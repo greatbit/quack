@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.quack.greatbit.ru"
+           targetNamespace="urn:beans.quack.greatbit.ru"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="common.xsd"/>
+    <xs:include schemaLocation="testcase.xsd"/>
+    <xs:include schemaLocation="testsuite.xsd"/>
+
+    <xs:element name="launch" type="Launch"/>
+    <xs:complexType name="Launch">
+        <xs:complexContent>
+            <xs:extension base="Entity">
+                <xs:sequence>
+                    <xs:element name="description" type="xs:string"/>
+
+                    <xs:element name="users" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="version" type="xs:string"/>
+                    <xs:element name="testSuite" type="TestSuite"/>
+                    <xs:element name="status" type="LaunchStatus"/>
+                    <xs:element name="startTime" type="xs:long"/>
+                    <xs:element name="finishTime" type="xs:long"/>
+                    <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="testGroups" type="TestNode" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="testNode" type="TestNode"/>
+    <xs:complexType name="TestNode">
+        <xs:sequence>
+            <xs:element name="path" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="testCases" type="LaunchTestCase" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="launchTestCase" type="LaunchTestCase"/>
+    <xs:complexType name="LaunchTestCase">
+        <xs:sequence>
+            <xs:element name="uuid" type="xs:string"/>
+            <xs:element name="testCase" type="TestCase"/>
+            <xs:element name="status" type="LaunchStatus"/>
+            <xs:element name="startUser" type="xs:string"/>
+            <xs:element name="finishUser" type="xs:string"/>
+            <xs:element name="startTime" type="xs:long"/>
+            <xs:element name="finishTime" type="xs:long"/>
+            <xs:element name="duration" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="launchStatus" type="LaunchStatus"/>
+    <xs:simpleType name="LaunchStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RUNNABLE"/>
+            <xs:enumeration value="RUNNING"/>
+            <xs:enumeration value="FAILED"/>
+            <xs:enumeration value="BROKEN"/>
+            <xs:enumeration value="PASSED"/>
+            <xs:enumeration value="SKIPPED"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+</xs:schema>

@@ -1,0 +1,14 @@
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               xmlns:annox="http://annox.dev.java.net"
+               jaxb:extensionBindingPrefixes="annox"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               schemaLocation="common.xsd"
+               jaxb:version="2.1">
+
+    <jaxb:globalBindings>
+        <jaxb:serializable uid="1"/>
+    </jaxb:globalBindings>
+
+</jaxb:bindings>

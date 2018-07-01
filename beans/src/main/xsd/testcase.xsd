@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.quack.greatbit.ru"
+           targetNamespace="urn:beans.quack.greatbit.ru"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="testCase" type="TestCase"/>
+    <xs:complexType name="TestCase">
+        <xs:complexContent>
+            <xs:extension base="Entity">
+                <xs:sequence>
+                    <xs:element name="description" type="xs:string"/>
+                    <xs:element name="descriptionToDisplay" type="xs:string"/>
+                    <xs:element name="preconditions" type="xs:string"/>
+                    <xs:element name="preconditionsToDisplay" type="xs:string"/>
+                    <xs:element name="steps" type="Step" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="issues" type="Issue" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="status" type="Status" minOccurs="0"/>
+                    <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="version" type="xs:string"/>
+                    <xs:element name="attachments" type="Attachment" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+    <xs:simpleType name="Status">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="incomplete"/>
+            <xs:enumeration value="review"/>
+            <xs:enumeration value="actual"/>
+            <xs:enumeration value="update"/>
+            <xs:enumeration value="to automate"/>
+            <xs:enumeration value="in automation"/>
+            <xs:enumeration value="automated"/>
+            <xs:enumeration value="archived"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Step">
+        <xs:sequence>
+            <xs:element name="action" type="xs:string"/>
+            <xs:element name="actionToDisplay" type="xs:string"/>
+            <xs:element name="expectation" type="xs:string"/>
+            <xs:element name="expectationToDisplay" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Issue">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="trackerType" type="xs:string"/>
+            <xs:element name="trackerProject" type="xs:string"/>
+            <xs:element name="url" type="xs:string"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="sourceLaunch" type="xs:string"/>
+            <xs:element name="type" type="IssueType"/>
+            <xs:element name="status" type="Status"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="isClosed" type="xs:boolean"/>
+            <xs:element name="parentIssueId" type="xs:string"/>
+            <xs:element name="priority" type="IssuePriority" default="normal"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="IssuePriority">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BLOCKER"/>
+            <xs:enumeration value="CRITICAL"/>
+            <xs:enumeration value="NORMAL"/>
+            <xs:enumeration value="MINOR"/>
+            <xs:enumeration value="TRIVIAL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="IssueType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BUG"/>
+            <xs:enumeration value="TASK"/>
+            <xs:enumeration value="FEATURE"/>
+            <xs:enumeration value="AUTOMATION"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="Attachment">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="storageType" type="xs:string"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="url" type="xs:string"/>
+            <xs:element name="createdBy" type="xs:string"/>
+            <xs:element name="createdTime" type="xs:long"/>
+            <xs:element name="dataSize" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+</xs:schema>
