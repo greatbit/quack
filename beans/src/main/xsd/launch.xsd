@@ -18,7 +18,6 @@
             <xs:extension base="Entity">
                 <xs:sequence>
                     <xs:element name="description" type="xs:string"/>
-
                     <xs:element name="users" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="version" type="xs:string"/>
                     <xs:element name="testSuite" type="TestSuite"/>

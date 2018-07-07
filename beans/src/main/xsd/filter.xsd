@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.quack.greatbit.ru"
+           targetNamespace="urn:beans.quack.greatbit.ru"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:element name="baseFilter" type="BaseFilter"/>
+    <xs:complexType name="BaseFilter">
+        <xs:sequence>
+            <xs:element name="sortField" type="xs:string"/>
+            <xs:element name="order" type="Order"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Order">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ASC"/>
+            <xs:enumeration value="DESC"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

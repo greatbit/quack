@@ -2,7 +2,7 @@ package ru.greatbit.quack.beans;
 
 import java.util.*;
 
-public class Filter {
+public class Filter extends BaseFilter{
 
     private Map<String, Set<Object>> fields;
     private Map<String, Set<Object>> notFields;
@@ -57,5 +57,15 @@ public class Filter {
     public Filter withExcludedField(String fieldName){
         getExcludedFields().add(fieldName);
         return this;
+    }
+
+    @Override
+    public Filter withSortField(String value) {
+        return (Filter) super.withSortField(value);
+    }
+
+    @Override
+    public Filter withOrder(Order value) {
+        return (Filter) super.withOrder(value);
     }
 }
