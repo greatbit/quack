@@ -4,5 +4,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import ru.greatbit.quack.beans.Project;
 
 public interface ProjectRepository extends ProjectRepositoryCustom,
-        PagingAndSortingRepository<Project, String> {
+        PagingAndSortingRepository<Project, String>, CommonRepository<Project> {
 }

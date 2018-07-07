@@ -10,7 +10,8 @@ import ru.greatbit.quack.dal.ProjectRepositoryCustom;
 
 import java.util.List;
 
-public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
+public class ProjectRepositoryCustomImpl extends CommonRepositoryImpl<Project>
+        implements ProjectRepositoryCustom {
 
     @Autowired
     MongoOperations mongoOperations;
@@ -20,5 +21,15 @@ public class ProjectRepositoryCustomImpl implements ProjectRepositoryCustom {
         Query query = new Query().with(new Sort(Sort.Direction.ASC, "id"));
         query.addCriteria(Criteria.where("projectGroupId").in(id));
         return mongoOperations.find(query, Project.class);
+    }
+
+    @Override
+    public Class getEntityClass() {
+        return Project.class;
+    }
+
+    @Override
+    protected String getCollectionName(String projectId) {
+        return "projects";
     }
 }
