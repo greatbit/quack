@@ -19,7 +19,7 @@ public abstract class CommonRepositoryImpl<E> implements CommonRepository<E> {
     @Autowired
     MongoOperations mongoOperations;
 
-    public abstract Class getEntityClass();
+    public abstract Class<E> getEntityClass();
 
     @Override
     public List<E> find(String projectId, Filter filter, int skip, int limit) {
