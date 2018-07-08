@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -124,5 +125,29 @@ public class ProjectRepositoryTest {
         assertThat(projects.size(), is(3));
         assertThat(projects.stream().map(Project::getName).collect(toList()),
                 contains("Pr3", "Pr2", "Pr1"));
+    }
+
+    @Test
+    public void findLimitedFieldsTest(){
+        projectRepository.save("projects", new Project().withName("Pr1").withCreatedBy("AAA"));
+        List<Project> projects = projectRepository.find(
+                null,
+                new Filter().
+                        withExcludedField("createdBy"),
+                0, 0
+        );
+        assertThat(projects.size(), is(1));
+        assertThat(projects.get(0).getName(), is("Pr1"));
+        assertNull(projects.get(0).getCreatedBy());
+
+        projects = projectRepository.find(
+                null,
+                new Filter().
+                        withIncludedField("createdBy"),
+                0, 0
+        );
+        assertThat(projects.size(), is(1));
+        assertThat(projects.get(0).getCreatedBy(), is("AAA"));
+        assertNull(projects.get(0).getName());
     }
 }
