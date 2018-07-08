@@ -8,15 +8,31 @@
            jaxb:version="2.1"
            elementFormDefault="qualified">
 
+    <xs:include schemaLocation="common.xsd"/>
+
     <xs:element name="user" type="User"/>
     <xs:complexType name="User">
+        <xs:complexContent>
+            <xs:extension base="Entity">
+                <xs:sequence>
+                    <xs:element name="id" type="xs:string"/>
+                    <xs:element name="login" type="xs:string"/>
+                    <xs:element name="firstName" type="xs:string"/>
+                    <xs:element name="lastName" type="xs:string"/>
+                    <xs:element name="middleName" type="xs:string"/>
+                    <xs:element name="groups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="session" type="Session"/>
+    <xs:complexType name="Session">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
-            <xs:element name="login" type="xs:string"/>
-            <xs:element name="firstName" type="xs:string"/>
-            <xs:element name="lastName" type="xs:string"/>
-            <xs:element name="middleName" type="xs:string"/>
-            <xs:element name="groups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="timeout" type="xs:long"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="user" type="User"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>services</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>ru.greatbit.qack</groupId>
+            <artifactId>dal</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

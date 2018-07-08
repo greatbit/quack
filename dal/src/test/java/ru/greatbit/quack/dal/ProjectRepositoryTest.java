@@ -57,8 +57,7 @@ public class ProjectRepositoryTest {
 
         List<Project> projects = projectRepository.find(
                 null,
-                new Filter().withField("name", "Pr2"),
-                0, 0
+                new Filter().withField("name", "Pr2")
         );
         assertThat(projects.size(), is(1));
         assertThat(projects.get(0).getName(), is("Pr2"));
@@ -74,8 +73,7 @@ public class ProjectRepositoryTest {
                 null,
                 new Filter().
                         withField("name", "Pr2").
-                        withField("name", "Pr3"),
-                0, 0
+                        withField("name", "Pr3")
         );
         assertThat(projects.size(), is(2));
         assertThat(projects.stream().map(Project::getName).collect(toList()),
@@ -93,8 +91,7 @@ public class ProjectRepositoryTest {
                 new Filter().
                         withField("name", "Pr2").
                         withField("name", "Pr3").
-                        withField("createdBy", "AAA"),
-                0, 0
+                        withField("createdBy", "AAA")
         );
         assertThat(projects.size(), is(1));
         assertThat(projects.get(0).getName(), is("Pr2"));
@@ -109,8 +106,7 @@ public class ProjectRepositoryTest {
         List<Project> projects = projectRepository.find(
                 null,
                 new Filter().
-                        withSortField("name"),
-                0, 0
+                        withSortField("name")
         );
         assertThat(projects.size(), is(3));
         assertThat(projects.stream().map(Project::getName).collect(toList()),
@@ -119,8 +115,7 @@ public class ProjectRepositoryTest {
         projects = projectRepository.find(
                 null,
                 new Filter().
-                        withSortField("name").withOrder(Order.DESC),
-                0, 0
+                        withSortField("name").withOrder(Order.DESC)
         );
         assertThat(projects.size(), is(3));
         assertThat(projects.stream().map(Project::getName).collect(toList()),
@@ -133,8 +128,7 @@ public class ProjectRepositoryTest {
         List<Project> projects = projectRepository.find(
                 null,
                 new Filter().
-                        withExcludedField("createdBy"),
-                0, 0
+                        withExcludedField("createdBy")
         );
         assertThat(projects.size(), is(1));
         assertThat(projects.get(0).getName(), is("Pr1"));
@@ -143,8 +137,7 @@ public class ProjectRepositoryTest {
         projects = projectRepository.find(
                 null,
                 new Filter().
-                        withIncludedField("createdBy"),
-                0, 0
+                        withIncludedField("createdBy")
         );
         assertThat(projects.size(), is(1));
         assertThat(projects.get(0).getCreatedBy(), is("AAA"));

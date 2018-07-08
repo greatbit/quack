@@ -13,6 +13,8 @@
         <xs:sequence>
             <xs:element name="sortField" type="xs:string"/>
             <xs:element name="order" type="Order"/>
+            <xs:element name="skip" type="xs:int" default="0"/>
+            <xs:element name="limit" type="xs:int" default="0"/>
         </xs:sequence>
     </xs:complexType>
 
