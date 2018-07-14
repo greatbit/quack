@@ -1,5 +1,6 @@
 package ru.greatbit.quack.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Session;
@@ -18,6 +19,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public abstract class BaseService<E extends Entity> {
     protected final Logger logger = Logger.getLogger(getClass().getName());
+
+    @Autowired
+    ProjectService projectService;
 
     protected abstract CommonRepository<E> getRepository();
 
@@ -45,7 +49,7 @@ public abstract class BaseService<E extends Entity> {
     public E save(Session user, String projectId, E entity){
         if (!userCanSave(user, projectId, entity)){
             throw new EntityAccessDeniedException(
-                    format("User %s can't save entity %s", user.getUser().getLogin(), entity.getId())
+                    format("User %s can't save entity %s", user.getUser().getId(), entity.getId())
             );
         }
         return isEmpty(entity.getId()) ?
@@ -56,7 +60,7 @@ public abstract class BaseService<E extends Entity> {
         if (!userCanSave(user, projectId, entities)){
             throw new EntityAccessDeniedException(
                     format("User %s can't save entities %s",
-                            user.getUser().getLogin(),
+                            user.getUser().getId(),
                             entities.stream().map(obj -> obj == null ? "null" : obj.toString()).collect(joining(", ")))
             );
         }
@@ -68,7 +72,7 @@ public abstract class BaseService<E extends Entity> {
         beforeDelete(session, id);
         if (!userCanDelete(session, projectId, id)){
             throw new EntityAccessDeniedException(
-                    format("User %s can't delete entity %s", session.getUser().getLogin(), id)
+                    format("User %s can't delete entity %s", session.getUser().getId(), id)
             );
         }
         getRepository().delete(projectId, id);
@@ -81,7 +85,9 @@ public abstract class BaseService<E extends Entity> {
     }
 
 
-    protected abstract boolean userCanRead(Session session, String projectId, E entity);
+    protected boolean userCanRead(Session session, String projectId, E entity){
+        return projectService.userCanRead(session, projectId);
+    }
     protected boolean userCanSave(Session session, String projectId, E entity){
         return true;
     }
@@ -149,7 +155,7 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected String getAccessDeniedMessage(Session session, E ent, String action){
-        String login = session != null && session.getUser() != null ? session.getUser().getLogin() : "unknown";
+        String login = session != null && session.getUser() != null ? session.getUser().getId() : "unknown";
         String entId = ent != null && ent.getId() != null ? ent.getId().toString() : "new entity";
         return format("User %s doesn't have %s permissions on %s", login, action, entId);
     }
