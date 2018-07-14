@@ -11,6 +11,7 @@
         <module>auth</module>
         <module>services</module>
         <module>api</module>
+        <module>ui</module>
     </modules>
 
     <name>quack System</name>
