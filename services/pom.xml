@@ -12,7 +12,7 @@
     <artifactId>services</artifactId>
     <dependencies>
         <dependency>
-            <groupId>ru.greatbit.qack</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>dal</artifactId>
         </dependency>
     </dependencies>
