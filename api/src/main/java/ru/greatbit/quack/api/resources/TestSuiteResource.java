@@ -8,7 +8,7 @@ import ru.greatbit.quack.services.TestSuiteService;
 import javax.ws.rs.Path;
 
 @Path("/testsuite")
-public abstract class TestSuiteResource extends BaseCrudResource<TestSuite> {
+public class TestSuiteResource extends BaseCrudResource<TestSuite> {
 
     @Autowired
     private TestSuiteService service;

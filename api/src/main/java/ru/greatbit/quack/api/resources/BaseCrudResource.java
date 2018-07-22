@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import ru.greatbit.quack.beans.Entity;
+import ru.greatbit.quack.beans.Filter;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -13,6 +15,11 @@ import java.util.Collection;
 import static javax.ws.rs.core.Response.ok;
 
 public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E> {
+
+    @Override
+    protected Filter initFilter(HttpServletRequest hsr) {
+        return new Filter();
+    }
 
     @GET
     @Path("/{projectId}")

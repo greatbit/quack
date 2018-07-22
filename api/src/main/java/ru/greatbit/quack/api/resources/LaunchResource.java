@@ -8,7 +8,7 @@ import ru.greatbit.quack.services.LaunchService;
 import javax.ws.rs.Path;
 
 @Path("/launch")
-public abstract class LaunchResource extends BaseCrudResource<Launch> {
+public class LaunchResource extends BaseCrudResource<Launch> {
 
     @Autowired
     private LaunchService service;

@@ -5,10 +5,12 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.ProjectService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
@@ -16,10 +18,15 @@ import java.util.Collection;
 import static javax.ws.rs.core.Response.ok;
 
 @Path("/project")
-public abstract class ProjectResource extends BaseResource<Project> {
+public class ProjectResource extends BaseResource<Project> {
 
     @Autowired
     private ProjectService service;
+
+    @Override
+    protected Filter initFilter(HttpServletRequest hsr) {
+        return new Filter();
+    }
 
     @Override
     protected BaseService<Project> getService() {
