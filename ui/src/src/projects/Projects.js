@@ -9,7 +9,7 @@ class Projects extends Component {
 
     componentDidMount() {
         axios
-          .get("/api/projects")
+          .get("/api/project")
           .then(response => {
 
             const projects = response.data.map(project => {
@@ -22,8 +22,6 @@ class Projects extends Component {
             const newState = Object.assign({}, this.state, {
               projects: projects
             });
-
-            // store the new state object in the component's state
             this.setState(newState);
           })
           .catch(error => console.log(error));
@@ -35,7 +33,7 @@ class Projects extends Component {
           <div>
             <ul>{
                 this.state.projects.map(function(project){
-                    return <li><Link to="/projects/{project.id}">{project.name}</Link></li>;
+                    return <li><Link to="/project/{project.id}">{project.name}</Link></li>;
                 })
             }</ul>
           </div>

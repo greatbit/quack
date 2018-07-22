@@ -50,6 +50,7 @@
         <hazelcast.version>3.8</hazelcast.version>
         <camel.version>2.18.3</camel.version>
         <swagger.version>1.5.10</swagger.version>
+        <jaxb.version>0.11.1</jaxb.version>
     </properties>
 
 
@@ -128,12 +129,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-commons</artifactId>
                 <version>${spring.data.version}</version>
@@ -160,12 +155,6 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.7</version>
             </dependency>
 
             <dependency>
@@ -234,12 +223,6 @@
                 <version>${swagger.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>0.11.1</version>
-            </dependency>
-
             <!-- Jackson -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -266,7 +249,7 @@
             <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
                 <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>0.7.0</version>
+                <version>${jaxb.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
@@ -310,7 +293,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.5</version>
+                <version>3.7</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -443,12 +426,12 @@
                                     <plugin>
                                         <groupId>org.jvnet.jaxb2_commons</groupId>
                                         <artifactId>jaxb2-basics-annotate</artifactId>
-                                        <version>0.6.4</version>
+                                        <version>${jaxb.version}</version>
                                     </plugin>
                                     <plugin>
                                         <groupId>org.jvnet.jaxb2_commons</groupId>
                                         <artifactId>jaxb2-basics</artifactId>
-                                        <version>0.6.4</version>
+                                        <version>${jaxb.version}</version>
                                     </plugin>
                                     <plugin>
                                         <groupId>net.java.dev.jaxb2-commons</groupId>

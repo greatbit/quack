@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import static javax.ws.rs.core.Response.ok;
 
-public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>{
+public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E> {
 
     @GET
     @Path("/{projectId}")
