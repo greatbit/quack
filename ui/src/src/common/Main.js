@@ -4,6 +4,7 @@ import TestCases from '../testcases/TestCases'
 import TestSuites from '../testsuites/TestSuites'
 import Projects from '../projects/Projects'
 import Launches from '../launches/Launches'
+import Attributes from '../attributes/Attributes'
 import ProjectForm from '../projects/ProjectForm'
 
 
@@ -13,9 +14,10 @@ const Main = () => (
       <Route exact path='/' component={Projects}/>
       <Route exact path='/projects' component={Projects}/>
       <Route exact path='/projects/new' component={ProjectForm}/>
-      <Route path='/testcases' component={TestCases}/>
-      <Route path='/testsuites' component={TestSuites}/>
-      <Route path='/launches' component={Launches}/>
+      <Route path='/:project/testcases' component={TestCases}/>
+      <Route path='/:project/testsuites' component={TestSuites}/>
+      <Route path='/:project/launches' component={Launches}/>
+      <Route path='/attributes/:project' component={Attributes}/>
     </Switch>
   </main>
 )
