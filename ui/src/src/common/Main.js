@@ -18,7 +18,7 @@ const Main = () => (
       <Route exact path='/projects/new' component={ProjectForm}/>
       <Route exact path='/:project/testcases/new' component={TestCaseForm}/>
       <Route path='/:project/testcases/:testcase' component={TestCase}/>
-      <Route path='/:project/testcases/' component={TestCases}/>
+      <Route path='/:project/testcases' component={TestCases}/>
       <Route path='/:project/testsuites' component={TestSuites}/>
       <Route path='/:project/launches' component={Launches}/>
       <Route path='/:project/attributes' component={Attributes}/>

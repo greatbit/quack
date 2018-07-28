@@ -30,11 +30,9 @@ class TestCaseForm extends Component {
       }
 
       handleSubmit(event) {
-      console.log(this);
-
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
-            this.props.history.push(this.props.match.params.project + '/testcases/' + response.data.id);
+            this.props.history.push("/" + this.props.match.params.project + '/testcases/' + response.data.id);
         })
         event.preventDefault();
       }
