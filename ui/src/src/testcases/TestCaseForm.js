@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 
-class TestcaseForm extends Component {
+class TestCaseForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,7 +34,7 @@ class TestcaseForm extends Component {
 
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
-            this.props.history.push('/testcases/' + this.props.match.params.project + '/' + response.data.id);
+            this.props.history.push(this.props.match.params.project + '/testcases/' + response.data.id);
         })
         event.preventDefault();
       }
@@ -72,4 +72,4 @@ class TestcaseForm extends Component {
 
 }
 
-export default withRouter(TestcaseForm);
+export default withRouter(TestCaseForm);
