@@ -17,7 +17,7 @@ import java.util.Collection;
 
 import static javax.ws.rs.core.Response.ok;
 
-@Path("/{projectId}/project-group")
+@Path("/project-group")
 public class ProjectGroupResource extends BaseResource<ProjectGroup> {
 
     @Autowired
