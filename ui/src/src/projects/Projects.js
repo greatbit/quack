@@ -33,7 +33,7 @@ class Projects extends Component {
           <div>
             <ul>{
                 this.state.projects.map(function(project){
-                    return <li><Link to="/project/{project.id}">{project.name}</Link></li>;
+                    return <li><Link to={'/project/' + project.id}>{project.name}</Link></li>;
                 })
             }</ul>
           </div>

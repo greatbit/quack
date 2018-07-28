@@ -22,13 +22,13 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
     }
 
     @GET
-    @Path("/{projectId}")
+    @Path("/")
     public Collection<E> findFiltered(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) {
         return getService().findFiltered(getUserSession(), projectId, initFilter(request));
     }
 
     @GET
-    @Path("/{projectId}/{id}")
+    @Path("/{id}")
     @ApiOperation(value = "Find entity by id", notes = "")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Entity not found"),
@@ -41,7 +41,7 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
     }
 
     @POST
-    @Path("/{projectId}")
+    @Path("/")
     @ApiOperation(value = "Create entity", notes = "")
     @ApiResponses(value = {
             @ApiResponse(code = 403, message = "Access denied to the entity"),
@@ -54,7 +54,7 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
     }
 
     @PUT
-    @Path("/{projectId}")
+    @Path("/")
     @ApiOperation(value = "Update entity", notes = "")
     @ApiResponses(value = {
             @ApiResponse(code = 403, message = "Access denied to the entity"),
@@ -67,7 +67,7 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
 
 
     @DELETE
-    @Path("/{projectId}/{id}")
+    @Path("/{id}")
     @ApiOperation(value = "Delete entity", notes = "")
     @ApiResponses(value = {
             @ApiResponse(code = 403, message = "Access denied to the entity"),
@@ -80,7 +80,7 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
     }
 
     @GET
-    @Path("/{projectId}/count")
+    @Path("/count")
     @ApiOperation(value = "Count", notes = "")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful operation", response = long.class)

@@ -9,7 +9,7 @@ import ru.greatbit.quack.services.BaseService;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 
-@Path("/attribute")
+@Path("/{projectId}/attribute")
 public class AttributeResource extends BaseCrudResource<Attribute> {
 
     @Autowired

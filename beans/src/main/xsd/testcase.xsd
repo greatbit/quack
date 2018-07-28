@@ -9,6 +9,7 @@
            elementFormDefault="qualified">
 
     <xs:include schemaLocation="common.xsd"/>
+    <xs:include schemaLocation="attributes.xsd"/>
 
     <xs:element name="testCase" type="TestCase"/>
     <xs:complexType name="TestCase">
@@ -23,6 +24,7 @@
                     <xs:element name="issues" type="Issue" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="status" type="Status" minOccurs="0"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="attributes" type="Attribute" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="version" type="xs:string"/>
                     <xs:element name="attachments" type="Attachment" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>

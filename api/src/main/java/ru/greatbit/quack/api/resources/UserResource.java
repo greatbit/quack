@@ -7,7 +7,7 @@ import ru.greatbit.quack.services.UserService;
 
 import javax.ws.rs.Path;
 
-@Path("/user")
+@Path("/{projectId}/user")
 public class UserResource extends BaseCrudResource<User> {
 
     @Autowired

@@ -7,7 +7,7 @@ import ru.greatbit.quack.services.LaunchService;
 
 import javax.ws.rs.Path;
 
-@Path("/launch")
+@Path("/{projectId}/launch")
 public class LaunchResource extends BaseCrudResource<Launch> {
 
     @Autowired

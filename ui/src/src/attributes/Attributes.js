@@ -9,7 +9,7 @@ class Attributes extends Component {
 
         componentDidMount() {
             axios
-              .get("/api/attribute/" + this.props.match.params.project)
+              .get("/api/" + this.props.match.params.project +  "/attribute")
               .then(response => {
                 const newState = Object.assign({}, this.state, {
                   attributes: response.data

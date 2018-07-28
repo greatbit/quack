@@ -3,45 +3,38 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 
-class AttributeForm extends Component {
-
+class TestcaseForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-             attribute: {
+             testcase: {
                  id: null,
                  name: "",
-                 values: []
+                 description: "",
+                 steps: [],
+                 attributes: []
              }
          };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleValuesChange = this.handleValuesChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
       }
 
       handleChange(event) {
-        var attributeUpd = this.state.attribute;
-        attributeUpd[event.target.name] = event.target.value;
+        var testcaseUpd = this.state.testcase;
+        testcaseUpd[event.target.name] = event.target.value;
         const newState = Object.assign({}, this.state, {
-          attribute: attributeUpd
+          testcase: testcaseUpd
         });
         this.setState(newState);
       }
 
-      handleValuesChange(event) {
-          var attributeUpd = this.state.attribute;
-          attributeUpd.values = event.target.value.split(',');
-          const newState = Object.assign({}, this.state, {
-            attribute: attributeUpd
-          });
-          this.setState(newState);
-       }
-
       handleSubmit(event) {
-        axios.post('/api/' + + this.props.project + '/attribute', this.state.attribute)
+      console.log(this);
+
+        axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
-            //ToDo: close modal
+            this.props.history.push('/testcases/' + this.props.match.params.project + '/' + response.data.id);
         })
         event.preventDefault();
       }
@@ -49,10 +42,10 @@ class AttributeForm extends Component {
     componentDidMount() {
         if (this.props.id){
             axios
-              .get("/api/" + this.props.project + "/project")
+              .get("/api/"  + this.props.match.params.project + "/testcase/"+ this.props.id)
               .then(response => {
                 const newState = Object.assign({}, this.state, {
-                  project: response.data
+                    testcase: response.data
                 });
                 this.setState(newState);
               })
@@ -66,11 +59,11 @@ class AttributeForm extends Component {
             <form onSubmit={this.handleSubmit}>
               <label>
                 Name:
-                <input type="text" name="name" value={this.state.attribute.name} onChange={this.handleChange} />
+                <input type="text" name="name" value={this.state.testcase.name} onChange={this.handleChange} />
               </label>
               <label>
-                Values:
-                <input type="text" name="values" value={this.state.attribute.values} onChange={this.handleValuesChange} />
+                Description:
+                <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
               </label>
               <input type="submit" value="Submit" />
             </form>
@@ -79,4 +72,4 @@ class AttributeForm extends Component {
 
 }
 
-export default AttributeForm;
+export default withRouter(TestcaseForm);
