@@ -9,7 +9,7 @@ class TestCases extends Component {
 
     componentDidMount() {
         axios
-          .get("/api/" + this.props.project + "/testcase")
+          .get("/api/" + this.props.match.params.project + "/testcase")
           .then(response => {
 
             const testcases = response.data.map(testcase => {
@@ -30,11 +30,12 @@ class TestCases extends Component {
 
 
     render() {
+        var that = this;
         return (
           <div>
             <ul>{
                 this.state.testcases.map(function(testcase){
-                    return <li><Link to={this.props.match.params.project + "/testcase/" + testcase.id}>{testcase.name}</Link></li>;
+                    return <li><Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link></li>;
                 })
             }</ul>
           </div>
