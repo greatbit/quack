@@ -12,10 +12,10 @@ class Header extends Component {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav mr-auto">
                 <li className="nav-item"><Link className="nav-link" to="/projects">Projects</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/attributes">Attributes</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/testcases">TestCases</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/testsuites">Suites</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/launches">Launches</Link></li>
+                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/attributes"}>Attributes</Link></li>
+                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testcases"}>TestCases</Link></li>
+                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>Suites</Link></li>
+                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/launches"}>Launches</Link></li>
               </ul>
             </div>
           </nav>

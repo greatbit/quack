@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 
-class TestCases extends Component {
+class TestCases extends SubComponent {
     state = {
         testcases: []
     };
 
     componentDidMount() {
+        super.componentDidMount();
         axios
           .get("/api/" + this.props.match.params.project + "/testcase")
           .then(response => {

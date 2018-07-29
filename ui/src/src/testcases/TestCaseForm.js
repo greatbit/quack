@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 
-class TestCaseForm extends Component {
+class TestCaseForm extends SubComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,6 +39,7 @@ class TestCaseForm extends Component {
       }
 
     componentDidMount() {
+        super.componentDidMount();
         if (this.props.id){
             axios
               .get("/api/"  + this.props.match.params.project + "/testcase/"+ this.props.id)
