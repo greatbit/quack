@@ -65,17 +65,32 @@ class AttributeForm extends Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                Name:
-                <input type="text" name="name" value={this.state.attribute.name} onChange={this.handleChange} />
-              </label>
-              <label>
-                Values:
-                <input type="text" name="values" value={this.state.attribute.values} onChange={this.handleValuesChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="editAttributeLabel">Attribute</h5>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <form>
+                      <label>
+                        Name:
+                        <input type="text" name="name" value={this.state.attribute.name} onChange={this.handleChange} />
+                      </label>
+                      <label>
+                        Values:
+                        <input type="text" name="values" value={this.state.attribute.values} onChange={this.handleValuesChange} />
+                      </label>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save changes</button>
+                  </div>
+                </div>
+             </div>
         );
       }
 
