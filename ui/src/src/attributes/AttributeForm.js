@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from "axios";
 import { withRouter } from 'react-router';
+import axios from "axios";
 
 class AttributeForm extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-             attribute: {
-                 id: null,
-                 name: "",
-                 values: []
-             }
-         };
+             attribute: props.attribute
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleValuesChange = this.handleValuesChange.bind(this);
@@ -39,10 +35,16 @@ class AttributeForm extends Component {
        }
 
       handleSubmit(event) {
-        axios.post('/api/' + + this.props.project + '/attribute', this.state.attribute)
+        axios.post('/api/' + this.props.project + '/attribute', this.state.attribute)
         .then(response => {
-            //ToDo: close modal
-        })
+            this.props.onAttributeAdded(response.data);
+            this.state.attribute = {
+                id: null,
+                name: "",
+                values: []
+            }
+            this.setState(this.state);
+        });
         event.preventDefault();
       }
 
