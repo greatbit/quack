@@ -29,7 +29,7 @@ class AttributeForm extends Component {
        }
 
       removeValue(i, event){
-        this.state.attribute.values[i] = this.state.attribute.values.splice(i, 1);
+        this.state.attribute.values.splice(i, 1);
         this.setState(this.state);
       }
 
