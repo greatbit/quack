@@ -52,11 +52,20 @@ class Attributes extends SubComponent {
     render() {
         return (
           <div>
-            <ul>{
+            {
                 this.state.attributes.map(function(attribute){
-                    return <li>{attribute.name}</li>;
+                    return (
+
+                        <div className="alert" role="alert">
+                          <h5 className="alert-heading">{attribute.name}</h5>
+                          <p>{attribute.description}</p>
+                          <hr/>
+                          <p class="mb-0">{attribute.values.join(", ")}</p>
+                        </div>
+
+                    );
                 })
-            }</ul>
+            }
 
             <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editAttribute">
               Add
