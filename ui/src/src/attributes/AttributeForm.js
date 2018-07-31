@@ -12,27 +12,26 @@ class AttributeForm extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleValuesChange = this.handleValuesChange.bind(this);
+        this.handleValueChange = this.handleValueChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.addValue = this.addValue.bind(this);
+        this.removeValue = this.removeValue.bind(this);
       }
 
       handleChange(event) {
-        var attributeUpd = this.state.attribute;
-        attributeUpd[event.target.name] = event.target.value;
-        const newState = Object.assign({}, this.state, {
-          attribute: attributeUpd
-        });
-        this.setState(newState);
+        this.state.attribute[event.target.name] = event.target.value;
+        this.setState(this.state);
       }
 
-      handleValuesChange(event) {
-          var attributeUpd = this.state.attribute;
-          attributeUpd.values = event.target.value.split(',');
-          const newState = Object.assign({}, this.state, {
-            attribute: attributeUpd
-          });
-          this.setState(newState);
+      handleValueChange(i, event) {
+        this.state.attribute.values[i] = event.target.value;
+        this.setState(this.state);
        }
+
+      removeValue(i, event){
+        this.state.attribute.values[i] = this.state.attribute.values.splice(i, 1);
+        this.setState(this.state);
+      }
 
       handleSubmit(event) {
         axios.post('/api/' + this.props.project + '/attribute', this.state.attribute)
@@ -46,6 +45,11 @@ class AttributeForm extends Component {
             this.setState(this.state);
         });
         event.preventDefault();
+      }
+
+      addValue(event){
+        this.state.attribute.values.push("");
+        this.setState(this.state);
       }
 
     componentDidMount() {
@@ -79,10 +83,21 @@ class AttributeForm extends Component {
                         Name:
                         <input type="text" name="name" value={this.state.attribute.name} onChange={this.handleChange} />
                       </label>
-                      <label>
-                        Values:
-                        <input type="text" name="values" value={this.state.attribute.values} onChange={this.handleValuesChange} />
-                      </label>
+
+                      {this.state.attribute.values.map((value, i) => {
+                         return(
+                             <div>
+                                 <label>
+                                     Values:
+                                     <input type="text" name="value" index={i} value={value}
+                                            onChange={(e) => this.handleValueChange(i, e)} />
+                                 </label>
+                                 <span index={i} onClick={(e) => this.removeValue(i, e)}>X</span>
+                             </div>
+                         )
+                      })}
+
+                      <button type="button" className="btn" onClick={this.addValue}>Add value</button>
                     </form>
                   </div>
                   <div className="modal-footer">
