@@ -18,6 +18,10 @@ class AttributeForm extends Component {
         this.removeValue = this.removeValue.bind(this);
       }
 
+      componentWillReceiveProps(nextProps) {
+        this.setState({ attribute: nextProps.attribute });
+      }
+
       handleChange(event) {
         this.state.attribute[event.target.name] = event.target.value;
         this.setState(this.state);

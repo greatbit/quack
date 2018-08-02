@@ -16,7 +16,7 @@ class Attributes extends SubComponent {
              }
          }
         this.onAttributeAdded = this.onAttributeAdded.bind(this);
-      }
+    }
 
     onAttributeAdded(attribute){
         var attributeToUpdate = this.state.attributes.find(function(attr){attr.id === attribute.id});
@@ -30,9 +30,15 @@ class Attributes extends SubComponent {
             name: "",
             values: []
         }
-        $("#editAttribute").modal('toggle');
+        $("#editAttribute").modal('hide');
         const newState = Object.assign({}, this.state);
         this.setState(newState);
+    }
+
+    editAttribute(i, event){
+        this.state.attributeToEdit = this.state.attributes[i];
+        this.setState(this.state);
+        $("#editAttribute").modal('show');
     }
 
     componentDidMount() {
@@ -53,7 +59,7 @@ class Attributes extends SubComponent {
         return (
           <div>
             {
-                this.state.attributes.map(function(attribute){
+                this.state.attributes.map(function(attribute, i){
                     return (
 
                         <div className="alert" role="alert">
@@ -61,10 +67,11 @@ class Attributes extends SubComponent {
                           <p>{attribute.description}</p>
                           <hr/>
                           <p class="mb-0">{attribute.values.join(", ")}</p>
+                          <span index={i} onClick={(e) => this.editAttribute(i, e)}>Edit</span>
                         </div>
 
                     );
-                })
+                }.bind(this))
             }
 
             <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editAttribute">
