@@ -56,19 +56,37 @@ class TestCaseForm extends SubComponent {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                Name:
-                <input type="text" name="name" value={this.state.testcase.name} onChange={this.handleChange} />
-              </label>
-              <label>
-                Description:
-                <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
+
+
+            <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="editAttributeLabel">Attribute</h5>
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div className="modal-body">
+                    <form>
+                      <label>
+                        Name:
+                        <input type="text" name="name" value={this.state.testcase.name} onChange={this.handleChange} />
+                      </label>
+                      <label>
+                        Description:
+                        <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
+                      </label>
+                    </form>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save changes</button>
+                  </div>
+                </div>
+             </div>
         );
       }
+
 
 }
 
