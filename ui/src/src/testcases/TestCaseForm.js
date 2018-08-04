@@ -19,6 +19,7 @@ class TestCaseForm extends SubComponent {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.addAttribute = this.addAttribute.bind(this);
       }
 
       handleChange(event) {
@@ -37,6 +38,17 @@ class TestCaseForm extends SubComponent {
         })
         event.preventDefault();
       }
+
+    componentWillReceiveProps(nextProps) {
+      this.setState({ testcase: nextProps.testcase });
+    }
+
+    addAttribute(){
+        this.state.testcase.attributes.push({
+            id: null
+        });
+        this.setState(this.state);
+    }
 
     componentDidMount() {
         super.componentDidMount();
@@ -76,7 +88,25 @@ class TestCaseForm extends SubComponent {
                         Description:
                         <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
                       </label>
+
+                      {
+                      (this.state.testcase.attributes || []).map(function(attribute, i){
+                              return (
+                                  <div index={i}>
+                                    {attribute.name}
+                                      <select>
+                                        {(attribute.values || []).map(function(value){
+                                            return <option value={value}>{value}</option>
+                                        })}
+                                      </select>
+                                  </div>
+
+                              );
+                          }.bind(this))
+                      }
+                      <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
                     </form>
+
                   </div>
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>

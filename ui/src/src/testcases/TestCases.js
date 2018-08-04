@@ -36,6 +36,15 @@ class TestCases extends SubComponent {
           .catch(error => console.log(error));
      }
 
+     editTestcase(testcaseId){
+        this.state.testcaseToEdit = this.state.testcases.find(function(testcase){
+            return testcaseId === testcase.id
+        }) || {};
+        this.setState(this.state);
+        $("#editTestcase").modal('show');
+     }
+
+
      onTestCaseAdded(testcase){
      }
 
@@ -46,8 +55,11 @@ class TestCases extends SubComponent {
           <div>
               <div>
                 <ul>{
-                    this.state.testcases.map(function(testcase){
-                        return <li><Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link></li>;
+                    this.state.testcases.map(function(testcase, i){
+                        return <li>
+                            <Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link>
+                            <span onClick={(e) => that.editTestcase(testcase.id)}>Edit</span>
+                        </li>
                     })
                 }</ul>
               </div>
