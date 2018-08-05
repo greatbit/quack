@@ -21,6 +21,10 @@ class TestCaseForm extends SubComponent {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addAttribute = this.addAttribute.bind(this);
+        this.getAttribute = this.getAttribute.bind(this);
+        this.getAttributeName = this.getAttributeName.bind(this);
+        this.getAttributeValues = this.getAttributeValues.bind(this);
+        this.editAttributeKey = this.editAttributeKey.bind(this);
       }
 
       handleChange(event) {
@@ -60,6 +64,18 @@ class TestCaseForm extends SubComponent {
     editAttributeKey(index, event){
         this.state.testcase.attributes[index].id = event.target.value;
         this.setState(this.state);
+    }
+
+    getAttribute(id){
+        return this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {}
+    }
+
+    getAttributeName(id){
+        return this.getAttribute(id).name || ""
+    }
+
+    getAttributeValues(id){
+        return this.getAttribute(id).values || []
     }
 
     componentDidMount() {
@@ -103,13 +119,13 @@ class TestCaseForm extends SubComponent {
                               if(attribute.id){
                                return (
                                   <div index={i}>
-                                    {attribute.name}
+                                    {this.getAttributeName(attribute.id)}
                                       <select value={attribute.values}>
-                                        {(this.state.projectAttributes || [])
-                                        .filter(function(projectAttribute){return attribute.id === projectAttribute.id})
-                                        .map(function(projectAttribute){
-                                            return <option value={projectAttribute.id}>{projectAttribute.name}</option>
-                                        })}
+                                        {this.getAttributeValues(attribute.id)
+                                            .map(function(value){
+                                                return <option value={value}>{value}</option>
+                                            })
+                                        }
                                       </select>
                                   </div>
 
