@@ -14,7 +14,8 @@ class TestCaseForm extends SubComponent {
                  description: "",
                  steps: [],
                  attributes: []
-             }
+             },
+             projectAttributes: []
          };
 
         this.handleChange = this.handleChange.bind(this);
@@ -40,7 +41,13 @@ class TestCaseForm extends SubComponent {
       }
 
     componentWillReceiveProps(nextProps) {
-      this.setState({ testcase: nextProps.testcase });
+      if(nextProps.testcase){
+        this.state.testcase = nextProps.testcase;
+      }
+      if (nextProps.projectAttributes){
+        this.state.projectAttributes = nextProps.projectAttributes;
+      }
+      this.setState(this.state);
     }
 
     addAttribute(){
@@ -52,17 +59,16 @@ class TestCaseForm extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
+        this.state.projectAttributes = this.props.projectAttributes || [];
         if (this.props.id){
             axios
               .get("/api/"  + this.props.match.params.project + "/testcase/"+ this.props.id)
               .then(response => {
-                const newState = Object.assign({}, this.state, {
-                    testcase: response.data
-                });
-                this.setState(newState);
+                this.state.testcase = response.data;
               })
               .catch(error => console.log(error));
         }
+        this.setState(this.state);
      }
 
 
@@ -91,17 +97,35 @@ class TestCaseForm extends SubComponent {
 
                       {
                       (this.state.testcase.attributes || []).map(function(attribute, i){
-                              return (
+                              if(attribute.id){
+                               return (
                                   <div index={i}>
                                     {attribute.name}
-                                      <select>
-                                        {(attribute.values || []).map(function(value){
+                                      <select value={attribute.values}>
+                                        {(this.state.projectAttributes || [])
+                                        .filter(function(projectAttribute){return attribute.id === projectAttribute.id})
+                                        .map(function(value){
                                             return <option value={value}>{value}</option>
                                         })}
                                       </select>
                                   </div>
 
+                               );
+                              } else {
+                                return (
+                                  <div index={i}>
+                                    <select value={attribute.id}>
+                                        {(this.state.projectAttributes || []).map(function(projectAttribute){
+                                            return <option value={projectAttribute.id}>{projectAttribute.name}</option>
+                                        })}
+                                    </select>
+                                  </div>
+
                               );
+
+                              }
+
+
                           }.bind(this))
                       }
                       <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>

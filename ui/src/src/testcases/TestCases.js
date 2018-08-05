@@ -11,7 +11,8 @@ class TestCases extends SubComponent {
         testcaseToEdit: {
             id: null,
             name: ""
-        }
+        },
+        projectAttributes: []
     };
 
     componentDidMount() {
@@ -34,6 +35,14 @@ class TestCases extends SubComponent {
             this.setState(newState);
           })
           .catch(error => console.log(error));
+
+          axios
+            .get("/api/" + this.props.match.params.project + "/attribute")
+            .then(response => {
+                 this.state.projectAttributes = response.data;
+                 this.setState(this.state);
+            })
+            .catch(error => console.log(error));
      }
 
      editTestcase(testcaseId){
@@ -69,6 +78,7 @@ class TestCases extends SubComponent {
               <div className="modal fade" id="editTestcase" tabindex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
                   <TestCaseForm project={this.props.match.params.project}
                           testcase={this.state.testcaseToEdit}
+                          projectAttributes={this.state.projectAttributes}
                           onTestCaseAdded={this.onTestCaseAdded}/>
               </div>
           </div>
