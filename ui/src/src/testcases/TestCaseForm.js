@@ -57,6 +57,11 @@ class TestCaseForm extends SubComponent {
         this.setState(this.state);
     }
 
+    editAttributeKey(index, event){
+        this.state.testcase.attributes[index].id = event.target.value;
+        this.setState(this.state);
+    }
+
     componentDidMount() {
         super.componentDidMount();
         this.state.projectAttributes = this.props.projectAttributes || [];
@@ -74,8 +79,6 @@ class TestCaseForm extends SubComponent {
 
     render() {
         return (
-
-
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
@@ -104,8 +107,8 @@ class TestCaseForm extends SubComponent {
                                       <select value={attribute.values}>
                                         {(this.state.projectAttributes || [])
                                         .filter(function(projectAttribute){return attribute.id === projectAttribute.id})
-                                        .map(function(value){
-                                            return <option value={value}>{value}</option>
+                                        .map(function(projectAttribute){
+                                            return <option value={projectAttribute.id}>{projectAttribute.name}</option>
                                         })}
                                       </select>
                                   </div>
@@ -114,7 +117,7 @@ class TestCaseForm extends SubComponent {
                               } else {
                                 return (
                                   <div index={i}>
-                                    <select value={attribute.id}>
+                                    <select value={attribute.id} onChange={(e) => this.editAttributeKey(i, e)}>
                                         {(this.state.projectAttributes || []).map(function(projectAttribute){
                                             return <option value={projectAttribute.id}>{projectAttribute.name}</option>
                                         })}
@@ -124,8 +127,6 @@ class TestCaseForm extends SubComponent {
                               );
 
                               }
-
-
                           }.bind(this))
                       }
                       <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
