@@ -27,6 +27,7 @@ class TestCaseForm extends SubComponent {
         this.getAttributeValues = this.getAttributeValues.bind(this);
         this.editAttributeKey = this.editAttributeKey.bind(this);
         this.editAttributeValues = this.editAttributeValues.bind(this);
+        this.removeAttribute = this.removeAttribute.bind(this);
       }
 
       handleChange(event) {
@@ -85,6 +86,11 @@ class TestCaseForm extends SubComponent {
         this.setState(this.state);
     }
 
+    removeAttribute(i, event){
+        this.state.testcase.attributes.splice(i, 1);
+        this.setState(this.state);
+    }
+
     componentDidMount() {
         super.componentDidMount();
         this.state.projectAttributes = this.props.projectAttributes || [];
@@ -120,7 +126,10 @@ class TestCaseForm extends SubComponent {
                         Description:
                         <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
                       </label>
-
+                      <label>
+                        Description:
+                        <input type="text" name="preconditions" value={this.state.testcase.preconditions} onChange={this.handleChange} />
+                      </label>
                       {
                       (this.state.testcase.attributes || []).map(function(attribute, i){
                               if(attribute.id){
@@ -133,6 +142,7 @@ class TestCaseForm extends SubComponent {
                                         onChange={(e) => this.editAttributeValues(i, e)}
                                         options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
                                        />
+                                       <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
                                   </div>
 
                                );
@@ -144,6 +154,7 @@ class TestCaseForm extends SubComponent {
                                             return <option value={projectAttribute.id}>{projectAttribute.name}</option>
                                         })}
                                     </select>
+                                    <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
                                   </div>
 
                               );
