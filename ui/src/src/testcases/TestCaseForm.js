@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
+import Select from 'react-select';
 
 class TestCaseForm extends SubComponent {
     constructor(props) {
@@ -25,6 +26,7 @@ class TestCaseForm extends SubComponent {
         this.getAttributeName = this.getAttributeName.bind(this);
         this.getAttributeValues = this.getAttributeValues.bind(this);
         this.editAttributeKey = this.editAttributeKey.bind(this);
+        this.editAttributeValues = this.editAttributeValues.bind(this);
       }
 
       handleChange(event) {
@@ -78,6 +80,11 @@ class TestCaseForm extends SubComponent {
         return this.getAttribute(id).values || []
     }
 
+    editAttributeValues(index, values){
+        this.state.testcase.attributes[index].values = values.map(function(value){return value.value});
+        this.setState(this.state);
+    }
+
     componentDidMount() {
         super.componentDidMount();
         this.state.projectAttributes = this.props.projectAttributes || [];
@@ -120,13 +127,11 @@ class TestCaseForm extends SubComponent {
                                return (
                                   <div index={i}>
                                     {this.getAttributeName(attribute.id)}
-                                      <select value={attribute.values}>
-                                        {this.getAttributeValues(attribute.id)
-                                            .map(function(value){
-                                                return <option value={value}>{value}</option>
-                                            })
-                                        }
-                                      </select>
+                                      <Select value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
+                                        isMulti
+                                        onChange={(e) => this.editAttributeValues(i, e)}
+                                        options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
+                                       />
                                   </div>
 
                                );
