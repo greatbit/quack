@@ -3,7 +3,7 @@ import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
-import Select from 'react-select';
+import CreatableSelect from 'react-select/lib/Creatable';
 
 class TestCaseForm extends SubComponent {
     constructor(props) {
@@ -127,8 +127,9 @@ class TestCaseForm extends SubComponent {
                                return (
                                   <div index={i}>
                                     {this.getAttributeName(attribute.id)}
-                                      <Select value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
+                                      <CreatableSelect value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
                                         isMulti
+                                        isClearable
                                         onChange={(e) => this.editAttributeValues(i, e)}
                                         options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
                                        />
