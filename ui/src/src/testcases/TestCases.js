@@ -50,7 +50,7 @@ class TestCases extends SubComponent {
             return testcaseId === testcase.id
         }) || {};
         this.setState(this.state);
-        $("#editTestcase").modal('show');
+        $("#editTestcase").modal('toggle');
      }
 
 
