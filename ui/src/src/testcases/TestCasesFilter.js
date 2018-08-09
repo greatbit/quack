@@ -27,6 +27,7 @@ class TestCasesFilter extends Component {
         this.handleFilter = this.handleFilter.bind(this);
         this.getFilterQParams = this.getFilterQParams.bind(this);
         this.getGroupingQParams = this.getGroupingQParams.bind(this);
+        this.getQueryParams = this.getQueryParams.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -71,9 +72,12 @@ class TestCasesFilter extends Component {
     }
 
     handleFilter(){
-        this.props.history.push("/" + this.props.project + '/testcases?' +
-                                [this.getFilterQParams(), this.getGroupingQParams()].
-                                filter(function(val){return val !== ""}).join("&"));
+        this.props.history.push("/" + this.props.project + '/testcases?' + this.getQueryParams());
+    }
+
+    getQueryParams(){
+        return [this.getFilterQParams(), this.getGroupingQParams()].
+                       filter(function(val){return val !== ""}).join("&");
     }
 
     getFilterQParams(){
