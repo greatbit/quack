@@ -24,7 +24,9 @@ class TestCasesFilter extends Component {
         this.getValuesByAttributeId = this.getValuesByAttributeId.bind(this);
         this.changeFilterAttributeId = this.changeFilterAttributeId.bind(this);
         this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
-
+        this.handleFilter = this.handleFilter.bind(this);
+        this.getFilterQParams = this.getFilterQParams.bind(this);
+        this.getGroupingQParams = this.getGroupingQParams.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +70,29 @@ class TestCasesFilter extends Component {
         return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).values;
     }
 
+    handleFilter(){
+        this.props.history.push("/" + this.props.project + '/testcases?' +
+                                [this.getFilterQParams(), this.getGroupingQParams()].
+                                filter(function(val){return val !== ""}).join("&"));
+    }
+
+    getFilterQParams(){
+        var activeFilters = this.state.filter.filters.filter(function(filter){return filter.id}) || [];
+        var attributesPairs = [];
+        activeFilters.forEach(function(filter){
+            var tokens = filter.values.map(function(value){
+                return "attribute." + filter.id + "=" + value
+            })
+            attributesPairs = attributesPairs.concat(tokens);
+        })
+
+        return attributesPairs.join("&") || "";
+    }
+
+    getGroupingQParams(){
+        return this.state.filter.groups.map(function(group){return "group=" + group}).join("&") || "";
+    }
+
 
     render() {
         return (
@@ -109,6 +134,7 @@ class TestCasesFilter extends Component {
 
 
                 </div>
+                <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
             </div>
         );
       }

@@ -67,7 +67,8 @@ class TestCases extends SubComponent {
         return (
             <div>
               <div>
-                <TestCasesFilter projectAttributes={this.state.projectAttributes} onFilter={this.onFilter} />
+                <TestCasesFilter projectAttributes={this.state.projectAttributes}
+                        onFilter={this.onFilter} project={this.props.match.params.project}/>
               </div>
               <div>
                   <div>
