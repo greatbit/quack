@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import TestCaseForm from '../testcases/TestCaseForm'
+import TestCasesFilter from '../testcases/TestCasesFilter'
 import axios from "axios";
 import $ from 'jquery';
 
@@ -57,31 +58,39 @@ class TestCases extends SubComponent {
      onTestCaseAdded(testcase){
      }
 
+     onFilter(filter){
+     }
+
 
     render() {
         var that = this;
         return (
-          <div>
+            <div>
               <div>
-                <ul>{
-                    this.state.testcases.map(function(testcase, i){
-                        return <li>
-                            <Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link>
-                            <span onClick={(e) => that.editTestcase(testcase.id)}>Edit</span>
-                        </li>
-                    })
-                }</ul>
+                <TestCasesFilter projectAttributes={this.state.projectAttributes} onFilter={this.onFilter} />
               </div>
-              <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
-                Add
-              </button>
-              <div className="modal fade" id="editTestcase" tabindex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
-                  <TestCaseForm project={this.props.match.params.project}
-                          testcase={this.state.testcaseToEdit}
-                          projectAttributes={this.state.projectAttributes}
-                          onTestCaseAdded={this.onTestCaseAdded}/>
+              <div>
+                  <div>
+                    <ul>{
+                        this.state.testcases.map(function(testcase, i){
+                            return <li>
+                                <Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link>
+                                <span onClick={(e) => that.editTestcase(testcase.id)}>Edit</span>
+                            </li>
+                        })
+                    }</ul>
+                  </div>
+                  <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
+                    Add
+                  </button>
+                  <div className="modal fade" id="editTestcase" tabindex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
+                      <TestCaseForm project={this.props.match.params.project}
+                              testcase={this.state.testcaseToEdit}
+                              projectAttributes={this.state.projectAttributes}
+                              onTestCaseAdded={this.onTestCaseAdded}/>
+                  </div>
               </div>
-          </div>
+            </div>
         );
       }
 
