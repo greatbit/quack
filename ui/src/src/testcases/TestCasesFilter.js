@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';
+import queryString from 'query-string';
 
 class TestCasesFilter extends Component {
     constructor(props) {
@@ -28,13 +29,67 @@ class TestCasesFilter extends Component {
         this.getFilterQParams = this.getFilterQParams.bind(this);
         this.getGroupingQParams = this.getGroupingQParams.bind(this);
         this.getQueryParams = this.getQueryParams.bind(this);
+        this.getAttributeName = this.getAttributeName.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
       if (nextProps.projectAttributes){
         this.state.projectAttributes = nextProps.projectAttributes;
+        this.state.filter.filters.forEach(function(filter){
+            filter.name = this.getAttributeName(filter.id);
+        }.bind(this))
+
+        this.state.groupsToDisplay.forEach(function(groupToDisplay){
+            groupToDisplay.label = this.getAttributeName(groupToDisplay.value);
+        }.bind(this))
       }
       this.setState(this.state);
+    }
+
+    componentDidMount(){
+        var params = queryString.parse(this.props.location.search);
+        if (params.group){
+            if(!Array.isArray(params.group)){
+                params.group = [params.group];
+            }
+            this.state.filter.groups = params.group;
+            this.state.groupsToDisplay = params.group.map(function(attrId){
+                return {value: attrId, label:this.getAttributeName(attrId)};
+            }.bind(this))
+        }
+        if (params.attribute){
+            if(!Array.isArray(params.attribute)){
+                params.attribute = [params.attribute];
+            }
+            var map = {}
+            params.attribute.forEach(function(pair){
+                var key = pair.split(":")[0];
+                var value = pair.split(":")[1];
+                if (!map[key]){
+                    map[key] = [];
+                }
+                map[key].push(value);
+            })
+
+            Object.keys(map).forEach(function(key) {
+                this.state.filter.filters.push({
+                    id: key,
+                    values: map[key],
+                    title: this.getAttributeName(key)
+
+                });
+            }.bind(this))
+
+            if (!this.state.filter.filters[0].id){
+                var emptyFilter = this.state.filter.filters[0];
+                this.state.filter.filters.push(emptyFilter);
+                this.state.filter.filters.shift();
+            }
+
+        }
+
+        this.setState(this.state);
+
     }
 
     changeFilterAttributeId(index, value){
@@ -85,7 +140,7 @@ class TestCasesFilter extends Component {
         var attributesPairs = [];
         activeFilters.forEach(function(filter){
             var tokens = filter.values.map(function(value){
-                return "attribute." + filter.id + "=" + value
+                return "attribute=" + filter.id + ":" + value
             })
             attributesPairs = attributesPairs.concat(tokens);
         })
@@ -95,6 +150,11 @@ class TestCasesFilter extends Component {
 
     getGroupingQParams(){
         return this.state.filter.groups.map(function(group){return "group=" + group}).join("&") || "";
+    }
+
+
+    getAttributeName(id){
+        return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).name;
     }
 
 
