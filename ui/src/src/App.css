@@ -26,3 +26,10 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.filter-attribute-id-select{
+    padding-right: 0px;
+}
+.filter-attribute-val-select{
+    padding-left: 0px;
+}
