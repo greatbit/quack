@@ -25,7 +25,7 @@ class App extends Component {
 
     render() {
         return (
-          <div>
+          <div className="container-fluid">
             <Header project={this.state.project} />
             <Main onProjectChange={this.onProjectChange} />
             <Footer />

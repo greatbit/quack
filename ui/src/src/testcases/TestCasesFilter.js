@@ -41,7 +41,7 @@ class TestCasesFilter extends Component {
         if (oldId !== value.value){
             this.state.filter.filters[index].values = [];
         }
-        if (!oldId && this.state.filter.filters.length < 4){
+        if (!oldId){
             this.state.filter.filters.push({
                 id: null,
                 title: "Select an attribute",
@@ -72,9 +72,9 @@ class TestCasesFilter extends Component {
     render() {
         return (
             <div>
-                <div>
-                    <div>Grouping</div>
-                    <div>
+                <div className="row">
+                    <div className="col-1">Grouping</div>
+                    <div className="col-3">
                         <Select value={this.state.groupsToDisplay}
                                 isMulti
                                 onChange={this.changeGrouping}
@@ -82,24 +82,24 @@ class TestCasesFilter extends Component {
                                />
                     </div>
                 </div>
-                <div>
-                    <div>Filter</div>
-                    <div>
-
+                <div className="row">
+                    <div className="col-1">Filter</div>
                         {
                             this.state.filter.filters.map(function(filter, i){
                                 return(
-                                    <div>
-                                        <Select value={{value: filter.id, label: filter.name}}
+                                <div className="col-5">
+                                    <div className="row">
+                                        <Select className="col-5" value={{value: filter.id, label: filter.name}}
                                                 onChange={(e) => this.changeFilterAttributeId(i, e)}
                                                 options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
                                                />
-                                        <Select value={filter.values.map(function(value){return {value: value, label: value}})}
+                                        <Select className="col-7" value={filter.values.map(function(value){return {value: value, label: value}})}
                                                 isMulti
                                                 onChange={(e) => this.changeFilterAttributeValues(i, e)}
                                                 options={this.getValuesByAttributeId(filter.id).map(function(val){return {value: val, label: val}})}
                                                />
                                     </div>
+                                </div>
                                 )
                             }.bind(this))
 
@@ -107,7 +107,7 @@ class TestCasesFilter extends Component {
 
 
 
-                    </div>
+
                 </div>
             </div>
         );
