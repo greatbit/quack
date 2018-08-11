@@ -18,7 +18,7 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        return new Filter();
+        return new Filter().withField("deleted", false);
     }
 
     @GET

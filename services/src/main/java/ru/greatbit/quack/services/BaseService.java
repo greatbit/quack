@@ -95,7 +95,7 @@ public abstract class BaseService<E extends Entity> {
         return true;
     }
     protected boolean userCanDelete(Session session, String projectId, String id){
-        return false;
+        return true;
     }
     protected boolean userCanCreate(Session session, String projectId, E entity){
         return true;

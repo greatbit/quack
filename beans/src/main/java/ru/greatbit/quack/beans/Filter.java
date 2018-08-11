@@ -4,10 +4,10 @@ import java.util.*;
 
 public class Filter extends BaseFilter{
 
-    private Map<String, Set<Object>> fields;
-    private Map<String, Set<Object>> notFields;
-    private Set<String> excludedFields;
-    private Set<String> includedFields;
+    protected Map<String, Set<Object>> fields;
+    protected Map<String, Set<Object>> notFields;
+    protected Set<String> excludedFields;
+    protected Set<String> includedFields;
 
     public Map<String, Set<Object>> getFields() {
         if (fields == null){

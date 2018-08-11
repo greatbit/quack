@@ -47,7 +47,9 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
 
     @Override
     public void delete(String projectId, String entityId) {
-        mongoOperations.remove(entityId, getCollectionName(projectId));
+        E entity = findOne(projectId, entityId);
+        entity.setDeleted(true);
+        mongoOperations.save(entity, getCollectionName(projectId));
     }
 
     protected String getCollectionName(String projectId){

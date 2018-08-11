@@ -27,7 +27,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        TestcaseFilter filter = (TestcaseFilter) super.initFilter(hsr).copyTo(new TestcaseFilter());
+        TestcaseFilter filter = new TestcaseFilter(super.initFilter(hsr));
         if(hsr.getParameterValues("groups") != null){
             filter.getGroups().addAll(Arrays.asList(hsr.getParameterValues("groups")));
         }
@@ -52,8 +52,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     @GET
     @Path("/tree")
     public TestCaseTree findFilteredTree(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) {
-        List<TestCase> testCases = getService().findFiltered(getUserSession(), projectId, initFilter(request));
-        return new TestCaseTree();
+        return service.findFilteredTree(getUserSession(), projectId, (TestcaseFilter) initFilter(request));
     }
 
 }
