@@ -34,6 +34,7 @@ public class TestCaseService extends BaseService<TestCase> {
 
     private TestCaseTree buildTree(TestCaseTree head, List<String> groups) {
         if (groups.isEmpty()){
+            head.setCount(head.getTestCases().size());
             return head;
         }
 
@@ -58,6 +59,7 @@ public class TestCaseService extends BaseService<TestCase> {
             head.getChildren().add(child);
         });
 
+        head.setCount(head.getTestCases().size());
         head.getTestCases().clear();
         return head;
 
