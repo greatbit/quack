@@ -48,12 +48,12 @@ class TestCasesFilter extends Component {
 
     componentDidMount(){
         var params = queryString.parse(this.props.location.search);
-        if (params.group){
-            if(!Array.isArray(params.group)){
-                params.group = [params.group];
+        if (params.groups){
+            if(!Array.isArray(params.groups)){
+                params.groups = [params.groups];
             }
-            this.state.filter.groups = params.group;
-            this.state.groupsToDisplay = params.group.map(function(attrId){
+            this.state.filter.groups = params.groups;
+            this.state.groupsToDisplay = params.groups.map(function(attrId){
                 return {value: attrId, label:this.getAttributeName(attrId)};
             }.bind(this))
         }
@@ -128,6 +128,7 @@ class TestCasesFilter extends Component {
 
     handleFilter(){
         this.props.history.push("/" + this.props.project + '/testcases?' + this.getQueryParams());
+        this.props.onFilter(this.state.filter);
     }
 
     getQueryParams(){
@@ -149,9 +150,8 @@ class TestCasesFilter extends Component {
     }
 
     getGroupingQParams(){
-        return this.state.filter.groups.map(function(group){return "group=" + group}).join("&") || "";
+        return this.state.filter.groups.map(function(group){return "groups=" + group}).join("&") || "";
     }
-
 
     getAttributeName(id){
         return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).name;
@@ -193,9 +193,6 @@ class TestCasesFilter extends Component {
                             }.bind(this))
 
                         }
-
-
-
 
                 </div>
                 <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>

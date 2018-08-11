@@ -16,6 +16,11 @@ class TestCases extends SubComponent {
         projectAttributes: []
     };
 
+    constructor(props) {
+        super(props);
+        this.onFilter = this.onFilter.bind(this);
+    }
+
     componentDidMount() {
         super.componentDidMount();
         axios
@@ -59,6 +64,28 @@ class TestCases extends SubComponent {
      }
 
      onFilter(filter){
+        console.log(this.getFilterApiRequestParams(filter));
+        axios
+          .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
+          .then(response => {
+
+            const testcasesTree = response.data;
+            const newState = Object.assign({}, this.state, {
+              testcasesTree: testcasesTree
+            });
+            this.setState(newState);
+          })
+          .catch(error => console.log(error));
+     }
+
+     getFilterApiRequestParams(filter){
+         var tokens = (filter.groups || []).map(function(group){return "groups=" + group});
+         filter.filters.forEach(function(filter){
+             filter.values.forEach(function(value){
+                 tokens.push("attribute=" + filter.id + ":" + value);
+             })
+         })
+         return tokens.join("&");
      }
 
 
