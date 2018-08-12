@@ -6,6 +6,14 @@ import TestCasesFilter from '../testcases/TestCasesFilter'
 import axios from "axios";
 import $ from 'jquery';
 
+var jQuery = require('jquery');
+window.jQuery = jQuery;
+window.jQuery = $;
+window.$ = $;
+global.jQuery = $;
+
+require('gijgo/js/gijgo.min.js');
+
 class TestCases extends SubComponent {
     state = {
         testcases: [],
@@ -19,6 +27,7 @@ class TestCases extends SubComponent {
     constructor(props) {
         super(props);
         this.onFilter = this.onFilter.bind(this);
+        this.parseTree = this.parseTree.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +47,13 @@ class TestCases extends SubComponent {
             const newState = Object.assign({}, this.state, {
               testcases: testcases
             });
+
+
+            $("#tree").tree({
+                uiLibrary: 'bootstrap4',
+                dataSource: this.parseTree()
+            });
+
             this.setState(newState);
           })
           .catch(error => console.log(error));
@@ -88,6 +104,10 @@ class TestCases extends SubComponent {
          return tokens.join("&");
      }
 
+     parseTree(){
+        return [ { text: 'foo', children: [ { text: 'bar' } ] } ];
+     }
+
 
     render() {
         var that = this;
@@ -118,6 +138,10 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
+
+              <div id="tree"></div>
+
+
             </div>
         );
       }

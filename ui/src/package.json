@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.1.2",
+    "gijgo": "^1.9.10",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
     "query-string": "^6.1.0",
