@@ -13,6 +13,7 @@ window.$ = $;
 global.jQuery = $;
 
 require('gijgo/js/gijgo.min.js');
+require('gijgo/css/gijgo.min.css');
 
 class TestCases extends SubComponent {
 
