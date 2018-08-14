@@ -151,6 +151,9 @@ class TestCases extends SubComponent {
                 <TestCasesFilter projectAttributes={this.state.projectAttributes}
                         onFilter={this.onFilter} project={this.props.match.params.project}/>
               </div>
+
+              <div id="tree"></div>
+
               <div>
                   <div>
                     <ul>{
@@ -172,9 +175,6 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
-
-              <div id="tree"></div>
-
 
             </div>
         );
