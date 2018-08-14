@@ -15,8 +15,10 @@ global.jQuery = $;
 require('gijgo/js/gijgo.min.js');
 
 class TestCases extends SubComponent {
+
     state = {
         testcases: [],
+        testcasesTree: {children: []},
         testcaseToEdit: {
             id: null,
             name: ""
@@ -32,6 +34,8 @@ class TestCases extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
+
+        /////////////////TEMP
         axios
           .get("/api/" + this.props.match.params.project + "/testcase")
           .then(response => {
@@ -48,15 +52,27 @@ class TestCases extends SubComponent {
               testcases: testcases
             });
 
-
-            $("#tree").tree({
-                uiLibrary: 'bootstrap4',
-                dataSource: this.parseTree()
-            });
-
             this.setState(newState);
           })
           .catch(error => console.log(error));
+
+
+
+        /////////TREE
+          axios
+            .get("/api/" + this.props.match.params.project + "/testcase/tree")
+            .then(response => {
+
+              const testcasesTree = response.data;
+
+              const newState = Object.assign({}, this.state, {
+                testcasesTree: testcasesTree
+              });
+
+              this.setState(newState);
+            })
+            .catch(error => console.log(error));
+
 
           axios
             .get("/api/" + this.props.match.params.project + "/attribute")
@@ -80,11 +96,9 @@ class TestCases extends SubComponent {
      }
 
      onFilter(filter){
-        console.log(this.getFilterApiRequestParams(filter));
         axios
           .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
-
             const testcasesTree = response.data;
             const newState = Object.assign({}, this.state, {
               testcasesTree: testcasesTree
@@ -105,12 +119,39 @@ class TestCases extends SubComponent {
      }
 
      parseTree(){
-        return [ { text: 'foo', children: [ { text: 'bar' } ] } ];
+        return this.getTreeNode(this.state.testcasesTree).children || [];
+     }
+
+     getTreeNode(node){
+        var resultNode = {text: node.title, isLeaf: false};
+        if (node.testCases && node.testCases.length > 0){
+            resultNode.children = node.testCases.map(function(testCase){
+                return {
+                    text: testCase.name,
+                    id: testCase.id,
+                    isLeaf: true
+                }
+            })
+        }
+        if (node.children && node.children.length > 0){
+            resultNode.children = node.children.map(this.getTreeNode);
+        }
+        return resultNode;
+     }
+
+     componentDidUpdate(){
+        $("#tree").tree({
+            primaryKey: 'id',
+            uiLibrary: 'bootstrap4',
+            dataSource: this.parseTree()
+        });
+
      }
 
 
     render() {
         var that = this;
+
         return (
             <div>
               <div>
