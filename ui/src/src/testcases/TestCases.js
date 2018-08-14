@@ -125,20 +125,21 @@ class TestCases extends SubComponent {
             })
         }
         if (node.children && node.children.length > 0){
-            resultNode.children = node.children.map(this.getTreeNode);
+            resultNode.children = node.children.map(function(child){return this.getTreeNode(child)}.bind(this));
         }
         return resultNode;
      }
 
      componentDidUpdate(){
-        $("#tree").tree({
+        if (this.tree){
+            this.tree.destroy()
+        }
+        this.tree = $("#tree").tree({
             primaryKey: 'id',
             uiLibrary: 'bootstrap4',
             dataSource: this.parseTree()
         });
-
      }
-
 
     render() {
         var that = this;
