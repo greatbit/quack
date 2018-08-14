@@ -176,7 +176,7 @@ class TestCasesFilter extends Component {
                         {
                             this.state.filter.filters.map(function(filter, i){
                                 return(
-                                <div className="col-5">
+                                <div className="col-5" key={i}>
                                     <div className="row">
                                         <Select className="col-5 filter-attribute-id-select" value={{value: filter.id, label: filter.name}}
                                                 onChange={(e) => this.changeFilterAttributeId(i, e)}

@@ -62,14 +62,8 @@ class TestCases extends SubComponent {
           axios
             .get("/api/" + this.props.match.params.project + "/testcase/tree")
             .then(response => {
-
-              const testcasesTree = response.data;
-
-              const newState = Object.assign({}, this.state, {
-                testcasesTree: testcasesTree
-              });
-
-              this.setState(newState);
+              this.state.testcasesTree = response.data
+              this.setState(this.state);
             })
             .catch(error => console.log(error));
 
@@ -99,11 +93,8 @@ class TestCases extends SubComponent {
         axios
           .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
-            const testcasesTree = response.data;
-            const newState = Object.assign({}, this.state, {
-              testcasesTree: testcasesTree
-            });
-            this.setState(newState);
+            this.state.testcasesTree = response.data;
+            this.setState(this.state);
           })
           .catch(error => console.log(error));
      }
@@ -162,7 +153,7 @@ class TestCases extends SubComponent {
                   <div>
                     <ul>{
                         this.state.testcases.map(function(testcase, i){
-                            return <li>
+                            return <li key={i}>
                                 <Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link>
                                 <span onClick={(e) => that.editTestcase(testcase.id)}>Edit</span>
                             </li>
@@ -172,7 +163,7 @@ class TestCases extends SubComponent {
                   <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
                     Add
                   </button>
-                  <div className="modal fade" id="editTestcase" tabindex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
+                  <div className="modal fade" id="editTestcase" tabIndex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
                       <TestCaseForm project={this.props.match.params.project}
                               testcase={this.state.testcaseToEdit}
                               projectAttributes={this.state.projectAttributes}
