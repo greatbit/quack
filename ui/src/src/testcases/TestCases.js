@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCasesFilter from '../testcases/TestCasesFilter'
+import TestCase from '../testcases/TestCase'
 import axios from "axios";
 import $ from 'jquery';
 
@@ -24,7 +25,8 @@ class TestCases extends SubComponent {
             id: null,
             name: ""
         },
-        projectAttributes: []
+        projectAttributes: [],
+        selectedTestCase: {}
     };
 
     constructor(props) {
@@ -32,6 +34,7 @@ class TestCases extends SubComponent {
         this.onFilter = this.onFilter.bind(this);
         this.parseTree = this.parseTree.bind(this);
         this.getTestCaseFromTree = this.getTestCaseFromTree.bind(this);
+        this.refreshTree = this.refreshTree.bind(this);
     }
 
     componentDidMount() {
@@ -66,6 +69,7 @@ class TestCases extends SubComponent {
             .then(response => {
               this.state.testcasesTree = response.data
               this.setState(this.state);
+              this.refreshTree();
             })
             .catch(error => console.log(error));
 
@@ -75,6 +79,7 @@ class TestCases extends SubComponent {
             .then(response => {
                  this.state.projectAttributes = response.data;
                  this.setState(this.state);
+                 this.refreshTree();
             })
             .catch(error => console.log(error));
      }
@@ -97,6 +102,7 @@ class TestCases extends SubComponent {
           .then(response => {
             this.state.testcasesTree = response.data;
             this.setState(this.state);
+            this.refreshTree();
           })
           .catch(error => console.log(error));
      }
@@ -109,6 +115,21 @@ class TestCases extends SubComponent {
              })
          })
          return tokens.join("&");
+     }
+
+     refreshTree(){
+        if (this.tree){
+            this.tree.destroy()
+        }
+        this.tree = $("#tree").tree({
+            primaryKey: 'id',
+            uiLibrary: 'bootstrap4',
+            dataSource: this.parseTree()
+        });
+        this.tree.on('select', function (e, node, id) {
+            this.state.selectedTestCase = this.getTestCaseFromTree(id);
+            this.setState(this.state);
+        }.bind(this));
      }
 
      parseTree(){
@@ -153,17 +174,18 @@ class TestCases extends SubComponent {
      }
 
      componentDidUpdate(){
-        if (this.tree){
-            this.tree.destroy()
-        }
-        this.tree = $("#tree").tree({
-            primaryKey: 'id',
-            uiLibrary: 'bootstrap4',
-            dataSource: this.parseTree()
-        });
-        this.tree.on('select', function (e, node, id) {
-            console.log(this.getTestCaseFromTree(id));
-        }.bind(this));
+//        if (this.tree){
+//            this.tree.destroy()
+//        }
+//        this.tree = $("#tree").tree({
+//            primaryKey: 'id',
+//            uiLibrary: 'bootstrap4',
+//            dataSource: this.parseTree()
+//        });
+//        this.tree.on('select', function (e, node, id) {
+//            this.state.selectedTestCase = this.getTestCaseFromTree(id);
+//            this.setState(this.state);
+//        }.bind(this));
      }
 
     render() {
@@ -176,7 +198,14 @@ class TestCases extends SubComponent {
                         onFilter={this.onFilter} project={this.props.match.params.project}/>
               </div>
 
-              <div id="tree"></div>
+              <div className="row">
+                <div className="tree-side col-6">
+                    <div id="tree"></div>
+                </div>
+                <div id="testCase" className="testcase-side col-6">
+                    <TestCase projectId={this.props.match.params.project} testcaseId={this.state.selectedTestCase.id}/>
+                </div>
+              </div>
 
               <div>
                   <div>

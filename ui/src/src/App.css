@@ -33,3 +33,13 @@
 .filter-attribute-val-select{
     padding-left: 0px;
 }
+
+tree-side{
+    height: 100%;
+    overflow-y: scroll;
+}
+
+testcase-side{
+    height: 100%;
+    overflow-y: scroll;
+}
