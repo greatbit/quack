@@ -31,6 +31,7 @@ class TestCases extends SubComponent {
         super(props);
         this.onFilter = this.onFilter.bind(this);
         this.parseTree = this.parseTree.bind(this);
+        this.getTestCaseFromTree = this.getTestCaseFromTree.bind(this);
     }
 
     componentDidMount() {
@@ -114,6 +115,26 @@ class TestCases extends SubComponent {
         return this.getTreeNode(this.state.testcasesTree).children || [];
      }
 
+     getTestCaseFromTree(id, head){
+        if(!head){
+            head = this.state.testcasesTree;
+        }
+
+        if (head.testCases && head.testCases.length > 0){
+            var foundTestCase = (head.testCases || []).find(function(testCase){
+                return testCase.id === id;
+            })
+            if (foundTestCase){
+                return foundTestCase;
+            }
+        } else {
+            return (head.children || []).
+                    map(function(child){return this.getTestCaseFromTree(id, child)}.bind(this)).
+                    find(function(child){return child !== undefined})
+        }
+        return undefined;
+     }
+
      getTreeNode(node){
         var resultNode = {text: node.title, isLeaf: false};
         if (node.testCases && node.testCases.length > 0){
@@ -140,6 +161,9 @@ class TestCases extends SubComponent {
             uiLibrary: 'bootstrap4',
             dataSource: this.parseTree()
         });
+        this.tree.on('select', function (e, node, id) {
+            console.log(this.getTestCaseFromTree(id));
+        }.bind(this));
      }
 
     render() {
