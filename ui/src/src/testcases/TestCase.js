@@ -3,6 +3,9 @@ import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
+import $ from 'jquery';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -17,6 +20,8 @@ class TestCase extends SubComponent {
              }
          };
          this.getTestCase = this.getTestCase.bind(this);
+         this.handleSubmit = this.handleSubmit.bind(this);
+         this.toggleEdit = this.toggleEdit.bind(this);
       }
 
     componentDidMount() {
@@ -50,13 +55,33 @@ class TestCase extends SubComponent {
           .catch(error => console.log(error));
     }
 
+    handleSubmit(){}
+
+    toggleEdit(field, event){
+        $("#" + field + "-display").toggle();
+        $("#" + field + "-form").toggle();
+    }
+
 
     render() {
         return (
             <div>
-              <span>
-                Name: {this.state.testcase.name}
-              </span>
+              <div id="name">
+                <div id="name-display" className="inplace-display">
+                    <h1>{this.state.testcase.name}
+                        <span className="glyphicon glyphicon-pencil edit clickable" field="name" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                    </h1>
+                </div>
+                <div id="name-form" className="inplace-form" style={{display: 'none'}}>
+                    <form>
+                        <input type="text" name="name" value={this.state.testcase.name}/>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save</button>
+                    </form>
+                </div>
+              </div>
+
+
               <span>
                 Description: {this.state.testcase.description}
               </span>

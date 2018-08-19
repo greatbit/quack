@@ -34,12 +34,16 @@
     padding-left: 0px;
 }
 
-tree-side{
+.tree-side{
     height: 100%;
     overflow-y: scroll;
 }
 
-testcase-side{
+.testcase-side{
     height: 100%;
     overflow-y: scroll;
+}
+
+.clickable{
+    cursor: pointer;
 }
