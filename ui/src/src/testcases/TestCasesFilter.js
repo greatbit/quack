@@ -26,9 +26,6 @@ class TestCasesFilter extends Component {
         this.changeFilterAttributeId = this.changeFilterAttributeId.bind(this);
         this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
-        this.getFilterQParams = this.getFilterQParams.bind(this);
-        this.getGroupingQParams = this.getGroupingQParams.bind(this);
-        this.getQueryParams = this.getQueryParams.bind(this);
         this.getAttributeName = this.getAttributeName.bind(this);
     }
 
@@ -128,30 +125,7 @@ class TestCasesFilter extends Component {
     }
 
     handleFilter(){
-        this.props.history.push("/" + this.props.project + '/testcases?' + this.getQueryParams());
         this.props.onFilter(this.state.filter);
-    }
-
-    getQueryParams(){
-        return [this.getFilterQParams(), this.getGroupingQParams()].
-                       filter(function(val){return val !== ""}).join("&");
-    }
-
-    getFilterQParams(){
-        var activeFilters = this.state.filter.filters.filter(function(filter){return filter.id}) || [];
-        var attributesPairs = [];
-        activeFilters.forEach(function(filter){
-            var tokens = filter.values.map(function(value){
-                return "attribute=" + filter.id + ":" + value
-            })
-            attributesPairs = attributesPairs.concat(tokens);
-        })
-
-        return attributesPairs.join("&") || "";
-    }
-
-    getGroupingQParams(){
-        return this.state.filter.groups.map(function(group){return "groups=" + group}).join("&") || "";
     }
 
     getAttributeName(id){
