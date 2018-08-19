@@ -61,19 +61,6 @@ class TestCases extends SubComponent {
           })
           .catch(error => console.log(error));
 
-
-
-        /////////TREE
-          axios
-            .get("/api/" + this.props.match.params.project + "/testcase/tree")
-            .then(response => {
-              this.state.testcasesTree = response.data
-              this.setState(this.state);
-              this.refreshTree();
-            })
-            .catch(error => console.log(error));
-
-
           axios
             .get("/api/" + this.props.match.params.project + "/attribute")
             .then(response => {

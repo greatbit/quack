@@ -89,6 +89,7 @@ class TestCasesFilter extends Component {
         }
 
         this.setState(this.state);
+        this.props.onFilter(this.state.filter);
 
     }
 
