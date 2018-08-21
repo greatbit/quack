@@ -54,7 +54,10 @@ public class TestCaseService extends BaseService<TestCase> {
         });
 
         casesByGroupValues.entrySet().stream().forEach(entry -> {
-            TestCaseTree child = new TestCaseTree().withTitle(entry.getKey()).withTestCases(entry.getValue());
+            TestCaseTree child = new TestCaseTree().
+                    withTitle(entry.getKey()).
+                    withTestCases(entry.getValue()).
+                    withId(groupId + ":" + entry.getKey());
             buildTree(child, nextGroups);
             head.getChildren().add(child);
         });

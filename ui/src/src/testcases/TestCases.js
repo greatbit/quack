@@ -47,6 +47,7 @@ class TestCases extends SubComponent {
         var params = queryString.parse(this.props.location.search);
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
+            this.setState(this.state);
         }
 
         /////////////////TEMP
@@ -94,6 +95,10 @@ class TestCases extends SubComponent {
 
      onFilter(filter){
         this.state.filter = filter;
+        var params = queryString.parse(this.props.location.search);
+        if (params.testcase){
+            this.state.selectedTestCase = {id: params.testcase};
+        }
         axios
           .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
@@ -129,6 +134,21 @@ class TestCases extends SubComponent {
             this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(this.state.filter));
             this.setState(this.state);
         }.bind(this));
+        if (this.state.selectedTestCase.id){
+            var node = this.tree.getNodeById(this.state.selectedTestCase.id);
+            this.tree.select(node);
+            this.state.filter.groups.forEach(function(groupId){
+                var attributes = this.getTestCaseFromTree(this.state.selectedTestCase.id).attributes || [];
+                var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
+                var values = attribute.values || ["None"];
+                values.forEach(function(value){
+                    var node = this.tree.getNodeById(groupId + ":" + value);
+                    this.tree.expand(node);
+                }.bind(this))
+
+            }.bind(this))
+        }
+
      }
 
      parseTree(){
@@ -156,7 +176,7 @@ class TestCases extends SubComponent {
      }
 
      getTreeNode(node){
-        var resultNode = {text: node.title, isLeaf: false};
+        var resultNode = {text: node.title, isLeaf: false, id: node.id};
         if (node.testCases && node.testCases.length > 0){
             resultNode.children = node.testCases.map(function(testCase){
                 return {
@@ -174,7 +194,7 @@ class TestCases extends SubComponent {
 
      getQueryParams(filter){
         var testcaseIdAttr = "";
-        if (this.state.selectedTestCase.id){
+        if (this.state.selectedTestCase && this.state.selectedTestCase.id){
             testcaseIdAttr = "testcase=" + this.state.selectedTestCase.id;
         }
          return [this.getFilterQParams(filter), this.getGroupingQParams(filter), testcaseIdAttr].
