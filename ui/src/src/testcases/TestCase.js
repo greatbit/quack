@@ -96,7 +96,7 @@ class TestCase extends SubComponent {
               <div id="name">
                 <div id="name-display" className="inplace-display">
                     <h1>{this.state.testcase.name}
-                        <span className="glyphicon glyphicon-pencil edit clickable" field="name" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
                     </h1>
                 </div>
                 <div id="name-form" className="inplace-form" style={{display: 'none'}}>
@@ -108,10 +108,22 @@ class TestCase extends SubComponent {
                 </div>
               </div>
 
-
-              <span>
-                Description: {this.state.testcase.description}
-              </span>
+                <div id="description">
+                    <h5>
+                        Description
+                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                    </h5>
+                    <div id="description-display" className="inplace-display">
+                    {this.state.testcase.description}
+                </div>
+                <div id="description-form" className="inplace-form" style={{display: 'none'}}>
+                    <form>
+                        <textarea rows="7" cols="50" name="description" onChange={this.handleChange}>{this.state.testcase.description}</textarea>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Close</button>
+                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
+                    </form>
+                </div>
+              </div>
             </div>
         );
       }
