@@ -101,7 +101,7 @@ public abstract class BaseService<E extends Entity> {
         return true;
     }
     protected boolean userCanUpdate(Session session, String projectId, E entity){
-        return false;
+        return true;
     }
 
     protected void beforeCreate(Session session, String projectId, E entity){

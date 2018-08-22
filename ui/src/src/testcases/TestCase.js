@@ -17,24 +17,30 @@ class TestCase extends SubComponent {
                  description: "",
                  steps: [],
                  attributes: []
-             }
+             },
+             originalTestcase: {}
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
          this.toggleEdit = this.toggleEdit.bind(this);
+         this.handleChange = this.handleChange.bind(this);
+         this.cancelEdit = this.cancelEdit.bind(this);
       }
 
     componentDidMount() {
         super.componentDidMount();
         if (this.props.testcaseId){
+            this.projectId = this.props.projectId;
             this.getTestCase(this.props.projectId, this.props.testcaseId);
         } else if(this.props.match) {
+            this.projectId = this.props.match.params.project;
             this.getTestCase(this.props.match.params.project, this.props.match.params.testcase);
         }
      }
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.testcaseId){
+        this.projectId = nextProps.projectId;
         this.getTestCase(nextProps.projectId, nextProps.testcaseId);
       }
       if (nextProps.projectAttributes){
@@ -55,11 +61,32 @@ class TestCase extends SubComponent {
           .catch(error => console.log(error));
     }
 
-    handleSubmit(){}
+    handleChange(event){
+        this.state.originalTestcase[event.target.name] = this.state.testcase[event.target.name];
+        this.state.testcase[event.target.name] = event.target.value;
+        this.setState(this.state);
+    }
 
-    toggleEdit(field, event){
-        $("#" + field + "-display").toggle();
-        $("#" + field + "-form").toggle();
+    cancelEdit(fieldName, event){
+        this.state.testcase[event.target.name] = this.state.originalTestcase[event.target.name];
+        this.setState(this.state);
+        this.toggleEdit(fieldName, event);
+    }
+
+    handleSubmit(fieldName, event){
+        axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
+            .then(response => {
+                this.state.testcase = response.data;
+                this.setState(this.state);
+                this.toggleEdit(fieldName, event);
+        })
+        event.preventDefault();
+
+    }
+
+    toggleEdit(fieldName, event){
+        $("#" + fieldName + "-display").toggle();
+        $("#" + fieldName + "-form").toggle();
     }
 
 
@@ -74,9 +101,9 @@ class TestCase extends SubComponent {
                 </div>
                 <div id="name-form" className="inplace-form" style={{display: 'none'}}>
                     <form>
-                        <input type="text" name="name" value={this.state.testcase.name}/>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save</button>
+                        <input type="text" name="name" onChange={this.handleChange} value={this.state.testcase.name}/>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Close</button>
+                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
                     </form>
                 </div>
               </div>
