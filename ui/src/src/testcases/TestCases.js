@@ -20,7 +20,6 @@ require('gijgo/css/gijgo.min.css');
 class TestCases extends SubComponent {
 
     state = {
-        testcases: [],
         testcasesTree: {children: []},
         testcaseToEdit: {
             id: null,
@@ -49,27 +48,6 @@ class TestCases extends SubComponent {
             this.state.selectedTestCase = {id: params.testcase};
             this.setState(this.state);
         }
-
-        /////////////////TEMP
-        axios
-          .get("/api/" + this.props.match.params.project + "/testcase")
-          .then(response => {
-
-            const testcases = response.data.map(testcase => {
-              return {
-                id: testcase.id,
-                name: testcase.name,
-                attributes: testcase.attributes
-              };
-            });
-
-            const newState = Object.assign({}, this.state, {
-              testcases: testcases
-            });
-
-            this.setState(newState);
-          })
-          .catch(error => console.log(error));
 
           axios
             .get("/api/" + this.props.match.params.project + "/attribute")
@@ -238,16 +216,6 @@ class TestCases extends SubComponent {
               </div>
 
               <div>
-                  <div>
-                    <ul>{
-                        this.state.testcases.map(function(testcase, i){
-                            return <li key={i}>
-                                <Link to={"/" + that.props.match.params.project + "/testcases/" + testcase.id}>{testcase.name}</Link>
-                                <span onClick={(e) => that.editTestcase(testcase.id)}>Edit</span>
-                            </li>
-                        })
-                    }</ul>
-                  </div>
                   <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
                     Add
                   </button>
