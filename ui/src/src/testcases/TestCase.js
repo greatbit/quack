@@ -108,12 +108,12 @@ class TestCase extends SubComponent {
                 </div>
               </div>
 
-                <div id="description">
-                    <h5>
-                        Description
-                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
-                    </h5>
-                    <div id="description-display" className="inplace-display">
+              <div id="description">
+                <h5>
+                    Description
+                    <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                </h5>
+                <div id="description-display" className="inplace-display">
                     {this.state.testcase.description}
                 </div>
                 <div id="description-form" className="inplace-form" style={{display: 'none'}}>
@@ -123,6 +123,23 @@ class TestCase extends SubComponent {
                         <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
                     </form>
                 </div>
+              </div>
+
+              <div id="preconditions">
+                  <h5>
+                      Preconditions
+                      <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                  </h5>
+                  <div id="preconditions-display" className="inplace-display">
+                      {this.state.testcase.preconditions}
+                  </div>
+                  <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
+                      <form>
+                          <textarea rows="7" cols="50" name="preconditions" onChange={this.handleChange}>{this.state.testcase.preconditions}</textarea>
+                          <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("preconditions", e)}>Close</button>
+                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
+                      </form>
+                  </div>
               </div>
             </div>
         );
