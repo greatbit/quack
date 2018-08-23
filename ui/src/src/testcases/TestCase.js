@@ -134,9 +134,9 @@ class TestCase extends SubComponent {
         return this.getAttribute(id).values || []
     }
 
-    editAttributeValues(index, event){
+    editAttributeValues(index, values){
         this.state.originalTestcase["attributes"][index] = this.state.testcase["attributes"][index];
-        this.state.testcase["attributes"][index].values = event.target.value;
+        this.state.testcase["attributes"][index].values = values.map(function(value){return value.value});
         this.setState(this.state);
     }
 
