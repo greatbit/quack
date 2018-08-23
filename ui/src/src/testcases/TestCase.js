@@ -6,6 +6,7 @@ import { withRouter } from 'react-router';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import CreatableSelect from 'react-select/lib/Creatable';
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -18,13 +19,23 @@ class TestCase extends SubComponent {
                  steps: [],
                  attributes: []
              },
-             originalTestcase: {}
+             originalTestcase: {
+                steps: [],
+                attributes: []
+             },
+             projectAttributes: []
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
          this.toggleEdit = this.toggleEdit.bind(this);
          this.handleChange = this.handleChange.bind(this);
          this.cancelEdit = this.cancelEdit.bind(this);
+         this.getAttributeName = this.getAttributeName.bind(this);
+         this.getAttributeValues = this.getAttributeValues.bind(this);
+         this.getAttribute = this.getAttribute.bind(this);
+         this.editAttributeValues = this.editAttributeValues.bind(this);
+         this.cancelEditAttributeValues = this.cancelEditAttributeValues.bind(this);
+         this.removeAttribute = this.removeAttribute.bind(this);
       }
 
     componentDidMount() {
@@ -61,34 +72,84 @@ class TestCase extends SubComponent {
           .catch(error => console.log(error));
     }
 
-    handleChange(event){
-        this.state.originalTestcase[event.target.name] = this.state.testcase[event.target.name];
-        this.state.testcase[event.target.name] = event.target.value;
+    handleChange(fieldName, event, index){
+        if (index){
+            this.state.testcase[fieldName][index] = event.target.value;
+        } else {
+            this.state.testcase[fieldName] = event.target.value;
+        }
+
         this.setState(this.state);
     }
 
-    cancelEdit(fieldName, event){
-        this.state.testcase[event.target.name] = this.state.originalTestcase[event.target.name];
+    cancelEdit(fieldName, event, index){
+        if (index){
+            this.state.testcase[fieldName][index] = this.state.originalTestcase[fieldName][index];
+        } else {
+            this.state.testcase[fieldName] = this.state.originalTestcase[fieldName];
+        }
+
         this.setState(this.state);
-        this.toggleEdit(fieldName, event);
+        this.toggleEdit(fieldName, event, index);
     }
 
-    handleSubmit(fieldName, event){
+    handleSubmit(fieldName, event, index){
         axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
                 this.setState(this.state);
-                this.toggleEdit(fieldName, event);
+                this.toggleEdit(fieldName, event, index);
         })
         event.preventDefault();
 
     }
 
-    toggleEdit(fieldName, event){
-        $("#" + fieldName + "-display").toggle();
-        $("#" + fieldName + "-form").toggle();
+    toggleEdit(fieldName, event, index){
+        var fieldId = fieldName;
+        if (index){
+            fieldId = fieldId + "-" + index;
+        }
+
+        if($("#" + fieldId + "-display").is(":visible")){
+            if (index){
+                this.state.originalTestcase[fieldName][index] = this.state.testcase[fieldName][index];
+            } else {
+                this.state.originalTestcase[fieldName] = this.state.testcase[fieldName];
+            }
+        }
+
+        $("#" + fieldId + "-display").toggle();
+        $("#" + fieldId + "-form").toggle();
     }
 
+    getAttribute(id){
+        return this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {}
+    }
+
+    getAttributeName(id){
+        return this.getAttribute(id).name || ""
+    }
+
+    getAttributeValues(id){
+        return this.getAttribute(id).values || []
+    }
+
+    editAttributeValues(index, event){
+        this.state.originalTestcase["attributes"][index] = this.state.testcase["attributes"][index];
+        this.state.testcase["attributes"][index].values = event.target.value;
+        this.setState(this.state);
+    }
+
+    cancelEditAttributeValues(event, index){
+        this.state.testcase["attributes"][index] = this.state.originalTestcase["attributes"][index];
+        this.setState(this.state);
+        this.toggleEdit("attributes", event, index);
+    }
+
+    removeAttribute(i, event){
+        this.state.testcase.attributes.splice(i, 1);
+        this.setState(this.state);
+    }
 
     render() {
         return (
@@ -101,8 +162,8 @@ class TestCase extends SubComponent {
                 </div>
                 <div id="name-form" className="inplace-form" style={{display: 'none'}}>
                     <form>
-                        <input type="text" name="name" onChange={this.handleChange} value={this.state.testcase.name}/>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Close</button>
+                        <input type="text" name="name" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
                         <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
                     </form>
                 </div>
@@ -118,8 +179,8 @@ class TestCase extends SubComponent {
                 </div>
                 <div id="description-form" className="inplace-form" style={{display: 'none'}}>
                     <form>
-                        <textarea rows="7" cols="50" name="description" onChange={this.handleChange}>{this.state.testcase.description}</textarea>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Close</button>
+                        <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)}>{this.state.testcase.description}</textarea>
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
                         <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
                     </form>
                 </div>
@@ -135,11 +196,48 @@ class TestCase extends SubComponent {
                   </div>
                   <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
                       <form>
-                          <textarea rows="7" cols="50" name="preconditions" onChange={this.handleChange}>{this.state.testcase.preconditions}</textarea>
-                          <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("preconditions", e)}>Close</button>
+                          <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)}>{this.state.testcase.preconditions}</textarea>
+                          <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
                           <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
                       </form>
                   </div>
+              </div>
+
+              <div id="attributes">
+                <h5>
+                    Attributes
+                </h5>
+                {
+                  (this.state.testcase.attributes || []).map(function(attribute, i){
+                      return (
+                          <div className="row">
+                              <div id={"attributes-" + i + "-display"} className="inplace-display">
+                                <div index={i}>
+                                  {this.getAttributeName(attribute.id)}
+                                  <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("attributes", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                  <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
+                                </div>
+                              </div>
+                              <div id={"attributes-" + i + "-form"} className="inplace-form" style={{display: 'none'}}>
+                                <form>
+                                  <div index={i}>
+                                    {this.getAttributeName(attribute.id)}
+                                    <CreatableSelect value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
+                                      isMulti
+                                      isClearable
+                                      onChange={(e) => this.editAttributeValues(i, e)}
+                                      options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
+                                     />
+                                  </div>
+                                  <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeValues(e, i)}>Cancel</button>
+                                  <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, i)}>Save</button>
+                                </form>
+                              </div>
+                          </div>
+                      );
+                    }.bind(this))
+                  }
+
               </div>
             </div>
         );
