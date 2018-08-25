@@ -35,7 +35,10 @@ class TestCase extends SubComponent {
          this.getAttribute = this.getAttribute.bind(this);
          this.editAttributeValues = this.editAttributeValues.bind(this);
          this.cancelEditAttributeValues = this.cancelEditAttributeValues.bind(this);
+         this.cancelEditAttributeKey = this.cancelEditAttributeKey.bind(this);
          this.removeAttribute = this.removeAttribute.bind(this);
+         this.addAttribute = this.addAttribute.bind(this);
+         this.editAttributeKey = this.editAttributeKey.bind(this);
       }
 
     componentDidMount() {
@@ -60,6 +63,18 @@ class TestCase extends SubComponent {
       this.setState(this.state);
     }
 
+    componentDidUpdate(){
+        this.state.testcase.attributes.forEach(function(attribute, index){
+            if (attribute.id && (
+                    attribute.values === undefined || attribute.values === null || attribute.values.length == 0)
+                ){
+                this.toggleEdit("attributes", null, index);
+            }
+
+        }.bind(this))
+
+    }
+
     getTestCase(projectId, testcaseId){
         axios
           .get("/api/"  + projectId + "/testcase/"+ testcaseId)
@@ -67,6 +82,9 @@ class TestCase extends SubComponent {
             const newState = Object.assign({}, this.state, {
                 testcase: response.data
             });
+            newState.testcase.attributes = newState.testcase.attributes.filter(function(attribute){
+                return attribute.values !== undefined && attribute.values !== null && attribute.values.length > 0
+                })
             this.setState(newState);
           })
           .catch(error => console.log(error));
@@ -106,7 +124,7 @@ class TestCase extends SubComponent {
 
     toggleEdit(fieldName, event, index){
         var fieldId = fieldName;
-        if (index){
+        if (index !== undefined){
             fieldId = fieldId + "-" + index;
         }
 
@@ -146,8 +164,26 @@ class TestCase extends SubComponent {
         this.toggleEdit("attributes", event, index);
     }
 
+    cancelEditAttributeKey(event, index){
+        if (this.state.testcase.attributes[index].id === undefined ||
+           this.state.testcase.attributes[index].values === undefined ||
+           this.state.testcase.attributes[index].values.length == 0)
+        this.state.testcase.attributes.splice(index, 1);
+        this.setState(this.state);
+    }
+
     removeAttribute(i, event){
         this.state.testcase.attributes.splice(i, 1);
+        this.setState(this.state);
+    }
+
+    addAttribute(){
+        this.state.testcase.attributes.push({});
+        this.setState(this.state);
+    }
+
+    editAttributeKey(index, data){
+        this.state.testcase.attributes[index].id = data.value;
         this.setState(this.state);
     }
 
@@ -209,7 +245,8 @@ class TestCase extends SubComponent {
                 </h5>
                 {
                   (this.state.testcase.attributes || []).map(function(attribute, i){
-                      return (
+                      if(attribute.id){
+                        return (
                           <div className="row">
                               <div id={"attributes-" + i + "-display"} className="inplace-display">
                                 <div index={i}>
@@ -234,13 +271,37 @@ class TestCase extends SubComponent {
                                 </form>
                               </div>
                           </div>
-                      );
+                        )
+                        } else {
+                          return (
+                            <div className="row">
+                                <form>
+                                    <div id={"attributes-" + i + "-form"} className="inplace-display">
+                                        <div index={i}>
+                                            <CreatableSelect
+                                                onChange={(e) => this.editAttributeKey(i, e)}
+                                                options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
+                                            />
+                                        </div>
+                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeKey(e, i)}>Cancel</button>
+                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, i)}>Save</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        )}
+
                     }.bind(this))
                   }
-
+                  <div>
+                    <button type="button" className="btn btn-primary" onClick={this.addAttribute}>
+                       Add
+                    </button>
+                  </div>
               </div>
             </div>
         );
+
       }
 
 }
