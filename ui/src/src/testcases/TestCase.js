@@ -39,6 +39,9 @@ class TestCase extends SubComponent {
          this.removeAttribute = this.removeAttribute.bind(this);
          this.addAttribute = this.addAttribute.bind(this);
          this.editAttributeKey = this.editAttributeKey.bind(this);
+         this.handleStepActionChange = this.handleStepActionChange.bind(this);
+         this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
+         this.addStep = this.addStep.bind(this);
       }
 
     componentDidMount() {
@@ -134,10 +137,12 @@ class TestCase extends SubComponent {
             } else {
                 this.state.originalTestcase[fieldName] = this.state.testcase[fieldName];
             }
+            $("#" + fieldId + "-display").hide();
+            $("#" + fieldId + "-form").show();
+        } else {
+            $("#" + fieldId + "-display").show();
+            $("#" + fieldId + "-form").hide();
         }
-
-        $("#" + fieldId + "-display").toggle();
-        $("#" + fieldId + "-form").toggle();
     }
 
     getAttribute(id){
@@ -178,12 +183,31 @@ class TestCase extends SubComponent {
     }
 
     addAttribute(){
+        if (!this.state.testcase.attributes){
+            this.state.testcase.attributes = [];
+        }
         this.state.testcase.attributes.push({});
         this.setState(this.state);
     }
 
     editAttributeKey(index, data){
         this.state.testcase.attributes[index].id = data.value;
+        this.setState(this.state);
+    }
+
+    handleStepActionChange(index, event){
+        this.state.testcase.steps[index].action = event.target.value;
+    }
+
+    handleStepExpectationChange(index, event){
+        this.state.testcase.steps[index].expectation = event.target.value;
+    }
+
+    addStep(){
+        if (!this.state.testcase.steps){
+            this.state.testcase.steps = [];
+        }
+        this.state.testcase.steps.push({});
         this.setState(this.state);
     }
 
@@ -239,6 +263,49 @@ class TestCase extends SubComponent {
                   </div>
               </div>
 
+              <div id="steps">
+                  <h5>
+                      Steps
+                  </h5>
+                  {
+                    (this.state.testcase.steps || []).map(function(step, i){
+                        if(!step.action && !step.expectation){
+                          return (
+                            <div className="row">
+                                <form>
+                                    <div id={"steps-" + i + "-form"} className="inplace-form">
+                                        <div index={i}>
+                                            <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} value={this.state.testcase.steps[i].action}/>
+                                            <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} value={this.state.testcase.steps[i].expectation}/>
+                                        </div>
+                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
+                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                          )
+                          } else {
+                            return (
+                              <div className="row">
+                                  <div id={"steps-" + i + "-display"} className="inplace-display">
+                                      <div index={i} className="row">
+                                         <div className="col">{i + 1}. </div>
+                                         <div className="col">{this.state.testcase.steps[i].action}</div>
+                                         <div className="col">{this.state.testcase.steps[i].expectation}</div>
+                                      </div>
+                                  </div>
+                              </div>
+                          )}
+
+                      }.bind(this))
+                    }
+                    <div>
+                      <button type="button" className="btn btn-primary" onClick={this.addStep}>
+                         Add
+                      </button>
+                    </div>
+               </div>
+
               <div id="attributes">
                 <h5>
                     Attributes
@@ -276,7 +343,7 @@ class TestCase extends SubComponent {
                           return (
                             <div className="row">
                                 <form>
-                                    <div id={"attributes-" + i + "-form"} className="inplace-display">
+                                    <div id={"attributes-" + i + "-form"} className="inplace-form">
                                         <div index={i}>
                                             <CreatableSelect
                                                 onChange={(e) => this.editAttributeKey(i, e)}
