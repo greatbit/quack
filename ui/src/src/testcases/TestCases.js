@@ -207,10 +207,10 @@ class TestCases extends SubComponent {
               </div>
 
               <div className="row">
-                <div className="tree-side col-6">
+                <div className="tree-side col-5">
                     <div id="tree"></div>
                 </div>
-                <div id="testCase" className="testcase-side col-6">
+                <div id="testCase" className="testcase-side col-7">
                     <TestCase projectId={this.props.match.params.project} projectAttributes={this.state.projectAttributes}
                             testcaseId={this.state.selectedTestCase.id}/>
                 </div>

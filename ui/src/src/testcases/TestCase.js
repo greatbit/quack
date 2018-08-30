@@ -220,7 +220,7 @@ class TestCase extends SubComponent {
     render() {
         return (
             <div>
-              <div id="name">
+              <div id="name" className="testcase-section">
                 <div id="name-display" className="inplace-display">
                     <h1>{this.state.testcase.name}
                         <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
@@ -235,7 +235,7 @@ class TestCase extends SubComponent {
                 </div>
               </div>
 
-              <div id="description">
+              <div id="description" className="testcase-section">
                 <h5>
                     Description
                     <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
@@ -252,7 +252,7 @@ class TestCase extends SubComponent {
                 </div>
               </div>
 
-              <div id="preconditions">
+              <div id="preconditions" className="testcase-section">
                   <h5>
                       Preconditions
                       <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faEdit}/></span>
@@ -269,7 +269,7 @@ class TestCase extends SubComponent {
                   </div>
               </div>
 
-              <div id="steps">
+              <div id="steps" className="testcase-section">
                   <h5>
                       Steps
                   </h5>
@@ -321,7 +321,7 @@ class TestCase extends SubComponent {
                     </div>
                </div>
 
-              <div id="attributes">
+              <div id="attributes" className="testcase-section">
                 <h5>
                     Attributes
                 </h5>
