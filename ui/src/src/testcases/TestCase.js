@@ -245,7 +245,7 @@ class TestCase extends SubComponent {
                 </div>
                 <div id="description-form" className="inplace-form" style={{display: 'none'}}>
                     <form>
-                        <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)}>{this.state.testcase.description}</textarea>
+                        <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
                         <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
                         <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
                     </form>
@@ -262,7 +262,7 @@ class TestCase extends SubComponent {
                   </div>
                   <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
                       <form>
-                          <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)}>{this.state.testcase.preconditions}</textarea>
+                          <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
                           <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
                           <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
                       </form>
