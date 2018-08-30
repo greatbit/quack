@@ -195,12 +195,18 @@ class TestCase extends SubComponent {
         this.setState(this.state);
     }
 
-    handleStepActionChange(index, event){
+    handleStepActionChange(index, event, reRender){
         this.state.testcase.steps[index].action = event.target.value;
+        if (reRender){
+            this.setState(this.state);
+        }
     }
 
-    handleStepExpectationChange(index, event){
+    handleStepExpectationChange(index, event, reRender){
         this.state.testcase.steps[index].expectation = event.target.value;
+        if (reRender){
+            this.setState(this.state);
+        }
     }
 
     addStep(){
@@ -292,12 +298,13 @@ class TestCase extends SubComponent {
                                          <div className="col">{i + 1}. </div>
                                          <div className="col">{this.state.testcase.steps[i].action}</div>
                                          <div className="col">{this.state.testcase.steps[i].expectation}</div>
+                                         <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
                                       </div>
                                   </div>
                                   <div id={"steps-" + i + "-form"} className="inplace-form"style={{display: 'none'}}>
                                       <div index={i}>
-                                          <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} value={this.state.testcase.steps[i].action}/>
-                                          <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} value={this.state.testcase.steps[i].expectation}/>
+                                          <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                          <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
                                       </div>
                                       <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
                                       <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
