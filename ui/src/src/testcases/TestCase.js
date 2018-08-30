@@ -114,12 +114,16 @@ class TestCase extends SubComponent {
         this.toggleEdit(fieldName, event, index);
     }
 
-    handleSubmit(fieldName, event, index){
+    handleSubmit(fieldName, event, index, ignoreToggleEdit){
         axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
                 this.setState(this.state);
-                this.toggleEdit(fieldName, event, index);
+                if (!ignoreToggleEdit){
+                    console.log("toggle");
+                    this.toggleEdit(fieldName, event, index);
+                }
+
         })
         event.preventDefault();
 
@@ -130,19 +134,15 @@ class TestCase extends SubComponent {
         if (index !== undefined){
             fieldId = fieldId + "-" + index;
         }
-
-        if($("#" + fieldId + "-display").is(":visible")){
+        if($("#" + fieldId + "-display").offsetParent !== null){
             if (index){
                 this.state.originalTestcase[fieldName][index] = this.state.testcase[fieldName][index];
             } else {
                 this.state.originalTestcase[fieldName] = this.state.testcase[fieldName];
             }
-            $("#" + fieldId + "-display").hide();
-            $("#" + fieldId + "-form").show();
-        } else {
-            $("#" + fieldId + "-display").show();
-            $("#" + fieldId + "-form").hide();
         }
+        $("#" + fieldId + "-display").toggle();
+        $("#" + fieldId + "-form").toggle();
     }
 
     getAttribute(id){
@@ -269,17 +269,17 @@ class TestCase extends SubComponent {
                   </h5>
                   {
                     (this.state.testcase.steps || []).map(function(step, i){
-                        if(!step.action && !step.expectation){
+                        if(!step || (!step.action && !step.expectation)){
                           return (
                             <div className="row">
                                 <form>
                                     <div id={"steps-" + i + "-form"} className="inplace-form">
                                         <div index={i}>
-                                            <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} value={this.state.testcase.steps[i].action}/>
-                                            <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} value={this.state.testcase.steps[i].expectation}/>
+                                            <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} />
+                                            <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} />
                                         </div>
                                         <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i, true)}>Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -293,6 +293,14 @@ class TestCase extends SubComponent {
                                          <div className="col">{this.state.testcase.steps[i].action}</div>
                                          <div className="col">{this.state.testcase.steps[i].expectation}</div>
                                       </div>
+                                  </div>
+                                  <div id={"steps-" + i + "-form"} className="inplace-form"style={{display: 'none'}}>
+                                      <div index={i}>
+                                          <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} value={this.state.testcase.steps[i].action}/>
+                                          <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} value={this.state.testcase.steps[i].expectation}/>
+                                      </div>
+                                      <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
+                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
                                   </div>
                               </div>
                           )}
