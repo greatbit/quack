@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.TestCaseService;
+import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Authenticable
 @Path("/{projectId}/testcase")
 public class TestCaseResource extends BaseCrudResource<TestCase> {
 

@@ -15,6 +15,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dal</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>ru.greatbit.whoru</groupId>
+            <artifactId>auth</artifactId>
+        </dependency>
     </dependencies>
 
 

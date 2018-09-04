@@ -2,12 +2,10 @@ package ru.greatbit.quack.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.greatbit.quack.beans.Attribute;
 import ru.greatbit.quack.beans.Project;
-import ru.greatbit.quack.beans.Session;
-import ru.greatbit.quack.dal.AttributeRepository;
 import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.dal.ProjectRepository;
+import ru.greatbit.whoru.auth.Session;
 
 @Service
 public class ProjectService extends BaseService<Project> {

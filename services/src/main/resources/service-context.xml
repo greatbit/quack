@@ -5,7 +5,4 @@
 
     <import resource="classpath:dal-context.xml"/>
 
-    <!--<bean id="sessionProvider" class="${session.provider}"/>-->
-
-
 </beans>

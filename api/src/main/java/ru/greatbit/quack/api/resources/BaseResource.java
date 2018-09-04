@@ -2,8 +2,8 @@ package ru.greatbit.quack.api.resources;
 
 import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
-import ru.greatbit.quack.beans.Session;
 import ru.greatbit.quack.services.BaseService;
+import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.dal.TestCaseRepository;
+import ru.greatbit.whoru.auth.Session;
 
 import java.util.*;
 import java.util.stream.Collectors;

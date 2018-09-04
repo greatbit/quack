@@ -26,17 +26,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:element name="session" type="Session"/>
-    <xs:complexType name="Session">
-        <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
-            <xs:element name="timeout" type="xs:long"/>
-            <xs:element name="name" type="xs:string"/>
-            <xs:element name="user" type="User"/>
-            <xs:element name="roles" type="Role" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
     <xs:element name="role" type="Role"/>
     <xs:simpleType name="Role">
         <xs:restriction base="xs:string">

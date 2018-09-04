@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.quack.beans.TestSuite;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.TestSuiteService;
+import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.ws.rs.Path;
 
+@Authenticable
 @Path("/{projectId}/testsuite")
 public class TestSuiteResource extends BaseCrudResource<TestSuite> {
 

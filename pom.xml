@@ -8,7 +8,6 @@
     <modules>
         <module>beans</module>
         <module>dal</module>
-        <module>auth</module>
         <module>services</module>
         <module>api</module>
         <module>ui</module>
@@ -51,6 +50,7 @@
         <camel.version>2.18.3</camel.version>
         <swagger.version>1.5.10</swagger.version>
         <jaxb.version>0.11.1</jaxb.version>
+        <whoru.version>1.0-SNAPSHOT</whoru.version>
     </properties>
 
 
@@ -199,6 +199,18 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.1.0</version>
+            </dependency>
+
+            <!-- Authentication -->
+            <dependency>
+                <groupId>ru.greatbit.whoru</groupId>
+                <artifactId>auth</artifactId>
+                <version>${whoru.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.greatbit.whoru</groupId>
+                <artifactId>jaxrs-ws-auth</artifactId>
+                <version>${whoru.version}</version>
             </dependency>
 
             <!--Swagger-->

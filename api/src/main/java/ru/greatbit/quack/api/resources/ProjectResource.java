@@ -9,6 +9,7 @@ import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.ProjectService;
+import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -17,6 +18,7 @@ import java.util.Collection;
 
 import static javax.ws.rs.core.Response.ok;
 
+@Authenticable
 @Path("/project")
 public class ProjectResource extends BaseResource<Project> {
 
