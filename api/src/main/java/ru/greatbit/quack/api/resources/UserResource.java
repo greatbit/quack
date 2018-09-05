@@ -9,11 +9,11 @@ import ru.greatbit.whoru.auth.AuthProvider;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Path("/user")
 public class UserResource extends BaseResource<User> {
@@ -47,6 +47,12 @@ public class UserResource extends BaseResource<User> {
                           @QueryParam("password") String password) {
         authProvider.doAuth(request, response);
         return Response.ok().build();
+    }
+
+    @GET
+    @PathParam("/login-redirect")
+    public URI getLoginRedirect() throws UnsupportedEncodingException, URISyntaxException {
+        return authProvider.redirectNotAuthTo(request);
     }
 
     @DELETE
