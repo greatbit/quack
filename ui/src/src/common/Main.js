@@ -9,6 +9,8 @@ import Launches from '../launches/Launches'
 import Attributes from '../attributes/Attributes'
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCase from '../testcases/TestCase'
+import Auth from '../user/Auth'
+import Login from '../user/Login'
 
 class Main extends Component {
 
@@ -23,6 +25,9 @@ class Main extends Component {
                   <Route exact path='/' component={Projects}/>
                   <Route exact path='/projects' component={Projects}/>
                   <Route exact path='/projects/new' component={ProjectForm}/>
+
+                  <Route exact path='/auth' component={Auth}/>
+                  <Route exact path='/login' component={Login}/>
 
                   <Route path='/:project/testcases/new'
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>

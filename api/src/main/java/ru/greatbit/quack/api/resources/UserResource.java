@@ -6,13 +6,13 @@ import ru.greatbit.quack.beans.User;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.UserService;
 import ru.greatbit.whoru.auth.AuthProvider;
+import ru.greatbit.whoru.auth.RedirectResponse;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 @Path("/user")
@@ -50,8 +50,8 @@ public class UserResource extends BaseResource<User> {
     }
 
     @GET
-    @PathParam("/login-redirect")
-    public URI getLoginRedirect() throws UnsupportedEncodingException, URISyntaxException {
+    @Path("/login-redirect")
+    public RedirectResponse getLoginRedirect(){
         return authProvider.redirectNotAuthTo(request);
     }
 
