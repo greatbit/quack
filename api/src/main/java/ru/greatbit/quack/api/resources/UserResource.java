@@ -40,8 +40,7 @@ public class UserResource extends BaseResource<User> {
         return authProvider.getSession(request);
     }
 
-    //@POST
-    @GET
+    @POST
     @Path("/login")
     public Response login(@QueryParam("login") String login,
                           @QueryParam("password") String password) {
