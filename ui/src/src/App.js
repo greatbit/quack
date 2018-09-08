@@ -15,10 +15,12 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            project: ""
+            project: "",
+            session : {person: {firstName: "Guest"}}
         }
         this.onProjectChange = this.onProjectChange.bind(this);
-      }
+        this.onSessionChange = this.onSessionChange.bind(this);
+    }
 
 
     onProjectChange(project){
@@ -28,11 +30,18 @@ class App extends Component {
         this.setState(newState);
     }
 
+    onSessionChange(session){
+        const newState = Object.assign({}, this.state, {
+            session: session
+        });
+        this.setState(newState);
+    }
+
     render() {
         return (
           <div className="container-fluid">
-            <Header project={this.state.project} />
-            <Main onProjectChange={this.onProjectChange} />
+            <Header project={this.state.project} session={this.state.session} onSessionChange={this.onSessionChange} />
+            <Main onProjectChange={this.onProjectChange} session={this.state.session} onSessionChange={this.onSessionChange} />
             <Footer />
            </div>
         );

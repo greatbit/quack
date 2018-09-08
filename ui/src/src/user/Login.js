@@ -13,6 +13,11 @@ class Login extends Component {
          };
          this.handleChange = this.handleChange.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
+         this.onSessionChange = this.onSessionChange.bind(this);
+    }
+
+    onSessionChange(session){
+        this.props.onSessionChange(session);
     }
 
     handleChange(event) {
@@ -23,6 +28,7 @@ class Login extends Component {
     handleSubmit(event) {
         axios.post('/api/user/login?login=' + this.state.login + '&password=' + this.state.password)
         .then(response => {
+            this.onSessionChange(response.data);
             var params = queryString.parse(this.props.location.search);
             var retpath = params.retpath || "/";
             this.props.history.push(decodeURI(retpath));

@@ -18,6 +18,10 @@ class Main extends Component {
         this.props.onProjectChange(project)
     }
 
+    onSessionChange(session){
+        this.props.onSessionChange(session)
+    }
+
     render() {
         return(
             <main>
@@ -27,7 +31,9 @@ class Main extends Component {
                   <Route exact path='/projects/new' component={ProjectForm}/>
 
                   <Route exact path='/auth' component={Auth}/>
-                  <Route exact path='/login' component={Login}/>
+                  <Route path='/login'
+                      render={(props) => <Login {...props}  onProjectChange={this.onProjectChange.bind(this)}
+                      onSessionChange={this.onSessionChange.bind(this)} /> }/>
 
                   <Route path='/:project/testcases/new'
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>

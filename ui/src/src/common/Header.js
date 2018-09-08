@@ -8,7 +8,7 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.emptyState = {session : {person: {firstName: "Guest"}}};
-        this.state = this.emptyState;
+        this.state = Object.assign({}, {session: this.props.session});
         this.logOut = this.logOut.bind(this);
     }
 
@@ -17,18 +17,33 @@ class Header extends Component {
         axios
           .get("/api/user/session")
           .then(response => {
-            this.state.session = response.data;
-            this.setState(this.state);
+            if (this.state.session.id !== response.data.id){
+                this.state.session = response.data;
+                this.setState(this.state);
+                this.onSessionChange(this.state.session);
+            }
           })
           .catch(error => this.props.history.push("/auth"));
+    }
+
+    componentWillReceiveProps(nextProps) {
+      if(nextProps.session){
+        this.state = Object.assign({}, {session: this.props.session});
+      }
+      this.setState(this.state);
+    }
+
+    onSessionChange(session){
+        this.props.onSessionChange(session)
     }
 
     logOut(){
         axios
           .delete("/api/user/logout")
           .then(response => {
-            const newState = Object.assign({}, this.state, this.emptyState);
-            this.setState(this.state);
+            const newState = Object.assign({}, this.emptyState);
+            this.setState(newState);
+            this.onSessionChange(this.state.session);
             this.props.history.push("/auth");
           })
           .catch(error => console.log(error));

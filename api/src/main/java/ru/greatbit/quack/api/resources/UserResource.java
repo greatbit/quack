@@ -12,8 +12,6 @@ import ru.greatbit.whoru.auth.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 
 @Path("/user")
 public class UserResource extends BaseResource<User> {
@@ -42,10 +40,9 @@ public class UserResource extends BaseResource<User> {
 
     @POST
     @Path("/login")
-    public Response login(@QueryParam("login") String login,
-                          @QueryParam("password") String password) {
-        authProvider.doAuth(request, response);
-        return Response.ok().build();
+    public Session login(@QueryParam("login") String login,
+                         @QueryParam("password") String password) {
+        return authProvider.doAuth(request, response);
     }
 
     @GET
