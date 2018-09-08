@@ -23,17 +23,17 @@ public class TestCaseService extends BaseService<TestCase> {
 
     private final String UNKNOWN_GROUP = "None";
 
-    public TestCaseTree findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
-        TestCaseTree head = new TestCaseTree();
+    public TestCaseTree<TestCase> findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
+        TestCaseTree<TestCase> head = new TestCaseTree<TestCase>();
 
         List<TestCase> testCases = super.findFiltered(session, projectId, filter);
         head.getTestCases().addAll(testCases);
 
-        buildTree(head, filter.getGroups().stream().collect(Collectors.toList()));
+        buildTree(head, new ArrayList<>(filter.getGroups()));
         return head;
     }
 
-    private TestCaseTree buildTree(TestCaseTree head, List<String> groups) {
+    private TestCaseTree<TestCase> buildTree(TestCaseTree<TestCase> head, List<String> groups) {
         if (groups.isEmpty()){
             head.setCount(head.getTestCases().size());
             return head;
@@ -55,9 +55,9 @@ public class TestCaseService extends BaseService<TestCase> {
         });
 
         casesByGroupValues.entrySet().stream().forEach(entry -> {
-            TestCaseTree child = new TestCaseTree().
-                    withTitle(entry.getKey()).
+            TestCaseTree<TestCase> child = (TestCaseTree<TestCase>) new TestCaseTree().
                     withTestCases(entry.getValue()).
+                    withTitle(entry.getKey()).
                     withId(groupId + ":" + entry.getKey());
             buildTree(child, nextGroups);
             head.getChildren().add(child);

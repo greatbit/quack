@@ -106,10 +106,8 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="TestCaseTree">
+    <xs:complexType name="TestCaseTreeBase">
         <xs:sequence>
-            <xs:element name="testCases" type="TestCase" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="children" type="TestCaseTree" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="isLeaf" type="xs:boolean"/>
             <xs:element name="title" type="xs:string"/>
             <xs:element name="id" type="xs:string"/>
