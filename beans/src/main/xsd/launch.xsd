@@ -12,8 +12,8 @@
     <xs:include schemaLocation="testcase.xsd"/>
     <xs:include schemaLocation="testsuite.xsd"/>
 
-    <xs:element name="launch" type="Launch"/>
-    <xs:complexType name="Launch">
+    <xs:element name="launch" type="LaunchBase"/>
+    <xs:complexType name="LaunchBase">
         <xs:complexContent>
             <xs:extension base="Entity">
                 <xs:sequence>
@@ -25,7 +25,6 @@
                     <xs:element name="startTime" type="xs:long"/>
                     <xs:element name="finishTime" type="xs:long"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
-                    <xs:element name="testCaseTree" type="TestCaseTreeBase" />
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

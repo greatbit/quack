@@ -19,11 +19,11 @@ import java.util.List;
     "id",
     "count"
 })
-public class TestCaseTree<T extends TestCase> extends TestCaseTreeBase {
+public class TestCaseTree extends TestCaseTreeBase {
 
     private final static long serialVersionUID = 1L;
-    protected List<T> testCases;
-    protected List<TestCaseTree<T>> children;
+    protected List<TestCase> testCases;
+    protected List<TestCaseTree> children;
 
     /**
      * Default no-arg constructor
@@ -37,54 +37,54 @@ public class TestCaseTree<T extends TestCase> extends TestCaseTreeBase {
      * Fully-initialising value constructor
      * 
      */
-    public TestCaseTree(final List<T> testCases, final List<TestCaseTree<T>> children) {
+    public TestCaseTree(final List<TestCase> testCases, final List<TestCaseTree> children) {
         this.testCases = testCases;
         this.children = children;
     }
 
 
-    public List<T> getTestCases() {
+    public List<TestCase> getTestCases() {
         if (testCases == null) {
-            testCases = new ArrayList<T>();
+            testCases = new ArrayList<TestCase>();
         }
         return this.testCases;
     }
 
 
-    public List<TestCaseTree<T>> getChildren() {
+    public List<TestCaseTree> getChildren() {
         if (children == null) {
-            children = new ArrayList<TestCaseTree<T>>();
+            children = new ArrayList<TestCaseTree>();
         }
         return this.children;
     }
 
 
-    public TestCaseTree<T> withTestCases(T... values) {
+    public TestCaseTree withTestCases(TestCase... values) {
         if (values!= null) {
-            for (T value: values) {
+            for (TestCase value: values) {
                 getTestCases().add(value);
             }
         }
         return this;
     }
 
-    public TestCaseTree<T> withTestCases(Collection<T> values) {
+    public TestCaseTree withTestCases(Collection values) {
         if (values!= null) {
             getTestCases().addAll(values);
         }
         return this;
     }
 
-    public TestCaseTree<T> withChildren(TestCaseTree<T>... values) {
+    public TestCaseTree withChildren(TestCaseTree... values) {
         if (values!= null) {
-            for (TestCaseTree<T> value: values) {
+            for (TestCaseTree value: values) {
                 getChildren().add(value);
             }
         }
         return this;
     }
 
-    public TestCaseTree<T> withChildren(Collection<TestCaseTree<T>> values) {
+    public TestCaseTree withChildren(Collection<TestCaseTree> values) {
         if (values!= null) {
             getChildren().addAll(values);
         }
@@ -100,7 +100,7 @@ public class TestCaseTree<T extends TestCase> extends TestCaseTreeBase {
      *     {@link TestCase }
      *     
      */
-    public void setTestCases(List<T> testCases) {
+    public void setTestCases(List<TestCase> testCases) {
         this.testCases = testCases;
     }
 
@@ -112,7 +112,7 @@ public class TestCaseTree<T extends TestCase> extends TestCaseTreeBase {
      *     {@link TestCaseTree }
      *     
      */
-    public void setChildren(List<TestCaseTree<T>> children) {
+    public void setChildren(List<TestCaseTree> children) {
         this.children = children;
     }
 
