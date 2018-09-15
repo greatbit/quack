@@ -20,7 +20,12 @@ class TestCasesFilter extends Component {
                  }]
              },
              groupsToDisplay: [],
-             projectAttributes: []
+             projectAttributes: [],
+             createdLaunch: {
+                  name: "",
+                  testSuite: {filter: {}},
+                  properties: []
+             }
          };
 
         this.changeGrouping = this.changeGrouping.bind(this);
@@ -136,6 +141,12 @@ class TestCasesFilter extends Component {
     }
 
     createLaunchModal(){
+        this.state.createdLaunch = {
+             name: "",
+             testSuite: {filter: {}},
+             properties: []
+        }
+        this.setState(this.state);
         $("#launch-modal").modal('toggle');
     }
 
@@ -181,7 +192,7 @@ class TestCasesFilter extends Component {
                     <button type="button" className="btn btn-primary" onClick={this.createLaunchModal}>Launch</button>
                 </div>
                 <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
-                    <LaunchForm filter={this.state.filter} />
+                    <LaunchForm filter={this.state.filter} launch={this.state.createdLaunch}/>
                 </div>
             </div>
         );

@@ -34,8 +34,8 @@ class LaunchForm extends SubComponent {
         })
         axios.post('/api/' + this.props.match.params.project + '/launch/', this.state.launch)
         .then(response => {
-            $("#launch-creation-form").hide();
-            $("#launch-created").show();
+            this.state.launch = response.data;
+            this.setState(this.state);
         })
         event.preventDefault();
       }
@@ -44,16 +44,35 @@ class LaunchForm extends SubComponent {
       if(nextProps.filter){
         this.state.launch.testSuite.filter = nextProps.filter;
       }
+      if(nextProps.launch){
+          this.state.launch = nextProps.launch;
+      }
       this.setState(this.state);
     }
-
 
     componentDidMount() {
         super.componentDidMount();
     }
 
-
     render() {
+        let modalBody;
+        if (this.state.launch.id){
+            modalBody = <div className="modal-body" id="launch-created">
+                            Launch created
+                        </div>
+        } else {
+            modalBody =
+                <div className="modal-body" id="launch-creation-form">
+                    <form>
+                      <label>
+                        Name:
+                        <input type="text" name="name" onChange={this.handleChange} />
+                      </label>
+                    </form>
+                </div>
+        }
+
+
         return (
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
@@ -63,18 +82,9 @@ class LaunchForm extends SubComponent {
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div className="modal-body" id="launch-creation-form">
-                    <form>
-                      <label>
-                        Name:
-                        <input type="text" name="name" onChange={this.handleChange} />
-                      </label>
-                    </form>
 
-                  </div>
-                  <div className="modal-body" id="launch-created" style={{display: 'none'}}>
-                      Launch created
-                  </div>
+                  <div>{modalBody}</div>
+
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create Launch</button>
