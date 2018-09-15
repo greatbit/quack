@@ -11,4 +11,10 @@
         <jaxb:serializable uid="1"/>
     </jaxb:globalBindings>
 
+    <jaxb:bindings schemaLocation="testsuite.xsd" node="xs:complexType[@name='TestcaseFilter']">
+        <jaxb:class ref="ru.greatbit.quack.beans.TestcaseFilter"/>
+    </jaxb:bindings>
+
+
+
 </jaxb:bindings>

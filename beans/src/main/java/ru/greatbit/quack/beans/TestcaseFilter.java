@@ -19,6 +19,10 @@ public class TestcaseFilter extends Filter {
         this.sortField = filter.sortField;
     }
 
+    public TestcaseFilter() {
+        super();
+    }
+
     private Set<String> groups = new LinkedHashSet<>();
     private List<Attribute> filters = new ArrayList<>();
 
@@ -28,5 +32,13 @@ public class TestcaseFilter extends Filter {
 
     public List<Attribute> getFilters() {
         return filters;
+    }
+
+    public void setGroups(Set<String> groups) {
+        this.groups = groups;
+    }
+
+    public void setFilters(List<Attribute> filters) {
+        this.filters = filters;
     }
 }

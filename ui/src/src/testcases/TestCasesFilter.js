@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
+import LaunchForm from '../launches/LaunchForm'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';
 import queryString from 'query-string';
+import $ from 'jquery';
 
 class TestCasesFilter extends Component {
     constructor(props) {
@@ -27,6 +29,7 @@ class TestCasesFilter extends Component {
         this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
         this.getAttributeName = this.getAttributeName.bind(this);
+        this.createLaunchModal = this.createLaunchModal.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -132,45 +135,54 @@ class TestCasesFilter extends Component {
         return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).name;
     }
 
+    createLaunchModal(){
+        $("#launch-modal").modal('toggle');
+    }
 
     render() {
         return (
             <div>
-                <div className="row">
-                    <div className="col-1">Grouping</div>
-                    <div className="col-3">
-                        <Select value={this.state.groupsToDisplay}
-                                isMulti
-                                onChange={this.changeGrouping}
-                                options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
-                               />
+                <div>
+                    <div className="row">
+                        <div className="col-1">Grouping</div>
+                        <div className="col-3">
+                            <Select value={this.state.groupsToDisplay}
+                                    isMulti
+                                    onChange={this.changeGrouping}
+                                    options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
+                                   />
+                        </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-1">Filter</div>
-                        {
-                            this.state.filter.filters.map(function(filter, i){
-                                return(
-                                <div className="col-5" key={i}>
-                                    <div className="row">
-                                        <Select className="col-5 filter-attribute-id-select" value={{value: filter.id, label: filter.name}}
-                                                onChange={(e) => this.changeFilterAttributeId(i, e)}
-                                                options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
-                                               />
-                                        <Select className="col-7 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
-                                                isMulti
-                                                onChange={(e) => this.changeFilterAttributeValues(i, e)}
-                                                options={this.getValuesByAttributeId(filter.id).map(function(val){return {value: val, label: val}})}
-                                               />
+                    <div className="row">
+                        <div className="col-1">Filter</div>
+                            {
+                                this.state.filter.filters.map(function(filter, i){
+                                    return(
+                                    <div className="col-5" key={i}>
+                                        <div className="row">
+                                            <Select className="col-5 filter-attribute-id-select" value={{value: filter.id, label: filter.name}}
+                                                    onChange={(e) => this.changeFilterAttributeId(i, e)}
+                                                    options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
+                                                   />
+                                            <Select className="col-7 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
+                                                    isMulti
+                                                    onChange={(e) => this.changeFilterAttributeValues(i, e)}
+                                                    options={this.getValuesByAttributeId(filter.id).map(function(val){return {value: val, label: val}})}
+                                                   />
+                                        </div>
                                     </div>
-                                </div>
-                                )
-                            }.bind(this))
+                                    )
+                                }.bind(this))
 
-                        }
+                            }
 
+                    </div>
+                    <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
+                    <button type="button" className="btn btn-primary" onClick={this.createLaunchModal}>Launch</button>
                 </div>
-                <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
+                <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
+                    <LaunchForm filter={this.state.filter} />
+                </div>
             </div>
         );
       }
