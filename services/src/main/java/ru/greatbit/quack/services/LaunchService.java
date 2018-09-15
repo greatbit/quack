@@ -39,11 +39,11 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private void fillLaunchByFilter(Session session, String projectId, Launch launch) {
-        TestCaseTree<TestCase> tcTree = testCaseService.findFilteredTree(session, projectId, (TestcaseFilter) launch.getTestSuite().getFilter());
+        TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, (TestcaseFilter) launch.getTestSuite().getFilter());
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
     }
 
-    private TestCaseTree convertToLaunchTestCases(TestCaseTree<TestCase> tcTree){
+    private LaunchTestCaseTree convertToLaunchTestCases(TestCaseTree tcTree){
         List<LaunchTestCase> launchTestCases = tcTree.getTestCases().stream().map(testCase ->
                 {
                     LaunchTestCase launchTestCase = new LaunchTestCase();
@@ -52,13 +52,14 @@ public class LaunchService extends BaseService<Launch> {
                             withLaunchStatus(LaunchStatus.RUNNABLE);
 
                 }
-
         ).collect(Collectors.toList());
-        tcTree.getTestCases().clear();
-        tcTree.getTestCases().addAll(launchTestCases);
-
-        tcTree.getChildren().forEach(this::convertToLaunchTestCases);
-        return tcTree;
+        LaunchTestCaseTree launchTestCaseTree = new LaunchTestCaseTree();
+        launchTestCaseTree.getTestCases().addAll(launchTestCases);
+        launchTestCaseTree.getChildren().addAll(
+                tcTree.getChildren().stream().map(this::convertToLaunchTestCases).
+                        collect(Collectors.toList())
+        );
+        return launchTestCaseTree;
     }
 
     private void fillLaunchBySuite(Launch launch) {
