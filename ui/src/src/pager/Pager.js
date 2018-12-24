@@ -9,14 +9,24 @@ class Pager extends Component {
              totalItems: this.props.totalItems,
              currentPage: this.props.currentPage,
              visiblePages: this.props.visiblePages,
-             itemsOnPage: this.props.itemsOnPage
+             itemsOnPage: this.props.itemsOnPage,
+             pageObjects: []
          };
-
-      }
-
-    componentDidMount() {
+         this.onPageChanged = this.props.onPageChanged;
 
     }
+
+    componentDidMount() {
+        this.state.pageObjects = this.getPageObjects();
+        this.setState(this.state);
+    }
+
+    componentWillReceiveProps(props) {
+      this.state.currentPage = props.currentPage;
+      this.state.pageObjects = this.getPageObjects();
+      this.setState(this.state);
+    }
+
 
     getPageObjects(){
         var totalPages = this.state.totalItems / this.state.itemsOnPage;
@@ -24,11 +34,11 @@ class Pager extends Component {
             totalPages++;
         }
 
-        var result = [];
-        result.push({title: '<', index: -2, enabled: this.state.current != 0});
-
         var startFromPage = Math.max(0, this.state.currentPage - this.state.itemsOnPage/2)
         var endPage = Math.min(totalPages, this.state.currentPage + this.state.itemsOnPage/2 + 1)
+
+        var result = [];
+        result.push({title: '<', index: Math.max(this.state.currentPage - 1, 0), enabled: this.state.current != 0});
 
         var startPageTitle = startFromPage + 1;
         if (startFromPage != 0){
@@ -45,9 +55,7 @@ class Pager extends Component {
         }
         result.push({title: endPageTitle, index: endPage, enabled: endPage != this.state.currentPage});
 
-        result.push({title: '>', index: -1, enabled: this.state.current != totalPages});
-
-        console.log(result);
+        result.push({title: '>', index: Math.min(this.state.currentPage + 1, totalPages - 1), enabled: this.state.current != totalPages - 1});
 
         return result;
 
@@ -61,20 +69,19 @@ class Pager extends Component {
             <div>
                 <nav>
                   <ul class="pagination">
-                    <li class="page-item disabled">
-                      <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item active">
-                      <span class="page-link">
-                        2
-                        <span class="sr-only">(current)</span>
-                      </span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                      <a class="page-link" href="#">Next</a>
-                    </li>
+                      {
+                          this.state.pageObjects.map(function(page){
+                              var disabledClass = page.enabled ? '' : 'disabled';
+                              var styleClass = 'page-item ' + disabledClass;
+                              return (
+                                <li class={styleClass}>
+                                    <a class="page-link" href="#" index={page.index} onClick={(e) => this.onPageChanged(page.index, e)}>
+                                        {page.title}
+                                    </a>
+                                </li>
+                              );
+                          }.bind(this))
+                      }
                   </ul>
                 </nav>
             </div>

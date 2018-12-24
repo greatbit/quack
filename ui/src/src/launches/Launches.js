@@ -40,6 +40,8 @@ class Launches extends SubComponent {
 
     handlePageChanged(newPage) {
         this.state.pager.current = newPage;
+        this.state.filter.skip = newPage * this.state.pager.itemsOnPage;
+        this.getLaunches();
         this.setState(this.state);
     }
 
