@@ -14,11 +14,11 @@ class Launches extends SubComponent {
             limit: 20
         },
         pager: {
-            total: 40,
+            total: 0,
             current: 0,
-            visiblePage: 3,
-            maxVisiblePage: 3,
-            itemsOnPage: 2
+            visiblePage: 7,
+            maxVisiblePage: 0,
+            itemsOnPage: 20
         }
     };
 

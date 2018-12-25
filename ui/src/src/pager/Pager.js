@@ -53,7 +53,10 @@ class Pager extends Component {
         if (endPage != totalPages){
             endPageTitle = '...'
         }
-        result.push({title: endPageTitle, index: endPage, enabled: endPage != this.state.currentPage});
+
+        if (startFromPage != endPage){
+            result.push({title: endPageTitle, index: endPage, enabled: endPage != this.state.currentPage});
+        }
 
         result.push({title: '>', index: Math.min(this.state.currentPage + 1, totalPages - 1), enabled: this.state.current != totalPages - 1});
 
