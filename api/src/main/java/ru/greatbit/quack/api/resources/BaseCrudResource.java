@@ -18,7 +18,16 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        return new Filter().withField("deleted", false);
+        Filter filter = new Filter().withField("deleted", false);
+        if (hsr.getParameter("skip") != null){
+            filter.setSkip(Integer.parseInt(hsr.getParameter("skip")));
+        }
+        if (hsr.getParameter("limit") != null){
+            filter.setLimit(Integer.parseInt(hsr.getParameter("limit")));
+        }
+
+        //TODO: entity match fields
+        return filter;
     }
 
     @GET
