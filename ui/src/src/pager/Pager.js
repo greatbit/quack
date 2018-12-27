@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import * as Utils from '../common/Utils';
 
 class Pager extends Component {
     constructor(props) {
@@ -30,19 +31,20 @@ class Pager extends Component {
 
 
     getPageObjects(){
-        var totalPages = (this.state.totalItems - this.state.totalItems % this.state.itemsOnPage) / this.state.itemsOnPage;
+        var totalPages = Utils.intDiv(this.state.totalItems, this.state.itemsOnPage);
         if (this.state.totalItems / this.state.itemsOnPage - totalPages > 0){
             totalPages++;
         }
 
-        var startFromPage = Math.max(0, this.state.currentPage - this.state.visiblePages / 2)
+        var startFromPage = Math.max(0, this.state.currentPage - Utils.intDiv(this.state.visiblePages, 2) - 1)
+        startFromPage = Math.min(startFromPage, totalPages - 1 - this.state.visiblePages);
         var endPage = Math.min(totalPages - 1, startFromPage + this.state.visiblePages)
 
         var result = [];
         result.push({title: '<', index: Math.max(this.state.currentPage - 1, 0), enabled: this.state.currentPage != 0});
 
         var startPageTitle = startFromPage + 1;
-        if (startFromPage > this.state.visiblePages / 2 && totalPages > this.state.visiblePages){
+        if (startFromPage + 1 > Utils.intDiv(this.state.visiblePages, 2)){
             startPageTitle = '...'
         }
         result.push({title: startPageTitle, index: startFromPage, enabled: startFromPage != this.state.currentPage});
@@ -51,7 +53,7 @@ class Pager extends Component {
             result.push({title: title, index: i, enabled: i != this.state.currentPage});
         }
         var endPageTitle = endPage + 1;
-        if (endPage < totalPages && totalPages > this.state.visiblePages){
+        if (endPage < totalPages - 1 && totalPages > this.state.visiblePages){
             endPageTitle = '...'
         }
 
@@ -64,7 +66,6 @@ class Pager extends Component {
         return result;
 
     }
-
 
 
     render() {
