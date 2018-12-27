@@ -35,14 +35,14 @@ class Pager extends Component {
             totalPages++;
         }
 
-        var startFromPage = Math.max(0, this.state.currentPage - this.state.itemsOnPage / 2)
-        var endPage = Math.min(totalPages - 1, this.state.currentPage + this.state.itemsOnPage / 2 + 1)
+        var startFromPage = Math.max(0, this.state.currentPage - this.state.visiblePages / 2)
+        var endPage = Math.min(totalPages - 1, startFromPage + this.state.visiblePages)
 
         var result = [];
         result.push({title: '<', index: Math.max(this.state.currentPage - 1, 0), enabled: this.state.currentPage != 0});
 
         var startPageTitle = startFromPage + 1;
-        if (startFromPage != 0){
+        if (startFromPage > this.state.visiblePages / 2 && totalPages > this.state.visiblePages){
             startPageTitle = '...'
         }
         result.push({title: startPageTitle, index: startFromPage, enabled: startFromPage != this.state.currentPage});
@@ -51,7 +51,7 @@ class Pager extends Component {
             result.push({title: title, index: i, enabled: i != this.state.currentPage});
         }
         var endPageTitle = endPage + 1;
-        if (endPage != totalPages){
+        if (endPage < totalPages && totalPages > this.state.visiblePages){
             endPageTitle = '...'
         }
 
