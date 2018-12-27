@@ -36,8 +36,8 @@ class Pager extends Component {
             totalPages++;
         }
 
-        var startFromPage = Math.max(0, this.state.currentPage - Utils.intDiv(this.state.visiblePages, 2) - 1)
-        startFromPage = Math.min(startFromPage, totalPages - 1 - this.state.visiblePages);
+        var startFromPage = Math.min(this.state.currentPage - Utils.intDiv(this.state.visiblePages, 2) - 1, totalPages - 1 - this.state.visiblePages);
+        startFromPage = Math.max(0, startFromPage);
         var endPage = Math.min(totalPages - 1, startFromPage + this.state.visiblePages)
 
         var result = [];

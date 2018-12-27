@@ -16,8 +16,7 @@ class Launches extends SubComponent {
         pager: {
             total: 0,
             current: 0,
-            visiblePage: 7,
-            maxVisiblePage: 0,
+            maxVisiblePage: 7,
             itemsOnPage: 20
         }
     };
@@ -62,7 +61,7 @@ class Launches extends SubComponent {
             .then(response => {
                  this.state.pager.total = response.data;
                  this.state.pager.total.current = this.state.filter.skip / this.state.filter.limit;
-                 this.state.pager.visiblePage = Math.min(response.data / 20 + 1, this.state.pager.maxVisiblePage);
+                 this.state.pager.visiblePage = Math.min(response.data / this.state.pager.itemsOnPage + 1, this.state.pager.maxVisiblePage);
                  this.setState(this.state);
         })
             .catch(error => console.log(error));
@@ -96,7 +95,7 @@ class Launches extends SubComponent {
                   <Pager
                       totalItems={this.state.pager.total}
                       currentPage={this.state.pager.current}
-                      visiblePages={this.state.pager.visiblePage}
+                      visiblePages={this.state.pager.maxVisiblePage}
                       itemsOnPage={this.state.pager.itemsOnPage}
                       onPageChanged={this.handlePageChanged}
                   />
