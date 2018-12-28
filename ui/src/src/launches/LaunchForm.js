@@ -44,7 +44,7 @@ class LaunchForm extends SubComponent {
       if(nextProps.filter){
         this.state.launch.testSuite.filter = nextProps.filter;
       }
-      if(nextProps.launch){
+      if(nextProps.launch && nextProps.launch.id){
           this.state.launch = nextProps.launch;
       }
       this.setState(this.state);
