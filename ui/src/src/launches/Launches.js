@@ -28,6 +28,7 @@ class Launches extends SubComponent {
         this.getLaunches = this.getLaunches.bind(this);
         this.getPager = this.getPager.bind(this);
         this.handlePageChanged = this.handlePageChanged.bind(this);
+        this.updateUrl = this.updateUrl.bind(this);
     }
 
     componentDidMount() {
@@ -42,6 +43,7 @@ class Launches extends SubComponent {
         this.state.filter.skip = newPage * this.state.pager.itemsOnPage;
         this.getLaunches();
         this.setState(this.state);
+        this.updateUrl();
     }
 
     getLaunches(){
@@ -77,6 +79,10 @@ class Launches extends SubComponent {
     filterToQuery(filter){
         return Object.keys(filter).
                     map((key) => {return key + "=" + filter[key]}).join("&");
+    }
+
+    updateUrl(){
+        this.props.history.push("/" + this.props.match.params.project + '/launches?' + this.filterToQuery(this.state.filter));
     }
 
     render() {
