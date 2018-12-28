@@ -90,7 +90,7 @@ class Launches extends SubComponent {
           <div>
               <div>{
                     this.state.launches.map(function(launch){
-                        return (<div><Link to={'/' + this.props.match.params.project + '/launches/' + launch.id}>
+                        return (<div><Link to={'/' + this.props.match.params.project + '/launch/' + launch.id}>
                                         {launch.name}
                                     </Link>
                                </div>);

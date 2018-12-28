@@ -6,6 +6,7 @@ import Projects from '../projects/Projects'
 import ProjectForm from '../projects/ProjectForm'
 import Project from '../projects/Project'
 import Launches from '../launches/Launches'
+import Launch from '../launches/Launch'
 import Attributes from '../attributes/Attributes'
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCase from '../testcases/TestCase'
@@ -39,14 +40,16 @@ class Main extends Component {
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/projects/:project'
                       render={(props) => <Project {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
-                  <Route path='/:project/testcases/:testcase'
+                  <Route path='/:project/testcase/:testcase'
                       render={(props) => <TestCase {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testcases'
                       render={(props) => <TestCases {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testsuites'
                       render={(props) => <TestSuites {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
-                  <Route path='/:project/launches'
+                  <Route path='/:project/launches/'
                       render={(props) => <Launches {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+                  <Route path='/:project/launch/:launchId'
+                      render={(props) => <Launch {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/attributes'
                       render={(props) => <Attributes {...props} onProjectChange={this.onProjectChange.bind(this)} /> }/>
 
