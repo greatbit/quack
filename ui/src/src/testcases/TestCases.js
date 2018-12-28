@@ -7,6 +7,7 @@ import TestCase from '../testcases/TestCase'
 import axios from "axios";
 import $ from 'jquery';
 import queryString from 'query-string';
+import * as Utils from '../common/Utils';
 
 var jQuery = require('jquery');
 window.jQuery = jQuery;
@@ -33,7 +34,6 @@ class TestCases extends SubComponent {
     constructor(props) {
         super(props);
         this.onFilter = this.onFilter.bind(this);
-        this.parseTree = this.parseTree.bind(this);
         this.getTestCaseFromTree = this.getTestCaseFromTree.bind(this);
         this.refreshTree = this.refreshTree.bind(this);
         this.getQueryParams = this.getQueryParams.bind(this);
@@ -105,7 +105,7 @@ class TestCases extends SubComponent {
         this.tree = $("#tree").tree({
             primaryKey: 'id',
             uiLibrary: 'bootstrap4',
-            dataSource: this.parseTree()
+            dataSource: Utils.parseTree(this.state.testcasesTree)
         });
         this.tree.on('select', function (e, node, id) {
             this.state.selectedTestCase = this.getTestCaseFromTree(id);
@@ -129,10 +129,6 @@ class TestCases extends SubComponent {
 
      }
 
-     parseTree(){
-        return this.getTreeNode(this.state.testcasesTree).children || [];
-     }
-
      getTestCaseFromTree(id, head){
         if(!head){
             head = this.state.testcasesTree;
@@ -151,23 +147,6 @@ class TestCases extends SubComponent {
                     find(function(child){return child !== undefined})
         }
         return undefined;
-     }
-
-     getTreeNode(node){
-        var resultNode = {text: node.title, isLeaf: false, id: node.id};
-        if (node.testCases && node.testCases.length > 0){
-            resultNode.children = node.testCases.map(function(testCase){
-                return {
-                    text: testCase.name,
-                    id: testCase.id,
-                    isLeaf: true
-                }
-            })
-        }
-        if (node.children && node.children.length > 0){
-            resultNode.children = node.children.map(function(child){return this.getTreeNode(child)}.bind(this));
-        }
-        return resultNode;
      }
 
      getQueryParams(filter){
