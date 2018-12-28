@@ -59,6 +59,10 @@ public class LaunchService extends BaseService<Launch> {
                 tcTree.getChildren().stream().map(this::convertToLaunchTestCases).
                         collect(Collectors.toList())
         );
+        launchTestCaseTree.setTitle(tcTree.getTitle());
+        launchTestCaseTree.setId(tcTree.getId());
+        launchTestCaseTree.setCount(tcTree.getCount());
+        launchTestCaseTree.setIsLeaf(tcTree.isIsLeaf());
         return launchTestCaseTree;
     }
 
