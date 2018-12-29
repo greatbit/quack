@@ -34,7 +34,6 @@ class TestCases extends SubComponent {
     constructor(props) {
         super(props);
         this.onFilter = this.onFilter.bind(this);
-        this.getTestCaseFromTree = this.getTestCaseFromTree.bind(this);
         this.refreshTree = this.refreshTree.bind(this);
         this.getQueryParams = this.getQueryParams.bind(this);
         this.getFilterQParams = this.getFilterQParams.bind(this);
@@ -108,7 +107,7 @@ class TestCases extends SubComponent {
             dataSource: Utils.parseTree(this.state.testcasesTree)
         });
         this.tree.on('select', function (e, node, id) {
-            this.state.selectedTestCase = this.getTestCaseFromTree(id);
+            this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.testcasesTree, function(testCase, id){return testCase.id === id});
             this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(this.state.filter));
             this.setState(this.state);
         }.bind(this));
@@ -116,7 +115,7 @@ class TestCases extends SubComponent {
             var node = this.tree.getNodeById(this.state.selectedTestCase.id);
             this.tree.select(node);
             this.state.filter.groups.forEach(function(groupId){
-                var attributes = this.getTestCaseFromTree(this.state.selectedTestCase.id).attributes || [];
+                var attributes = Utils.getTestCaseFromTree(this.state.selectedTestCase.id, this.state.testcasesTree, function(testCase, id){return testCase.id === id}).attributes || [];
                 var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
                 var values = attribute.values || ["None"];
                 values.forEach(function(value){
@@ -127,26 +126,6 @@ class TestCases extends SubComponent {
             }.bind(this))
         }
 
-     }
-
-     getTestCaseFromTree(id, head){
-        if(!head){
-            head = this.state.testcasesTree;
-        }
-
-        if (head.testCases && head.testCases.length > 0){
-            var foundTestCase = (head.testCases || []).find(function(testCase){
-                return testCase.id === id;
-            })
-            if (foundTestCase){
-                return foundTestCase;
-            }
-        } else {
-            return (head.children || []).
-                    map(function(child){return this.getTestCaseFromTree(id, child)}.bind(this)).
-                    find(function(child){return child !== undefined})
-        }
-        return undefined;
      }
 
      getQueryParams(filter){
