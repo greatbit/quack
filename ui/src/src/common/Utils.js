@@ -13,6 +13,7 @@ export function getTreeNode(node){
             return {
                 text: testCase.name,
                 id: testCase.id,
+                uuid: testCase.uuid,
                 isLeaf: true
             }
         })
@@ -21,4 +22,25 @@ export function getTreeNode(node){
         resultNode.children = node.children.map(function(child){return getTreeNode(child)});
     }
     return resultNode;
+}
+
+export function getTestCaseFromTree(id, head, matcher){
+    if(!head){
+        head = this.state.testcasesTree;
+    }
+
+    if (head.testCases && head.testCases.length > 0){
+        var foundTestCase = (head.testCases || []).find(function(testCase){
+            return matcher(testCase, id);
+//            return testCase.id === id;
+        })
+        if (foundTestCase){
+            return foundTestCase;
+        }
+    } else {
+        return (head.children || []).
+                map(function(child){return getTestCaseFromTree(id, child, matcher)}.bind(this)).
+                find(function(child){return child !== undefined})
+    }
+    return undefined;
 }

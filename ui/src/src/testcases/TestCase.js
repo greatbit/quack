@@ -46,7 +46,9 @@ class TestCase extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        if (this.props.testcaseId){
+        if (this.props.testcase){
+            this.state.testcase = this.props.testcase;
+        } else if (this.props.testcaseId){
             this.projectId = this.props.projectId;
             this.getTestCase(this.props.projectId, this.props.testcaseId);
         } else if(this.props.match) {
@@ -56,7 +58,9 @@ class TestCase extends SubComponent {
      }
 
     componentWillReceiveProps(nextProps) {
-      if(nextProps.testcaseId){
+      if (nextProps.testcase){
+        this.state.testcase = nextProps.testcase;
+      } else if(nextProps.testcaseId){
         this.projectId = nextProps.projectId;
         this.getTestCase(nextProps.projectId, nextProps.testcaseId);
       }
@@ -67,7 +71,7 @@ class TestCase extends SubComponent {
     }
 
     componentDidUpdate(){
-        this.state.testcase.attributes.forEach(function(attribute, index){
+        (this.state.testcase.attributes || []).forEach(function(attribute, index){
             if (attribute.id && (
                     attribute.values === undefined || attribute.values === null || attribute.values.length == 0)
                 ){

@@ -49,14 +49,14 @@ class TestCases extends SubComponent {
             this.setState(this.state);
         }
 
-          axios
-            .get("/api/" + this.props.match.params.project + "/attribute")
-            .then(response => {
-                 this.state.projectAttributes = response.data;
-                 this.setState(this.state);
-                 this.refreshTree();
-            })
-            .catch(error => console.log(error));
+        axios
+          .get("/api/" + this.props.match.params.project + "/attribute")
+          .then(response => {
+               this.state.projectAttributes = response.data;
+               this.setState(this.state);
+               this.refreshTree();
+          })
+          .catch(error => console.log(error));
      }
 
      editTestcase(testcaseId){

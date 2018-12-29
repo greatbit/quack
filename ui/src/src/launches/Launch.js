@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
+import TestCase from '../testcases/TestCase'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -29,6 +30,14 @@ class Launch extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
+        axios
+            .get("/api/" + this.props.match.params.project + "/attribute")
+            .then(response => {
+                 this.state.projectAttributes = response.data;
+                 this.setState(this.state);
+                 this.refreshTree();
+            })
+            .catch(error => console.log(error));
         this.getLaunch();
     }
 
@@ -52,6 +61,26 @@ class Launch extends SubComponent {
             uiLibrary: 'bootstrap4',
             dataSource: Utils.parseTree(this.state.launch.testCaseTree)
         });
+        this.tree.on('select', function (e, node, id) {
+            this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
+            this.props.history.push("/" + this.props.match.params.project + '/launch/' + this.state.launch.id + '/' + id);
+            this.setState(this.state);
+        }.bind(this));
+//        ToDo: expand tree if got to LaunchTestCase by url
+//        if (this.state.selectedTestCase.id){
+//            var node = this.tree.getNodeById(this.state.selectedTestCase.uuid);
+//            this.tree.select(node);
+//            this.state.filter.groups.forEach(function(groupId){
+//                var attributes = this.getTestCaseFromTree(this.state.selectedTestCase.id).attributes || [];
+//                var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
+//                var values = attribute.values || ["None"];
+//                values.forEach(function(value){
+//                    var node = this.tree.getNodeById(groupId + ":" + value);
+//                    this.tree.expand(node);
+//                }.bind(this))
+//
+//            }.bind(this))
+//        }
 
     }
 
@@ -63,7 +92,7 @@ class Launch extends SubComponent {
                       <div id="tree"></div>
                   </div>
                   <div id="testCase" className="testcase-side col-7">
-                      Current Testcase Here
+                      <TestCase testcase={this.state.selectedTestCase} projectAttributes={this.state.projectAttributes} />
                   </div>
                 </div>
           </div>
