@@ -48,7 +48,9 @@ class Main extends Component {
                       render={(props) => <TestSuites {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/launches/'
                       render={(props) => <Launches {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
-                  <Route path='/:project/launch/:launchId'
+                  <Route exact path='/:project/launch/:launchId'
+                      render={(props) => <Launch {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+                  <Route path='/:project/launch/:launchId/:testcaseUuid'
                       render={(props) => <Launch {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/attributes'
                       render={(props) => <Attributes {...props} onProjectChange={this.onProjectChange.bind(this)} /> }/>

@@ -19,13 +19,19 @@ require('gijgo/css/gijgo.min.css');
 class Launch extends SubComponent {
 
     state = {
-        launch: {}
+        launch: {},
+        selectedTestCase: {
+            uuid: null
+        }
     };
 
     constructor(props) {
         super(props);
         this.getLaunch = this.getLaunch.bind(this);
         this.buildTree = this.buildTree.bind(this);
+        if (this.props.match.params.testcaseUuid){
+            this.state.selectedTestCase = {uuid: this.props.match.params.testcaseUuid};
+        }
     }
 
     componentDidMount() {
@@ -46,8 +52,12 @@ class Launch extends SubComponent {
             .get("/api/" + this.props.match.params.project + "/launch/" + this.props.match.params.launchId)
             .then(response => {
                  this.state.launch = response.data;
+                 if (this.state.selectedTestCase.uuid){
+                     this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
+                 }
                  this.setState(this.state);
                  this.buildTree();
+
         })
             .catch(error => console.log(error));
     }
