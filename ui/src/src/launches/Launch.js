@@ -71,27 +71,27 @@ class Launch extends SubComponent {
             uiLibrary: 'bootstrap4',
             dataSource: Utils.parseTree(this.state.launch.testCaseTree)
         });
+
         this.tree.on('select', function (e, node, id) {
             this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
             this.props.history.push("/" + this.props.match.params.project + '/launch/' + this.state.launch.id + '/' + id);
             this.setState(this.state);
         }.bind(this));
-//        ToDo: expand tree if got to LaunchTestCase by url
-//        if (this.state.selectedTestCase.id){
-//            var node = this.tree.getNodeById(this.state.selectedTestCase.uuid);
-//            this.tree.select(node);
-//            this.state.filter.groups.forEach(function(groupId){
-//                var attributes = this.getTestCaseFromTree(this.state.selectedTestCase.id).attributes || [];
-//                var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
-//                var values = attribute.values || ["None"];
-//                values.forEach(function(value){
-//                    var node = this.tree.getNodeById(groupId + ":" + value);
-//                    this.tree.expand(node);
-//                }.bind(this))
-//
-//            }.bind(this))
-//        }
+        if (this.state.selectedTestCase.uuid){
+            var node = this.tree.getNodeById(this.state.selectedTestCase.uuid);
+            this.tree.select(node);
+            this.state.launch.testSuite.filter.groups.forEach(function(groupId){
+                var selectedTestCaseInTree = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id});
+                var attributes = selectedTestCaseInTree.attributes || [];
+                var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
+                var values = attribute.values || ["None"];
+                values.forEach(function(value){
+                    var node = this.tree.getNodeById(groupId + ":" + value);
+                    this.tree.expand(node);
+                }.bind(this))
 
+            }.bind(this))
+        }
     }
 
     render() {

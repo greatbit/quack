@@ -7,7 +7,7 @@ export function parseTree(testcasesTree){
 }
 
 export function getTreeNode(node){
-    var resultNode = {text: node.title, isLeaf: false, id: node.id};
+    var resultNode = {text: node.title, isLeaf: false, id: node.id, uuid: node.uuid};
     if (node.testCases && node.testCases.length > 0){
         resultNode.children = node.testCases.map(function(testCase){
             return {
@@ -32,7 +32,6 @@ export function getTestCaseFromTree(id, head, matcher){
     if (head.testCases && head.testCases.length > 0){
         var foundTestCase = (head.testCases || []).find(function(testCase){
             return matcher(testCase, id);
-//            return testCase.id === id;
         })
         if (foundTestCase){
             return foundTestCase;
