@@ -102,7 +102,11 @@ class Launch extends SubComponent {
                       <div id="tree"></div>
                   </div>
                   <div id="testCase" className="testcase-side col-7">
-                      <TestCase testcase={this.state.selectedTestCase} projectAttributes={this.state.projectAttributes} />
+                      <TestCase
+                        testcase={this.state.selectedTestCase}
+                        projectAttributes={this.state.projectAttributes}
+                        readonly={true}
+                      />
                   </div>
                 </div>
           </div>

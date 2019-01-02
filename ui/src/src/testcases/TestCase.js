@@ -23,7 +23,8 @@ class TestCase extends SubComponent {
                 steps: [],
                 attributes: []
              },
-             projectAttributes: []
+             projectAttributes: [],
+             readonly: false
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
@@ -46,6 +47,9 @@ class TestCase extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
+        if (this.props.readonly){
+            this.state.readonly = true;
+        }
         if (this.props.testcase){
             this.state.testcase = this.props.testcase;
         } else if (this.props.testcaseId){
@@ -227,50 +231,62 @@ class TestCase extends SubComponent {
               <div id="name" className="testcase-section">
                 <div id="name-display" className="inplace-display">
                     <h1>{this.state.testcase.name}
-                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                        {!this.state.readonly &&
+                            <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                        }
                     </h1>
                 </div>
-                <div id="name-form" className="inplace-form" style={{display: 'none'}}>
-                    <form>
-                        <input type="text" name="name" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
-                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
-                    </form>
-                </div>
+                {!this.state.readonly &&
+                    <div id="name-form" className="inplace-form" style={{display: 'none'}}>
+                        <form>
+                            <input type="text" name="name" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
+                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
+                        </form>
+                    </div>
+                }
               </div>
 
               <div id="description" className="testcase-section">
                 <h5>
                     Description
-                    <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                    {!this.state.readonly &&
+                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                    }
                 </h5>
                 <div id="description-display" className="inplace-display">
                     {this.state.testcase.description}
                 </div>
-                <div id="description-form" className="inplace-form" style={{display: 'none'}}>
-                    <form>
-                        <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
-                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
-                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
-                    </form>
-                </div>
+                {!this.state.readonly &&
+                    <div id="description-form" className="inplace-form" style={{display: 'none'}}>
+                        <form>
+                            <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
+                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
+                        </form>
+                    </div>
+                }
               </div>
 
               <div id="preconditions" className="testcase-section">
                   <h5>
                       Preconditions
-                      <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                      {!this.state.readonly &&
+                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                      }
                   </h5>
                   <div id="preconditions-display" className="inplace-display">
                       {this.state.testcase.preconditions}
                   </div>
-                  <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
-                      <form>
-                          <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
-                          <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
-                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
-                      </form>
-                  </div>
+                  {!this.state.readonly &&
+                      <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
+                          <form>
+                              <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
+                              <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
+                              <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
+                          </form>
+                      </div>
+                  }
               </div>
 
               <div id="steps" className="testcase-section">
@@ -302,27 +318,33 @@ class TestCase extends SubComponent {
                                          <div className="col">{i + 1}. </div>
                                          <div className="col">{this.state.testcase.steps[i].action}</div>
                                          <div className="col">{this.state.testcase.steps[i].expectation}</div>
-                                         <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                         {!this.state.readonly &&
+                                            <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                         }
                                       </div>
                                   </div>
-                                  <div id={"steps-" + i + "-form"} className="inplace-form"style={{display: 'none'}}>
-                                      <div index={i}>
-                                          <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
-                                          <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                  {!this.state.readonly &&
+                                      <div id={"steps-" + i + "-form"} className="inplace-form"style={{display: 'none'}}>
+                                          <div index={i}>
+                                              <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                              <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                          </div>
+                                          <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
+                                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
                                       </div>
-                                      <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
-                                  </div>
+                                  }
                               </div>
                           )}
 
                       }.bind(this))
                     }
-                    <div>
-                      <button type="button" className="btn btn-primary" onClick={this.addStep}>
-                         Add
-                      </button>
-                    </div>
+                    {!this.state.readonly &&
+                        <div>
+                          <button type="button" className="btn btn-primary" onClick={this.addStep}>
+                             Add
+                          </button>
+                        </div>
+                    }
                </div>
 
               <div id="attributes" className="testcase-section">
@@ -337,25 +359,31 @@ class TestCase extends SubComponent {
                               <div id={"attributes-" + i + "-display"} className="inplace-display">
                                 <div index={i}>
                                   {this.getAttributeName(attribute.id)}
-                                  <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("attributes", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
-                                  <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
+                                  {!this.state.readonly &&
+                                      <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("attributes", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                  }
+                                  {!this.state.readonly &&
+                                      <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
+                                  }
                                 </div>
                               </div>
-                              <div id={"attributes-" + i + "-form"} className="inplace-form" style={{display: 'none'}}>
-                                <form>
-                                  <div index={i}>
-                                    {this.getAttributeName(attribute.id)}
-                                    <CreatableSelect value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
-                                      isMulti
-                                      isClearable
-                                      onChange={(e) => this.editAttributeValues(i, e)}
-                                      options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
-                                     />
+                              {!this.state.readonly &&
+                                  <div id={"attributes-" + i + "-form"} className="inplace-form" style={{display: 'none'}}>
+                                    <form>
+                                      <div index={i}>
+                                        {this.getAttributeName(attribute.id)}
+                                        <CreatableSelect value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
+                                          isMulti
+                                          isClearable
+                                          onChange={(e) => this.editAttributeValues(i, e)}
+                                          options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
+                                         />
+                                      </div>
+                                      <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeValues(e, i)}>Cancel</button>
+                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, i)}>Save</button>
+                                    </form>
                                   </div>
-                                  <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeValues(e, i)}>Cancel</button>
-                                  <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, i)}>Save</button>
-                                </form>
-                              </div>
+                              }
                           </div>
                         )
                         } else {
@@ -379,11 +407,13 @@ class TestCase extends SubComponent {
 
                     }.bind(this))
                   }
-                  <div>
-                    <button type="button" className="btn btn-primary" onClick={this.addAttribute}>
-                       Add
-                    </button>
-                  </div>
+                  {!this.state.readonly &&
+                      <div>
+                        <button type="button" className="btn btn-primary" onClick={this.addAttribute}>
+                           Add
+                        </button>
+                      </div>
+                  }
               </div>
             </div>
         );
