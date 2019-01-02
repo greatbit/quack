@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
+import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -32,12 +33,13 @@ class Launch extends SubComponent {
         if (this.props.match.params.testcaseUuid){
             this.state.selectedTestCase = {uuid: this.props.match.params.testcaseUuid};
         }
+        this.state.projectId = this.props.match.params.project;
     }
 
     componentDidMount() {
         super.componentDidMount();
         axios
-            .get("/api/" + this.props.match.params.project + "/attribute")
+            .get("/api/" + this.state.projectId + "/attribute")
             .then(response => {
                  this.state.projectAttributes = response.data;
                  this.setState(this.state);
@@ -49,7 +51,7 @@ class Launch extends SubComponent {
 
     getLaunch(){
         axios
-            .get("/api/" + this.props.match.params.project + "/launch/" + this.props.match.params.launchId)
+            .get("/api/" + this.state.projectId + "/launch/" + this.props.match.params.launchId)
             .then(response => {
                  this.state.launch = response.data;
                  if (this.state.selectedTestCase.uuid){
@@ -74,7 +76,7 @@ class Launch extends SubComponent {
 
         this.tree.on('select', function (e, node, id) {
             this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
-            this.props.history.push("/" + this.props.match.params.project + '/launch/' + this.state.launch.id + '/' + id);
+            this.props.history.push("/" + this.state.projectId + '/launch/' + this.state.launch.id + '/' + id);
             this.setState(this.state);
         }.bind(this));
         if (this.state.selectedTestCase.uuid){
@@ -106,6 +108,11 @@ class Launch extends SubComponent {
                         testcase={this.state.selectedTestCase}
                         projectAttributes={this.state.projectAttributes}
                         readonly={true}
+                      />
+                      <LaunchTestcaseControls
+                        testcase={this.state.selectedTestCase}
+                        launchId={this.state.launch.id}
+                        projectId={this.state.projectId}
                       />
                   </div>
                 </div>
