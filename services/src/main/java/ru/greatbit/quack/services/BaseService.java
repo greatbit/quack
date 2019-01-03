@@ -1,6 +1,9 @@
 package ru.greatbit.quack.services;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.ILock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.dal.CommonRepository;
@@ -11,6 +14,7 @@ import ru.greatbit.whoru.auth.Session;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static java.lang.String.format;
@@ -20,8 +24,15 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public abstract class BaseService<E extends Entity> {
     protected final Logger logger = Logger.getLogger(getClass().getName());
 
+    @Value("${entity.lock.ttl.min}")
+    private long lockTtl;
+
+
     @Autowired
-    ProjectService projectService;
+    private HazelcastInstance hazelcastInstance;
+
+    @Autowired
+    protected ProjectService projectService;
 
     protected abstract CommonRepository<E> getRepository();
 
@@ -136,13 +147,20 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected E update(Session session, String projectId, E entity){
-        beforeUpdate(session, entity);
-        if (!userCanUpdate(session, projectId, entity)){
-            throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
+        ILock lock = hazelcastInstance.getLock(entity.getClass()+ entity.getId());
+        try{
+            lock.lock(lockTtl, TimeUnit.MINUTES);
+            beforeUpdate(session, entity);
+            if (!userCanUpdate(session, projectId, entity)){
+                throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
+            }
+            entity = doSave(session, projectId, entity);
+            afterUpdate(session, entity);
+            return entity;
+        } finally {
+            lock.unlock();
         }
-        entity = doSave(session, projectId, entity);
-        afterUpdate(session, entity);
-        return entity;
+
     }
 
     private E doSave(Session session, String projectId, E entity){

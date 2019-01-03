@@ -5,13 +5,19 @@ import org.springframework.stereotype.Service;
 import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.dal.LaunchRepository;
+import ru.greatbit.quack.services.errors.EntityAccessDeniedException;
+import ru.greatbit.quack.services.errors.EntityNotFoundException;
 import ru.greatbit.whoru.auth.Session;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
+import static ru.greatbit.quack.beans.LaunchStatus.RUNNABLE;
+import static ru.greatbit.quack.beans.LaunchStatus.RUNNING;
+import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
 @Service
 public class LaunchService extends BaseService<Launch> {
@@ -27,6 +33,21 @@ public class LaunchService extends BaseService<Launch> {
         return repository;
     }
 
+    public LaunchTestCase updateLaunchTestCaseStatus(Session session, String projectId,
+                                                     String launchId, String testCaseUUID,
+                                                     LaunchStatus status){
+        Launch launch = findOne(session, projectId, launchId);
+        LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
+        if (launchTestCase == null){
+            throw new EntityNotFoundException(
+                    format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
+            );
+        }
+        updateStatus(session.getPerson().getId(), launchTestCase, status);
+        update(session, projectId, launch);
+        return launchTestCase;
+    }
+
     @Override
     protected void beforeCreate(Session session, String projectId, Launch launch) {
         if (launch.getTestSuite() != null && !isEmpty(launch.getTestSuite().getId())){
@@ -34,7 +55,7 @@ public class LaunchService extends BaseService<Launch> {
         } else if ( launch.getTestSuite() != null && launch.getTestSuite().getFilter() != null){
             fillLaunchByFilter(session, projectId, launch);
         }
-        launch.setStatus(LaunchStatus.RUNNABLE);
+        launch.setStatus(RUNNABLE);
         super.beforeCreate(session, projectId, launch);
     }
 
@@ -49,7 +70,7 @@ public class LaunchService extends BaseService<Launch> {
                     LaunchTestCase launchTestCase = new LaunchTestCase();
                     testCase.copyTo(launchTestCase);
                     return launchTestCase.withUuid(UUID.randomUUID().toString()).
-                            withLaunchStatus(LaunchStatus.RUNNABLE);
+                            withLaunchStatus(RUNNABLE);
 
                 }
         ).collect(Collectors.toList());
@@ -71,5 +92,39 @@ public class LaunchService extends BaseService<Launch> {
 
     private void fillLaunchBySuite(Launch launch) {
 
+    }
+
+    private LaunchTestCase findLaunchTestCaseInTree(LaunchTestCaseTree tree, String uuid){
+        LaunchTestCase testCase = tree.getTestCases().stream().
+                filter(testcase -> testcase.getUuid().equals(uuid)).
+                findFirst().orElse(null);
+        if (testCase == null){
+            for (LaunchTestCaseTree child : tree.getChildren()) {
+                testCase = findLaunchTestCaseInTree(child, uuid);
+                if (testCase != null) {
+                    return testCase;
+                }
+            }
+        }
+        return testCase;
+    }
+
+    private void updateStatus(String userId, LaunchTestCase launchTestCase, LaunchStatus status) {
+        LaunchStatus currentStatus = launchTestCase.getLaunchStatus();
+        if (currentStatus.equals(RUNNING) &&
+                !emptyIfNull(launchTestCase.getCurrentUser()).equals(userId) &&
+                !status.equals(RUNNABLE)){
+            throw new EntityAccessDeniedException(
+                    format("Test Case with UUID %s is being executed by user %s", launchTestCase.getUuid(), launchTestCase.getCurrentUser())
+            );
+        } else {
+            if (status.equals(RUNNING)){
+                launchTestCase.setCurrentUser(userId);
+            }
+            launchTestCase.setLaunchStatus(status);
+        }
+        if (!launchTestCase.getUsers().contains(userId)){
+            launchTestCase.getUsers().add(userId);
+        }
     }
 }

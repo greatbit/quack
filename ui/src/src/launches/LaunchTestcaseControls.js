@@ -29,7 +29,7 @@ class LaunchTestcaseControls extends Component {
     }
 
     handleStatusSubmit(status, event){
-        axios.post('/api/' + this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/' + status)
+        axios.post('/api/' + this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/status/' + status)
             .then(response => {
                 this.state.testcase = response.data;
                 this.setState(this.state);
