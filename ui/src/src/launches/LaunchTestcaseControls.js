@@ -51,12 +51,38 @@ class LaunchTestcaseControls extends Component {
                 <button type="button" class="btn btn-danger" onClick={(e) => this.handleStatusSubmit("FAILED", e)}>Fail</button>
                 <button type="button" class="btn btn-warning" onClick={(e) => this.handleStatusSubmit("BROKEN", e)}>Broken</button>
                 <button type="button" class="btn btn-secondary" onClick={(e) => this.handleStatusSubmit("SKIPPED", e)}>Skip</button>
+                <button type="button" class="btn btn-warning" onClick={(e) => this.handleStatusSubmit("RUNNABLE", e)}>X</button>
             </div>
         )
     }
 
     renderFinished(){
-        return <button type="button" class="btn btn-warning" onClick={(e) => this.handleStatusSubmit("RUNNABLE", e)}>X</button>
+        return(
+            <div>
+                <button class={this.getStatusAlertClass()} role="alert">
+                  {this.state.testcase.launchStatus}
+                </button>
+                <button type="button" class="btn" onClick={(e) => this.handleStatusSubmit("RUNNABLE", e)}>X</button>
+            </div>
+        )
+    }
+
+    getStatusAlertClass(){
+        switch (this.state.testcase.launchStatus) {
+          case 'FAILED':
+            return 'alert alert-danger';
+            break;
+          case 'BROKEN':
+            return 'alert alert-warning';
+            break;
+          case 'PASSED':
+            return 'alert alert-success';
+            break;
+          case 'SKIPPED':
+            return 'alert alert-secondary';
+            break;
+        }
+        return 'alert';
     }
 
     renderButtons(){
