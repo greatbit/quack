@@ -30,6 +30,7 @@ class Launch extends SubComponent {
         super(props);
         this.getLaunch = this.getLaunch.bind(this);
         this.buildTree = this.buildTree.bind(this);
+        this.onTestcaseStateChanged = this.onTestcaseStateChanged.bind(this);
         if (this.props.match.params.testcaseUuid){
             this.state.selectedTestCase = {uuid: this.props.match.params.testcaseUuid};
         }
@@ -96,6 +97,11 @@ class Launch extends SubComponent {
         }
     }
 
+    onTestcaseStateChanged(testcase){
+        var updatedTestCase = Utils.getTestCaseFromTree(testcase.uuid, this.state.launch.testCaseTree, function(testcase, id){return testcase.uuid === testcase.uuid} );
+        Object.assign(updatedTestCase, testcase);
+    }
+
     render() {
         return (
           <div>
@@ -113,6 +119,7 @@ class Launch extends SubComponent {
                         testcase={this.state.selectedTestCase}
                         launchId={this.state.launch.id}
                         projectId={this.state.projectId}
+                        callback={this.onTestcaseStateChanged}
                       />
                   </div>
                 </div>

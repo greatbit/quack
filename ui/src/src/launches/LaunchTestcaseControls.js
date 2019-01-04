@@ -12,10 +12,10 @@ class LaunchTestcaseControls extends Component {
         this.state.testcase = this.props.testcase;
         this.state.launchId = this.props.launchId;
         this.state.projectId = this.props.projectId;
-        this.callback = this.props.callback || function(){}
     }
 
     componentDidMount() {
+        this.callback = this.props.callback || function(testcase){}
     }
 
     componentWillReceiveProps(nextProps) {
