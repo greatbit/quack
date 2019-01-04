@@ -14,7 +14,8 @@ export function getTreeNode(node){
                 text: testCase.name,
                 id: testCase.id,
                 uuid: testCase.uuid,
-                isLeaf: true
+                isLeaf: true,
+                statusUrl: getStatusUrl(testCase)
             }
         })
     }
@@ -40,6 +41,30 @@ export function getTestCaseFromTree(id, head, matcher){
         return (head.children || []).
                 map(function(child){return getTestCaseFromTree(id, child, matcher)}.bind(this)).
                 find(function(child){return child !== undefined})
+    }
+    return undefined;
+}
+
+export function getStatusUrl(testCase){
+    if (testCase && testCase.launchStatus){
+        switch (testCase.launchStatus) {
+          case 'FAILED':
+            return '/images/fail.png';
+            break;
+          case 'BROKEN':
+            return '/images/broken.png';
+            break;
+          case 'PASSED':
+            return '/images/passed.png';
+            break;
+          case 'SKIPPED':
+            return '/images/skipped.png';
+            break;
+          case 'RUNNING':
+            return '/images/running.png';
+            break;
+        }
+        return '/images/1px.png';
     }
     return undefined;
 }

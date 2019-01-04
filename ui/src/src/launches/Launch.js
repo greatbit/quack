@@ -44,7 +44,6 @@ class Launch extends SubComponent {
             .then(response => {
                  this.state.projectAttributes = response.data;
                  this.setState(this.state);
-                 this.refreshTree();
             })
             .catch(error => console.log(error));
         this.getLaunch();
@@ -72,6 +71,7 @@ class Launch extends SubComponent {
         this.tree = $("#tree").tree({
             primaryKey: 'uuid',
             uiLibrary: 'bootstrap4',
+            imageUrlField: 'statusUrl',
             dataSource: Utils.parseTree(this.state.launch.testCaseTree)
         });
 
