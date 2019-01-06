@@ -100,6 +100,8 @@ class Launch extends SubComponent {
     onTestcaseStateChanged(testcase){
         var updatedTestCase = Utils.getTestCaseFromTree(testcase.uuid, this.state.launch.testCaseTree, function(testcase, id){return testcase.uuid === testcase.uuid} );
         Object.assign(updatedTestCase, testcase);
+        this.tree.dataSource = Utils.parseTree(this.state.launch.testCaseTree);
+        $("li[data-id='" + testcase.uuid + "']").find("img").attr("src", Utils.getStatusUrl(testcase));
     }
 
     render() {
