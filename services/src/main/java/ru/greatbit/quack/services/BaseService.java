@@ -119,6 +119,8 @@ public abstract class BaseService<E extends Entity> {
         if (!isEmpty(entity.getId()) && getRepository().exists(projectId, entity.getId())){
             throw new EntityValidationException(format("Entity with id [%s] already exists", entity.getId()));
         }
+        entity.setCreatedTime(System.currentTimeMillis());
+        entity.setCreatedBy(session.getPerson().getId());
     }
     protected void afterCreate(Session session, E entity){}
     protected void beforeUpdate(Session session, E entity){}

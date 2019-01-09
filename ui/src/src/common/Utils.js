@@ -70,6 +70,9 @@ export function getStatusUrl(testCase){
 }
 
 export function timeToDate(time) {
+    if (!time || time == 0){
+        return 'No data'
+    }
     var date = new Date(parseInt(time));
     var currMinutes = date.getMinutes();
     var monthNames = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
