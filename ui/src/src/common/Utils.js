@@ -68,3 +68,14 @@ export function getStatusUrl(testCase){
     }
     return undefined;
 }
+
+export function timeToDate(time) {
+    var date = new Date(parseInt(time));
+    var currMinutes = date.getMinutes();
+    var monthNames = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    if (currMinutes < 10) {
+        currMinutes = "0" + currMinutes;
+    }
+    return date.getDate() + " " + monthNames[date.getMonth()]
+        + " " + date.getHours() + ":" + currMinutes;
+};
