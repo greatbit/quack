@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Map;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -12,6 +13,9 @@ public class Launch extends LaunchBase {
 
     @XmlElement(required = true)
     protected LaunchTestCaseTree testCaseTree;
+
+    @XmlElement(required = true)
+    protected LaunchStats launchStats = new LaunchStats();
 
     /**
      * Gets the value of the testCaseTree property.
@@ -37,4 +41,11 @@ public class Launch extends LaunchBase {
         this.testCaseTree = value;
     }
 
+    public LaunchStats getLaunchStats() {
+        return launchStats;
+    }
+
+    public void setLaunchStats(LaunchStats launchStats) {
+        this.launchStats = launchStats;
+    }
 }

@@ -59,6 +59,30 @@ public class LaunchService extends BaseService<Launch> {
         super.beforeCreate(session, projectId, launch);
     }
 
+    @Override
+    protected void beforeSave(Session session, Launch launch) {
+        super.beforeSave(session, launch);
+        updateLaunchStatus(launch);
+    }
+
+    private void updateLaunchStatus(Launch launch) {
+        launch.setLaunchStats(new LaunchStats());
+        updateLaunchStatus(launch.getLaunchStats(), launch.getTestCaseTree());
+    }
+
+    private void updateLaunchStatus(LaunchStats launchStats, LaunchTestCaseTree testCaseTree) {
+        updateLaunchStatus(launchStats, testCaseTree.getTestCases());
+        testCaseTree.getChildren().forEach(child -> updateLaunchStatus(launchStats, child));
+    }
+
+    private void updateLaunchStatus(LaunchStats launchStats, List<LaunchTestCase> testCases) {
+        testCases.forEach(testCase -> {
+            launchStats.setTotal(launchStats.getTotal() + 1);
+            int counter = launchStats.getStatusCounters().get(testCase.getLaunchStatus());
+            launchStats.getStatusCounters().put(testCase.getLaunchStatus(), counter+1);
+        });
+    }
+    
     private void fillLaunchByFilter(Session session, String projectId, Launch launch) {
         TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, (TestcaseFilter) launch.getTestSuite().getFilter());
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
