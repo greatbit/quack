@@ -10,13 +10,13 @@ import ru.greatbit.quack.services.errors.EntityNotFoundException;
 import ru.greatbit.whoru.auth.Session;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
-import static ru.greatbit.quack.beans.LaunchStatus.RUNNABLE;
-import static ru.greatbit.quack.beans.LaunchStatus.RUNNING;
+import static ru.greatbit.quack.beans.LaunchStatus.*;
 import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
 @Service
@@ -68,6 +68,20 @@ public class LaunchService extends BaseService<Launch> {
     private void updateLaunchStatus(Launch launch) {
         launch.setLaunchStats(new LaunchStats());
         updateLaunchStatus(launch.getLaunchStats(), launch.getTestCaseTree());
+        if (isLaunchFinished(launch) && launch.getFinishTime() == 0){
+            launch.setFinishTime(System.currentTimeMillis());
+        }
+        if (!isLaunchFinished(launch) &&
+                launch.getLaunchStats().getStatusCounters().getOrDefault(RUNNABLE, 0) != launch.getLaunchStats().getTotal() &&
+                launch.getStartTime() == 0){
+            launch.setStartTime(System.currentTimeMillis());
+        }
+    }
+
+    private boolean isLaunchFinished(Launch launch) {
+        Map<LaunchStatus, Integer> statusCounters = launch.getLaunchStats().getStatusCounters();
+        return launch.getLaunchStats().getTotal() == statusCounters.get(PASSED) +
+                statusCounters.get(FAILED) + statusCounters.get(BROKEN) + statusCounters.get(SKIPPED);
     }
 
     private void updateLaunchStatus(LaunchStats launchStats, LaunchTestCaseTree testCaseTree) {

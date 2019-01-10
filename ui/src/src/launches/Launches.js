@@ -128,7 +128,7 @@ class Launches extends SubComponent {
                                        <td>{this.getProgressBar(launch)}</td>
                                        <td>{Utils.timeToDate(launch.createdTime)}</td>
                                        <td>{Utils.timeToDate(launch.startTime)}</td>
-                                       <td>{Utils.timeToDate(launch.stopTime)}</td>
+                                       <td>{Utils.timeToDate(launch.finishTime)}</td>
                                    </tr>
                                    );
                         }.bind(this))
