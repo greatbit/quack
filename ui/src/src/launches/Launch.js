@@ -46,10 +46,11 @@ class Launch extends SubComponent {
                  this.setState(this.state);
             })
             .catch(error => console.log(error));
-        this.getLaunch();
+        this.getLaunch(true);
+        this.interval = setInterval(this.getLaunch, 30000);
     }
 
-    getLaunch(){
+    getLaunch(buildTree){
         axios
             .get("/api/" + this.state.projectId + "/launch/" + this.props.match.params.launchId)
             .then(response => {
@@ -58,7 +59,10 @@ class Launch extends SubComponent {
                      this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
                  }
                  this.setState(this.state);
-                 this.buildTree();
+                 if (buildTree){
+                    this.buildTree();
+                 }
+                 this.checkUpdatedTestCases();
 
         })
             .catch(error => console.log(error));
@@ -102,6 +106,34 @@ class Launch extends SubComponent {
         Object.assign(updatedTestCase, testcase);
         this.tree.dataSource = Utils.parseTree(this.state.launch.testCaseTree);
         $("li[data-id='" + testcase.uuid + "']").find("img").attr("src", Utils.getStatusUrl(testcase));
+    }
+
+    checkUpdatedTestCases(){
+        if (!this.testCasesStateMap){
+            this.buildTestCasesStateMap(this.state.launch.testCaseTree);
+        }
+        this.updateTestCasesStateFromLaunch(this.state.launch.testCaseTree);
+    }
+
+    updateTestCasesStateFromLaunch(tree){
+        tree.testCases.forEach(function(testCase){
+            if (this.testCasesStateMap && this.testCasesStateMap[testCase.uuid] !== testCase.launchStatus){
+                this.onTestcaseStateChanged(testCase);
+            }
+        }.bind(this))
+        tree.children.forEach(function(child){
+            this.updateTestCasesStateFromLaunch(child);
+        }.bind(this))
+    }
+
+    buildTestCasesStateMap(tree){
+        this.testCasesStateMap = {};
+        tree.testCases.forEach(function(testCase){
+            this.testCasesStateMap[testCase.uuid] = testCase.launchStatus;
+        }.bind(this))
+        tree.children.forEach(function(child){
+            this.buildTestCasesStateMap(child);
+        }.bind(this))
     }
 
     render() {
