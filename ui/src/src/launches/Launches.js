@@ -37,6 +37,7 @@ class Launches extends SubComponent {
         this.queryToFilter();
         this.getLaunches();
         this.getPager();
+        this.intervalId = setInterval(this.getLaunches, 30000);
     }
 
     handlePageChanged(newPage) {
