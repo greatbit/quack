@@ -8,7 +8,7 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.emptyState = {session : {person: {firstName: "Guest"}}};
-        this.state = Object.assign({}, {session: this.props.session});
+        this.state = Object.assign({}, {session: this.props.session, projects: []});
         this.logOut = this.logOut.bind(this);
     }
 
@@ -24,17 +24,45 @@ class Header extends Component {
             }
           })
           .catch(error => this.props.history.push("/auth"));
+        axios
+          .get("/api/project?includedFields=name,description,id")
+          .then(response => {
+              this.state.projects = response.data;
+              this.setState(this.state);
+          })
+
+        axios
+          .get("/api/project?includedFields=name,description,id")
+          .then(response => {
+              this.state.projects = response.data;
+              this.setState(this.state);
+          })
+        this.getProject();
     }
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.session){
-        this.state = Object.assign({}, {session: this.props.session});
+        this.state.session = this.props.session;
+      }
+      if(nextProps.project){
+        this.state.projectId = nextProps.project;
+        this.getProject();
       }
       this.setState(this.state);
     }
 
     onSessionChange(session){
         this.props.onSessionChange(session)
+    }
+
+    getProject(){
+        axios
+          .get("/api/project/" + this.state.projectId)
+          .then(response => {
+              this.state.projectName = response.data.name;
+              this.state.projectId = response.data.id;
+              this.setState(this.state);
+          })
     }
 
     logOut(){
@@ -49,6 +77,27 @@ class Header extends Component {
           .catch(error => console.log(error));
     }
 
+    renderProjects(){
+        return (
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-projects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {this.state.projectName || 'Projects'}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-projects">
+                  <Link className="dropdown-item " to="/projects">All</Link>
+                  {this.state.projects.map(function(project){
+                      return (
+                           <Link to={'/projects/' + project.id} className='dropdown-item'>{project.name}</Link>
+                      )
+                  })}
+                </div>
+              </li>
+          </ul>
+        )
+    }
+
+
     render() {
         let profileContext;
         if (this.state.session.id){
@@ -62,7 +111,6 @@ class Header extends Component {
           } else {
             profileContext = <a class="dropdown-item active" href="/auth">Login</a>
         }
-
         return (
           <nav className="navbar navbar-expand-md navbar-dark bg-dark">
             <Link className="navbar-brand" to="/">QuAck</Link>
@@ -70,19 +118,24 @@ class Header extends Component {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav mr-auto">
-                <li className="nav-item"><Link className="nav-link" to="/projects">Projects</Link></li>
-                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/attributes"}>Attributes</Link></li>
-                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testcases"}>TestCases</Link></li>
-                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>Suites</Link></li>
-                <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/launches"}>Launches</Link></li>
-              </ul>
+            {this.renderProjects()}
+            {!this.props.project &&
+                <ul className="navbar-nav mr-auto"></ul>
+            }
+            {this.props.project &&
+                <ul className="navbar-nav mr-auto">
+                    <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/attributes"}>Attributes</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testcases"}>TestCases</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>Suites</Link></li>
+                    <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/launches"}>Launches</Link></li>
+                </ul>
+            }
               <ul class="navbar-nav">
                   <li class="nav-item dropdown">
-                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {this.state.session.person.firstName || ""} {this.state.session.person.lastName || ""}
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-login">
                       {profileContext}
                     </div>
                   </li>

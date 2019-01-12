@@ -39,11 +39,14 @@ class App extends Component {
 
     render() {
         return (
-          <div className="container-fluid">
+          <div>
             <Header project={this.state.project} session={this.state.session} onSessionChange={this.onSessionChange} />
-            <Main onProjectChange={this.onProjectChange} session={this.state.session} onSessionChange={this.onSessionChange} />
+                <div className="container-fluid">
+                    <Main onProjectChange={this.onProjectChange} session={this.state.session} onSessionChange={this.onSessionChange} />
+                </div>
             <Footer />
-           </div>
+          </div>
+
         );
       }
 

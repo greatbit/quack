@@ -30,12 +30,21 @@ class Projects extends Component {
 
     render() {
         return (
-          <div>
-            <ul>{
+          <div className='col-12'>
+            {
                 this.state.projects.map(function(project){
-                    return <li><Link to={'/projects/' + project.id}>{project.name}</Link></li>;
+                    return (
+                        <div className="card">
+                          <div className="card-header">
+                            <Link to={'/projects/' + project.id}>{project.name}</Link>
+                          </div>
+                          <div className="card-body">
+                            <p className="card-text">{project.description || ''}</p>
+                          </div>
+                        </div>
+                    )
                 })
-            }</ul>
+            }
           </div>
         );
       }
