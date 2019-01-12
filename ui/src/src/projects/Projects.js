@@ -11,14 +11,7 @@ class Projects extends Component {
         axios
           .get("/api/project")
           .then(response => {
-
-            const projects = response.data.map(project => {
-              return {
-                id: project.id,
-                name: project.name
-              };
-            });
-
+            const projects = response.data;
             const newState = Object.assign({}, this.state, {
               projects: projects
             });
