@@ -16,6 +16,9 @@ public class TestCaseService extends BaseService<TestCase> {
     @Autowired
     private TestCaseRepository repository;
 
+    @Autowired
+    private SequencerService sequencerService;
+
     @Override
     protected CommonRepository<TestCase> getRepository() {
         return repository;
@@ -72,5 +75,12 @@ public class TestCaseService extends BaseService<TestCase> {
     private void addToMapOfList(Map<String, List<TestCase>> casesByGroupValues, String attrValue, TestCase testCase){
         casesByGroupValues.putIfAbsent(attrValue, new ArrayList<>());
         casesByGroupValues.get(attrValue).add(testCase);
+    }
+
+    @Override
+    protected void beforeCreate(Session session, String projectId, TestCase entity) {
+        super.beforeCreate(session, projectId, entity);
+        Sequencer sequencer = sequencerService.increment(projectId);
+        entity.setId(Long.toString(sequencer.getIndex()));
     }
 }

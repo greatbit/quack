@@ -11,7 +11,10 @@ import ru.greatbit.whoru.auth.Session;
 public class ProjectService extends BaseService<Project> {
 
     @Autowired
-    ProjectRepository repository;
+    private ProjectRepository repository;
+
+    @Autowired
+    private SequencerService sequencerService;
 
     @Override
     protected CommonRepository<Project> getRepository() {
@@ -25,5 +28,11 @@ public class ProjectService extends BaseService<Project> {
 
     public boolean userCanRead(Session session, String projectId){
         return true;
+    }
+
+    @Override
+    protected void beforeCreate(Session session, String projectId, Project entity) {
+        super.beforeCreate(session, projectId, entity);
+        sequencerService.create(projectId);
     }
 }

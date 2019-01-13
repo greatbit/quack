@@ -29,4 +29,10 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="Sequencer">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="index" type="xs:long" default="0"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

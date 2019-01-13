@@ -93,7 +93,7 @@ class TestCase extends SubComponent {
             const newState = Object.assign({}, this.state, {
                 testcase: response.data
             });
-            newState.testcase.attributes = newState.testcase.attributes.filter(function(attribute){
+            newState.testcase.attributes = (newState.testcase.attributes || []).filter(function(attribute){
                 return attribute.values !== undefined && attribute.values !== null && attribute.values.length > 0
                 })
             this.setState(newState);
