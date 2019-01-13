@@ -5,6 +5,7 @@ import TestSuites from '../testsuites/TestSuites'
 import Projects from '../projects/Projects'
 import ProjectForm from '../projects/ProjectForm'
 import Project from '../projects/Project'
+import ProjectSettings from '../projects/ProjectSettings'
 import Launches from '../launches/Launches'
 import Launch from '../launches/Launch'
 import Attributes from '../attributes/Attributes'
@@ -38,8 +39,10 @@ class Main extends Component {
 
                   <Route path='/:project/testcases/new'
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
-                  <Route path='/projects/:project'
+                  <Route exact path='/projects/:project'
                       render={(props) => <Project {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+                  <Route exact path='/projects/:project/settings'
+                      render={(props) => <ProjectSettings {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testcase/:testcase'
                       render={(props) => <TestCase {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testcases'
