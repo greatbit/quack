@@ -12,6 +12,7 @@ import ru.greatbit.whoru.auth.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 
 @Path("/user")
 public class UserResource extends BaseResource<User> {
@@ -56,6 +57,12 @@ public class UserResource extends BaseResource<User> {
     public Response logout() {
         authProvider.doLogout(request, response);
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/groups")
+    public Set<String> getGroups(){
+        return authProvider.getAllGroups();
     }
 
 }
