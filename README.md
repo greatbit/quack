@@ -14,6 +14,8 @@ Next versions of the service will allow users to analyze test runs, find gaps an
 
 The usage of the service is free of charge.
 
+Please note - the system is in active development state. Alpha version should be ready by the end of April 2019.
+
 Hot to run
 ==========
 1. Install NGINX and add conf/quack.conf
