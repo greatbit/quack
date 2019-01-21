@@ -12,6 +12,7 @@ The service is built with integration patterns in mind. Pluggable architecuture 
 
 Next versions of the service will allow users to analyze test runs, find gaps and bottle necks in their SDL process.
 
+The usage of the service is free of charge.
 
 Hot to run
 ==========
