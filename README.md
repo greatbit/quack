@@ -1,4 +1,6 @@
 QuAck
+==========
+
 QuAck is an open-source test management service. 
 It allows to store testcases and test suites and execute them.
 
@@ -11,7 +13,8 @@ The service is built with integration patterns in mind. Pluggable architecuture 
 Next versions of the service will allow users to analyze test runs, find gaps and bottle necks in their SDL process.
 
 
-Hot to run:
+Hot to run
+==========
 1. Install NGINX and add conf/quack.conf
 2. Run mongo docker run --name mongodb --restart always -p 27017:27017 -d mongo
 3. Place conf/quack.properties somewhere in the system (e.g. /etc/quack)
