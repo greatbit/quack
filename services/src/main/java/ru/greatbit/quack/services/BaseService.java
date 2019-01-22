@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
+import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.services.errors.EntityAccessDeniedException;
 import ru.greatbit.quack.services.errors.EntityNotFoundException;
@@ -13,6 +14,7 @@ import ru.greatbit.quack.services.errors.EntityValidationException;
 import ru.greatbit.whoru.auth.Session;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -41,7 +43,7 @@ public abstract class BaseService<E extends Entity> {
     }
 
     public List<E> findFiltered(Session session, String projectId, Filter filter){
-        return getRepository().find(projectId, filter);
+        return userCanReadProject(session, projectId) ? getRepository().find(projectId, filter) : Collections.emptyList();
     }
 
     public E findOne(Session session, String projectId, String id){
@@ -97,22 +99,34 @@ public abstract class BaseService<E extends Entity> {
 
 
     protected boolean userCanRead(Session session, String projectId, E entity){
-        return projectService.userCanRead(session, projectId);
+        return userCanReadProject(session, projectId);
+    }
+    protected boolean userCanUpdateProject(Session session, String projectId){
+        return userCanReadProject(session, projectId);
+
+    }
+    protected boolean userCanReadProject(Session session, String projectId){
+        if (session.isIsAdmin()){
+            return true;
+        }
+        Project project = projectService.findOne(session, null, projectId);
+        return project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains);
+
     }
     protected boolean userCanSave(Session session, String projectId, E entity){
-        return true;
+        return userCanUpdateProject(session, projectId);
     }
     protected boolean userCanSave(Session session, String projectId, Collection<E> entities) {
-        return true;
+        return userCanUpdateProject(session, projectId);
     }
     protected boolean userCanDelete(Session session, String projectId, String id){
-        return true;
+        return userCanUpdateProject(session, projectId);
     }
     protected boolean userCanCreate(Session session, String projectId, E entity){
-        return true;
+        return userCanUpdateProject(session, projectId);
     }
     protected boolean userCanUpdate(Session session, String projectId, E entity){
-        return true;
+        return userCanUpdateProject(session, projectId);
     }
 
     protected void beforeCreate(Session session, String projectId, E entity){
