@@ -8,6 +8,7 @@ import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.dal.CommonRepository;
+import ru.greatbit.quack.dal.ProjectRepository;
 import ru.greatbit.quack.services.errors.EntityAccessDeniedException;
 import ru.greatbit.quack.services.errors.EntityNotFoundException;
 import ru.greatbit.quack.services.errors.EntityValidationException;
@@ -35,6 +36,9 @@ public abstract class BaseService<E extends Entity> {
 
     @Autowired
     protected ProjectService projectService;
+
+    @Autowired
+    protected ProjectRepository projectRepository;
 
     protected abstract CommonRepository<E> getRepository();
 
@@ -109,7 +113,7 @@ public abstract class BaseService<E extends Entity> {
         if (session.isIsAdmin()){
             return true;
         }
-        Project project = projectService.findOne(session, null, projectId);
+        Project project = projectRepository.findOne(null, projectId);
         return project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains);
 
     }

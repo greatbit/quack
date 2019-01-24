@@ -22,7 +22,9 @@ public class ProjectServiceTest extends BaseTest{
         assertThat(projects.size(), is(3));
         assertThat(
                 projects.stream().map(Project::getId).collect(toList()),
-                containsInAnyOrder(project1.getId(), project2.getId(), project3.getId())
+                containsInAnyOrder(
+                        projects.stream().map(Project::getId).collect(toList())
+                )
         );
     }
 

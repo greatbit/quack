@@ -1,20 +1,23 @@
 package ru.greatbit.quack.services;
 
+import com.mongodb.BasicDBObject;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Project;
+import ru.greatbit.quack.beans.TestCase;
 import ru.greatbit.quack.dal.ProjectRepository;
 import ru.greatbit.quack.dal.TestCaseRepository;
 import ru.greatbit.whoru.auth.Person;
 import ru.greatbit.whoru.auth.Session;
 
-import java.util.UUID;
+import java.util.*;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,7 +25,7 @@ import java.util.UUID;
 public class BaseTest {
 
     @Autowired
-    protected MongoOperations mongoOperations;
+    protected MongoTemplate mongoTemplate;
 
     @Autowired
     protected ProjectRepository projectRepository;
@@ -45,6 +48,12 @@ public class BaseTest {
     protected Project project3 = new Project().withName("Project 3").
             withId("pr3").withAllowedGroups("3", "4");
 
+    protected List<Project> projects = Arrays.asList(project1, project2, project3);
+
+    protected List<TestCase> testCasesProject1 = new ArrayList<>();
+    protected List<TestCase> testCasesProject2 = new ArrayList<>();
+    protected List<TestCase> testCasesProject3 = new ArrayList<>();
+
     protected Session adminSession = new Session().withId(UUID.randomUUID().toString()).
             withIsAdmin(true).withPerson(new Person().withId("admin"));
 
@@ -54,11 +63,25 @@ public class BaseTest {
 
     @Before
     public void setUp(){
-        mongoOperations.remove(new Query(), "projects");
+        mongoTemplate.getDb().drop();
 
         project1 = projectService.create(adminSession, null, project1);
         project2 = projectService.create(adminSession, null, project2);
         project3 = projectService.create(adminSession, null, project3);
 
+        testCasesProject1.addAll(createTestCases(project1.getId()));
+        testCasesProject2.addAll(createTestCases(project2.getId()));
+        testCasesProject3.addAll(createTestCases(project3.getId()));
+
+    }
+
+    private Collection<? extends TestCase> createTestCases(String projectId) {
+        List<TestCase> testCases = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++){
+            testCases.add(testCaseService.create(adminSession, projectId,
+                    new TestCase().withName(Integer.toString(i)))
+            );
+        }
+        return testCases;
     }
 }
