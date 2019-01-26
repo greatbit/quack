@@ -1,15 +1,11 @@
 package ru.greatbit.quack.services;
 
-import com.mongodb.BasicDBObject;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.beans.TestCase;
 import ru.greatbit.quack.dal.ProjectRepository;
@@ -22,7 +18,7 @@ import java.util.*;
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:service-test-context.xml")
-public class BaseTest {
+public abstract class BaseTest {
 
     @Autowired
     protected MongoTemplate mongoTemplate;

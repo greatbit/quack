@@ -45,8 +45,8 @@
             <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <groupId>ru.yandex.qatools.embed</groupId>
+            <artifactId>embedded-services</artifactId>
         </dependency>
     </dependencies>
 

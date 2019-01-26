@@ -4,6 +4,9 @@
 
     <import resource="classpath:service-context.xml"/>
 
-    <bean name="embedMongo" class="ru.greatbit.quack.services.EmbedMongo" />
+    <bean id="embedMongo" class="ru.yandex.qatools.embed.service.MongoEmbeddedService" init-method="start">
+        <constructor-arg name="replicaSet" value="localhost:37017"/>
+        <constructor-arg name="mongoDatabaseName" value="test"/>
+    </bean>
 
 </beans>
