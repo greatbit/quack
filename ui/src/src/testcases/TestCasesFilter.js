@@ -31,7 +31,8 @@ class TestCasesFilter extends Component {
                      groups: [],
                      filters: this.defaultFilters
                  }
-             }
+             },
+             testSuiteNameToDisplay: ""
          };
 
         this.changeGrouping = this.changeGrouping.bind(this);
@@ -178,7 +179,9 @@ class TestCasesFilter extends Component {
         axios.post('/api/' + this.props.match.params.project + '/testsuite/', suiteToSave)
             .then(response => {
                 this.state.testSuite = response.data;
+                this.state.testSuiteNameToDisplay = this.state.testSuite.name;
                 this.setState(this.state);
+                $("#suite-modal").modal('toggle');
             })
         event.preventDefault();
     }
@@ -195,6 +198,7 @@ class TestCasesFilter extends Component {
     render() {
         return (
             <div>
+                <h2>{this.state.testSuiteNameToDisplay}</h2>
                 <div>
                     <div className="row">
                         <div className="col-1">Grouping</div>
