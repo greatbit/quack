@@ -58,7 +58,6 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
     })
     public E create(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId,
             @ApiParam(value = "Entity", required = true) E entity) {
-        entity.setId(null);
         return getService().save(getUserSession(), projectId, entity);
     }
 
