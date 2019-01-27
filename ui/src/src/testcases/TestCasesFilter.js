@@ -11,14 +11,13 @@ import $ from 'jquery';
 class TestCasesFilter extends Component {
     constructor(props) {
         super(props);
+
+        this.defaultFilters = [{
+              title: "Select an attribute",
+              values: []
+        }]
+
         this.state = {
-             filter: {
-                 groups: [],
-                 filters: [{
-                    title: "Select an attribute",
-                    values: []
-                 }]
-             },
              groupsToDisplay: [],
              projectAttributes: [],
              createdLaunch: {
@@ -28,7 +27,10 @@ class TestCasesFilter extends Component {
              },
              testSuite: {
                 name: "",
-                filter: {}
+                filter: {
+                     groups: [],
+                     filters: this.defaultFilters
+                 }
              }
          };
 
@@ -47,7 +49,7 @@ class TestCasesFilter extends Component {
     componentWillReceiveProps(nextProps) {
       if (nextProps.projectAttributes){
         this.state.projectAttributes = nextProps.projectAttributes;
-        this.state.filter.filters.forEach(function(filter){
+        this.state.testSuite.filter.filters.forEach(function(filter){
             filter.name = this.getAttributeName(filter.id);
         }.bind(this))
 
@@ -64,7 +66,7 @@ class TestCasesFilter extends Component {
             if(!Array.isArray(params.groups)){
                 params.groups = [params.groups];
             }
-            this.state.filter.groups = params.groups;
+            this.state.testSuite.filter.groups = params.groups;
             this.state.groupsToDisplay = params.groups.map(function(attrId){
                 return {value: attrId, label:this.getAttributeName(attrId)};
             }.bind(this))
@@ -84,7 +86,7 @@ class TestCasesFilter extends Component {
             })
 
             Object.keys(map).forEach(function(key) {
-                this.state.filter.filters.push({
+                this.state.testSuite.filter.filters.push({
                     id: key,
                     values: map[key],
                     title: this.getAttributeName(key)
@@ -92,10 +94,10 @@ class TestCasesFilter extends Component {
                 });
             }.bind(this))
 
-            if (!this.state.filter.filters[0].id){
-                var emptyFilter = this.state.filter.filters[0];
-                this.state.filter.filters.push(emptyFilter);
-                this.state.filter.filters.shift();
+            if (!this.state.testSuite.filter.filters[0].id){
+                var emptyFilter = this.state.testSuite.filter.filters[0];
+                this.state.testSuite.filter.filters.push(emptyFilter);
+                this.state.testSuite.filter.filters.shift();
             }
 
         }
@@ -104,7 +106,7 @@ class TestCasesFilter extends Component {
               .get("/api/" + this.props.match.params.project + "/testsuite/" + params.testSuite)
               .then(response => {
                    this.state.testSuite = response.data;
-                   this.state.filter = this.state.testSuite.filter;
+                   this.state.testSuite.filter = this.state.testSuite.filter;
                    this.setState(this.state);
                    this.refreshTree();
               })
@@ -112,19 +114,19 @@ class TestCasesFilter extends Component {
         }
 
         this.setState(this.state);
-        this.props.onFilter(this.state.filter);
+        this.props.onFilter(this.state.testSuite.filter);
 
     }
 
     changeFilterAttributeId(index, value){
-        var oldId = this.state.filter.filters[index].id;
-        this.state.filter.filters[index].id = value.value;
-        this.state.filter.filters[index].name = value.label;
+        var oldId = this.state.testSuite.filter.filters[index].id;
+        this.state.testSuite.filter.filters[index].id = value.value;
+        this.state.testSuite.filter.filters[index].name = value.label;
         if (oldId !== value.value){
-            this.state.filter.filters[index].values = [];
+            this.state.testSuite.filter.filters[index].values = [];
         }
         if (!oldId){
-            this.state.filter.filters.push({
+            this.state.testSuite.filter.filters.push({
                 id: null,
                 title: "Select an attribute",
                 values: []
@@ -135,12 +137,12 @@ class TestCasesFilter extends Component {
     }
 
     changeFilterAttributeValues(index, values){
-        this.state.filter.filters[index].values = values.map(function(value){return value.value});
+        this.state.testSuite.filter.filters[index].values = values.map(function(value){return value.value});
         this.setState(this.state);
     }
 
     changeGrouping(values){
-        this.state.filter.groups = values.map(function(value){return value.value});
+        this.state.testSuite.filter.groups = values.map(function(value){return value.value});
         this.state.groupsToDisplay = values;
         this.setState(this.state);
     }
@@ -151,7 +153,7 @@ class TestCasesFilter extends Component {
     }
 
     handleFilter(){
-        this.props.onFilter(this.state.filter);
+        this.props.onFilter(this.state.testSuite.filter);
     }
 
     getAttributeName(id){
@@ -169,10 +171,13 @@ class TestCasesFilter extends Component {
     }
 
     saveSuite(event){
-        axios.post('/api/' + this.props.match.params.project + '/testsuite/', this.state.testSuite)
+        var suiteToSave = JSON.parse(JSON.stringify(this.state.testSuite));
+        (suiteToSave.filter.filters || []).forEach(function(filter){
+            delete filter.title;
+        })
+        axios.post('/api/' + this.props.match.params.project + '/testsuite/', suiteToSave)
             .then(response => {
                 this.state.testSuite = response.data;
-                this.state.filter = this.state.testSuite.filter;
                 this.setState(this.state);
             })
         event.preventDefault();
@@ -204,7 +209,7 @@ class TestCasesFilter extends Component {
                     <div className="row">
                         <div className="col-1">Filter</div>
                             {
-                                this.state.filter.filters.map(function(filter, i){
+                                this.state.testSuite.filter.filters.map(function(filter, i){
                                     return(
                                     <div className="col-5" key={i}>
                                         <div className="row">
@@ -230,7 +235,7 @@ class TestCasesFilter extends Component {
                     <button type="button" className="btn btn-primary" onClick={this.createLaunchModal}>Launch</button>
                 </div>
                 <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
-                    <LaunchForm filter={this.state.filter} launch={this.state.createdLaunch}/>
+                    <LaunchForm filter={this.state.testSuite.filter} launch={this.state.createdLaunch}/>
                 </div>
 
                 <div className="modal fade" id="suite-modal" tabIndex="-1" role="dialog" aria-labelledby="suiteLabel" aria-hidden="true">
