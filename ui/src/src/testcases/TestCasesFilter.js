@@ -63,45 +63,7 @@ class TestCasesFilter extends Component {
 
     componentDidMount(){
         var params = queryString.parse(this.props.location.search);
-        if (params.groups){
-            if(!Array.isArray(params.groups)){
-                params.groups = [params.groups];
-            }
-            this.state.testSuite.filter.groups = params.groups;
-            this.state.groupsToDisplay = params.groups.map(function(attrId){
-                return {value: attrId, label:this.getAttributeName(attrId)};
-            }.bind(this))
-        }
-        if (params.attribute){
-            if(!Array.isArray(params.attribute)){
-                params.attribute = [params.attribute];
-            }
-            var map = {}
-            params.attribute.forEach(function(pair){
-                var key = pair.split(":")[0];
-                var value = pair.split(":")[1];
-                if (!map[key]){
-                    map[key] = [];
-                }
-                map[key].push(value);
-            })
 
-            Object.keys(map).forEach(function(key) {
-                this.state.testSuite.filter.filters.push({
-                    id: key,
-                    values: map[key],
-                    title: this.getAttributeName(key)
-
-                });
-            }.bind(this))
-
-            if (!this.state.testSuite.filter.filters[0].id){
-                var emptyFilter = this.state.testSuite.filter.filters[0];
-                this.state.testSuite.filter.filters.push(emptyFilter);
-                this.state.testSuite.filter.filters.shift();
-            }
-
-        }
         if (params.testSuite){
             axios
               .get("/api/" + this.props.match.params.project + "/testsuite/" + params.testSuite)
@@ -112,6 +74,47 @@ class TestCasesFilter extends Component {
                    this.refreshTree();
               })
               .catch(error => console.log(error));
+        } else {
+            if (params.groups){
+                if(!Array.isArray(params.groups)){
+                    params.groups = [params.groups];
+                }
+                this.state.testSuite.filter.groups = params.groups;
+                this.state.groupsToDisplay = params.groups.map(function(attrId){
+                    return {value: attrId, label:this.getAttributeName(attrId)};
+                }.bind(this))
+            }
+            if (params.attribute){
+                if(!Array.isArray(params.attribute)){
+                    params.attribute = [params.attribute];
+                }
+                var map = {}
+                params.attribute.forEach(function(pair){
+                    var key = pair.split(":")[0];
+                    var value = pair.split(":")[1];
+                    if (!map[key]){
+                        map[key] = [];
+                    }
+                    map[key].push(value);
+                })
+
+                Object.keys(map).forEach(function(key) {
+                    this.state.testSuite.filter.filters.push({
+                        id: key,
+                        values: map[key],
+                        title: this.getAttributeName(key)
+
+                    });
+                }.bind(this))
+
+                if (!this.state.testSuite.filter.filters[0].id){
+                    var emptyFilter = this.state.testSuite.filter.filters[0];
+                    this.state.testSuite.filter.filters.push(emptyFilter);
+                    this.state.testSuite.filter.filters.shift();
+                }
+
+            }
+
         }
 
         this.setState(this.state);
@@ -182,6 +185,7 @@ class TestCasesFilter extends Component {
                 this.state.testSuiteNameToDisplay = this.state.testSuite.name;
                 this.setState(this.state);
                 $("#suite-modal").modal('toggle');
+                this.props.history.push('/' + this.props.match.params.project + '/testcases?testSuite=' + this.state.testSuite.id)
             })
         event.preventDefault();
     }
