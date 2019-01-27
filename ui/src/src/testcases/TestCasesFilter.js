@@ -25,6 +25,10 @@ class TestCasesFilter extends Component {
                   name: "",
                   testSuite: {filter: {}},
                   properties: []
+             },
+             testSuite: {
+                name: "",
+                filter: {}
              }
          };
 
@@ -35,6 +39,9 @@ class TestCasesFilter extends Component {
         this.handleFilter = this.handleFilter.bind(this);
         this.getAttributeName = this.getAttributeName.bind(this);
         this.createLaunchModal = this.createLaunchModal.bind(this);
+        this.saveSuite = this.saveSuite.bind(this);
+        this.showSuiteModal = this.showSuiteModal.bind(this);
+        this.suiteAttrChanged = this.suiteAttrChanged.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -91,6 +98,17 @@ class TestCasesFilter extends Component {
                 this.state.filter.filters.shift();
             }
 
+        }
+        if (params.testSuite){
+            axios
+              .get("/api/" + this.props.match.params.project + "/testsuite/" + params.testSuite)
+              .then(response => {
+                   this.state.testSuite = response.data;
+                   this.state.filter = this.state.testSuite.filter;
+                   this.setState(this.state);
+                   this.refreshTree();
+              })
+              .catch(error => console.log(error));
         }
 
         this.setState(this.state);
@@ -150,6 +168,25 @@ class TestCasesFilter extends Component {
         $("#launch-modal").modal('toggle');
     }
 
+    saveSuite(event){
+        axios.post('/api/' + this.props.match.params.project + '/testsuite/', this.state.testSuite)
+            .then(response => {
+                this.state.testSuite = response.data;
+                this.state.filter = this.state.testSuite.filter;
+                this.setState(this.state);
+            })
+        event.preventDefault();
+    }
+
+    showSuiteModal(){
+        $("#suite-modal").modal('toggle');
+    }
+
+    suiteAttrChanged(event){
+        this.state.testSuite[event.target.name] = event.target.value;
+        this.setState(this.state);
+    }
+
     render() {
         return (
             <div>
@@ -189,11 +226,43 @@ class TestCasesFilter extends Component {
 
                     </div>
                     <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
+                    <button type="button" className="btn btn-primary" onClick={this.showSuiteModal}>Save</button>
                     <button type="button" className="btn btn-primary" onClick={this.createLaunchModal}>Launch</button>
                 </div>
                 <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
                     <LaunchForm filter={this.state.filter} launch={this.state.createdLaunch}/>
                 </div>
+
+                <div className="modal fade" id="suite-modal" tabIndex="-1" role="dialog" aria-labelledby="suiteLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title" id="editAttributeLabel">Attribute</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+
+                          <div>
+                            <div className="modal-body" id="suite-save-form">
+                                <form>
+                                  <label>
+                                    Name:
+                                    <input type="text" name="name" onChange={this.suiteAttrChanged} />
+                                  </label>
+                                </form>
+                            </div>
+                          </div>
+
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary" onClick={this.saveSuite}>Save</button>
+                          </div>
+                        </div>
+                     </div>
+                </div>
+
+
             </div>
         );
       }
