@@ -84,7 +84,9 @@ class TestCases extends SubComponent {
             this.refreshTree();
           })
           .catch(error => console.log(error));
-          this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(filter));
+          if (!params.testSuite){
+            this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(filter));
+          }
      }
 
      getFilterApiRequestParams(filter){
