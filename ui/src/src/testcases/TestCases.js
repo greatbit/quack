@@ -47,7 +47,12 @@ class TestCases extends SubComponent {
             this.state.selectedTestCase = {id: params.testcase};
             this.setState(this.state);
         }
-
+        if (params.testSuite){
+            this.state.testSuite = {
+                id: params.testSuite
+            }
+            this.setState(this.state);
+        }
         axios
           .get("/api/" + this.props.match.params.project + "/attribute")
           .then(response => {
@@ -135,8 +140,11 @@ class TestCases extends SubComponent {
         if (this.state.selectedTestCase && this.state.selectedTestCase.id){
             testcaseIdAttr = "testcase=" + this.state.selectedTestCase.id;
         }
-         return [this.getFilterQParams(filter), this.getGroupingQParams(filter), testcaseIdAttr].
-                        filter(function(val){return val !== ""}).join("&");
+        var urlParts = [this.getFilterQParams(filter), this.getGroupingQParams(filter), testcaseIdAttr];
+        if (this.state.testSuite){
+            urlParts.push("testSuite=" + this.state.testSuite.id);
+        }
+        return urlParts.filter(function(val){return val !== ""}).join("&");
      }
 
     getFilterQParams(filter){

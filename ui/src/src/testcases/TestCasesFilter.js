@@ -264,7 +264,7 @@ class TestCasesFilter extends Component {
                                 <form>
                                   <label>
                                     Name:
-                                    <input type="text" name="name" onChange={this.suiteAttrChanged} />
+                                    <input type="text" name="name" onChange={this.suiteAttrChanged} defaultValue={this.state.testSuiteNameToDisplay}/>
                                   </label>
                                 </form>
                             </div>
