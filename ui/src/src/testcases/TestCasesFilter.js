@@ -45,11 +45,18 @@ class TestCasesFilter extends Component {
         this.saveSuite = this.saveSuite.bind(this);
         this.showSuiteModal = this.showSuiteModal.bind(this);
         this.suiteAttrChanged = this.suiteAttrChanged.bind(this);
+        this.updateAttributesNames = this.updateAttributesNames.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
       if (nextProps.projectAttributes){
         this.state.projectAttributes = nextProps.projectAttributes;
+        this.updateAttributesNames();
+      }
+      this.setState(this.state);
+    }
+
+    updateAttributesNames(){
         this.state.testSuite.filter.filters.forEach(function(filter){
             filter.name = this.getAttributeName(filter.id);
         }.bind(this))
@@ -57,8 +64,6 @@ class TestCasesFilter extends Component {
         this.state.groupsToDisplay.forEach(function(groupToDisplay){
             groupToDisplay.label = this.getAttributeName(groupToDisplay.value);
         }.bind(this))
-      }
-      this.setState(this.state);
     }
 
     componentDidMount(){
@@ -69,7 +74,8 @@ class TestCasesFilter extends Component {
               .get("/api/" + this.props.match.params.project + "/testsuite/" + params.testSuite)
               .then(response => {
                    this.state.testSuite = response.data;
-                   this.state.testSuite.filter = this.state.testSuite.filter;
+                   this.state.testSuiteNameToDisplay = this.state.testSuite.name;
+                   this.updateAttributesNames();
                    this.setState(this.state);
                    this.refreshTree();
               })
