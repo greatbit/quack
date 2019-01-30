@@ -16,6 +16,8 @@ The usage of the service is free of charge.
 
 Please note - the system is in active development state. Alpha version should be ready by the end of April 2019.
 
+https://github.com/azee/quack/wiki
+
 Hot to run
 ==========
 1. Install NGINX and add conf/quack.conf
