@@ -74,7 +74,7 @@ class TestCasesFilter extends Component {
                        return {value: attrId, label:this.getAttributeName(attrId)};
                    }.bind(this))
                    this.setState(this.state);
-                   this.refreshTree();
+                   this.props.onFilter(this.state.testSuite.filter);
               })
               .catch(error => console.log(error));
         } else {
@@ -117,11 +117,9 @@ class TestCasesFilter extends Component {
                 }
 
             }
-
+            this.setState(this.state);
+            this.props.onFilter(this.state.testSuite.filter);
         }
-
-        this.setState(this.state);
-        this.props.onFilter(this.state.testSuite.filter);
 
     }
 
