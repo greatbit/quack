@@ -84,7 +84,7 @@ class Header extends Component {
                 <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-projects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {this.state.projectName || 'Projects'}
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-projects">
+                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="bd-projects">
                   <Link className="dropdown-item " to="/projects">All</Link>
                   {this.state.projects.map(function(project){
                       return (
@@ -112,7 +112,7 @@ class Header extends Component {
             profileContext = <a class="dropdown-item active" href="/auth">Login</a>
         }
         return (
-          <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+          <nav className="navbar navbar-expand-md navbar-dark bg-green">
             <Link className="navbar-brand" to="/">
                 <img src='/images/smalllogoquack.png'/>
             </Link>
