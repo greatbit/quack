@@ -67,7 +67,9 @@ class Attributes extends SubComponent {
                         <div className="alert" role="alert">
                           <h5 className="alert-heading">
                             <b>{attribute.name}</b>
-                            <span className="glyphicon glyphicon-pencil edit clickable edit-icon" index={i} onClick={(e) => this.editAttribute(i, e)}><FontAwesomeIcon icon={faEdit}/></span>
+                            <span className="glyphicon glyphicon-pencil edit clickable edit-icon" index={i} onClick={(e) => this.editAttribute(i, e)}>
+                                <FontAwesomeIcon icon={faEdit}/>
+                            </span>
                           </h5>
                           <p>{attribute.description}</p>
                           <hr/>
