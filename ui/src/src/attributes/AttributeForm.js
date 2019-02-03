@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+
 import axios from "axios";
 
 class AttributeForm extends Component {
@@ -83,20 +86,31 @@ class AttributeForm extends Component {
                   </div>
                   <div className="modal-body">
                     <form>
-                      <label>
-                        Name:
-                        <input type="text" name="name" value={this.state.attribute.name} onChange={this.handleChange} />
-                      </label>
+                      <div className='form-group row'>
+                          <label className='col-sm-2 col-form-label'>
+                            Name
+                          </label>
+                          <div className='col-sm-8'>
+                            <input type="text" name="name" className='col-sm-12'
+                                value={this.state.attribute.name} onChange={this.handleChange} />
+                          </div>
+                      </div>
 
                       {this.state.attribute.values.map((value, i) => {
                          return(
-                             <div>
-                                 <label>
-                                     Values:
-                                     <input type="text" name="value" index={i} value={value}
-                                            onChange={(e) => this.handleValueChange(i, e)} />
+                             <div className='form-group row'>
+                                 <label className='col-sm-2 col-form-label'>
+                                     Value
                                  </label>
-                                 <span index={i} onClick={(e) => this.removeValue(i, e)}>X</span>
+                                 <div className='col-sm-8'>
+                                    <input type="text" name="value" index={i} value={value} className='col-sm-12'
+                                                onChange={(e) => this.handleValueChange(i, e)} />
+                                 </div>
+                                 <div className='col-sm-1'>
+                                    <span className='edit-icon clickable red' index={i} onClick={(e) => this.removeValue(i, e)}>
+                                        <FontAwesomeIcon icon={faMinusCircle}/>
+                                     </span>
+                                 </div>
                              </div>
                          )
                       })}

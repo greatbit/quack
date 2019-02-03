@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import AttributeForm from '../attributes/AttributeForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
 import $ from 'jquery';
 
@@ -63,12 +63,11 @@ class Attributes extends SubComponent {
             {
                 this.state.attributes.map(function(attribute, i){
                     return (
-
                         <div className="alert" role="alert">
                           <h5 className="alert-heading">
                             <b>{attribute.name}</b>
-                            <span className="glyphicon glyphicon-pencil edit clickable edit-icon" index={i} onClick={(e) => this.editAttribute(i, e)}>
-                                <FontAwesomeIcon icon={faEdit}/>
+                            <span className="edit clickable edit-icon" index={i} onClick={(e) => this.editAttribute(i, e)}>
+                                <FontAwesomeIcon icon={faPencilAlt}/>
                             </span>
                           </h5>
                           <p>{attribute.description}</p>
