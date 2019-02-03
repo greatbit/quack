@@ -41,9 +41,9 @@ class App extends Component {
         return (
           <div>
             <Header project={this.state.project} session={this.state.session} onSessionChange={this.onSessionChange} />
-                <div className="container-fluid">
-                    <Main onProjectChange={this.onProjectChange} session={this.state.session} onSessionChange={this.onSessionChange} />
-                </div>
+            <div className="container-fluid">
+                <Main onProjectChange={this.onProjectChange} session={this.state.session} onSessionChange={this.onSessionChange} />
+            </div>
             <Footer />
           </div>
 

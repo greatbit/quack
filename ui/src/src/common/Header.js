@@ -113,7 +113,9 @@ class Header extends Component {
         }
         return (
           <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-            <Link className="navbar-brand" to="/">QuAck</Link>
+            <Link className="navbar-brand" to="/">
+                <img src='/images/smalllogoquack.png'/>
+            </Link>
             <button type="button" className="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
               <span className="navbar-toggler-icon"></span>
             </button>
