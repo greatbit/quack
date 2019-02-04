@@ -19,6 +19,7 @@ class AttributeForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addValue = this.addValue.bind(this);
         this.removeValue = this.removeValue.bind(this);
+        this.handleRemove = this.handleRemove.bind(this);
       }
 
       componentWillReceiveProps(nextProps) {
@@ -44,6 +45,21 @@ class AttributeForm extends Component {
         axios.post('/api/' + this.props.project + '/attribute', this.state.attribute)
         .then(response => {
             this.props.onAttributeAdded(response.data);
+            this.state.attribute = {
+                id: null,
+                name: "",
+                values: []
+            }
+            this.setState(this.state);
+        });
+        event.preventDefault();
+      }
+
+
+      handleRemove(event) {
+        axios.delete('/api/' + this.props.project + '/attribute/' + this.state.attribute.id)
+        .then(response => {
+            this.props.onAttributeRemoved(this.state.attribute);
             this.state.attribute = {
                 id: null,
                 name: "",
@@ -121,6 +137,10 @@ class AttributeForm extends Component {
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save changes</button>
+                    {this.state.attribute.id &&
+                        <button type="button" className="btn btn-danger float-right" onClick={this.handleRemove}>Remove</button>
+                    }
+
                   </div>
                 </div>
              </div>

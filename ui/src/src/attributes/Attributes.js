@@ -18,6 +18,7 @@ class Attributes extends SubComponent {
              }
          }
         this.onAttributeAdded = this.onAttributeAdded.bind(this);
+        this.onAttributeRemoved = this.onAttributeRemoved.bind(this);
     }
 
     onAttributeAdded(attribute){
@@ -32,6 +33,13 @@ class Attributes extends SubComponent {
             name: "",
             values: []
         }
+        $("#editAttribute").modal('hide');
+        const newState = Object.assign({}, this.state);
+        this.setState(newState);
+    }
+
+    onAttributeRemoved(attribute){
+        this.state.attributes = this.state.attributes.filter(attr => attr.id !== attribute.id);
         $("#editAttribute").modal('hide');
         const newState = Object.assign({}, this.state);
         this.setState(newState);
@@ -85,6 +93,7 @@ class Attributes extends SubComponent {
             <div className="modal fade" id="editAttribute" tabindex="-1" role="dialog" aria-labelledby="editAttributeLabel" aria-hidden="true">
                 <AttributeForm project={this.props.match.params.project}
                                 attribute={this.state.attributeToEdit}
+                                onAttributeRemoved={this.onAttributeRemoved}
                                 onAttributeAdded={this.onAttributeAdded}/>
             </div>
           </div>
