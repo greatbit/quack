@@ -1,6 +1,8 @@
 QuAck
 ==========
 
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/testquack)
+
 QuAck is an open-source test management service. 
 It allows to store testcases and test suites and execute them.
 
