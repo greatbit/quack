@@ -3,6 +3,8 @@ import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCogs } from '@fortawesome/free-solid-svg-icons'
 
 class Project extends SubComponent {
 
@@ -34,7 +36,42 @@ class Project extends SubComponent {
 
     render() {
         return (
-            <h1>Name: {this.state.project.name}</h1>
+            <div>
+                <h1>
+                    {this.state.project.name}
+                    <span className='float-right'>
+                        <Link to={'/projects/' + this.state.project.id + '/settings'}>
+                            <FontAwesomeIcon icon={faCogs}/>
+                        </Link>
+                    </span>
+                </h1>
+                <div className="row">
+                    <div className="col-sm-6">
+                        <div className="card project-card">
+                          <div className="card-header">
+                            <span>
+                                <Link to={'/' + this.state.project.id + '/testsuites'}>Test Suites</Link>
+                            </span>
+                          </div>
+                          <div className="card-body">
+                            <p className="card-text">Most recently used suites</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div className="col-sm-6">
+                        <div className="card project-card">
+                          <div className="card-header">
+                            <span>
+                                <Link to={'/' + this.state.project.id + '/launches'}>Launches</Link>
+                            </span>
+                          </div>
+                          <div className="card-body">
+                            <p className="card-text">Last 5 launches</p>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
       }
 
