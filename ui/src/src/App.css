@@ -131,3 +131,7 @@ code {
 .red {
     color: #da0000;
 }
+
+.project-card {
+    margin-bottom: 20px;
+}

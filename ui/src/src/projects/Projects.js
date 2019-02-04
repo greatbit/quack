@@ -25,11 +25,11 @@ class Projects extends Component {
 
     render() {
         return (
-          <div className='col-12'>
+          <div className='container'>
             {
                 this.state.projects.map(function(project){
                     return (
-                        <div className="card">
+                        <div className="card project-card">
                           <div className="card-header">
                             <span>
                                 <Link to={'/projects/' + project.id}>{project.name}</Link>
