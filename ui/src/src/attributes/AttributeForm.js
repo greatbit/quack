@@ -135,8 +135,8 @@ class AttributeForm extends Component {
                     </form>
                   </div>
                   <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save changes</button>
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                     {this.state.attribute.id &&
                         <button type="button" className="btn btn-danger float-right" onClick={this.handleRemove}>Remove</button>
                     }
