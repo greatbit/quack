@@ -214,6 +214,11 @@ class TestCasesFilter extends Component {
                                     options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
                                    />
                         </div>
+                        <div className="col-3 btn-group" role="group" >
+                            <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
+                            <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>Save</button>
+                            <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>Launch</button>
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-1">Filter</div>
@@ -239,9 +244,6 @@ class TestCasesFilter extends Component {
                             }
 
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
-                    <button type="button" className="btn btn-primary" onClick={this.showSuiteModal}>Save</button>
-                    <button type="button" className="btn btn-primary" onClick={this.createLaunchModal}>Launch</button>
                 </div>
                 <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
                     <LaunchForm filter={this.state.testSuite.filter} launch={this.state.createdLaunch}/>
