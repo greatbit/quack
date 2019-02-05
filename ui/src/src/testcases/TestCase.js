@@ -5,7 +5,7 @@ import axios from "axios";
 import { withRouter } from 'react-router';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import CreatableSelect from 'react-select/lib/Creatable';
 
 class TestCase extends SubComponent {
@@ -232,7 +232,7 @@ class TestCase extends SubComponent {
                 <div id="name-display" className="inplace-display">
                     <h1>{this.state.testcase.name}
                         {!this.state.readonly &&
-                            <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={{faPencilAlt}}/></span>
                         }
                     </h1>
                 </div>
@@ -251,7 +251,7 @@ class TestCase extends SubComponent {
                 <h5>
                     Description
                     {!this.state.readonly &&
-                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                     }
                 </h5>
                 <div id="description-display" className="inplace-display">
@@ -272,7 +272,7 @@ class TestCase extends SubComponent {
                   <h5>
                       Preconditions
                       {!this.state.readonly &&
-                        <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faEdit}/></span>
+                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                       }
                   </h5>
                   <div id="preconditions-display" className="inplace-display">
@@ -319,7 +319,7 @@ class TestCase extends SubComponent {
                                          <div className="col">{this.state.testcase.steps[i].action}</div>
                                          <div className="col">{this.state.testcase.steps[i].expectation}</div>
                                          {!this.state.readonly &&
-                                            <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                          }
                                       </div>
                                   </div>
@@ -360,7 +360,7 @@ class TestCase extends SubComponent {
                                 <div index={i}>
                                   {this.getAttributeName(attribute.id)}
                                   {!this.state.readonly &&
-                                      <span className="glyphicon glyphicon-pencil edit clickable" onClick={(e) => this.toggleEdit("attributes", e, i)}><FontAwesomeIcon icon={faEdit}/></span>
+                                      <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("attributes", e, i)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                   }
                                   {!this.state.readonly &&
                                       <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
