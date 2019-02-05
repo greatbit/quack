@@ -144,17 +144,21 @@ class Launch extends SubComponent {
                       <div id="tree"></div>
                   </div>
                   <div id="testCase" className="testcase-side col-7">
-                      <TestCase
-                        testcase={this.state.selectedTestCase}
-                        projectAttributes={this.state.projectAttributes}
-                        readonly={true}
-                      />
-                      <LaunchTestcaseControls
-                        testcase={this.state.selectedTestCase}
-                        launchId={this.state.launch.id}
-                        projectId={this.state.projectId}
-                        callback={this.onTestcaseStateChanged}
-                      />
+                     {this.state.selectedTestCase.id &&
+                          <TestCase
+                            testcase={this.state.selectedTestCase}
+                            projectAttributes={this.state.projectAttributes}
+                            readonly={true}
+                          />
+                      }
+                      {this.state.selectedTestCase.id &&
+                            <LaunchTestcaseControls
+                                testcase={this.state.selectedTestCase}
+                                launchId={this.state.launch.id}
+                                projectId={this.state.projectId}
+                                callback={this.onTestcaseStateChanged}
+                            />
+                      }
                   </div>
                 </div>
           </div>
