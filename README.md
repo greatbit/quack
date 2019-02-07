@@ -18,7 +18,7 @@ The usage of the service is free of charge.
 
 Please note - the system is in active development state. Alpha version should be ready by the end of April 2019.
 
-https://github.com/azee/quack/wiki
+[More information on Wiki](https://github.com/greatbit/quack/wiki/QuAck)
 
 How to run
 ==========
