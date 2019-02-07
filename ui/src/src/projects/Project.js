@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
+import TestSuitesWidget from '../testsuites/TestSuitesWidget'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
@@ -54,7 +55,9 @@ class Project extends SubComponent {
                             </span>
                           </div>
                           <div className="card-body">
-                            <p className="card-text">Most recently used suites</p>
+                            <TestSuitesWidget
+                                limit={10}
+                                projectId={this.props.match.params.project}/>
                           </div>
                         </div>
                     </div>
