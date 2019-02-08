@@ -6,6 +6,8 @@ import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';
 import queryString from 'query-string';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
 
 class TestCasesFilter extends Component {
@@ -45,6 +47,7 @@ class TestCasesFilter extends Component {
         this.saveSuite = this.saveSuite.bind(this);
         this.showSuiteModal = this.showSuiteModal.bind(this);
         this.suiteAttrChanged = this.suiteAttrChanged.bind(this);
+        this.removeFilter = this.removeFilter.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -200,6 +203,11 @@ class TestCasesFilter extends Component {
         this.setState(this.state);
     }
 
+    removeFilter(i, event){
+        this.state.testSuite.filter.filters.splice(i, 1);
+        this.setState(this.state);
+    }
+
     render() {
         return (
             <div>
@@ -231,11 +239,16 @@ class TestCasesFilter extends Component {
                                                     onChange={(e) => this.changeFilterAttributeId(i, e)}
                                                     options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
                                                    />
-                                            <Select className="col-7 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
+                                            <Select className="col-6 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
                                                     isMulti
                                                     onChange={(e) => this.changeFilterAttributeValues(i, e)}
                                                     options={this.getValuesByAttributeId(filter.id).map(function(val){return {value: val, label: val}})}
                                                    />
+                                            {filter.id &&
+                                                <span className='col-1 remove-filter-icon clickable red' index={i} onClick={(e) => this.removeFilter(i, e)}>
+                                                    <FontAwesomeIcon icon={faMinusCircle}/>
+                                                 </span>
+                                            }
                                         </div>
                                     </div>
                                     )

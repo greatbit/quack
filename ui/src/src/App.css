@@ -139,3 +139,7 @@ code {
 .testsuite-card {
     margin-bottom: 20px;
 }
+
+.remove-filter-icon {
+    margin-left: -29px;
+}
