@@ -123,9 +123,8 @@ class TestCases extends SubComponent {
             var node = this.tree.getNodeById(this.state.selectedTestCase.id);
             this.tree.select(node);
             this.state.filter.groups.forEach(function(groupId){
-                var attributes = Utils.getTestCaseFromTree(this.state.selectedTestCase.id, this.state.testcasesTree, function(testCase, id){return testCase.id === id}).attributes || [];
-                var attribute = attributes.find(function(attribute){return attribute.id === groupId}) || {} ;
-                var values = attribute.values || ["None"];
+                var attributes = Utils.getTestCaseFromTree(this.state.selectedTestCase.id, this.state.testcasesTree, function(testCase, id){return testCase.id === id}).attributes || {};
+                var values = attributes[groupId] || ["None"] ;
                 values.forEach(function(value){
                     var node = this.tree.getNodeById(groupId + ":" + value);
                     this.tree.expand(node);
