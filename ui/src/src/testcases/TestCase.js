@@ -358,16 +358,19 @@ class TestCase extends SubComponent {
                           <div className="row">
                               <div id={"attributes-" + attributeId + "-display"} className="inplace-display">
                                 <div index={attributeId}>
-                                  <h6>{this.getAttributeName(attributeId)}</h6>
+                                  <div>
+                                    <b>{this.getAttributeName(attributeId)}</b>
+                                    {!this.state.readonly &&
+                                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("attributes", e, attributeId)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                    }
+                                    {!this.state.readonly &&
+                                        <span index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
+                                    }
+                                  </div>
                                   {
-                                      <span>{attributeValues.join(", ")}</span>
+                                      <div>{attributeValues.join(", ")}</div>
                                   }
-                                  {!this.state.readonly &&
-                                      <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("attributes", e, attributeId)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                                  }
-                                  {!this.state.readonly &&
-                                      <span index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
-                                  }
+
                                 </div>
                               </div>
                               {!this.state.readonly &&
