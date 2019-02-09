@@ -20,18 +20,18 @@ public class LaunchTest {
         TestCaseTree tcChild2 = (TestCaseTree) new TestCaseTree().withId("2");
         TestCaseTree tcChild1_1 = (TestCaseTree) new TestCaseTree().withId("1_1");
 
-        TestCase tcl1i1 = new TestCase().withId("l1i1");
-        TestCase tcl1i2 = new TestCase().withId("l1i2");
+        TestCase tcl1i1 = (TestCase) new TestCase().withId("l1i1");
+        TestCase tcl1i2 = (TestCase) new TestCase().withId("l1i2");
         tcChild1.getTestCases().add(tcl1i1);
         tcChild1.getTestCases().add(tcl1i2);
 
-        TestCase tcl2i1 = new TestCase().withId("l2i1");
-        TestCase tcl2i2 = new TestCase().withId("l2i2");
+        TestCase tcl2i1 = (TestCase) new TestCase().withId("l2i1");
+        TestCase tcl2i2 = (TestCase) new TestCase().withId("l2i2");
         tcChild2.getTestCases().add(tcl2i1);
         tcChild2.getTestCases().add(tcl2i2);
 
-        TestCase tcl1_1i1 = new TestCase().withId("l1_1i1");
-        TestCase tcl1_1i2 = new TestCase().withId("l1_1i2");
+        TestCase tcl1_1i1 = (TestCase) new TestCase().withId("l1_1i1");
+        TestCase tcl1_1i2 = (TestCase) new TestCase().withId("l1_1i2");
         tcChild1_1.getTestCases().add(tcl1_1i1);
         tcChild1_1.getTestCases().add(tcl1_1i2);
 

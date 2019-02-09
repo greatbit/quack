@@ -15,6 +15,9 @@
         <jaxb:class ref="ru.greatbit.quack.beans.TestcaseFilter"/>
     </jaxb:bindings>
 
+    <jaxb:bindings schemaLocation="testcase.xsd" node="xs:complexType[@name='TestCase']">
+        <jaxb:class ref="ru.greatbit.quack.beans.TestCase"/>
+    </jaxb:bindings>
 
 
 </jaxb:bindings>

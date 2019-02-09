@@ -47,9 +47,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
         Map<String, List<TestCase>> casesByGroupValues = new HashMap<>();
         head.getTestCases().forEach(testCase -> {
-            Set<String> attrValues = testCase.getAttributes().stream().
-                    filter(attribute -> groupId.equals(attribute.getId())).
-                    flatMap(attribute -> attribute.getValues().stream()).
+            Set<String> attrValues = testCase.getAttributes().entrySet().stream().
+                    filter(attribute -> groupId.equals(attribute.getKey())).
+                    flatMap(attribute -> attribute.getValue().stream()).
                     collect(Collectors.toSet());
             if (attrValues.isEmpty()){
                 addToMapOfList(casesByGroupValues, UNKNOWN_GROUP, testCase);
