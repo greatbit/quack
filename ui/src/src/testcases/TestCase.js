@@ -231,7 +231,7 @@ class TestCase extends SubComponent {
                 <div id="name-display" className="inplace-display">
                     <h1>{this.state.testcase.name}
                         {!this.state.readonly &&
-                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={{faPencilAlt}}/></span>
+                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                         }
                     </h1>
                 </div>

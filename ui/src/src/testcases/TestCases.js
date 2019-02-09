@@ -99,7 +99,7 @@ class TestCases extends SubComponent {
          var tokens = (filter.groups || []).map(function(group){return "groups=" + group});
          filter.filters.forEach(function(filter){
              filter.values.forEach(function(value){
-                 tokens.push("attribute=" + filter.id + ":" + value);
+                 tokens.push("attributes." + filter.id + "=" + value);
              })
          })
          return tokens.join("&");
