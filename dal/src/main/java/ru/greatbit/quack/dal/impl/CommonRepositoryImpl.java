@@ -56,7 +56,7 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
         return projectId + "_" + getEntityClass().getSimpleName();
     }
 
-    private Query getQuery(Filter filter){
+    protected Query getQuery(Filter filter){
         Criteria criteria = new Criteria();
 
         // Add AND fields criterias
