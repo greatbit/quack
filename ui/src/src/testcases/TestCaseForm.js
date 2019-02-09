@@ -14,7 +14,7 @@ class TestCaseForm extends SubComponent {
                  name: "",
                  description: "",
                  steps: [],
-                 attributes: []
+                 attributes: {}
              },
              projectAttributes: []
          };
@@ -58,14 +58,13 @@ class TestCaseForm extends SubComponent {
     }
 
     addAttribute(){
-        this.state.testcase.attributes.push({
-            id: null
-        });
+        this.state.testcase.attributes[null] = [];
         this.setState(this.state);
     }
 
-    editAttributeKey(index, event){
-        this.state.testcase.attributes[index].id = event.target.value;
+    editAttributeKey(key, event){
+        this.state.testcase.attributes[event.target.value] = this.state.testcase.attributes[key];
+        delete this.state.testcase.attributes[key];
         this.setState(this.state);
     }
 
@@ -81,13 +80,13 @@ class TestCaseForm extends SubComponent {
         return this.getAttribute(id).values || []
     }
 
-    editAttributeValues(index, values){
-        this.state.testcase.attributes[index].values = values.map(function(value){return value.value});
+    editAttributeValues(key, values){
+        this.state.testcase.attributes[key] = values.map(function(value){return value.value});
         this.setState(this.state);
     }
 
-    removeAttribute(i, event){
-        this.state.testcase.attributes.splice(i, 1);
+    removeAttribute(key, event){
+        delete this.state.testcase.attributes[key];
         this.setState(this.state);
     }
 
@@ -131,30 +130,31 @@ class TestCaseForm extends SubComponent {
                         <input type="text" name="preconditions" value={this.state.testcase.preconditions} onChange={this.handleChange} />
                       </label>
                       {
-                      (this.state.testcase.attributes || []).map(function(attribute, i){
-                              if(attribute.id){
+                      Object.keys(this.state.testcase.attributes || {}).map(function(attributeId, i){
+                              var attributeValues = this.state.testcase.attributes[attributeId] || [];
+                              if(attributeId !== "null"){
                                return (
-                                  <div index={i}>
-                                    {this.getAttributeName(attribute.id)}
-                                      <CreatableSelect value={(attribute.values || []).map(function(val){return {value: val, label: val}})}
+                                  <div index={attributeId}>
+                                    {this.getAttributeName(attributeId)}
+                                      <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
                                         isMulti
                                         isClearable
-                                        onChange={(e) => this.editAttributeValues(i, e)}
-                                        options={this.getAttributeValues(attribute.id).map(function(val){return {value: val, label: val}})}
+                                        onChange={(e) => this.editAttributeValues(attributeId, e)}
+                                        options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
                                        />
-                                       <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
+                                       <span index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
                                   </div>
 
                                );
                               } else {
                                 return (
-                                  <div index={i}>
-                                    <select value={attribute.id} onChange={(e) => this.editAttributeKey(i, e)}>
+                                  <div index={attributeId}>
+                                    <select value={attributeId} onChange={(e) => this.editAttributeKey(attributeId, e)}>
                                         {(this.state.projectAttributes || []).map(function(projectAttribute){
                                             return <option value={projectAttribute.id}>{projectAttribute.name}</option>
                                         })}
                                     </select>
-                                    <span index={i} onClick={(e) => this.removeAttribute(i, e)}>X</span>
+                                    <span index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
                                   </div>
 
                               );

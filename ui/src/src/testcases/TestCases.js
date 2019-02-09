@@ -24,7 +24,8 @@ class TestCases extends SubComponent {
         testcasesTree: {children: []},
         testcaseToEdit: {
             id: null,
-            name: ""
+            name: "",
+            attributes: {}
         },
         projectAttributes: [],
         selectedTestCase: {},
