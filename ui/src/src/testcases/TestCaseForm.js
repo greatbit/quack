@@ -110,25 +110,25 @@ class TestCaseForm extends SubComponent {
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
-                    <h5 className="modal-title" id="editAttributeLabel">Attribute</h5>
+                    <h5 className="modal-title" id="editAttributeLabel">Create Test Case</h5>
                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div className="modal-body">
                     <form>
-                      <label>
-                        Name:
-                        <input type="text" name="name" value={this.state.testcase.name} onChange={this.handleChange} />
-                      </label>
-                      <label>
-                        Description:
-                        <input type="text" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
-                      </label>
-                      <label>
-                        Description:
-                        <input type="text" name="preconditions" value={this.state.testcase.preconditions} onChange={this.handleChange} />
-                      </label>
+                        <div className="form-group row">
+                          <label className="col-sm-3 col-form-label">Name</label>
+                          <div className="col-sm-9">
+                            <input type="text" className="form-control" name="name" value={this.state.testcase.name} onChange={this.handleChange} />
+                          </div>
+                        </div>
+                      <div className="form-group row">
+                          <label className="col-sm-3 col-form-label">Description</label>
+                          <div className="col-sm-9">
+                            <input type="text" className="form-control" name="description" value={this.state.testcase.description} onChange={this.handleChange} />
+                          </div>
+                      </div>
                       {
                       Object.keys(this.state.testcase.attributes || {}).map(function(attributeId, i){
                               var attributeValues = this.state.testcase.attributes[attributeId] || [];
@@ -162,7 +162,11 @@ class TestCaseForm extends SubComponent {
                               }
                           }.bind(this))
                       }
-                      <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
+                      <div className="form-group row">
+                        <div className="col-sm-3">
+                            <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
+                        </div>
+                      </div>
                     </form>
 
                   </div>
