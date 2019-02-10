@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 
 class TestCaseForm extends SubComponent {
     constructor(props) {
@@ -134,37 +136,51 @@ class TestCaseForm extends SubComponent {
                               var attributeValues = this.state.testcase.attributes[attributeId] || [];
                               if(attributeId !== "null"){
                                return (
-                                  <div index={attributeId}>
-                                    {this.getAttributeName(attributeId)}
-                                      <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
-                                        isMulti
-                                        isClearable
-                                        onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                        options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
-                                       />
-                                       <span index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
+                                  <div index={attributeId} className="form-group row">
+                                    <label className="col-sm-3 col-form-label">
+                                        {this.getAttributeName(attributeId)}
+                                    </label>
+                                      <div className="col-sm-8">
+                                          <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
+                                            isMulti
+                                            isClearable
+                                            onChange={(e) => this.editAttributeValues(attributeId, e)}
+                                            options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                           />
+                                       </div>
+                                       <div className="col-sm-1">
+                                           <span className="clickable red" index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                                <FontAwesomeIcon icon={faMinusCircle}/>
+                                           </span>
+                                       </div>
                                   </div>
 
                                );
                               } else {
                                 return (
-                                  <div index={attributeId}>
-                                    <select value={attributeId} onChange={(e) => this.editAttributeKey(attributeId, e)}>
-                                        {(this.state.projectAttributes || []).map(function(projectAttribute){
-                                            return <option value={projectAttribute.id}>{projectAttribute.name}</option>
-                                        })}
-                                    </select>
-                                    <span index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
+                                  <div index={attributeId} className="form-group row">
+                                    <label className="col-sm-3 col-form-label">Attribute</label>
+                                    <div className="col-sm-8">
+                                        <select className="form-control" value={attributeId} onChange={(e) => this.editAttributeKey(attributeId, e)}>
+                                            {(this.state.projectAttributes || []).map(function(projectAttribute){
+                                                return <option value={projectAttribute.id}>{projectAttribute.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-sm-1">
+                                        <span className="clickable red" index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                            <FontAwesomeIcon icon={faMinusCircle}/>
+                                        </span>
+                                    </div>
                                   </div>
 
                               );
-
                               }
                           }.bind(this))
                       }
                       <div className="form-group row">
                         <div className="col-sm-3">
-                            <button type="button" className="btn btn-secondary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
+                            <button type="button" className="btn" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
                         </div>
                       </div>
                     </form>
