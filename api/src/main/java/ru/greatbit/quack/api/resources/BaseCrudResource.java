@@ -26,7 +26,13 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
             filter.setLimit(Integer.parseInt(hsr.getParameter("limit")));
         }
 
-        //TODO: entity match fields
+        //Add fields filter
+        hsr.getParameterMap().entrySet().stream().
+                filter(entry -> !entry.getKey().equals("skip") && !entry.getKey().equals("limit")).
+                filter(entry -> !entry.getKey().startsWith("not_")).
+                filter(entry -> !entry.getKey().startsWith("from_")).
+                filter(entry -> !entry.getKey().startsWith("to_")).
+                forEach(entry -> filter.addFields(entry.getKey(), entry.getValue()));
         return filter;
     }
 

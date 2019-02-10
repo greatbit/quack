@@ -68,4 +68,18 @@ public class Filter extends BaseFilter{
     public Filter withOrder(Order value) {
         return (Filter) super.withOrder(value);
     }
+
+    private void addValuesToMap(Map<String, Set<Object>> map, String key, String... values){
+        Set<Object> mappedValues = map.getOrDefault(key, new HashSet<>());
+        mappedValues.addAll(Arrays.asList(values));
+        map.put(key, mappedValues);
+    }
+
+    public void addFields(String key, String... values){
+        addValuesToMap(fields, key, values);
+    }
+
+    public void addNotFields(String key, String... values){
+        addValuesToMap(notFields, key, values);
+    }
 }
