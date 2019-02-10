@@ -75,7 +75,7 @@ public abstract class BaseTest {
         List<TestCase> testCases = new ArrayList<>(3);
         for (int i = 0; i < 3; i++){
             testCases.add(testCaseService.create(adminSession, projectId,
-                    new TestCase().withName(Integer.toString(i)))
+                    (TestCase) new TestCase().withName(Integer.toString(i)))
             );
         }
         return testCases;

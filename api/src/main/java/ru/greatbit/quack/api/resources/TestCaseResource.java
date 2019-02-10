@@ -33,21 +33,10 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
         if(hsr.getParameterValues("groups") != null){
             filter.getGroups().addAll(Arrays.asList(hsr.getParameterValues("groups")));
         }
-
-        if (hsr.getParameterValues("attribute") != null){
-            Map<String, Set<String>> attributes = new HashMap<>();
-            Stream.of(hsr.getParameterValues("attribute")).forEach(param -> {
-                String id = param.split(":")[0];
-                String value = param.split(":")[1];
-                attributes.putIfAbsent(id, new HashSet<>());
-                attributes.get(id).add(value);
-            });
-            List<Attribute> attributesToFilter = attributes.entrySet().stream().
-                    map(entry -> new Attribute().withId(entry.getKey()).withValues(entry.getValue())).
-                    collect(Collectors.toList());
-            filter.getFilters().addAll(attributesToFilter);
+        if (filter.getFields().containsKey("groups")){
+            filter.getFields().remove("groups");
         }
-
+        
         return filter;
     }
 
