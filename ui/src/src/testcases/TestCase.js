@@ -6,7 +6,8 @@ import { withRouter } from 'react-router';
 import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
-import CreatableSelect from 'react-select/lib/Creatable';
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+import CreatableSelect from 'react-select/lib/Creatable'
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -43,6 +44,7 @@ class TestCase extends SubComponent {
          this.handleStepActionChange = this.handleStepActionChange.bind(this);
          this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
          this.addStep = this.addStep.bind(this);
+         this.removeStep = this.removeStep.bind(this);
       }
 
     componentDidMount() {
@@ -224,6 +226,12 @@ class TestCase extends SubComponent {
         this.setState(this.state);
     }
 
+    removeStep(event, index){
+        this.state.testcase.steps.splice(index, 1);
+        this.setState(this.state);
+        this.handleSubmit("steps", event, index, true);
+    }
+
     render() {
         return (
             <div>
@@ -312,14 +320,25 @@ class TestCase extends SubComponent {
                           } else {
                             return (
                               <div className="row">
-                                  <div id={"steps-" + i + "-display"} className="inplace-display">
+                                  <div id={"steps-" + i + "-display"} className="inplace-display col-sm-12">
                                       <div index={i} className="row">
-                                         <div className="col">{i + 1}. </div>
-                                         <div className="col">{this.state.testcase.steps[i].action}</div>
-                                         <div className="col">{this.state.testcase.steps[i].expectation}</div>
-                                         {!this.state.readonly &&
-                                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("steps", e, i)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                                         }
+                                          <div className="card col-md-12">
+                                            <div className="card-body">
+                                              <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
+                                              <p className="card-text">{this.state.testcase.steps[i].action}</p>
+
+                                              <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                              <p className="card-text">{this.state.testcase.steps[i].expectation}</p>
+
+                                              {!this.state.readonly &&
+                                                <a href="#" className="card-link" onClick={(e) => this.toggleEdit("steps", e, i)}>Edit</a>
+                                              }
+
+                                              {!this.state.readonly &&
+                                                <a href="#" className="card-link red" onClick={(e) => this.removeStep(e, i)}>Remove</a>
+                                              }
+                                            </div>
+                                          </div>
                                       </div>
                                   </div>
                                   {!this.state.readonly &&

@@ -50,6 +50,7 @@
 
 .testcase-section{
     padding: 15px;
+    margin-bottom: 15px;
 }
 
 .form-signin {
@@ -142,4 +143,8 @@ code {
 
 .remove-filter-icon {
     margin-left: -29px;
+}
+
+.card-step {
+    width: 100%;
 }
