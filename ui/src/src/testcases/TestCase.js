@@ -313,14 +313,14 @@ class TestCase extends SubComponent {
                                       <div className="card-body">
                                         <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
                                         <p className="card-text">
-                                          <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                          <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
                                         </p>
                                         <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
                                         <p className="card-text">
-                                          <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                          <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, false)} value={this.state.testcase.steps[i].expectation}/>
                                         </p>
-                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.removeStep(e, i)}>Cancel</button>
+                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i, true)}>Save</button>
                                       </div>
                                   </div>
                             </div>
