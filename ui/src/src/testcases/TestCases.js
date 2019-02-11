@@ -188,7 +188,7 @@ class TestCases extends SubComponent {
 
               <div>
                   <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
-                    Add
+                    Add Test Case
                   </button>
                   <div className="modal fade" id="editTestcase" tabIndex="-1" role="dialog" aria-labelledby="editTestcaseLabel" aria-hidden="true">
                       <TestCaseForm project={this.props.match.params.project}

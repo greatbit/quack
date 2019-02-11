@@ -375,7 +375,7 @@ class TestCase extends SubComponent {
                     {!this.state.readonly &&
                         <div className="row">
                           <button type="button" className="btn btn-primary" onClick={this.addStep}>
-                             Add
+                             Add Step
                           </button>
                         </div>
                     }
@@ -448,7 +448,7 @@ class TestCase extends SubComponent {
                   {!this.state.readonly &&
                       <div className="row">
                         <button type="button" className="btn btn-primary" onClick={(e) => this.addAttribute(e)}>
-                           Add
+                           Add Attribute
                         </button>
                       </div>
                   }
