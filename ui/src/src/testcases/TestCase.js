@@ -150,6 +150,10 @@ class TestCase extends SubComponent {
         }
         $("#" + fieldId + "-display").toggle();
         $("#" + fieldId + "-form").toggle();
+        if (event){
+            event.preventDefault();
+        }
+
     }
 
     getAttribute(id){
@@ -190,7 +194,7 @@ class TestCase extends SubComponent {
         this.setState(this.state);
     }
 
-    addAttribute(){
+    addAttribute(event){
         if (!this.state.testcase.attributes){
             this.state.testcase.attributes = {};
         }
@@ -305,16 +309,20 @@ class TestCase extends SubComponent {
                         if(!step || (!step.action && !step.expectation)){
                           return (
                             <div className="row">
-                                <form>
-                                    <div id={"steps-" + i + "-form"} className="inplace-form">
-                                        <div index={i}>
-                                            <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e)} />
-                                            <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e)} />
-                                        </div>
+                                <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12">
+                                      <div className="card-body">
+                                        <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
+                                        <p className="card-text">
+                                          <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                        </p>
+                                        <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                        <p className="card-text">
+                                          <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                        </p>
                                         <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i, true)}>Save</button>
-                                    </div>
-                                </form>
+                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                      </div>
+                                  </div>
                             </div>
                           )
                           } else {
@@ -342,13 +350,19 @@ class TestCase extends SubComponent {
                                       </div>
                                   </div>
                                   {!this.state.readonly &&
-                                      <div id={"steps-" + i + "-form"} className="inplace-form"style={{display: 'none'}}>
-                                          <div index={i}>
-                                              <input type="text" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
-                                              <input type="text" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                      <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12" style={{display: 'none'}}>
+                                          <div className="card-body">
+                                            <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
+                                            <p className="card-text">
+                                              <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                            </p>
+                                            <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                            <p className="card-text">
+                                              <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                            </p>
+                                            <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
+                                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
                                           </div>
-                                          <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
                                       </div>
                                   }
                               </div>
@@ -357,7 +371,7 @@ class TestCase extends SubComponent {
                       }.bind(this))
                     }
                     {!this.state.readonly &&
-                        <div>
+                        <div className="row">
                           <button type="button" className="btn btn-primary" onClick={this.addStep}>
                              Add
                           </button>
@@ -404,7 +418,7 @@ class TestCase extends SubComponent {
                                           options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
                                          />
                                       </div>
-                                      <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
+                                      <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
                                       <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
                                     </form>
                                   </div>
@@ -414,27 +428,24 @@ class TestCase extends SubComponent {
                         } else {
                           return (
                             <div className="row">
-                                <form>
-                                    <div id={"attributes-" + attributeId + "-form"} className="inplace-form">
-                                        <div index={attributeId}>
-                                            <CreatableSelect
-                                                onChange={(e) => this.editAttributeKey(attributeId, e)}
-                                                options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
-                                            />
-                                        </div>
-                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
+                                <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
+                                    <div index={attributeId}>
+                                        <CreatableSelect
+                                            onChange={(e) => this.editAttributeKey(attributeId, e)}
+                                            options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
+                                        />
                                     </div>
-                                </form>
-
+                                    <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
+                                    <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
+                                </div>
                             </div>
                         )}
 
                     }.bind(this))
                   }
                   {!this.state.readonly &&
-                      <div>
-                        <button type="button" className="btn btn-primary" onClick={this.addAttribute}>
+                      <div className="row">
+                        <button type="button" className="btn btn-primary" onClick={(e) => this.addAttribute(e)}>
                            Add
                         </button>
                       </div>
