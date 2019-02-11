@@ -202,10 +202,12 @@ class TestCase extends SubComponent {
         this.setState(this.state);
     }
 
-    editAttributeKey(key, data){
+    editAttributeKey(key, data, reRender){
         this.state.testcase.attributes[data.value] = this.state.testcase.attributes[key];
         delete this.state.testcase.attributes[key];
-        this.setState(this.state);
+        if (reRender){
+            this.setState(this.state);
+        }
     }
 
     handleStepActionChange(index, event, reRender){
