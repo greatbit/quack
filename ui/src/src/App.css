@@ -127,7 +127,19 @@ code {
 
 .edit-icon {
     margin-left: 10px;
+    visibility: hidden;
 }
+
+h1:hover .edit-icon {
+    margin-left: 10px;
+    visibility: visible;
+}
+
+h5:hover .edit-icon {
+    margin-left: 10px;
+    visibility: visible;
+}
+
 
 .red {
     color: #da0000;
