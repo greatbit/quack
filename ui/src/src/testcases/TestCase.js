@@ -25,7 +25,8 @@ class TestCase extends SubComponent {
                 attributes: {}
              },
              projectAttributes: [],
-             readonly: false
+             readonly: false,
+             attributesInEdit: new Set()
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
@@ -45,6 +46,7 @@ class TestCase extends SubComponent {
          this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
          this.addStep = this.addStep.bind(this);
          this.removeStep = this.removeStep.bind(this);
+         this.displayAttrValFormStyle = this.displayAttrValFormStyle.bind(this);
       }
 
     componentDidMount() {
@@ -176,22 +178,26 @@ class TestCase extends SubComponent {
 
     cancelEditAttributeValues(event, key){
         this.state.testcase["attributes"][key] = this.state.originalTestcase["attributes"][key];
+        this.state.attributesInEdit.delete(key);
         this.setState(this.state);
         this.toggleEdit("attributes", event, key);
     }
 
     cancelEditAttributeKey(event, key){
-        if (key === undefined ||
+        if (this.state.testcase.attributes[key] === undefined ||
+           key === undefined ||
            this.state.testcase.attributes[key].values === undefined ||
            this.state.testcase.attributes[key].values === null ||
            this.state.testcase.attributes[key].values.length == 0)
         delete this.state.testcase.attributes[key];
+        this.state.attributesInEdit.delete(key);
         this.setState(this.state);
     }
 
     removeAttribute(key, event){
         delete this.state.testcase.attributes[key];
-        this.setState(this.state);
+        this.state.attributesInEdit.delete(key);
+        this.handleSubmit("attributes", event, 0, true);
     }
 
     addAttribute(event){
@@ -199,10 +205,13 @@ class TestCase extends SubComponent {
             this.state.testcase.attributes = {};
         }
         this.state.testcase.attributes[null] = [];
+        this.state.attributesInEdit.add(null);
         this.setState(this.state);
     }
 
     editAttributeKey(key, data, reRender){
+        this.state.attributesInEdit.delete(key);
+        this.state.attributesInEdit.add(data.value);
         this.state.testcase.attributes[data.value] = this.state.testcase.attributes[key];
         delete this.state.testcase.attributes[key];
         if (reRender){
@@ -234,9 +243,18 @@ class TestCase extends SubComponent {
 
     removeStep(event, index){
         this.state.testcase.steps.splice(index, 1);
+        this.state.attributesInEdit = new Set();
         this.setState(this.state);
         this.handleSubmit("steps", event, index, true);
     }
+
+    displayAttrValFormStyle(key){
+        if (this.state.attributesInEdit.has(key)){
+            return {};
+        }
+        return {display: 'none'};
+    }
+
 
     render() {
         return (
@@ -409,9 +427,9 @@ class TestCase extends SubComponent {
                                 </div>
                               </div>
                               {!this.state.readonly &&
-                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={{display: 'none'}}>
+                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={this.displayAttrValFormStyle(attributeId)}>
                                     <form>
-                                      <div index={attributeId}>
+                                      <div index={attributeId} className="form-control">
                                         {this.getAttributeName(attributeId)}
                                         <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
                                           isMulti
@@ -429,13 +447,23 @@ class TestCase extends SubComponent {
                         )
                         } else {
                           return (
-                            <div className="row">
+                            <div className="row form-group">
                                 <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
                                     <div index={attributeId}>
-                                        <CreatableSelect
-                                            onChange={(e) => this.editAttributeKey(attributeId, e)}
-                                            options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
-                                        />
+                                        <div className="form-control">
+                                            <CreatableSelect
+                                                onChange={(e) => this.editAttributeKey(attributeId, e, true)}
+                                                options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
+                                            />
+                                        </div>
+                                        <div className="form-control">
+                                            <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
+                                              isMulti
+                                              isClearable
+                                              onChange={(e) => this.editAttributeValues(attributeId, e)}
+                                              options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                             />
+                                        </div>
                                     </div>
                                     <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
                                     <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
