@@ -46,7 +46,6 @@ class TestCase extends SubComponent {
          this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
          this.addStep = this.addStep.bind(this);
          this.removeStep = this.removeStep.bind(this);
-         this.displayAttrValFormStyle = this.displayAttrValFormStyle.bind(this);
       }
 
     componentDidMount() {
@@ -235,14 +234,6 @@ class TestCase extends SubComponent {
         this.setState(this.state);
         this.handleSubmit("steps", event, index, true);
     }
-
-    displayAttrValFormStyle(key){
-        if (this.state.attributesInEdit.has(key)){
-            return {};
-        }
-        return {display: 'none'};
-    }
-
 
     render() {
         return (
