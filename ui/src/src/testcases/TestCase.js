@@ -128,6 +128,7 @@ class TestCase extends SubComponent {
         axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
+                this.state.attributesInEdit = new Set();
                 this.setState(this.state);
                 if (!ignoreToggleEdit){
                     this.toggleEdit(fieldName, event, index);
@@ -439,7 +440,7 @@ class TestCase extends SubComponent {
                                          />
                                       </div>
                                       <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
-                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
+                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
                                     </form>
                                   </div>
                               }
@@ -466,7 +467,7 @@ class TestCase extends SubComponent {
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
-                                    <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId)}>Save</button>
+                                    <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
                                 </div>
                             </div>
                         )}
