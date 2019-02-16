@@ -78,27 +78,14 @@ class TestCase extends SubComponent {
       this.setState(this.state);
     }
 
-    componentDidUpdate(){
-        Object.keys(this.state.testcase.attributes || {}).forEach(function(attributeId, index){
-            var attributeValues = this.state.testcase.attributes[attributeId];
-            if (attributeId && (
-                    attributeValues === undefined || attributeValues === null || attributeValues.length == 0)
-                ){
-                this.toggleEdit("attributes", null, index);
-            }
-
-        }.bind(this))
-
-    }
-
     getTestCase(projectId, testcaseId){
         axios
           .get("/api/"  + projectId + "/testcase/"+ testcaseId)
           .then(response => {
-            const newState = Object.assign({}, this.state, {
-                testcase: response.data
-            });
-            this.setState(newState);
+            this.state.testcase = response.data;
+            this.state.originalTestcase = this.state.testcase = response.data;
+            this.state.attributesInEdit.clear();
+            this.setState(this.state);
           })
           .catch(error => console.log(error));
     }
@@ -128,7 +115,8 @@ class TestCase extends SubComponent {
         axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
-                this.state.attributesInEdit = new Set();
+                this.state.originalTestcase = this.state.testcase;
+                this.state.attributesInEdit.clear();
                 this.setState(this.state);
                 if (!ignoreToggleEdit){
                     this.toggleEdit(fieldName, event, index);
@@ -244,7 +232,6 @@ class TestCase extends SubComponent {
 
     removeStep(event, index){
         this.state.testcase.steps.splice(index, 1);
-        this.state.attributesInEdit = new Set();
         this.setState(this.state);
         this.handleSubmit("steps", event, index, true);
     }
@@ -415,10 +402,12 @@ class TestCase extends SubComponent {
                                   <div>
                                     <b>{this.getAttributeName(attributeId)}</b>
                                     {!this.state.readonly &&
-                                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("attributes", e, attributeId)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                        <span className="edit edit-icon-visible clickable" onClick={(e) => this.toggleEdit("attributes", e, attributeId)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                     }
                                     {!this.state.readonly &&
-                                        <span index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>X</span>
+                                        <span className="clickable red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                            <FontAwesomeIcon icon={faMinusCircle}/>
+                                        </span>
                                     }
                                   </div>
                                   {
@@ -428,7 +417,7 @@ class TestCase extends SubComponent {
                                 </div>
                               </div>
                               {!this.state.readonly &&
-                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={this.displayAttrValFormStyle(attributeId)}>
+                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
                                     <form>
                                       <div index={attributeId} className="form-control">
                                         {this.getAttributeName(attributeId)}
@@ -457,17 +446,8 @@ class TestCase extends SubComponent {
                                                 options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
                                             />
                                         </div>
-                                        <div className="form-control">
-                                            <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
-                                              isMulti
-                                              isClearable
-                                              onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                              options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
-                                             />
-                                        </div>
                                     </div>
                                     <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
-                                    <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
                                 </div>
                             </div>
                         )}

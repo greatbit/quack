@@ -125,6 +125,10 @@ code {
     #background-color: #13515f!important;
 }
 
+.edit-icon-visible {
+    margin-left: 10px;
+}
+
 .edit-icon {
     margin-left: 10px;
     visibility: hidden;
