@@ -164,3 +164,7 @@ h5:hover .edit-icon {
 .card-step {
     width: 100%;
 }
+
+.attribute-block {
+    margin-bottom: 10px;
+}

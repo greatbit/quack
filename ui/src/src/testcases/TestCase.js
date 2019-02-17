@@ -47,6 +47,7 @@ class TestCase extends SubComponent {
          this.addStep = this.addStep.bind(this);
          this.removeStep = this.removeStep.bind(this);
          this.toggleEditAttribute = this.toggleEditAttribute.bind(this);
+         this.getAttributeKeysToAdd = this.getAttributeKeysToAdd.bind(this);
       }
 
     componentDidMount() {
@@ -241,6 +242,12 @@ class TestCase extends SubComponent {
         this.setState(this.state);
     }
 
+    getAttributeKeysToAdd(){
+        return (this.state.projectAttributes || []).
+            filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id)).
+            map(attribute => ({value: attribute.id, label: attribute.name}));
+    }
+
     render() {
         return (
             <div>
@@ -393,7 +400,7 @@ class TestCase extends SubComponent {
                       var attributeValues = this.state.testcase.attributes[attributeId] || [];
                       if(attributeId && attributeId != "null"){
                         return (
-                          <div className="row">
+                          <div className="row form-group attribute-block">
                               <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
                                 <div index={attributeId}>
                                   <div>
@@ -402,7 +409,7 @@ class TestCase extends SubComponent {
                                         <span className="edit edit-icon-visible clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                     }
                                     {!this.state.readonly &&
-                                        <span className="clickable red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                        <span className="clickable edit-icon-visible red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
                                             <FontAwesomeIcon icon={faMinusCircle}/>
                                         </span>
                                     }
@@ -414,7 +421,7 @@ class TestCase extends SubComponent {
                                 </div>
                               </div>
                               {!this.state.readonly &&
-                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
+                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
                                     <form>
                                       <div index={attributeId} className="form-control">
                                         {this.getAttributeName(attributeId)}
@@ -434,13 +441,13 @@ class TestCase extends SubComponent {
                         )
                         } else {
                           return (
-                            <div className="row form-group">
+                            <div className="row form-group attribute-block">
                                 <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
                                     <div index={attributeId}>
                                         <div className="form-control">
                                             <CreatableSelect
                                                 onChange={(e) => this.editAttributeKey(attributeId, e, true)}
-                                                options={(this.state.projectAttributes || []).map(function(attribute){return {value: attribute.id, label: attribute.name}})}
+                                                options={this.getAttributeKeysToAdd()}
                                             />
                                         </div>
                                     </div>
