@@ -46,6 +46,7 @@ class TestCase extends SubComponent {
          this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
          this.addStep = this.addStep.bind(this);
          this.removeStep = this.removeStep.bind(this);
+         this.toggleEditAttribute = this.toggleEditAttribute.bind(this);
       }
 
     componentDidMount() {
@@ -82,7 +83,7 @@ class TestCase extends SubComponent {
           .get("/api/"  + projectId + "/testcase/"+ testcaseId)
           .then(response => {
             this.state.testcase = response.data;
-            this.state.originalTestcase = this.state.testcase = response.data;
+            this.state.originalTestcase = this.state.testcase;
             this.state.attributesInEdit.clear();
             this.setState(this.state);
           })
@@ -233,6 +234,11 @@ class TestCase extends SubComponent {
         this.state.testcase.steps.splice(index, 1);
         this.setState(this.state);
         this.handleSubmit("steps", event, index, true);
+    }
+
+    toggleEditAttribute(attributeId){
+        this.state.attributesInEdit.add(attributeId);
+        this.setState(this.state);
     }
 
     render() {
@@ -388,12 +394,12 @@ class TestCase extends SubComponent {
                       if(attributeId && attributeId != "null"){
                         return (
                           <div className="row">
-                              <div id={"attributes-" + attributeId + "-display"} className="inplace-display">
+                              <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
                                 <div index={attributeId}>
                                   <div>
                                     <b>{this.getAttributeName(attributeId)}</b>
                                     {!this.state.readonly &&
-                                        <span className="edit edit-icon-visible clickable" onClick={(e) => this.toggleEdit("attributes", e, attributeId)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                        <span className="edit edit-icon-visible clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                     }
                                     {!this.state.readonly &&
                                         <span className="clickable red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
