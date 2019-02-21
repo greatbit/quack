@@ -5,8 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.dal.TestCaseRepository;
+import ru.greatbit.quack.services.errors.EntityNotFoundException;
+import ru.greatbit.quack.storage.Storage;
 import ru.greatbit.whoru.auth.Session;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
     @Autowired
     private SequencerService sequencerService;
+
+    @Autowired
+    private Storage storage;
 
     @Override
     protected CommonRepository<TestCase> getRepository() {
@@ -82,5 +89,37 @@ public class TestCaseService extends BaseService<TestCase> {
         super.beforeCreate(session, projectId, entity);
         Sequencer sequencer = sequencerService.increment(projectId);
         entity.setId(Long.toString(sequencer.getIndex()));
+    }
+
+    public TestCase uploadAttachment(Session userSession, String projectId, String testcaseId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        Attachment attachment = storage.upload(uploadedInputStream, fileName, size);
+        attachment.setId(UUID.randomUUID().toString());
+        testCase.getAttachments().add(attachment);
+        return update(userSession, projectId, testCase);
+    }
+
+    public Attachment getAttachment(Session userSession, String projectId, String testcaseId, String attachmentId) {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        return getAttachment(testCase, attachmentId);
+    }
+
+    public TestCase deleteAttachment(Session userSession, String projectId, String testcaseId, String attachmentId) throws IOException {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        Attachment attachment = getAttachment(testCase, attachmentId);
+        storage.remove(attachment);
+        testCase.getAttachments().remove(attachment);
+        return update(userSession, projectId, testCase);
+    }
+
+    private Attachment getAttachment(TestCase testCase, String attachmentId) {
+        return testCase.getAttachments().stream().
+                filter(attachment -> attachment.getId().equals(attachmentId)).
+                findFirst().orElseThrow(EntityNotFoundException::new);
+    }
+
+
+    public InputStream getAttachmentStream(Attachment attachment) throws IOException {
+        return storage.get(attachment);
     }
 }

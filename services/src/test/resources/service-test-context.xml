@@ -9,4 +9,6 @@
         <constructor-arg name="mongoDatabaseName" value="test"/>
     </bean>
 
+    <bean id="storage" class="${storage.provider}"/>
+
 </beans>

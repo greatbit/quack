@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import ru.greatbit.quack.beans.Attachment;
-import ru.greatbit.whoru.auth.Session;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
@@ -70,7 +69,7 @@ public class S3Storage implements Storage {
     }
 
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, Session session, long size) throws IOException {
+    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
         String fileNameInCloud = LocalDateTime.now().format(formatter) + fileName;
         try {
             ObjectMetadata metadata = new ObjectMetadata();

@@ -31,4 +31,6 @@
         </hz:config>
     </hz:hazelcast>
 
+    <bean id="storage" class="${storage.provider}"/>
+
 </beans>

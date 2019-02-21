@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import ru.greatbit.quack.beans.Attachment;
-import ru.greatbit.whoru.auth.Session;
 
 import java.io.*;
 import java.util.UUID;
@@ -15,7 +14,7 @@ public class LocalStorage implements Storage {
     private String STORAGE_BASE_PATH;
 
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, Session session, long size) throws IOException {
+    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
         File file = new File(STORAGE_BASE_PATH + File.separator + UUID.randomUUID().toString(), fileName);
         file.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(file);
