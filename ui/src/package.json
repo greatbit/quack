@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.2",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.2",
+    "bootstrap-fileinput": "^4.5.2",
     "gijgo": "^1.9.10",
     "jquery": "^3.3.1",
     "popper.js": "^1.14.3",
