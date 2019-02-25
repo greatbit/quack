@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
+import Attachments from '../testcases/Attachments'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
@@ -248,223 +249,266 @@ class TestCase extends SubComponent {
             map(attribute => ({value: attribute.id, label: attribute.name}));
     }
 
+
+
     render() {
         return (
             <div>
-              <div id="name" className="testcase-section">
-                <div id="name-display" className="inplace-display">
-                    <h1>{this.state.testcase.name}
-                        {!this.state.readonly &&
-                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                        }
-                    </h1>
-                </div>
-                {!this.state.readonly &&
-                    <div id="name-form" className="inplace-form" style={{display: 'none'}}>
-                        <form>
-                            <input type="text" name="name" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
-                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
-                        </form>
-                    </div>
-                }
-              </div>
 
-              <div id="description" className="testcase-section">
-                <h5>
-                    Description
+            <ul class="nav nav-tabs" id="tcTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">Attachments</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">Issues</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Comments</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+                  </li>
+
+            </ul>
+
+            <div className="tab-content" id="myTabContent">
+               <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+                  <div id="name" className="testcase-section">
+                    <div id="name-display" className="inplace-display">
+                        <h1>{this.state.testcase.name}
+                            {!this.state.readonly &&
+                                <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                            }
+                        </h1>
+                    </div>
                     {!this.state.readonly &&
-                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                        <div id="name-form" className="inplace-form" style={{display: 'none'}}>
+                            <form>
+                                <input type="text" name="name" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
+                                <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("name", e)}>Save</button>
+                            </form>
+                        </div>
                     }
-                </h5>
-                <div id="description-display" className="inplace-display">
-                    {this.state.testcase.description}
-                </div>
-                {!this.state.readonly &&
-                    <div id="description-form" className="inplace-form" style={{display: 'none'}}>
-                        <form>
-                            <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
-                            <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
-                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
-                        </form>
-                    </div>
-                }
-              </div>
-
-              <div id="preconditions" className="testcase-section">
-                  <h5>
-                      Preconditions
-                      {!this.state.readonly &&
-                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                      }
-                  </h5>
-                  <div id="preconditions-display" className="inplace-display">
-                      {this.state.testcase.preconditions}
                   </div>
-                  {!this.state.readonly &&
-                      <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
-                          <form>
-                              <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
-                              <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
-                              <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
-                          </form>
+
+                  <div id="description" className="testcase-section">
+                    <h5>
+                        Description
+                        {!this.state.readonly &&
+                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                        }
+                    </h5>
+                    <div id="description-display" className="inplace-display">
+                        {this.state.testcase.description}
+                    </div>
+                    {!this.state.readonly &&
+                        <div id="description-form" className="inplace-form" style={{display: 'none'}}>
+                            <form>
+                                <textarea rows="7" cols="50" name="description" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
+                                <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
+                            </form>
+                        </div>
+                    }
+                  </div>
+
+                  <div id="preconditions" className="testcase-section">
+                      <h5>
+                          Preconditions
+                          {!this.state.readonly &&
+                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                          }
+                      </h5>
+                      <div id="preconditions-display" className="inplace-display">
+                          {this.state.testcase.preconditions}
                       </div>
-                  }
-              </div>
+                      {!this.state.readonly &&
+                          <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
+                              <form>
+                                  <textarea rows="7" cols="50" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
+                                  <button type="button" className="btn btn-secondary" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
+                                  <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>
+                              </form>
+                          </div>
+                      }
+                  </div>
 
-              <div id="steps" className="testcase-section">
-                  <h5>
-                      Steps
-                  </h5>
-                  {
-                    (this.state.testcase.steps || []).map(function(step, i){
-                        if(!step || (!step.action && !step.expectation)){
-                          return (
-                            <div className="row">
-                                <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12">
-                                      <div className="card-body">
-                                        <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
-                                        <p className="card-text">
-                                          <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
-                                        </p>
-                                        <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
-                                        <p className="card-text">
-                                          <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, false)} value={this.state.testcase.steps[i].expectation}/>
-                                        </p>
-                                        <button type="button" className="btn btn-secondary" onClick={(e) => this.removeStep(e, i)}>Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i, true)}>Save</button>
-                                      </div>
-                                  </div>
-                            </div>
-                          )
-                          } else {
-                            return (
-                              <div className="row">
-                                  <div id={"steps-" + i + "-display"} className="inplace-display col-sm-12">
-                                      <div index={i} className="row">
-                                          <div className="card col-md-12">
-                                            <div className="card-body">
-                                              <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
-                                              <p className="card-text">{this.state.testcase.steps[i].action}</p>
-
-                                              <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
-                                              <p className="card-text">{this.state.testcase.steps[i].expectation}</p>
-
-                                              {!this.state.readonly &&
-                                                <a href="#" className="card-link" onClick={(e) => this.toggleEdit("steps", e, i)}>Edit</a>
-                                              }
-
-                                              {!this.state.readonly &&
-                                                <a href="#" className="card-link red" onClick={(e) => this.removeStep(e, i)}>Remove</a>
-                                              }
-                                            </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  {!this.state.readonly &&
-                                      <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12" style={{display: 'none'}}>
+                  <div id="steps" className="testcase-section">
+                      <h5>
+                          Steps
+                      </h5>
+                      {
+                        (this.state.testcase.steps || []).map(function(step, i){
+                            if(!step || (!step.action && !step.expectation)){
+                              return (
+                                <div className="row">
+                                    <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12">
                                           <div className="card-body">
                                             <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
                                             <p className="card-text">
-                                              <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                              <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
                                             </p>
                                             <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
                                             <p className="card-text">
-                                              <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                              <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, false)} value={this.state.testcase.steps[i].expectation}/>
                                             </p>
-                                            <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
-                                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                            <button type="button" className="btn btn-secondary" onClick={(e) => this.removeStep(e, i)}>Cancel</button>
+                                            <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i, true)}>Save</button>
                                           </div>
                                       </div>
-                                  }
-                              </div>
-                          )}
-
-                      }.bind(this))
-                    }
-                    {!this.state.readonly &&
-                        <div className="row">
-                          <button type="button" className="btn btn-primary" onClick={this.addStep}>
-                             Add Step
-                          </button>
-                        </div>
-                    }
-               </div>
-
-              <div id="attributes" className="testcase-section">
-                <h5>
-                    Attributes
-                </h5>
-                {
-                  Object.keys(this.state.testcase.attributes || {}).map(function(attributeId, i){
-                      var attributeValues = this.state.testcase.attributes[attributeId] || [];
-                      if(attributeId && attributeId != "null"){
-                        return (
-                          <div className="row form-group attribute-block">
-                              <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
-                                <div index={attributeId}>
-                                  <div>
-                                    <b>{this.getAttributeName(attributeId)}</b>
-                                    {!this.state.readonly &&
-                                        <span className="edit edit-icon-visible clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                                    }
-                                    {!this.state.readonly &&
-                                        <span className="clickable edit-icon-visible red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
-                                            <FontAwesomeIcon icon={faMinusCircle}/>
-                                        </span>
-                                    }
-                                  </div>
-                                  {
-                                      <div>{attributeValues.join(", ")}</div>
-                                  }
-
                                 </div>
-                              </div>
-                              {!this.state.readonly &&
-                                  <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
-                                    <form>
-                                      <div index={attributeId} className="form-control">
-                                        {this.getAttributeName(attributeId)}
-                                        <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
-                                          isMulti
-                                          isClearable
-                                          onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                          options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
-                                         />
+                              )
+                              } else {
+                                return (
+                                  <div className="row">
+                                      <div id={"steps-" + i + "-display"} className="inplace-display col-sm-12">
+                                          <div index={i} className="row">
+                                              <div className="card col-md-12">
+                                                <div className="card-body">
+                                                  <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
+                                                  <p className="card-text">{this.state.testcase.steps[i].action}</p>
+
+                                                  <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                                  <p className="card-text">{this.state.testcase.steps[i].expectation}</p>
+
+                                                  {!this.state.readonly &&
+                                                    <a href="#" className="card-link" onClick={(e) => this.toggleEdit("steps", e, i)}>Edit</a>
+                                                  }
+
+                                                  {!this.state.readonly &&
+                                                    <a href="#" className="card-link red" onClick={(e) => this.removeStep(e, i)}>Remove</a>
+                                                  }
+                                                </div>
+                                              </div>
+                                          </div>
                                       </div>
-                                      <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
-                                      <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
-                                    </form>
+                                      {!this.state.readonly &&
+                                          <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12" style={{display: 'none'}}>
+                                              <div className="card-body">
+                                                <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
+                                                <p className="card-text">
+                                                  <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, true)} value={this.state.testcase.steps[i].action}/>
+                                                </p>
+                                                <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                                <p className="card-text">
+                                                  <textarea rows="5" cols="60" name="step.expectation" onChange={(e) => this.handleStepExpectationChange(i, e, true)} value={this.state.testcase.steps[i].expectation}/>
+                                                </p>
+                                                <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEdit("steps", e, i)}>Cancel</button>
+                                                <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("steps", e, i)}>Save</button>
+                                              </div>
+                                          </div>
+                                      }
                                   </div>
-                              }
-                          </div>
-                        )
-                        } else {
-                          return (
-                            <div className="row form-group attribute-block">
-                                <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
-                                    <div index={attributeId}>
-                                        <div className="form-control">
-                                            <CreatableSelect
-                                                onChange={(e) => this.editAttributeKey(attributeId, e, true)}
-                                                options={this.getAttributeKeysToAdd()}
-                                            />
-                                        </div>
-                                    </div>
-                                    <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
-                                </div>
-                            </div>
-                        )}
+                              )}
 
-                    }.bind(this))
-                  }
-                  {!this.state.readonly &&
-                      <div className="row">
-                        <button type="button" className="btn btn-primary" onClick={(e) => this.addAttribute(e)}>
-                           Add Attribute
-                        </button>
-                      </div>
-                  }
+                          }.bind(this))
+                        }
+                        {!this.state.readonly &&
+                            <div className="row">
+                              <button type="button" className="btn btn-primary" onClick={this.addStep}>
+                                 Add Step
+                              </button>
+                            </div>
+                        }
+                   </div>
+
+                  <div id="attributes" className="testcase-section">
+                    <h5>
+                        Attributes
+                    </h5>
+                    {
+                      Object.keys(this.state.testcase.attributes || {}).map(function(attributeId, i){
+                          var attributeValues = this.state.testcase.attributes[attributeId] || [];
+                          if(attributeId && attributeId != "null"){
+                            return (
+                              <div className="row form-group attribute-block">
+                                  <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
+                                    <div index={attributeId}>
+                                      <div>
+                                        <b>{this.getAttributeName(attributeId)}</b>
+                                        {!this.state.readonly &&
+                                            <span className="edit edit-icon-visible clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                        }
+                                        {!this.state.readonly &&
+                                            <span className="clickable edit-icon-visible red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                                <FontAwesomeIcon icon={faMinusCircle}/>
+                                            </span>
+                                        }
+                                      </div>
+                                      {
+                                          <div>{attributeValues.join(", ")}</div>
+                                      }
+
+                                    </div>
+                                  </div>
+                                  {!this.state.readonly &&
+                                      <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
+                                        <form>
+                                          <div index={attributeId}>
+                                            {this.getAttributeName(attributeId)}
+                                            <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
+                                              isMulti
+                                              isClearable
+                                              onChange={(e) => this.editAttributeValues(attributeId, e)}
+                                              options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                             />
+                                          </div>
+                                          <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
+                                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
+                                        </form>
+                                      </div>
+                                  }
+                              </div>
+                            )
+                            } else {
+                              return (
+                                <div className="row form-group attribute-block">
+                                    <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
+                                        <div index={attributeId}>
+                                            <div>
+                                                <CreatableSelect
+                                                    onChange={(e) => this.editAttributeKey(attributeId, e, true)}
+                                                    options={this.getAttributeKeysToAdd()}
+                                                />
+                                            </div>
+                                        </div>
+                                        <button type="button" className="btn btn-outline-secondary" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
+                                    </div>
+                                </div>
+                            )}
+
+                        }.bind(this))
+                      }
+                      {!this.state.readonly &&
+                          <div className="row">
+                            <button type="button" className="btn btn-primary" onClick={(e) => this.addAttribute(e)}>
+                               Add Attribute
+                            </button>
+                          </div>
+                      }
+                  </div>
+                </div>
+
+                <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
+                    <Attachments testcase={this.state.testcase} projectId={this.state.projectId}/>
+                </div>
+
+                <div class="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
+                    Issues - coming up soon
+                </div>
+
+                <div class="tab-pane fade show" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                    Comments - coming up soon
+                </div>
+
+                <div class="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">
+                    History - coming up soon
+                </div>
+
               </div>
             </div>
         );

@@ -30,6 +30,7 @@ class TestCaseForm extends SubComponent {
         this.editAttributeKey = this.editAttributeKey.bind(this);
         this.editAttributeValues = this.editAttributeValues.bind(this);
         this.removeAttribute = this.removeAttribute.bind(this);
+        this.getAttributeKeysToAdd = this.getAttributeKeysToAdd.bind(this);
       }
 
       handleChange(event) {
@@ -65,7 +66,7 @@ class TestCaseForm extends SubComponent {
     }
 
     editAttributeKey(key, event){
-        this.state.testcase.attributes[event.target.value] = this.state.testcase.attributes[key];
+        this.state.testcase.attributes[event.value] = this.state.testcase.attributes[key];
         delete this.state.testcase.attributes[key];
         this.setState(this.state);
     }
@@ -104,6 +105,12 @@ class TestCaseForm extends SubComponent {
               .catch(error => console.log(error));
         }
         this.setState(this.state);
+     }
+
+     getAttributeKeysToAdd(){
+         return (this.state.projectAttributes || []).
+             filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id)).
+             map(attribute => ({value: attribute.id, label: attribute.name}));
      }
 
 
@@ -161,11 +168,10 @@ class TestCaseForm extends SubComponent {
                                   <div index={attributeId} className="form-group row">
                                     <label className="col-sm-3 col-form-label">Attribute</label>
                                     <div className="col-sm-8">
-                                        <select className="form-control" value={attributeId} onChange={(e) => this.editAttributeKey(attributeId, e)}>
-                                            {(this.state.projectAttributes || []).map(function(projectAttribute){
-                                                return <option value={projectAttribute.id}>{projectAttribute.name}</option>
-                                            })}
-                                        </select>
+                                        <CreatableSelect
+                                            onChange={(e) => this.editAttributeKey(attributeId, e)}
+                                            options={this.getAttributeKeysToAdd()}
+                                        />
                                     </div>
                                     <div className="col-sm-1">
                                         <span className="clickable red" index={i} onClick={(e) => this.removeAttribute(attributeId, e)}>
@@ -179,8 +185,8 @@ class TestCaseForm extends SubComponent {
                           }.bind(this))
                       }
                       <div className="form-group row">
-                        <div className="col-sm-3">
-                            <button type="button" className="btn" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
+                        <div className="col-sm-4">
+                            <button type="button" className="btn btn-primary" id="addAttribute" onClick={this.addAttribute}>Add attribute</button>
                         </div>
                       </div>
                     </form>
