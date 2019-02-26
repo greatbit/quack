@@ -494,7 +494,7 @@ class TestCase extends SubComponent {
                 </div>
 
                 <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
-                    <Attachments testcase={this.state.testcase} projectId={this.state.projectId}/>
+                    <Attachments testcase={this.state.testcase} projectId={this.projectId}/>
                 </div>
 
                 <div class="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
