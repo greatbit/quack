@@ -19,6 +19,7 @@ class Attachments extends SubComponent {
              testcase: props.testcase
          };
          this.getAttachmentUrl = this.getAttachmentUrl.bind(this);
+         this.onTestcaseUpdated = props.onTestcaseUpdated;
       }
 
     componentWillReceiveProps(nextProps) {
@@ -33,7 +34,10 @@ class Attachments extends SubComponent {
           $("#file-data").fileinput({
               previewFileType:'any',
               uploadUrl: '/api/' + this.state.projectId + '/testcase/attachment/' + this.state.testcase.id
-          })
+          });
+          $("#file-data").on('fileloaded', function(event, file, previewId, index) {
+              this.onTestcaseUpdated();
+          }.bind(this));
       }
 
     }
@@ -56,7 +60,7 @@ class Attachments extends SubComponent {
     render() {
         return (
             <div>
-                <div id="files">
+                <div id="files" className="attachments-list">
                 {(
                     (this.state.testcase.attachments || []).map(this.getAttachmentUrl)
                 )}
@@ -72,9 +76,6 @@ class Attachments extends SubComponent {
                         <button type="reset" class="btn btn-outline-secondary">Reset</button>
                     </form>
                 </div>
-
-
-
             </div>
 
         );

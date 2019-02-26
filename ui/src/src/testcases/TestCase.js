@@ -49,6 +49,7 @@ class TestCase extends SubComponent {
          this.removeStep = this.removeStep.bind(this);
          this.toggleEditAttribute = this.toggleEditAttribute.bind(this);
          this.getAttributeKeysToAdd = this.getAttributeKeysToAdd.bind(this);
+         this.onTestcaseUpdated = this.onTestcaseUpdated.bind(this);
       }
 
     componentDidMount() {
@@ -78,6 +79,10 @@ class TestCase extends SubComponent {
         this.state.projectAttributes = nextProps.projectAttributes;
       }
       this.setState(this.state);
+    }
+
+    onTestcaseUpdated(){
+        this.getTestCase(this.projectId, this.state.testcase.id);
     }
 
     getTestCase(projectId, testcaseId){
@@ -494,7 +499,7 @@ class TestCase extends SubComponent {
                 </div>
 
                 <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
-                    <Attachments testcase={this.state.testcase} projectId={this.projectId}/>
+                    <Attachments testcase={this.state.testcase} projectId={this.projectId} onTestcaseUpdated={this.onTestcaseUpdated}/>
                 </div>
 
                 <div class="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
