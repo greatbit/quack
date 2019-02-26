@@ -48,7 +48,7 @@ public class MongoStorage implements Storage {
     @Override
     public InputStream get(Attachment attachment) throws IOException {
         com.mongodb.client.gridfs.model.GridFSFile file = gridOperations.findOne(
-                new Query().addCriteria(Criteria.where("_id").is(new ObjectId(attachment.getId()))));
+                new Query().addCriteria(Criteria.where("_id").is(new ObjectId(attachment.getUrl()))));
         if (file == null){
             throw new RuntimeException(String.format("File with id %s not found", attachment.getId()));
         } else {
