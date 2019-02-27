@@ -36,7 +36,7 @@ class Attachments extends SubComponent {
               previewFileType:'any',
               uploadUrl: '/api/' + this.state.projectId + '/testcase/attachment/' + this.state.testcase.id
           });
-          $("#file-data").on('fileloaded', function(event, file, previewId, index) {
+          $("#file-data").on('fileuploaded', function(event, file, previewId, index) {
               this.onTestcaseUpdated();
           }.bind(this));
       }
