@@ -94,7 +94,10 @@ public class TestCaseService extends BaseService<TestCase> {
     public TestCase uploadAttachment(Session userSession, String projectId, String testcaseId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
         Attachment attachment = storage.upload(uploadedInputStream, fileName, size);
-        attachment.setId(UUID.randomUUID().toString());
+        attachment.withId(UUID.randomUUID().toString()).
+                withCreatedBy(userSession.getLogin()).
+                withCreatedTime(System.currentTimeMillis()).
+                withDataSize(size);
         testCase.getAttachments().add(attachment);
         return update(userSession, projectId, testCase);
     }
