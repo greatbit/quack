@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
+import axios from "axios";
 require('popper.js/dist/umd/popper.min.js');
 require('bootstrap-fileinput/js/fileinput.min.js');
 require('bootstrap-fileinput/css/fileinput.min.css');
@@ -19,7 +20,7 @@ class Attachments extends SubComponent {
              testcase: props.testcase
          };
          this.getAttachmentUrl = this.getAttachmentUrl.bind(this);
-         this.onTestcaseUpdated = props.onTestcaseUpdated;
+         this.removeAttachment = this.removeAttachment.bind(this);
       }
 
     componentWillReceiveProps(nextProps) {
@@ -42,16 +43,34 @@ class Attachments extends SubComponent {
 
     }
 
-    componentDidMount() {
+    componentDidMount(){
         super.componentDidMount();
+        this.onTestcaseUpdated = this.props.onTestcaseUpdated;
+    }
+
+    removeAttachment(attachmentId){
+        axios
+          .delete('/api/' + this.state.projectId + '/testcase/attachment/' + this.state.testcase.id + '/' + attachmentId)
+          .then(response => {
+              this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== attachmentId);
+              this.setState(this.state);
+          })
+          .catch(error => console.log(error));
     }
 
     getAttachmentUrl(attachment){
         return (
-            <div>
-                <a href={'/api/' + this.state.projectId +
-                    '/testcase/attachment/' + this.state.testcase.id + '/' +
-                    attachment.id} target='_blank'>{attachment.title}</a>
+            <div className="row">
+                <div className="col-sm-11">
+                    <a href={'/api/' + this.state.projectId +
+                        '/testcase/attachment/' + this.state.testcase.id + '/' +
+                        attachment.id} target='_blank'>{attachment.title}</a>
+                </div>
+                <div className="col-sm-1">
+                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeAttachment(attachment.id, e)}>
+                        <FontAwesomeIcon icon={faMinusCircle}/>
+                    </span>
+                </div>
             </div>
         )
     }

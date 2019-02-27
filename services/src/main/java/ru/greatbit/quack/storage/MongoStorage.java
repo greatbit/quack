@@ -41,7 +41,7 @@ public class MongoStorage implements Storage {
 
     @Override
     public void remove(Attachment attachment) throws IOException {
-        gridOperations.delete(new Query().addCriteria(Criteria.where("_id").is(new ObjectId(attachment.getId()))));
+        gridOperations.delete(new Query().addCriteria(Criteria.where("_id").is(new ObjectId(attachment.getUrl()))));
 
     }
 
