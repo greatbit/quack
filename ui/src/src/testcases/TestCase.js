@@ -19,7 +19,8 @@ class TestCase extends SubComponent {
                  name: "",
                  description: "",
                  steps: [],
-                 attributes: {}
+                 attributes: {},
+                 attachments: []
              },
              originalTestcase: {
                 steps: [],
@@ -265,7 +266,12 @@ class TestCase extends SubComponent {
                     <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">Attachments</a>
+                    <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">
+                        Attachments
+                        {this.state.testcase.attachments && this.state.testcase.attachments.length > 0 &&
+                            <span class="badge badge-pill badge-secondary">{this.state.testcase.attachments.length}</span>
+                        }
+                    </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">Issues</a>

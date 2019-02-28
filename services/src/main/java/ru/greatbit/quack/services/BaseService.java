@@ -70,7 +70,7 @@ public abstract class BaseService<E extends Entity> {
             );
         }
         return isEmpty(entity.getId()) ?
-                create(user, projectId, entity) : update(user, projectId, entity);
+                create(user, projectId, entity) : update(user, projectId, entity, (origEnt, newEnt) -> newEnt);
     }
 
     public Collection<E> save(Session user, String projectId, Collection<E> entities){
@@ -143,7 +143,10 @@ public abstract class BaseService<E extends Entity> {
     protected void afterCreate(Session session, E entity){}
     protected void beforeUpdate(Session session, E entity){}
     protected void afterUpdate(Session session, E entity){}
-    protected void beforeSave(Session session, E entity){}
+    protected void beforeSave(Session session, E entity){
+        entity.setLastModifiedTime(System.currentTimeMillis());
+        entity.setLastModifiedBy(session.getLogin());
+    }
     protected void afterSave(Session session, E entity){}
     protected void beforeDelete(Session session, String id){}
     protected void afterDelete(Session session, String id){}
@@ -167,12 +170,23 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected E update(Session session, String projectId, E entity){
+        return update(session, projectId, entity, (savedEnt, newEnt) -> newEnt);
+    }
+
+    protected E update(Session session, String projectId, E entity, UpdatableEntityConvertor convector){
+        if (!userCanUpdate(session, projectId, entity)){
+            throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
+        }
         ILock lock = hazelcastInstance.getLock(entity.getClass()+ entity.getId());
         try{
             lock.lock(lockTtl, TimeUnit.MINUTES);
             beforeUpdate(session, entity);
-            if (!userCanUpdate(session, projectId, entity)){
-                throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
+            E savedEntity = findOne(session, projectId, entity.getId());
+            if (savedEntity != null){
+                if (savedEntity.getLastModifiedTime() > entity.getLastModifiedTime()){
+                    throw new EntityValidationException("Entity has been changed previously. Changes will cause lost updates.");
+                }
+                entity = (E) convector.transform(savedEntity, entity);
             }
             entity = doSave(session, projectId, entity);
             afterUpdate(session, entity);
@@ -180,7 +194,6 @@ public abstract class BaseService<E extends Entity> {
         } finally {
             lock.unlock();
         }
-
     }
 
     private E doSave(Session session, String projectId, E entity){

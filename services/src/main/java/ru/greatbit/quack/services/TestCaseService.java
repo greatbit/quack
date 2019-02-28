@@ -92,14 +92,17 @@ public class TestCaseService extends BaseService<TestCase> {
     }
 
     public TestCase uploadAttachment(Session userSession, String projectId, String testcaseId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
-        TestCase testCase = findOne(userSession, projectId, testcaseId);
         Attachment attachment = storage.upload(uploadedInputStream, fileName, size);
-        attachment.withId(UUID.randomUUID().toString()).
-                withCreatedBy(userSession.getLogin()).
-                withCreatedTime(System.currentTimeMillis()).
-                withDataSize(size);
-        testCase.getAttachments().add(attachment);
-        return update(userSession, projectId, testCase);
+        return update(userSession, projectId,
+                (TestCase) new TestCase().withId(testcaseId).withLastModifiedTime(Long.MAX_VALUE),
+                ((originalEntity, newEntity) -> {
+            attachment.withId(UUID.randomUUID().toString()).
+                    withCreatedBy(userSession.getLogin()).
+                    withCreatedTime(System.currentTimeMillis()).
+                    withDataSize(size);
+            ((TestCase)originalEntity).getAttachments().add(attachment);
+            return originalEntity;
+        }));
     }
 
     public Attachment getAttachment(Session userSession, String projectId, String testcaseId, String attachmentId) {
