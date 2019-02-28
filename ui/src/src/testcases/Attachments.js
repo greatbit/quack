@@ -54,6 +54,7 @@ class Attachments extends SubComponent {
           .then(response => {
               this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== attachmentId);
               this.setState(this.state);
+              this.onTestcaseUpdated();
           })
           .catch(error => console.log(error));
     }
@@ -88,7 +89,7 @@ class Attachments extends SubComponent {
                 <div>
                     <form id="file-form" enctype="multipart/form-data">
                         <div class="file-loading">
-                            <input id="file-data" class="file" type="file" name="file" multiple data-min-file-count="1" data-theme="fas"/>
+                            <input id="file-data" class="file" type="file" name="file" multiple data-min-file-count="0" data-theme="fas"/>
                         </div>
                         <br/>
                         <button type="submit" class="btn btn-primary">Submit</button>
