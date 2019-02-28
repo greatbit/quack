@@ -269,7 +269,7 @@ class TestCase extends SubComponent {
                     <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">
                         Attachments
                         {this.state.testcase.attachments && this.state.testcase.attachments.length > 0 &&
-                            <span class="badge badge-pill badge-secondary">{this.state.testcase.attachments.length}</span>
+                            <span class="badge badge-pill badge-secondary tab-badge">{this.state.testcase.attachments.length}</span>
                         }
                     </a>
                   </li>

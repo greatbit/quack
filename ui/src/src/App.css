@@ -173,3 +173,7 @@ h5:hover .edit-icon {
   margin-bottom: 20px;
   margin-top: 20px;
 }
+
+.tab-badge {
+    margin-left: 5px;
+}
