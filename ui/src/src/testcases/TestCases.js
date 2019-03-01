@@ -39,6 +39,8 @@ class TestCases extends SubComponent {
         this.getQueryParams = this.getQueryParams.bind(this);
         this.getFilterQParams = this.getFilterQParams.bind(this);
         this.getGroupingQParams = this.getGroupingQParams.bind(this);
+        this.onTestcaseSelected = this.onTestcaseSelected.bind(this);
+        this.onTestCaseAdded = this.onTestCaseAdded.bind(this);
     }
 
     componentDidMount() {
@@ -74,9 +76,10 @@ class TestCases extends SubComponent {
 
 
      onTestCaseAdded(testcase){
+        this.onFilter(this.state.filter, function(){this.onTestcaseSelected(testcase.id); this.refreshTree();}.bind(this));
      }
 
-     onFilter(filter){
+     onFilter(filter, onResponse){
         this.state.filter = filter;
         var params = queryString.parse(this.props.location.search);
         if (params.testcase){
@@ -88,6 +91,9 @@ class TestCases extends SubComponent {
             this.state.testcasesTree = response.data;
             this.setState(this.state);
             this.refreshTree();
+            if (onResponse){
+                onResponse();
+            }
           })
           .catch(error => console.log(error));
           if (!params.testSuite){
@@ -105,6 +111,12 @@ class TestCases extends SubComponent {
          return tokens.join("&");
      }
 
+     onTestcaseSelected(id){
+        this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.testcasesTree, function(testCase, id){return testCase.id === id});
+        this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(this.state.filter));
+        this.setState(this.state);
+     }
+
      refreshTree(){
         if (this.tree){
             this.tree.destroy()
@@ -115,9 +127,7 @@ class TestCases extends SubComponent {
             dataSource: Utils.parseTree(this.state.testcasesTree)
         });
         this.tree.on('select', function (e, node, id) {
-            this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.testcasesTree, function(testCase, id){return testCase.id === id});
-            this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(this.state.filter));
-            this.setState(this.state);
+            this.onTestcaseSelected(id);
         }.bind(this));
         if (this.state.selectedTestCase.id){
             var node = this.tree.getNodeById(this.state.selectedTestCase.id);

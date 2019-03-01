@@ -10,17 +10,19 @@ import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 class TestCaseForm extends SubComponent {
     constructor(props) {
         super(props);
+
+        this.defaultTestcase = {
+            id: null,
+            name: "",
+            description: "",
+            steps: [],
+            attributes: {}
+        },
         this.state = {
-             testcase: {
-                 id: null,
-                 name: "",
-                 description: "",
-                 steps: [],
-                 attributes: {}
-             },
+             testcase: Object.assign({}, this.defaultTestcase),
              projectAttributes: []
          };
-
+        this.onTestCaseAdded = props.onTestCaseAdded;
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addAttribute = this.addAttribute.bind(this);
@@ -45,8 +47,10 @@ class TestCaseForm extends SubComponent {
       handleSubmit(event) {
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
-            this.props.history.push("/" + this.props.match.params.project + '/testcases?testcase=' + response.data.id);
-        })
+            this.onTestCaseAdded(response.data);
+            this.state.testcase = Object.assign({}, this.defaultTestcase);
+            this.setState(this.state);
+        });
         event.preventDefault();
       }
 
