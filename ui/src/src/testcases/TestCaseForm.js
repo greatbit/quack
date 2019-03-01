@@ -11,15 +11,8 @@ class TestCaseForm extends SubComponent {
     constructor(props) {
         super(props);
 
-        this.defaultTestcase = {
-            id: null,
-            name: "",
-            description: "",
-            steps: [],
-            attributes: {}
-        },
         this.state = {
-             testcase: Object.assign({}, this.defaultTestcase),
+             testcase: props.testcase,
              projectAttributes: []
          };
         this.onTestCaseAdded = props.onTestCaseAdded;
@@ -48,8 +41,6 @@ class TestCaseForm extends SubComponent {
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
             this.onTestCaseAdded(response.data);
-            this.state.testcase = Object.assign({}, this.defaultTestcase);
-            this.setState(this.state);
         });
         event.preventDefault();
       }
@@ -120,7 +111,7 @@ class TestCaseForm extends SubComponent {
 
     render() {
         return (
-            <div className="modal-dialog" role="document">
+            <div className="modal-dialog" role="document" id="testcase-creation-form">
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title" id="editAttributeLabel">Create Test Case</h5>

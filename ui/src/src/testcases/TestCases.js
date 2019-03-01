@@ -20,13 +20,17 @@ require('gijgo/css/gijgo.min.css');
 
 class TestCases extends SubComponent {
 
+    defaultTestcase = {
+        id: null,
+        name: "",
+        description: "",
+        steps: [],
+        attributes: {}
+    };
+
     state = {
         testcasesTree: {children: []},
-        testcaseToEdit: {
-            id: null,
-            name: "",
-            attributes: {}
-        },
+        testcaseToEdit: Object.assign({}, this.defaultTestcase),
         projectAttributes: [],
         selectedTestCase: {},
         filter: {}
@@ -77,6 +81,8 @@ class TestCases extends SubComponent {
 
      onTestCaseAdded(testcase){
         this.onFilter(this.state.filter, function(){this.onTestcaseSelected(testcase.id); this.refreshTree();}.bind(this));
+        $('#editTestcase').modal('hide');
+        this.state.testcaseToEdit = Object.assign({}, this.defaultTestcase);
      }
 
      onFilter(filter, onResponse){
