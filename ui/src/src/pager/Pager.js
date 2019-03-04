@@ -39,6 +39,7 @@ class Pager extends Component {
         var startFromPage = Math.min(this.state.currentPage - Utils.intDiv(this.state.visiblePages, 2) - 1, totalPages - 1 - this.state.visiblePages);
         startFromPage = Math.max(0, startFromPage);
         var endPage = Math.min(totalPages - 1, startFromPage + this.state.visiblePages)
+        endPage = Math.max(0, endPage);
 
         var result = [];
         result.push({title: '<', index: Math.max(this.state.currentPage - 1, 0), enabled: this.state.currentPage != 0});
@@ -61,7 +62,8 @@ class Pager extends Component {
             result.push({title: endPageTitle, index: endPage, enabled: endPage != this.state.currentPage});
         }
 
-        result.push({title: '>', index: Math.min(this.state.currentPage + 1, totalPages - 1), enabled: this.state.currentPage != totalPages - 1});
+        result.push({title: '>', index: Math.min(this.state.currentPage + 1, totalPages - 1),
+            enabled: this.state.currentPage != Math.max(totalPages - 1, 0)});
 
         return result;
 

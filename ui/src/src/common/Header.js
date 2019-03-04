@@ -37,7 +37,6 @@ class Header extends Component {
               this.state.projects = response.data;
               this.setState(this.state);
           })
-        this.getProject();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -79,12 +78,12 @@ class Header extends Component {
 
     renderProjects(){
         return (
-            <ul class="navbar-nav">
-              <li class="nav-item dropdown">
-                <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-projects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <ul className="navbar-nav">
+              <li className="nav-item dropdown">
+                <a className="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-projects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {this.state.projectName || 'Projects'}
                 </a>
-                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="bd-projects">
+                <div className="dropdown-menu dropdown-menu-left" aria-labelledby="bd-projects">
                   <Link className="dropdown-item " to="/projects">All</Link>
                   {this.state.projects.map(function(project){
                       return (
@@ -103,13 +102,13 @@ class Header extends Component {
         if (this.state.session.id){
             profileContext = (
             <span>
-                <a class="dropdown-item" href="/user/profile">Profile</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" onClick={this.logOut}>Log out</a>
+                <a className="dropdown-item" href="/user/profile">Profile</a>
+                <div className="dropdown-divider"></div>
+                <a className="dropdown-item" href="#" onClick={this.logOut}>Log out</a>
             </span>
             )
           } else {
-            profileContext = <a class="dropdown-item active" href="/auth">Login</a>
+            profileContext = <a className="dropdown-item active" href="/auth">Login</a>
         }
         return (
           <nav className="navbar navbar-expand-md navbar-dark bg-green">
@@ -132,12 +131,12 @@ class Header extends Component {
                     <li className="nav-item"><Link className="nav-link" to={"/" + this.props.project + "/launches"}>Launches</Link></li>
                 </ul>
             }
-              <ul class="navbar-nav">
-                  <li class="nav-item dropdown">
-                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <ul className="navbar-nav">
+                  <li className="nav-item dropdown">
+                    <a className="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-login" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {this.state.session.person.firstName || ""} {this.state.session.person.lastName || ""}
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-login">
+                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="bd-login">
                       {profileContext}
                     </div>
                   </li>

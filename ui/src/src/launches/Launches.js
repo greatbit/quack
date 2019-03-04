@@ -64,7 +64,7 @@ class Launches extends SubComponent {
             .get("/api/" + this.props.match.params.project + "/launch/count?" + this.filterToQuery(countFilter))
             .then(response => {
                  this.state.pager.total = response.data;
-                 this.state.pager.total.current = this.state.filter.skip / this.state.filter.limit;
+                 this.state.pager.current = this.state.filter.skip / this.state.filter.limit;
                  this.state.pager.visiblePage = Math.min(response.data / this.state.pager.itemsOnPage + 1, this.state.pager.maxVisiblePage);
                  this.setState(this.state);
         })
