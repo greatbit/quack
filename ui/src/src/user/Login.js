@@ -30,7 +30,7 @@ class Login extends Component {
         .then(response => {
             this.onSessionChange(response.data);
             var params = queryString.parse(this.props.location.search);
-            var retpath = decodeURIComponent(params.retpath) || "/";
+            var retpath = decodeURIComponent(params.retpath || "");
             window.location = decodeURI(retpath);
         })
         event.preventDefault();

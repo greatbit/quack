@@ -18,15 +18,13 @@ class Auth extends Component {
           .get("/api/user/login-redirect")
           .then(response => {
             var url = response.data.url || "/login";
-            if (response.data.retpathParamName){
-                url = url + response.data.retpathParamName + "=" + encodeURIComponent(params.retpath || "");
-            } else  {
-                  url = url + "?retpath=" + encodeURIComponent(params.retpath || "");
+            var retpath = params.retpath || "";
+            var retpathParamName = response.data.retpathParamName || "retpath";
+            if (retpath.startsWith(window.location.origin + "/auth") ||
+                            retpath.startsWith(window.location.origin + "/login")){
+                retpath = "/";
             }
-
-            //TOdo: if (retpath.startsWith("/auth") || retpath.startsWith("/login")){retpath = "/";}
-
-
+            url = url + retpathParamName + "=" + encodeURIComponent(retpath);
             this.props.history.push(url);
           })
           .catch(error => console.log(error));
