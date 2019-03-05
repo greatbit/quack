@@ -30,8 +30,8 @@ class Login extends Component {
         .then(response => {
             this.onSessionChange(response.data);
             var params = queryString.parse(this.props.location.search);
-            var retpath = params.retpath || "/";
-            this.props.history.push(decodeURI(retpath));
+            var retpath = decodeURIComponent(params.retpath) || "/";
+            window.location = decodeURI(retpath);
         })
         event.preventDefault();
     }

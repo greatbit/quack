@@ -23,7 +23,7 @@ class Header extends Component {
                 this.onSessionChange(this.state.session);
             }
           })
-          .catch(error => this.props.history.push("/auth"));
+          .catch(error => this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href)));
         axios
           .get("/api/project?includedFields=name,description,id")
           .then(response => {
