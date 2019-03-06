@@ -41,7 +41,7 @@ class Header extends Component {
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.session){
-        this.state.session = this.props.session;
+        this.state.session = nextProps.session;
       }
       if(nextProps.project){
         this.state.projectId = nextProps.project;
