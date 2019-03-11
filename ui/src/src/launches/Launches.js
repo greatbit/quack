@@ -30,6 +30,8 @@ class Launches extends SubComponent {
         this.getPager = this.getPager.bind(this);
         this.handlePageChanged = this.handlePageChanged.bind(this);
         this.updateUrl = this.updateUrl.bind(this);
+        this.onFilter = this.onFilter.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
     }
 
     componentDidMount() {
@@ -75,12 +77,37 @@ class Launches extends SubComponent {
         var params = queryString.parse(this.props.location.search);
         this.state.filter.skip = params.skip || 0;
         this.state.filter.limit = params.limit || 20;
+        if (params.from_createdTime){
+            this.state.filter.from_createdTime = params.from_createdTime;
+        }
+        if (params.to_createdTime){
+            this.state.filter.to_createdTime = params.to_createdTime;
+        }
+        if (params.like_name){
+            this.state.filter.like_name = params.like_name;
+        }
         this.setState(this.state);
     }
 
     filterToQuery(filter){
         return Object.keys(filter).
                     map((key) => {return key + "=" + filter[key]}).join("&");
+    }
+
+    handleFilterChange(fieldName, event, index){
+        if (index){
+            this.state.filter[fieldName][index] = event.target.value;
+        } else {
+            this.state.filter[fieldName] = event.target.value;
+        }
+        this.setState(this.state);
+    }
+
+    onFilter(event){
+        this.updateUrl();
+        this.getLaunches();
+        this.getPager();
+        event.preventDefault();
     }
 
     updateUrl(){
@@ -104,47 +131,70 @@ class Launches extends SubComponent {
 
     render() {
         return (
-          <div>
-              <table class="table table-striped">
-                  <thead>
-                      <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Progress</th>
-                        <th scope="col">Created</th>
-                        <th scope="col">Started</th>
-                        <th scope="col">Finished</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                  {
-                        this.state.launches.map(function(launch){
-                            return (
-                                   <tr>
-                                       <td>
-                                            <Link to={'/' + this.props.match.params.project + '/launch/' + launch.id}>
-                                                {launch.name}
-                                            </Link>
-                                       </td>
-                                       <td>{this.getProgressBar(launch)}</td>
-                                       <td>{Utils.timeToDate(launch.createdTime)}</td>
-                                       <td>{Utils.timeToDate(launch.startTime)}</td>
-                                       <td>{Utils.timeToDate(launch.finishTime)}</td>
-                                   </tr>
-                                   );
-                        }.bind(this))
-                  }
-                  </tbody>
-              </table>
-              <div>
-                  <Pager
-                      totalItems={this.state.pager.total}
-                      currentPage={this.state.pager.current}
-                      visiblePages={this.state.pager.maxVisiblePage}
-                      itemsOnPage={this.state.pager.itemsOnPage}
-                      onPageChanged={this.handlePageChanged}
-                  />
+            <div className="row">
+              <div className="col-sm-3 launch-filter">
+                <form>
+                  <div class="form-group">
+                    <label for="title"><h5>Name</h5></label>
+                    <input type="text" class="form-control" id="name" name="name" aria-describedby="Launch title" placeholder="Launch title"
+                        value={this.state.filter.like_name || ""} onChange={(e) => this.handleFilterChange("like_name", e)} />
+                    <small id="titleHelp" class="form-text text-muted">Find by partly matching Launch title</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="created"><h5>Created Time</h5></label>
+                    <div class="input-group mb-2">
+                      <input type="text" class="form-control" id="from_created" placeholder="Created after"/>
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">-</div>
+                      </div>
+                      <input type="text" class="form-control" id="to_created" placeholder="Created before"/>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
+                </form>
               </div>
-          </div>
+              <div className="col-sm-9">
+                  <table class="table table-striped">
+                      <thead>
+                          <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Progress</th>
+                            <th scope="col">Created</th>
+                            <th scope="col">Started</th>
+                            <th scope="col">Finished</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      {
+                            this.state.launches.map(function(launch){
+                                return (
+                                       <tr>
+                                           <td>
+                                                <Link to={'/' + this.props.match.params.project + '/launch/' + launch.id}>
+                                                    {launch.name}
+                                                </Link>
+                                           </td>
+                                           <td>{this.getProgressBar(launch)}</td>
+                                           <td>{Utils.timeToDate(launch.createdTime)}</td>
+                                           <td>{Utils.timeToDate(launch.startTime)}</td>
+                                           <td>{Utils.timeToDate(launch.finishTime)}</td>
+                                       </tr>
+                                       );
+                            }.bind(this))
+                      }
+                      </tbody>
+                  </table>
+                  <div>
+                      <Pager
+                          totalItems={this.state.pager.total}
+                          currentPage={this.state.pager.current}
+                          visiblePages={this.state.pager.maxVisiblePage}
+                          itemsOnPage={this.state.pager.itemsOnPage}
+                          onPageChanged={this.handlePageChanged}
+                      />
+                  </div>
+              </div>
+            </div>
 
         );
       }
