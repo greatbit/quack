@@ -1,3 +1,6 @@
+import Moment from 'moment/min/moment.min.js';
+
+
 export function intDiv(val, by){
     return (val - val % by) / by;
 }
@@ -81,4 +84,8 @@ export function timeToDate(time) {
     }
     return date.getDate() + " " + monthNames[date.getMonth()]
         + " " + date.getHours() + ":" + currMinutes;
-};
+}
+
+export function longToDateTimeFormatted(uts, format) {
+    return Moment(uts).format(format);
+}

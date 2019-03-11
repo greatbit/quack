@@ -5,6 +5,9 @@ import axios from "axios";
 import queryString from 'query-string';
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
+import $ from 'jquery';
+
+require('bootstrap-datepicker/js/bootstrap-datepicker.js');
 
 class Launches extends SubComponent {
 
@@ -40,6 +43,20 @@ class Launches extends SubComponent {
         this.getLaunches();
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);
+
+        $("#from_created").datetimepicker({
+            showClear: true,
+            showClose: true,
+            useCurrent: false,
+            format: 'MM/DD/YYYY hh:mm A'
+        });
+
+        $("#to_created").datetimepicker({
+            showClear: true,
+            showClose: true,
+            useCurrent: false,
+            format: 'MM/DD/YYYY hh:mm A'
+        });
     }
 
     handlePageChanged(newPage) {
@@ -100,6 +117,12 @@ class Launches extends SubComponent {
         } else {
             this.state.filter[fieldName] = event.target.value;
         }
+        this.setState(this.state);
+    }
+
+    handleDateFilterChange(fieldName, event){
+        this.state.filter[fieldName] = event.target.value;
+        $("#" + fieldName).data("DateTimePicker").date(Utils.longToDateTimeFormatted(Number(event.target.value), 'MM/DD/YYYY hh:mm A'));
         this.setState(this.state);
     }
 
