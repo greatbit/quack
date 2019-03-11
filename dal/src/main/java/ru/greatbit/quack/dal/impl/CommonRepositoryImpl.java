@@ -10,8 +10,7 @@ import ru.greatbit.quack.beans.Filter;
 import ru.greatbit.quack.beans.Order;
 import ru.greatbit.quack.dal.CommonRepository;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -61,7 +60,7 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
 
         // Add AND fields criterias
         List<Criteria> fieldsCriteria = filter.getFields().entrySet().stream().
-                map(field -> new Criteria(field.getKey()).in(field.getValue())).collect(Collectors.toList());
+                map(field -> getFieldCriteris(field.getKey(), field.getValue())).collect(Collectors.toList());
         if (!fieldsCriteria.isEmpty()){
             criteria.andOperator(fieldsCriteria.toArray(new Criteria[fieldsCriteria.size()]));
         }
@@ -94,6 +93,36 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
         }
 
         return query;
+    }
+
+    private Criteria getFieldCriteris(String key, Set<Object> values) {
+        if (key.startsWith("like_")){
+            String effectiveKey = key.replace("like_", "");
+            return new Criteria().orOperator((Criteria[]) values.stream().map(
+                    value -> new Criteria(effectiveKey).regex(value.toString())
+            ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
+        }
+        if (key.startsWith("from_")){
+            String effectiveKey = key.replace("from_", "");
+            return new Criteria().orOperator((Criteria[]) values.stream().map(
+                    value -> new Criteria(effectiveKey).gte(value)
+            ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
+        }
+        if (key.startsWith("to_")){
+            String effectiveKey = key.replace("to_", "");
+            return new Criteria().orOperator((Criteria[]) values.stream().map(
+                    value -> new Criteria(effectiveKey).lte(value)
+            ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
+        }
+        return new Criteria(key).in(values);
+    }
+
+    private Criteria[] getCriteriasArray(List<Criteria> criterias){
+        Criteria[] criteriasArray = new Criteria[criterias.size()];
+        for (int i = 0; i < criterias.size(); i++){
+            criteriasArray[i] = criterias.get(i);
+        }
+        return criteriasArray;
     }
 
     @Override
