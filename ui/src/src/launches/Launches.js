@@ -8,6 +8,7 @@ import * as Utils from '../common/Utils';
 import $ from 'jquery';
 
 require('bootstrap-datepicker/js/bootstrap-datepicker.js');
+require('bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')
 
 class Launches extends SubComponent {
 
@@ -44,18 +45,18 @@ class Launches extends SubComponent {
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);
 
-        $("#from_created").datetimepicker({
+        $("#from_createdTime").datetimepicker({
             showClear: true,
             showClose: true,
             useCurrent: false,
-            format: 'MM/DD/YYYY hh:mm A'
+            format: 'MM/DD/YYYY'
         });
 
-        $("#to_created").datetimepicker({
+        $("#to_createdTime").datetimepicker({
             showClear: true,
             showClose: true,
             useCurrent: false,
-            format: 'MM/DD/YYYY hh:mm A'
+            format: 'MM/DD/YYYY'
         });
     }
 
@@ -122,7 +123,7 @@ class Launches extends SubComponent {
 
     handleDateFilterChange(fieldName, event){
         this.state.filter[fieldName] = event.target.value;
-        $("#" + fieldName).data("DateTimePicker").date(Utils.longToDateTimeFormatted(Number(event.target.value), 'MM/DD/YYYY hh:mm A'));
+        $("#" + fieldName).data("DateTimePicker").date(Utils.longToDateTimeFormatted(Number(event.target.value), 'MM/DD/YYYY'));
         this.setState(this.state);
     }
 
@@ -166,11 +167,11 @@ class Launches extends SubComponent {
                   <div class="form-group">
                     <label for="created"><h5>Created Time</h5></label>
                     <div class="input-group mb-2">
-                      <input type="text" class="form-control" id="from_created" placeholder="Created after"/>
+                      <input type="text" class="form-control" value={Utils.longToDateTimeFormatted(this.state.filter.from_createdTime, 'MM/DD/YYYY')} name="from_createdTime" id="from_createdTime" placeholder="Created after"/>
                       <div class="input-group-prepend">
                         <div class="input-group-text">-</div>
                       </div>
-                      <input type="text" class="form-control" id="to_created" placeholder="Created before"/>
+                      <input type="text" class="form-control" value={Utils.longToDateTimeFormatted(this.state.filter.to_createdTime, 'MM/DD/YYYY')} name="to_createdTime" id="to_createdTime" placeholder="Created before"/>
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
