@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import ru.greatbit.quack.beans.Entity;
 import ru.greatbit.quack.beans.Filter;
+import ru.greatbit.quack.beans.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -30,9 +31,23 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
         hsr.getParameterMap().entrySet().stream().
                 filter(entry -> !entry.getKey().equals("skip") && !entry.getKey().equals("limit")).
                 filter(entry -> !entry.getKey().startsWith("not_")).
-                filter(entry -> !entry.getKey().startsWith("from_")).
-                filter(entry -> !entry.getKey().startsWith("to_")).
+                filter(entry -> !entry.getKey().startsWith("orderby")).
+                filter(entry -> !entry.getKey().startsWith("orderdir")).
                 forEach(entry -> filter.addFields(entry.getKey(), entry.getValue()));
+
+        //Add NOT fields filter
+        hsr.getParameterMap().entrySet().stream().
+                filter(entry -> entry.getKey().startsWith("not_")).
+                forEach(entry -> filter.addNotFields(entry.getKey().replace("not_", ""), entry.getValue()));
+
+        if (hsr.getParameter("orderby") != null){
+            filter.setSortField(hsr.getParameter("orderby"));
+            try {
+                filter.setOrder(Order.fromValue(hsr.getParameter("orderdir")));
+            } catch (Exception e){
+                filter.setOrder(Order.ASC);
+            }
+        }
         return filter;
     }
 

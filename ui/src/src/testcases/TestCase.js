@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import Attachments from '../testcases/Attachments'
+import Comments from '../comments/Comments'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
@@ -28,7 +29,8 @@ class TestCase extends SubComponent {
              },
              projectAttributes: [],
              readonly: false,
-             attributesInEdit: new Set()
+             attributesInEdit: new Set(),
+             commentsCount: 0
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,6 +53,7 @@ class TestCase extends SubComponent {
          this.toggleEditAttribute = this.toggleEditAttribute.bind(this);
          this.getAttributeKeysToAdd = this.getAttributeKeysToAdd.bind(this);
          this.onTestcaseUpdated = this.onTestcaseUpdated.bind(this);
+         this.onCommentsCountChanged = this.onCommentsCountChanged.bind(this);
       }
 
     componentDidMount() {
@@ -67,6 +70,7 @@ class TestCase extends SubComponent {
             this.projectId = this.props.match.params.project;
             this.getTestCase(this.props.match.params.project, this.props.match.params.testcase);
         }
+        this.setState(this.state);
      }
 
     componentWillReceiveProps(nextProps) {
@@ -82,7 +86,7 @@ class TestCase extends SubComponent {
       this.setState(this.state);
     }
 
-    onTestcaseUpdated(){
+    onTestcaseUpdated(count){
         this.getTestCase(this.projectId, this.state.testcase.id);
     }
 
@@ -255,7 +259,10 @@ class TestCase extends SubComponent {
             map(attribute => ({value: attribute.id, label: attribute.name}));
     }
 
-
+    onCommentsCountChanged(count){
+         this.state.commentsCount = count;
+         this.setState(this.state);
+    }
 
     render() {
         return (
@@ -277,7 +284,12 @@ class TestCase extends SubComponent {
                     <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">Issues</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Comments</a>
+                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">
+                     Comments
+                     {this.state.commentsCount > 0 &&
+                         <span class="badge badge-pill badge-secondary tab-badge">{this.state.commentsCount}</span>
+                     }
+                     </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
@@ -513,7 +525,7 @@ class TestCase extends SubComponent {
                 </div>
 
                 <div class="tab-pane fade show" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-                    Comments - coming up soon
+                    <Comments entityId={this.state.testcase.id} projectId={this.projectId} entityType="testcase" onCommentsNumberChanged={this.onCommentsCountChanged}/>
                 </div>
 
                 <div class="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">
