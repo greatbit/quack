@@ -7,6 +7,7 @@ import $ from 'jquery';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+import * as Utils from '../common/Utils';
 
 class Comments extends SubComponent {
     constructor(props) {
@@ -25,6 +26,7 @@ class Comments extends SubComponent {
          this.handleChange = this.handleChange.bind(this);
          this.cancelEdit = this.cancelEdit.bind(this);
          this.refreshCommentToEdit = this.refreshCommentToEdit.bind(this);
+         this.removeComment = this.removeComment.bind(this);
          this.refreshCommentToEdit();
       }
 
@@ -83,6 +85,17 @@ class Comments extends SubComponent {
         //ToDO implement
     }
 
+    removeComment(commentId, event){
+        axios.delete("/api/"  + this.projectId + "/comment/" + commentId)
+            .then(response => {
+                this.state.comments = this.state.comments.filter(comment => comment.id != commentId);
+                if (this.onCommentsNumberChanged){
+                    this.onCommentsNumberChanged(this.state.comments.length);
+                }
+                this.setState(this.state);
+        })
+    }
+
     handleSubmit(event){
         axios.put('/api/' + this.projectId + '/comment/', this.state.commentToEdit)
             .then(response => {
@@ -106,7 +119,10 @@ class Comments extends SubComponent {
                           return (
                             <div className="card project-card">
                                 <div className="card-header">
-                                    {comment.createdBy} on {comment.createdTime}
+                                    <Link to={"/user/profile/" + comment.createdBy}>{comment.createdBy}</Link>  {Utils.timeToDate(comment.createdTime)}
+                                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeComment(comment.id, e)}>
+                                        <FontAwesomeIcon icon={faMinusCircle}/>
+                                    </span>
                                 </div>
                                 <div className="card-body">
                                     <p className="card-text">{comment.textFormatted || ''}</p>

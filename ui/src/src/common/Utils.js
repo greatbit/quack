@@ -82,8 +82,8 @@ export function timeToDate(time) {
     if (currMinutes < 10) {
         currMinutes = "0" + currMinutes;
     }
-    return date.getDate() + " " + monthNames[date.getMonth()]
-        + " " + date.getHours() + ":" + currMinutes;
+    return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear() +
+        " " + date.getHours() + ":" + currMinutes;
 }
 
 export function longToDateTimeFormatted(uts, format) {
