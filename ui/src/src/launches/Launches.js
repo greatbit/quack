@@ -15,7 +15,9 @@ class Launches extends SubComponent {
         launches: [],
         filter: {
             skip: 0,
-            limit: 20
+            limit: 20,
+            orderby: "createdTime",
+            orderdir: "DESC"
         },
         pager: {
             total: 0,
