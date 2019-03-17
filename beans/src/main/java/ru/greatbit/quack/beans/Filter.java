@@ -76,10 +76,10 @@ public class Filter extends BaseFilter{
     }
 
     public void addFields(String key, String... values){
-        addValuesToMap(fields, key, values);
+        addValuesToMap(getFields(), key, values);
     }
 
     public void addNotFields(String key, String... values){
-        addValuesToMap(notFields, key, values);
+        addValuesToMap(getNotFields(), key, values);
     }
 }

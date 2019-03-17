@@ -73,7 +73,7 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
             criteria.norOperator(notFieldsCriteria.toArray(new Criteria[notFieldsCriteria.size()]));
         }
 
-        // Add pageing
+        // Add paging
         Query query = Query.query(criteria).skip(filter.getSkip()).limit(filter.getLimit());
 
         // Add included and excluded fields
@@ -105,13 +105,13 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
         if (key.startsWith("from_")){
             String effectiveKey = key.replace("from_", "");
             return new Criteria().orOperator((Criteria[]) values.stream().map(
-                    value -> new Criteria(effectiveKey).gte(value)
+                    value -> new Criteria(effectiveKey).gte(Long.parseLong(value.toString()))
             ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
         }
         if (key.startsWith("to_")){
             String effectiveKey = key.replace("to_", "");
             return new Criteria().orOperator((Criteria[]) values.stream().map(
-                    value -> new Criteria(effectiveKey).lte(value)
+                    value -> new Criteria(effectiveKey).lte(Long.parseLong(value.toString()))
             ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
         }
         return new Criteria(key).in(values);
