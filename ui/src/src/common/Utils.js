@@ -89,3 +89,11 @@ export function timeToDate(time) {
 export function longToDateTimeFormatted(uts, format) {
     return Moment(uts).format(format);
 }
+
+
+export function getDatepickerTime(timeMillis){
+    if (timeMillis && timeMillis != null){
+        return new Date(Number(timeMillis));
+    }
+    return null;
+}

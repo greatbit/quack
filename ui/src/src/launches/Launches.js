@@ -7,8 +7,7 @@ import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import $ from 'jquery';
 
-require('bootstrap-datepicker/js/bootstrap-datepicker.js');
-require('bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')
+import DatePicker from 'react-date-picker';
 
 class Launches extends SubComponent {
 
@@ -36,6 +35,8 @@ class Launches extends SubComponent {
         this.updateUrl = this.updateUrl.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.handleFromDateFilterChange = this.handleFromDateFilterChange.bind(this);
+        this.handleToDateFilterChange = this.handleToDateFilterChange.bind(this);
     }
 
     componentDidMount() {
@@ -44,20 +45,6 @@ class Launches extends SubComponent {
         this.getLaunches();
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);
-
-        $("#from_createdTime").datetimepicker({
-            showClear: true,
-            showClose: true,
-            useCurrent: false,
-            format: 'MM/DD/YYYY'
-        });
-
-        $("#to_createdTime").datetimepicker({
-            showClear: true,
-            showClose: true,
-            useCurrent: false,
-            format: 'MM/DD/YYYY'
-        });
     }
 
     handlePageChanged(newPage) {
@@ -121,9 +108,21 @@ class Launches extends SubComponent {
         this.setState(this.state);
     }
 
-    handleDateFilterChange(fieldName, event){
-        this.state.filter[fieldName] = event.target.value;
-        $("#" + fieldName).data("DateTimePicker").date(Utils.longToDateTimeFormatted(Number(event.target.value), 'MM/DD/YYYY'));
+    handleFromDateFilterChange(value, formattedValue){
+        if (value == null){
+            delete this.state.filter.from_createdTime;
+        } else {
+            this.state.filter.from_createdTime = value.getTime();
+        }
+        this.setState(this.state);
+    }
+
+    handleToDateFilterChange(value, formattedValue){
+        if (value == null){
+            delete this.state.filter.to_createdTime;
+        } else {
+            this.state.filter.to_createdTime = value.getTime();
+        }
         this.setState(this.state);
     }
 
@@ -167,11 +166,10 @@ class Launches extends SubComponent {
                   <div class="form-group">
                     <label for="created"><h5>Created Time</h5></label>
                     <div class="input-group mb-2">
-                      <input type="text" class="form-control" value={Utils.longToDateTimeFormatted(this.state.filter.from_createdTime, 'MM/DD/YYYY')} name="from_createdTime" id="from_createdTime" placeholder="Created after"/>
-                      <div class="input-group-prepend">
-                        <div class="input-group-text">-</div>
-                      </div>
-                      <input type="text" class="form-control" value={Utils.longToDateTimeFormatted(this.state.filter.to_createdTime, 'MM/DD/YYYY')} name="to_createdTime" id="to_createdTime" placeholder="Created before"/>
+                      <DatePicker id="from_createdTime" value={Utils.getDatepickerTime(this.state.filter.from_createdTime)}
+                                onChange={this.handleFromDateFilterChange} placeholder="Created after" />
+                      <DatePicker id="to_createdTime" value={Utils.getDatepickerTime(this.state.filter.to_createdTime)}
+                                onChange={this.handleToDateFilterChange}  placeholder="Created before"/>
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
