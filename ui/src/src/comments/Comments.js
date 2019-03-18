@@ -28,6 +28,8 @@ class Comments extends SubComponent {
          this.refreshCommentToEdit = this.refreshCommentToEdit.bind(this);
          this.removeComment = this.removeComment.bind(this);
          this.refreshCommentToEdit();
+         this.handleUpdateChange = this.handleUpdateChange.bind(this);
+         this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
       }
 
     componentDidMount() {
@@ -81,8 +83,14 @@ class Comments extends SubComponent {
         this.setState(this.state);
     }
 
-    cancelEdit(fieldName, event, index){
-        //ToDO implement
+    cancelEdit(index, event){
+        $("#comment-" + index + "-display").show();
+        $("#comment-" + index + "-form").hide();
+    }
+
+    toggleEdit(index, event){
+        $("#comment-" + index + "-display").hide();
+        $("#comment-" + index + "-form").show();
     }
 
     removeComment(commentId, event){
@@ -109,23 +117,53 @@ class Comments extends SubComponent {
         event.preventDefault();
     }
 
+    handleUpdateChange(index, event){
+        this.state.comments[index].text = event.target.value;
+        this.setState(this.state);
+        event.preventDefault();
+    }
+
+    handleUpdateSubmit(index, event){
+        axios.post('/api/' + this.projectId + '/comment/', this.state.comments[index])
+                .then(response => {
+                    this.state.comments[index] = response.data;
+                    this.setState(this.state);
+                    this.cancelEdit(index, event);
+            })
+    }
+
+
 
     render() {
         return (
             <div>
                 <div id="comments">
                     {
-                      this.state.comments.map(function(comment){
+                      this.state.comments.map(function(comment, i){
                           return (
                             <div className="card project-card">
                                 <div className="card-header">
                                     <Link to={"/user/profile/" + comment.createdBy}>{comment.createdBy}</Link>  {Utils.timeToDate(comment.createdTime)}
+                                    <span className="clickable edit-icon-visible" onClick={(e) => this.toggleEdit(i, e)}>
+                                        <FontAwesomeIcon icon={faPencilAlt}/>
+                                    </span>
                                     <span className="clickable edit-icon-visible red" onClick={(e) => this.removeComment(comment.id, e)}>
                                         <FontAwesomeIcon icon={faMinusCircle}/>
                                     </span>
                                 </div>
                                 <div className="card-body">
-                                    <p className="card-text">{comment.textFormatted || ''}</p>
+                                    <div className="inplace-display" id={"comment-" + i + "-display"} index={i}>
+                                        <p className="card-text">{comment.textFormatted || ''}</p>
+                                    </div>
+                                    <div id={"comment-" + i + "-form"} index={i} lassName="inplace-form" style={{display: 'none'}}>
+                                        <form>
+                                            <textarea rows="7" cols="70" name="text" onChange={(e) => this.handleUpdateChange(i, e)} value={comment.text}></textarea>
+                                            <div>
+                                                <button type="button" className="btn" onClick={(e) => this.cancelEdit(i, e)}>Cancel</button>
+                                                <button type="button" className="btn btn-primary" onClick={(e) => this.handleUpdateSubmit(i, e)}>Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                           );
