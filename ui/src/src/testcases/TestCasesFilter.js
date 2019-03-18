@@ -266,7 +266,7 @@ class TestCasesFilter extends Component {
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                           <div className="modal-header">
-                            <h5 className="modal-title" id="editAttributeLabel">Attribute</h5>
+                            <h5 className="modal-title" id="editAttributeLabel">Test Suite</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -275,10 +275,12 @@ class TestCasesFilter extends Component {
                           <div>
                             <div className="modal-body" id="suite-save-form">
                                 <form>
-                                  <label>
-                                    Name:
-                                    <input type="text" name="name" onChange={this.suiteAttrChanged} defaultValue={this.state.testSuiteNameToDisplay}/>
-                                  </label>
+                                    <div className="form-group row">
+                                        <label className="col-sm-3 col-form-label">Name</label>
+                                        <div className="col-sm-9">
+                                            <input type="text" name="name" className="form-control" onChange={this.suiteAttrChanged} defaultValue={this.state.testSuiteNameToDisplay}/>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                           </div>
