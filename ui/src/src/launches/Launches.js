@@ -17,7 +17,8 @@ class Launches extends SubComponent {
             skip: 0,
             limit: 20,
             orderby: "createdTime",
-            orderdir: "DESC"
+            orderdir: "DESC",
+            includedFields: "name,launchStats,id,createdTime"
         },
         pager: {
             total: 0,

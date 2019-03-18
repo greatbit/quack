@@ -11,35 +11,56 @@ import ru.greatbit.quack.beans.Order;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.Collection;
 
 import static javax.ws.rs.core.Response.ok;
 
 public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E> {
 
+    public final static String SKIP = "skip";
+    public final static String LIMIT = "limit";
+    public final static String DELETED = "deleted";
+    public final static String ORDER_BY = "orderby";
+    public final static String ORDER_DIR = "orderdir";
+    public final static String INCLUDED_FIELDS = "includedFields";
+    public final static String EXCLUDED_FIELDS = "excludedFields";
+    public final static String NOT_PREFIX = "not_";
+
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        Filter filter = new Filter().withField("deleted", false);
-        if (hsr.getParameter("skip") != null){
-            filter.setSkip(Integer.parseInt(hsr.getParameter("skip")));
+        Filter filter = new Filter().withField(DELETED, false);
+        if (hsr.getParameter(SKIP) != null) {
+            filter.setSkip(Integer.parseInt(hsr.getParameter(SKIP)));
         }
-        if (hsr.getParameter("limit") != null){
-            filter.setLimit(Integer.parseInt(hsr.getParameter("limit")));
+        if (hsr.getParameter(LIMIT) != null) {
+            filter.setLimit(Integer.parseInt(hsr.getParameter(LIMIT)));
         }
 
         //Add fields filter
         hsr.getParameterMap().entrySet().stream().
-                filter(entry -> !entry.getKey().equals("skip") && !entry.getKey().equals("limit")).
-                filter(entry -> !entry.getKey().startsWith("not_")).
-                filter(entry -> !entry.getKey().startsWith("orderby")).
-                filter(entry -> !entry.getKey().startsWith("orderdir")).
+                filter(entry -> !entry.getKey().equals(SKIP) && !entry.getKey().equals(LIMIT)).
+                filter(entry -> !entry.getKey().startsWith(NOT_PREFIX)).
+                filter(entry -> !entry.getKey().startsWith(ORDER_BY)).
+                filter(entry -> !entry.getKey().startsWith(ORDER_DIR)).
+                filter(entry -> !entry.getKey().startsWith(INCLUDED_FIELDS)).
+                filter(entry -> !entry.getKey().startsWith(EXCLUDED_FIELDS)).
                 forEach(entry -> filter.addFields(entry.getKey(), entry.getValue()));
 
         //Add NOT fields filter
         hsr.getParameterMap().entrySet().stream().
-                filter(entry -> entry.getKey().startsWith("not_")).
-                forEach(entry -> filter.addNotFields(entry.getKey().replace("not_", ""), entry.getValue()));
+                filter(entry -> entry.getKey().startsWith(NOT_PREFIX)).
+                forEach(entry -> filter.addNotFields(entry.getKey().replace(NOT_PREFIX, ""), entry.getValue()));
 
+        //Included and Excluded fields
+        if (hsr.getParameter(INCLUDED_FIELDS) != null) {
+            filter.getIncludedFields().addAll(Arrays.asList(hsr.getParameter(INCLUDED_FIELDS).split(",")));
+        }
+        if (hsr.getParameter(EXCLUDED_FIELDS) != null) {
+            filter.getIncludedFields().addAll(Arrays.asList(hsr.getParameter(EXCLUDED_FIELDS).split(",")));
+        }
+
+        //Sort order
         if (hsr.getParameter("orderby") != null){
             filter.setSortField(hsr.getParameter("orderby"));
             try {
