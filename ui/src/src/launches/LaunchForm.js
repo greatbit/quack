@@ -64,10 +64,12 @@ class LaunchForm extends SubComponent {
             modalBody =
                 <div className="modal-body" id="launch-creation-form">
                     <form>
-                      <label>
-                        Name:
-                        <input type="text" name="name" onChange={this.handleChange} />
-                      </label>
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Name</label>
+                            <div className="col-sm-9">
+                                <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+                            </div>
+                        </div>
                     </form>
                 </div>
         }
