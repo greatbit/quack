@@ -23,4 +23,20 @@ public class CommentService extends BaseService<Comment> {
         super.beforeSave(session, entity);
         entity.setTextFormatted(entity.getText());
     }
+
+    @Override
+    protected boolean userCanDelete(Session session, String projectId, String id) {
+        Comment comment = findOne(session, projectId, id);
+        return super.userCanDelete(session, projectId, id) || userIsTheOwner(session, comment);
+    }
+
+    @Override
+    protected boolean userCanUpdate(Session session, String projectId, Comment entity) {
+        return super.userCanUpdate(session, projectId, entity) || userIsTheOwner(session, entity);
+    }
+
+    private boolean userIsTheOwner(Session session, Comment comment) {
+        return session.getPerson().getId().equals(comment.getCreatedBy());
+    }
+
 }

@@ -118,19 +118,19 @@ public abstract class BaseService<E extends Entity> {
 
     }
     protected boolean userCanSave(Session session, String projectId, E entity){
-        return userCanUpdateProject(session, projectId);
+        return session.isIsAdmin() || userCanUpdateProject(session, projectId);
     }
     protected boolean userCanSave(Session session, String projectId, Collection<E> entities) {
-        return userCanUpdateProject(session, projectId);
+        return session.isIsAdmin() || userCanUpdateProject(session, projectId);
     }
     protected boolean userCanDelete(Session session, String projectId, String id){
-        return userCanUpdateProject(session, projectId);
+        return session.isIsAdmin() || userCanUpdateProject(session, projectId);
     }
     protected boolean userCanCreate(Session session, String projectId, E entity){
-        return userCanUpdateProject(session, projectId);
+        return session.isIsAdmin() || userCanUpdateProject(session, projectId);
     }
     protected boolean userCanUpdate(Session session, String projectId, E entity){
-        return userCanUpdateProject(session, projectId);
+        return session.isIsAdmin() || userCanUpdateProject(session, projectId);
     }
 
     protected void beforeCreate(Session session, String projectId, E entity){
