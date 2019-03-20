@@ -31,13 +31,6 @@ class Header extends Component {
               this.state.projects = response.data;
               this.setState(this.state);
           })
-
-        axios
-          .get("/api/project?includedFields=name,description,id")
-          .then(response => {
-              this.state.projects = response.data;
-              this.setState(this.state);
-          })
     }
 
     componentWillReceiveProps(nextProps) {
