@@ -92,8 +92,8 @@ class Attachments extends SubComponent {
                             <input id="file-data" class="file" type="file" name="file" multiple data-min-file-count="0" data-theme="fas"/>
                         </div>
                         <br/>
+                        <button type="reset" class="btn btn-light">Reset</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="reset" class="btn btn-outline-secondary">Reset</button>
                     </form>
                 </div>
             </div>

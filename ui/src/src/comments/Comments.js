@@ -166,7 +166,7 @@ class Comments extends SubComponent {
                                         <form>
                                             <textarea rows="7" cols="70" name="text" onChange={(e) => this.handleUpdateChange(i, e)} value={comment.text}></textarea>
                                             <div>
-                                                <button type="button" className="btn" onClick={(e) => this.cancelEdit(i, e)}>Cancel</button>
+                                                <button type="button" className="btn btn-light" onClick={(e) => this.cancelEdit(i, e)}>Cancel</button>
                                                 <button type="button" className="btn btn-primary" onClick={(e) => this.handleUpdateSubmit(i, e)}>Save</button>
                                             </div>
                                         </form>
