@@ -34,14 +34,14 @@ class Header extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-      if(nextProps.session){
+      if(nextProps.session && this.state.session != nextProps.session.id){
         this.state.session = nextProps.session;
+        this.setState(this.state);
       }
-      if(nextProps.project){
+      if(nextProps.project && this.state.projectId != nextProps.project){
         this.state.projectId = nextProps.project;
         this.getProject();
       }
-      this.setState(this.state);
     }
 
     onSessionChange(session){
