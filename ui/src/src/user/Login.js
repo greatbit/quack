@@ -40,15 +40,15 @@ class Login extends Component {
     render() {
         return (
           <div className="text-center">
-            <form class="form-signin">
-              <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-              <label for="login" class="sr-only">Login</label>
-              <input type="text" id="login" name="login" class="form-control"
+            <form className="form-signin">
+              <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+              <label for="login" className="sr-only">Login</label>
+              <input type="text" id="login" name="login" className="form-control"
                         placeholder="Login" required="" autofocus="" onChange={this.handleChange} />
-              <label for="password" class="sr-only">Password</label>
-              <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+              <label for="password" className="sr-only">Password</label>
+              <input type="password" id="password" name="password" className="form-control" placeholder="Password"
                     required="" onChange={this.handleChange} />
-              <button class="btn btn-lg btn-primary btn-block" onClick={this.handleSubmit}>Sign in</button>
+              <button className="btn btn-lg btn-primary btn-block" onClick={this.handleSubmit}>Sign in</button>
             </form>
           </div>
         );

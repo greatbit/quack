@@ -141,15 +141,22 @@ class Comments extends SubComponent {
                     {
                       this.state.comments.map(function(comment, i){
                           return (
-                            <div className="card project-card">
-                                <div className="card-header">
-                                    <Link to={"/user/profile/" + comment.createdBy}>{comment.createdBy}</Link>  {Utils.timeToDate(comment.createdTime)}
-                                    <span className="clickable edit-icon-visible" onClick={(e) => this.toggleEdit(i, e)}>
-                                        <FontAwesomeIcon icon={faPencilAlt}/>
-                                    </span>
-                                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeComment(comment.id, e)}>
-                                        <FontAwesomeIcon icon={faMinusCircle}/>
-                                    </span>
+                            <div className="card project-card container">
+                                <div className="card-header row">
+                                    <div className="col-10">
+                                        <Link to={"/user/profile/" + comment.createdBy}>{comment.createdBy}</Link>  {Utils.timeToDate(comment.createdTime)}
+                                    </div>
+
+                                    { Utils.isUserOwnerOrAdmin(comment.createdBy) &&
+                                        <div className="col-2">
+                                            <span className="clickable edit-icon-visible" onClick={(e) => this.toggleEdit(i, e)}>
+                                                <FontAwesomeIcon icon={faPencilAlt}/>
+                                            </span>
+                                            <span className="clickable edit-icon-visible red" onClick={(e) => this.removeComment(comment.id, e)}>
+                                                <FontAwesomeIcon icon={faMinusCircle}/>
+                                            </span>
+                                        </div>
+                                    }
                                 </div>
                                 <div className="card-body">
                                     <div className="inplace-display" id={"comment-" + i + "-display"} index={i}>

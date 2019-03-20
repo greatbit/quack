@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import axios from "axios";
+import * as UserSession  from '../user/UserSession';
 
 class Header extends Component {
 
@@ -51,6 +52,14 @@ class Header extends Component {
     }
 
     onSessionChange(session){
+        if (session && session.person){
+            UserSession.getSession().login = session.person.id;
+            UserSession.getSession().name = session.person.name;
+            UserSession.getSession().isAdmin = session.isAdmin;
+            UserSession.getSession().roles = session.person.roles;
+            UserSession.getSession().groups = session.person.groups;
+            UserSession.getSession().permissions = session.person.permissions;
+        }
         this.props.onSessionChange(session)
     }
 

@@ -1,4 +1,5 @@
 import Moment from 'moment/min/moment.min.js';
+import * as UserSession  from '../user/UserSession';
 
 
 export function intDiv(val, by){
@@ -96,4 +97,8 @@ export function getDatepickerTime(timeMillis){
         return new Date(Number(timeMillis));
     }
     return null;
+}
+
+export function isUserOwnerOrAdmin(createdById){
+    return UserSession.getSession() && (UserSession.getSession().isAdmin || UserSession.getSession().login === createdById);
 }
