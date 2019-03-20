@@ -392,10 +392,8 @@ class TestCase extends SubComponent {
                                           <div index={i} className="row">
                                               <div className="card col-md-12">
                                                 <div className="card-body">
-                                                  <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
-                                                  <p className="card-text">{this.state.testcase.steps[i].action}</p>
-
-                                                  <h6 className="card-subtitle mb-2 text-muted">Expectations</h6>
+                                                  <p className="card-text">{i + 1}. {this.state.testcase.steps[i].action}</p>
+                                                  <h6 className="card-subtitle mb-2 expectations"><b><i>Expectations</i></b></h6>
                                                   <p className="card-text">{this.state.testcase.steps[i].expectation}</p>
 
                                                   {!this.state.readonly &&
