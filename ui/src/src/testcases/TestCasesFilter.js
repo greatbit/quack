@@ -222,6 +222,7 @@ class TestCasesFilter extends Component {
                                     options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
                                    />
                         </div>
+                        <div className="col-5"></div>
                         <div className="col-3 btn-group" role="group" >
                             <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
                             <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>Save</button>
