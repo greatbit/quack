@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.greatbit.quack.beans.User;
+import ru.greatbit.quack.dal.UserRepository;
 import ru.greatbit.whoru.auth.AuthProvider;
 import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.jaxrs.Authenticable;
@@ -40,6 +42,9 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
     @Autowired
     AuthProvider authProvider;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Context
     HttpServletRequest request;
 
@@ -60,6 +65,15 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
         if (authProvider.isAuthenticated(request)){
             final Session session = authProvider.getSession(request);
             logger.debug(format("Session exists: %s, login %s", session.getId(), session.getName()));
+            if (!userRepository.exists(null, session.getPerson().getId())) {
+                userRepository.save(null,
+                        new User().withCreatedTime(System.currentTimeMillis()).
+                                withId(session.getPerson().getId()).
+                                withLogin(session.getPerson().getId()).
+                                withToken(session.getPerson().getToken()).
+                                withLastModifiedTime(System.currentTimeMillis())
+                );
+            }
             if (!isTokenAccessRequest(request))
                 requestContext.setProperty(SESSION_ID, session.getId());
             requestContext.setSecurityContext(new WhoruSecurityContext(session));

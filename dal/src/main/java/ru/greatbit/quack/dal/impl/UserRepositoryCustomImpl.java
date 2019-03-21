@@ -10,4 +10,9 @@ public class UserRepositoryCustomImpl extends CommonRepositoryImpl<User>
     public Class getEntityClass() {
         return User.class;
     }
+
+    @Override
+    protected String getCollectionName(String projectId) {
+        return super.getCollectionName("users");
+    }
 }

@@ -15,11 +15,11 @@
         <xs:complexContent>
             <xs:extension base="Entity">
                 <xs:sequence>
-                    <xs:element name="id" type="xs:string"/>
                     <xs:element name="login" type="xs:string"/>
                     <xs:element name="firstName" type="xs:string"/>
                     <xs:element name="lastName" type="xs:string"/>
                     <xs:element name="middleName" type="xs:string"/>
+                    <xs:element name="token" type="xs:string"/>
                     <xs:element name="groups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
