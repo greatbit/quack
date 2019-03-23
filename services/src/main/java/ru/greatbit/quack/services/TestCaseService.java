@@ -7,8 +7,10 @@ import ru.greatbit.quack.dal.CommonRepository;
 import ru.greatbit.quack.dal.TestCaseRepository;
 import ru.greatbit.quack.services.errors.EntityNotFoundException;
 import ru.greatbit.quack.storage.Storage;
+import ru.greatbit.quack.tracker.Tracker;
 import ru.greatbit.whoru.auth.Session;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -25,6 +27,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
     @Autowired
     private Storage storage;
+
+    @Autowired
+    private Tracker tracker;
 
     @Override
     protected CommonRepository<TestCase> getRepository() {
@@ -124,8 +129,37 @@ public class TestCaseService extends BaseService<TestCase> {
                 findFirst().orElseThrow(EntityNotFoundException::new);
     }
 
-
     public InputStream getAttachmentStream(Attachment attachment) throws IOException {
         return storage.get(attachment);
+    }
+
+    public TestCase createIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, Issue issue) {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        testCase.getIssues().add(tracker.createIssue(request, userSession, issue));
+        return update(userSession, projectId, testCase);
+    }
+
+    public TestCase linkIssueById(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        testCase.getIssues().add(tracker.linkIssueById(request, userSession, issueId));
+        return update(userSession, projectId, testCase);
+    }
+
+    public TestCase linkIssueByUrl(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String url) {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        testCase.getIssues().add(tracker.linkIssueByUrl(request, userSession, url));
+        return update(userSession, projectId, testCase);
+    }
+
+    public TestCase unlinkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
+        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        List<Issue> issues = testCase.getIssues().stream().filter(issue -> !issue.getId().equals(issueId)).
+                collect(Collectors.toList());
+        testCase.setIssues(issues);
+        return update(userSession, projectId, testCase);
+    }
+
+    public List<Issue> suggestIssue(HttpServletRequest request, Session userSession, String issueProject, String text) {
+        return tracker.suggestIssue(request, userSession, issueProject, text);
     }
 }

@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiParam;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.TestCaseService;
 import ru.greatbit.quack.services.errors.EntityValidationException;
+import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static javax.ws.rs.core.Response.serverError;
@@ -93,4 +96,42 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
         return service.deleteAttachment(getUserSession(), projectId, testcaseId, attachmentId);
     }
 
+    @POST
+    @Path("/issue/{testcaseId}")
+    public TestCase createIssue(@PathParam("projectId") String projectId,
+                                @PathParam("testcaseId") final String testcaseId,
+                                @RequestBody Issue issue) {
+        return service.createIssue(request, getUserSession(), projectId, testcaseId, issue);
+    }
+
+    @POST
+    @Path("/issue/{testcaseId}/link-id/{issueId}")
+    public TestCase linkIssueById(@PathParam("projectId") String projectId,
+                                  @PathParam("testcaseId") final String testcaseId,
+                                  @PathParam("issueId") final String issueId) {
+        return service.linkIssueById(request, getUserSession(), projectId, testcaseId, issueId);
+    }
+
+    @POST
+    @Path("/issue/{testcaseId}/link-url/{url}")
+    public TestCase linkIssueByUrl(@PathParam("projectId") String projectId,
+                                   @PathParam("testcaseId") final String testcaseId,
+                                   @PathParam("url") final String url) {
+        return service.linkIssueByUrl(request, getUserSession(), projectId, testcaseId, url);
+    }
+
+    @DELETE
+    @Path("/issue/{testcaseId}/{issueId}")
+    public TestCase unlinkIssue(@PathParam("projectId") String projectId,
+                                @PathParam("testcaseId") final String testcaseId,
+                                @PathParam("issueId") final String issueId) {
+        return service.unlinkIssue(request, getUserSession(), projectId, testcaseId, issueId);
+    }
+
+    @GET
+    @Path("/issue/suggest")
+    public List<Issue> suggestIssue(@PathParam("projectId") String projectId,
+                                    @QueryParam("text") String text) {
+        return service.suggestIssue(request, getUserSession(), projectId, text);
+    }
 }

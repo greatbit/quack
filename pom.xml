@@ -9,6 +9,7 @@
         <module>beans</module>
         <module>storage</module>
         <module>s3-storage</module>
+        <module>tracker</module>
         <module>dal</module>
         <module>services</module>
         <module>api</module>
@@ -72,6 +73,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>s3-storage</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>tracker</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

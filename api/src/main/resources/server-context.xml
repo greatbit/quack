@@ -6,5 +6,6 @@
 
     <bean id="authProvider" class="${whoru.auth.provider}"/>
     <bean id="sessionProvider" class="${whoru.session.provider}"/>
+    <bean id="tracker" class="${quack.tracker}"/>
 
 </beans>

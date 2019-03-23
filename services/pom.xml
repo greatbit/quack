@@ -19,6 +19,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>storage</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>tracker</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
