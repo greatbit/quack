@@ -230,6 +230,11 @@
                 <artifactId>jaxrs-ws-auth</artifactId>
                 <version>${whoru.version}</version>
             </dependency>
+            <dependency>
+                <groupId>ru.greatbit.whoru</groupId>
+                <artifactId>jira-auth-provider</artifactId>
+                <version>${whoru.version}</version>
+            </dependency>
 
             <!--Swagger-->
             <dependency>

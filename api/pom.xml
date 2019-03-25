@@ -128,6 +128,10 @@
         </dependency>
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
+            <artifactId>jira-auth-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.greatbit.whoru</groupId>
             <artifactId>jaxrs-ws-auth</artifactId>
         </dependency>
 
