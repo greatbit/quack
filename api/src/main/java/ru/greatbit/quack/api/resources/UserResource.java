@@ -62,25 +62,25 @@ public class UserResource extends BaseResource<User> {
     @GET
     @Path("/groups")
     public Set<String> getGroups(){
-        return authProvider.getAllGroups();
+        return authProvider.getAllGroups(request);
     }
 
     @GET
     @Path("/groups/suggest/{literal}")
     public Set<String> suggestGroups(@PathParam("literal") String literal){
-        return authProvider.suggestGroups(literal);
+        return authProvider.suggestGroups(request, literal);
     }
 
     @GET
     @Path("/users")
     public Set<String> getUsers(){
-        return authProvider.getAllUsers();
+        return authProvider.getAllUsers(request);
     }
 
     @GET
     @Path("/users/suggest/{literal}")
     public Set<String> suggestUsers(@PathParam("literal") String literal){
-        return authProvider.suggestUser(literal);
+        return authProvider.suggestUser(request, literal);
     }
 
 }

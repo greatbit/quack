@@ -24,8 +24,9 @@ class Auth extends Component {
                             retpath.startsWith(window.location.origin + "/login")){
                 retpath = "/";
             }
-            url = url + retpathParamName + "=" + encodeURIComponent(retpath);
-            this.props.history.push(url);
+
+            url = url +  "?" + retpathParamName + "=" + encodeURIComponent(retpath);
+            window.location = url;
           })
           .catch(error => console.log(error));
     }

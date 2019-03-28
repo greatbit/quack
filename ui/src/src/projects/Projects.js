@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
+axios.defaults.withCredentials = true;
 
 class Projects extends Component {
     state = {
