@@ -66,8 +66,8 @@ public class UserResource extends BaseResource<User> {
     }
 
     @GET
-    @Path("/groups/suggest/{literal}")
-    public Set<String> suggestGroups(@PathParam("literal") String literal){
+    @Path("/groups/suggest")
+    public Set<String> suggestGroups(@QueryParam("literal") String literal) {
         return authProvider.suggestGroups(request, literal);
     }
 
@@ -78,8 +78,8 @@ public class UserResource extends BaseResource<User> {
     }
 
     @GET
-    @Path("/users/suggest/{literal}")
-    public Set<String> suggestUsers(@PathParam("literal") String literal){
+    @Path("/users/suggest")
+    public Set<String> suggestUsers(@QueryParam("literal") String literal) {
         return authProvider.suggestUser(request, literal);
     }
 
