@@ -80,11 +80,11 @@ class ProjectSettings extends SubComponent {
     render() {
         return (
             <div>
-                <h1>Name: {this.state.project.name}</h1>
-                <h2>Settings</h2>
+                <h1>{this.state.project.name} Settings</h1>
+                <h3>Permissions</h3>
                  <div className="row">
                     <div className="col-1">Groups</div>
-                    <div className="col-3">
+                    <div className="col-6">
                         <AsyncSelect value={this.state.groupsToDisplay}
                                 isMulti
                                 cacheOptions
