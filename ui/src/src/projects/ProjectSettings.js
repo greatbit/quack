@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import axios from "axios";
-import Select from 'react-select';
+import AsyncSelect from 'react-select/lib/Async';
 import { withRouter } from 'react-router';
 
 class ProjectSettings extends SubComponent {
@@ -22,6 +22,8 @@ class ProjectSettings extends SubComponent {
          this.changeGroups = this.changeGroups.bind(this);
          this.submit = this.submit.bind(this);
          this.refreshGroupsToDisplay = this.refreshGroupsToDisplay.bind(this);
+         this.getGroups = this.getGroups.bind(this);
+         this.mapGroupsToView = this.mapGroupsToView.bind(this);
       }
 
     componentDidMount() {
@@ -34,14 +36,21 @@ class ProjectSettings extends SubComponent {
             this.setState(this.state);
           })
           .catch(error => console.log(error));
+     }
+
+     getGroups(literal, callback){
+        var url = "/api/user/groups/suggest";
+        if (literal){
+            url = url + "?literal=" + literal;
+        }
         axios
-          .get("/api/user/groups")
-          .then(response => {
-            this.state.groups = response.data;
-            this.refreshGroupsToDisplay();
-            this.setState(this.state);
-          })
-          .catch(error => console.log(error));
+           .get(url)
+           .then(response => {
+             this.state.groups = response.data;
+             this.refreshGroupsToDisplay();
+            callback(this.mapGroupsToView(this.state.groups));
+           })
+           .catch(error => console.log(error));
      }
 
     changeGroups(values){
@@ -61,9 +70,11 @@ class ProjectSettings extends SubComponent {
     }
 
     refreshGroupsToDisplay(){
-        this.state.groupsToDisplay = this.state.project.allowedGroups.map(function(group){
-            return {value: group, label: group};
-        }.bind(this));
+        this.state.groupsToDisplay = this.mapGroupsToView(this.state.project.allowedGroups);
+    }
+
+    mapGroupsToView(groups){
+        return groups.map(function(val){return {value: val, label: val}});
     }
 
     render() {
@@ -74,11 +85,12 @@ class ProjectSettings extends SubComponent {
                  <div className="row">
                     <div className="col-1">Groups</div>
                     <div className="col-3">
-                        <Select value={this.state.groupsToDisplay}
+                        <AsyncSelect value={this.state.groupsToDisplay}
                                 isMulti
+                                cacheOptions
+                                loadOptions={this.getGroups}
                                 onChange={this.changeGroups}
-                                options={this.state.groups}
-                                options={this.state.groups.map(function(val){return {value: val, label: val}})}
+                                options={this.mapGroupsToView(this.state.groups)}
                                />
                     </div>
                 </div>
