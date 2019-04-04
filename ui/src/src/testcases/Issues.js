@@ -16,6 +16,7 @@ class Issues extends SubComponent {
             name: "",
             type: "BUG",
             description: "",
+            priority: "NORMAL"
         }
 
         this.state = {
@@ -67,14 +68,18 @@ class Issues extends SubComponent {
     createIssue(event){
         axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue' , this.state.issueToEdit)
             .then(response => {
+                $('#issue-modal').modal('hide');
+                this.state.issueToEdit = Object.assign({}, this.defaultIssue);
                 this.onTestcaseUpdated();
         })
         event.preventDefault();
     }
 
     linkIssue(event){
-        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/' + this.state.linkIssueView.value || "" , this.state.issueToEdit)
+        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/link/' + this.state.linkIssueView.value || "" , this.state.issueToEdit)
             .then(response => {
+                this.state.linkIssueView = {};
+                $('#issue-modal').modal('hide');
                 this.onTestcaseUpdated();
         })
         event.preventDefault();
@@ -139,8 +144,8 @@ class Issues extends SubComponent {
                         Add Issue
                     </button>
                 </div>
-                <div class="modal fade" tabindex="-1" role="dialog" id="issue-modal">
-                    <div className="modal-dialog" role="document">
+                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="issue-modal">
+                    <div className="modal-dialog modal-lg" role="document">
 
 
                         <div className="modal-content">
