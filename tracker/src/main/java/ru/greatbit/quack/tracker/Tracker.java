@@ -12,9 +12,7 @@ public interface Tracker {
 
     Issue createIssue(HttpServletRequest request, Session userSession, Issue issue);
 
-    Issue linkIssueById(HttpServletRequest request, Session userSession, String issueId);
-
-    Issue linkIssueByUrl(HttpServletRequest request, Session userSession, String url);
+    Issue linkIssue(HttpServletRequest request, Session userSession, String issueId);
 
     Issue updateIssue(HttpServletRequest request, Session userSession, Issue issue);
 

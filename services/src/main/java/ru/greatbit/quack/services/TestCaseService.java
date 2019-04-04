@@ -139,17 +139,12 @@ public class TestCaseService extends BaseService<TestCase> {
         return update(userSession, projectId, testCase);
     }
 
-    public TestCase linkIssueById(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
+    public TestCase linkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
-        testCase.getIssues().add(tracker.linkIssueById(request, userSession, issueId));
+        testCase.getIssues().add(tracker.linkIssue(request, userSession, issueId));
         return update(userSession, projectId, testCase);
     }
 
-    public TestCase linkIssueByUrl(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String url) {
-        TestCase testCase = findOne(userSession, projectId, testcaseId);
-        testCase.getIssues().add(tracker.linkIssueByUrl(request, userSession, url));
-        return update(userSession, projectId, testCase);
-    }
 
     public TestCase unlinkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
         TestCase testCase = findOne(userSession, projectId, testcaseId);

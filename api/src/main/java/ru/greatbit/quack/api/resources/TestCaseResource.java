@@ -56,7 +56,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @POST
-    @Path("/attachment/{testcaseId}")
+    @Path("/{testcaseId}/attachment")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public TestCase upload(@FormDataParam("file") InputStream uploadedInputStream,
                               @FormDataParam("file") FormDataContentDisposition fileDetail,
@@ -71,7 +71,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @GET
-    @Path("/attachment/{testcaseId}/{attachmentId}")
+    @Path("/{testcaseId}/attachment/{attachmentId}")
     public Response downloadAttachment(
             @PathParam("projectId") String projectId,
             @PathParam("testcaseId") final String testcaseId,
@@ -88,7 +88,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @DELETE
-    @Path("/attachment/{testcaseId}/{attachmentId}")
+    @Path("/{testcaseId}/attachment/{attachmentId}")
     public TestCase deleteAttachment(
             @PathParam("projectId") String projectId,
             @PathParam("testcaseId") final String testcaseId,
@@ -97,7 +97,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @POST
-    @Path("/issue/{testcaseId}")
+    @Path("/{testcaseId}/issue")
     public TestCase createIssue(@PathParam("projectId") String projectId,
                                 @PathParam("testcaseId") final String testcaseId,
                                 @RequestBody Issue issue) {
@@ -105,23 +105,16 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @POST
-    @Path("/issue/{testcaseId}/link-id/{issueId}")
+    @Path("/{testcaseId}/issue/link/{issueId}")
     public TestCase linkIssueById(@PathParam("projectId") String projectId,
                                   @PathParam("testcaseId") final String testcaseId,
                                   @PathParam("issueId") final String issueId) {
-        return service.linkIssueById(request, getUserSession(), projectId, testcaseId, issueId);
+        return service.linkIssue(request, getUserSession(), projectId, testcaseId, issueId);
     }
 
-    @POST
-    @Path("/issue/{testcaseId}/link-url/{url}")
-    public TestCase linkIssueByUrl(@PathParam("projectId") String projectId,
-                                   @PathParam("testcaseId") final String testcaseId,
-                                   @PathParam("url") final String url) {
-        return service.linkIssueByUrl(request, getUserSession(), projectId, testcaseId, url);
-    }
 
     @DELETE
-    @Path("/issue/{testcaseId}/{issueId}")
+    @Path("/{testcaseId}/issue/{issueId}")
     public TestCase unlinkIssue(@PathParam("projectId") String projectId,
                                 @PathParam("testcaseId") final String testcaseId,
                                 @PathParam("issueId") final String issueId) {

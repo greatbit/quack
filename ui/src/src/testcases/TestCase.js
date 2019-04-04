@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import Attachments from '../testcases/Attachments'
+import Issues from '../testcases/Issues'
 import Comments from '../comments/Comments'
 import { Link } from 'react-router-dom';
 import axios from "axios";
@@ -281,7 +282,12 @@ class TestCase extends SubComponent {
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">Issues</a>
+                    <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">
+                        Issues
+                        {this.state.testcase.issues && this.state.testcase.issues.length > 0 &&
+                            <span class="badge badge-pill badge-secondary tab-badge">{this.state.testcase.issues.length}</span>
+                        }
+                    </a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">
@@ -294,10 +300,9 @@ class TestCase extends SubComponent {
                   <li class="nav-item">
                     <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
                   </li>
-
             </ul>
 
-            <div className="tab-content" id="myTabContent">
+            <div className="tab-content" id="tcTabContent">
                <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display">
@@ -529,7 +534,7 @@ class TestCase extends SubComponent {
                 </div>
 
                 <div class="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
-                    Issues - coming up soon
+                    <Issues testcase={this.state.testcase} projectId={this.projectId} entityType="testcase" onTestcaseUpdated={this.onTestcaseUpdated}/>
                 </div>
 
                 <div class="tab-pane fade show" id="comments" role="tabpanel" aria-labelledby="comments-tab">

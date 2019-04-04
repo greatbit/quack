@@ -34,7 +34,7 @@ class Attachments extends SubComponent {
       if (this.state.projectId && this.state.testcase.id && this.state.testcase.id != null){
           $("#file-data").fileinput({
               previewFileType:'any',
-              uploadUrl: '/api/' + this.state.projectId + '/testcase/attachment/' + this.state.testcase.id
+              uploadUrl: '/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/attachment'
           });
           $("#file-data").on('fileuploaded', function(event, file, previewId, index) {
               this.onTestcaseUpdated();
@@ -50,7 +50,7 @@ class Attachments extends SubComponent {
 
     removeAttachment(attachmentId){
         axios
-          .delete('/api/' + this.state.projectId + '/testcase/attachment/' + this.state.testcase.id + '/' + attachmentId)
+          .delete('/api/' + this.state.projectId + '/testcase/' +  this.state.testcase.id + '/attachment/' + attachmentId)
           .then(response => {
               this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== attachmentId);
               this.setState(this.state);

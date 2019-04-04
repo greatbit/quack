@@ -62,7 +62,7 @@
             <xs:element name="trackerType" type="xs:string"/>
             <xs:element name="trackerProject" type="xs:string"/>
             <xs:element name="url" type="xs:string"/>
-            <xs:element name="title" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
             <xs:element name="sourceLaunch" type="xs:string"/>
             <xs:element name="type" type="IssueType"/>
             <xs:element name="status" type="Status"/>
