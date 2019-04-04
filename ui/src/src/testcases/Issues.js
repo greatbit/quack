@@ -116,16 +116,22 @@ class Issues extends SubComponent {
 
     getIssueUrl(issue){
         return (
-            <div className="row">
-                <div className="col-sm-11">
+            <tr>
+                <td>
                     <a href={issue.url || ""} target='_blank'>{issue.name}</a>
-                </div>
-                <div className="col-sm-1">
+                </td>
+                <td>
+                    {issue.type}
+                </td>
+                <td>
+                    {issue.priority}
+                </td>
+                <td>
                     <span className="clickable edit-icon-visible red" onClick={(e) => this.unlinkIssue(issue.id, e)}>
                         <FontAwesomeIcon icon={faMinusCircle}/>
                     </span>
-                </div>
-            </div>
+                </td>
+            </tr>
         )
     }
 
@@ -134,9 +140,13 @@ class Issues extends SubComponent {
         return (
             <div>
                 <div id="issues" className="issues-list">
-                {(
-                    (this.state.testcase.issues || []).map(this.getIssueUrl)
-                )}
+                    <table class="table table-striped">
+                      <tbody>
+                        {(
+                            (this.state.testcase.issues || []).map(this.getIssueUrl)
+                        )}
+                       </tbody>
+                    </table>
                 </div>
 
                 <div>
@@ -146,7 +156,6 @@ class Issues extends SubComponent {
                 </div>
                 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="issue-modal">
                     <div className="modal-dialog modal-lg" role="document">
-
 
                         <div className="modal-content">
                             <div className="modal-header">
