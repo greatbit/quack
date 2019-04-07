@@ -16,7 +16,8 @@ class Issues extends SubComponent {
             name: "",
             type: "BUG",
             description: "",
-            priority: "NORMAL"
+            priority: "NORMAL",
+            trackerProject: ""
         }
 
         this.state = {
@@ -24,7 +25,8 @@ class Issues extends SubComponent {
              testcase: props.testcase || {issues: []},
              issueToEdit: Object.assign({}, this.defaultIssue),
              linkIssueView: {},
-             suggestIssues: []
+             suggestIssues: [],
+             suggestIssueProjects: []
          };
 
          this.types = [{value: "BUG", label: "BUG"}, {value: "TASK", label: "TASK" },
@@ -40,6 +42,7 @@ class Issues extends SubComponent {
          this.handleSelectChange = this.handleSelectChange.bind(this);
          this.changeLinkIssueId = this.changeLinkIssueId.bind(this);
          this.suggestIssues = this.suggestIssues.bind(this);
+         this.suggestProjects = this.suggestProjects.bind(this);
          this.linkIssue = this.linkIssue.bind(this);
       }
 
@@ -105,13 +108,32 @@ class Issues extends SubComponent {
         })
     }
 
+    suggestProjects(value, callback){
+        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects/suggest?text=' + value)
+            .then(response => {
+                 this.state.suggestIssueProjects = response.data;
+                 this.setState(this.state);
+                 callback(this.mapIssueProjectsToView(this.state.suggestedIssueProjects));
+        })
+    }
+
     changeLinkIssueId(value){
         this.state.linkIssueView = value;
         this.setState(this.state);
     }
 
+    changeIssueProjectId(value){
+        this.state.issue.issueProject = value;
+        this.setState(this.state);
+    }
+
+
     mapIssuesToView(issues){
         return (issues || []).map(function(issue){return {value: issue.id, label: issue.name}});
+    }
+
+    mapIssueProjectsToView(issueProject){
+        return (issueProject || []).map(function(issue){return {value: issueProject, label: issueProject}});
     }
 
     getIssueUrl(issue){
@@ -180,6 +202,20 @@ class Issues extends SubComponent {
                                 <div class="tab-pane fade show active" id="create-issue" role="tabpanel" aria-labelledby="create-issue-tab">
                                     <div className="modal-body">
                                         <form>
+
+                                            <div className="form-group row">
+                                                <label className="col-sm-3 col-form-label">Project</label>
+                                                <div className="col-sm-9">
+                                                    <AsyncSelect value={{value: this.state.issueToEdit.issueProject, label: this.state.issueToEdit.issueProject}}
+                                                            cacheOptions
+                                                            loadOptions={this.suggestProjects}
+                                                            onChange={this.changeIssueProjectId}
+                                                            options={this.mapIssueProjectsToView(this.state.suggestedIssueProjects)}
+                                                           />
+                                                </div>
+                                            </div>
+
+
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Name</label>
                                                 <div className="col-sm-9">

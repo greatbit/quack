@@ -20,4 +20,6 @@ public interface Tracker {
 
     List<Issue> suggestIssue(HttpServletRequest request, Session userSession, String issueProject, String text);
 
+    List<String> suggestProjects(HttpServletRequest request, Session userSession, String project, String text);
+
 }

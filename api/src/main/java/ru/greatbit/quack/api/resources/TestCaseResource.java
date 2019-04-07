@@ -9,7 +9,6 @@ import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.TestCaseService;
 import ru.greatbit.quack.services.errors.EntityValidationException;
-import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static javax.ws.rs.core.Response.serverError;
@@ -126,5 +124,12 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     public List<Issue> suggestIssue(@PathParam("projectId") String projectId,
                                     @QueryParam("text") String text) {
         return service.suggestIssue(request, getUserSession(), projectId, text);
+    }
+
+    @GET
+    @Path("/issue/projects/suggest")
+    public List<String> suggestProjects(@PathParam("projectId") String projectId,
+                                        @QueryParam("text") String text) {
+        return service.suggestProjects(request, getUserSession(), projectId, text);
     }
 }

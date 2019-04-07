@@ -157,4 +157,8 @@ public class TestCaseService extends BaseService<TestCase> {
     public List<Issue> suggestIssue(HttpServletRequest request, Session userSession, String issueProject, String text) {
         return tracker.suggestIssue(request, userSession, issueProject, text);
     }
+
+    public List<String> suggestProjects(HttpServletRequest request, Session userSession, String projectId, String text) {
+        return tracker.suggestProjects(request, userSession, projectId, text);
+    }
 }
