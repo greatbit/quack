@@ -65,4 +65,12 @@ public class DummyTracker implements Tracker {
     public List<IssuePriority> getIssuePriorities(HttpServletRequest request, Session userSession, String issueProject) throws Exception {
         return Arrays.asList(new IssuePriority("HIGH", "High"), new IssuePriority("LOW", "Low"));
     }
+
+    @Override
+    public List<TrackerProject> getAllProjects(HttpServletRequest request, Session userSession, String project) throws Exception {
+        return Arrays.asList(
+                new TrackerProject().withId("Issue").withName("Tracker Project Name1"),
+                new TrackerProject().withId("Issue2").withName("Tracker Project Name2")
+        );
+    }
 }

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.isEmpty;
@@ -104,6 +105,10 @@ public class JiraTracker implements Tracker {
         return new IssuePriority(jiraField.getId(), jiraField.getName());
     }
 
+    @Override
+    public List<TrackerProject> getAllProjects(HttpServletRequest request, Session userSession, String project) throws Exception {
+        return getClient(request).getProjects().execute().body().stream().map(this::convertProject).collect(Collectors.toList());
+    }
 
     private JiraRestClient getClient(HttpServletRequest request) {
         return HttpClientBuilder.builder(jiraApiEndpoint, jiraApiTimeout, request).build().

@@ -161,4 +161,8 @@ public class TestCaseService extends BaseService<TestCase> {
     public List<TrackerProject> suggestProjects(HttpServletRequest request, Session userSession, String projectId, String text) throws Exception {
         return tracker.suggestProjects(request, userSession, projectId, text);
     }
+
+    public List<TrackerProject> getAllProjects(HttpServletRequest request, Session userSession, String projectId) throws Exception {
+        return tracker.getAllProjects(request, userSession, projectId);
+    }
 }

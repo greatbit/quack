@@ -25,6 +25,8 @@ public interface Tracker {
 
     List<TrackerProject> suggestProjects(HttpServletRequest request, Session userSession, String project, String text) throws Exception;
 
+    List<TrackerProject> getAllProjects(HttpServletRequest request, Session userSession, String project) throws Exception;
+
     List<IssueType> getIssueTypes(HttpServletRequest request, Session userSession, String issueProject) throws Exception;
 
     List<IssuePriority> getIssuePriorities(HttpServletRequest request, Session userSession, String issueProject) throws Exception;

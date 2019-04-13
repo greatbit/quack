@@ -132,4 +132,10 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
                                                 @QueryParam("text") String text) throws Exception {
         return service.suggestProjects(request, getUserSession(), projectId, text);
     }
+
+    @GET
+    @Path("/issue/projects")
+    public List<TrackerProject> getProjects(@PathParam("projectId") String projectId) throws Exception {
+        return service.getAllProjects(request, getUserSession(), projectId);
+    }
 }

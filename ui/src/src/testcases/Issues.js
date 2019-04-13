@@ -17,13 +17,13 @@ class Issues extends SubComponent {
             type: "BUG",
             description: "",
             priority: "NORMAL",
-            trackerProject: ""
+            issueProject: {}
         }
 
         this.state = {
              projectId: props.projectId,
              testcase: props.testcase || {issues: []},
-             issueToEdit: Object.assign({}, this.defaultIssue),
+             issue: Object.assign({}, this.defaultIssue),
              linkIssueView: {},
              suggestIssues: [],
              suggestIssueProjects: []
@@ -44,6 +44,7 @@ class Issues extends SubComponent {
          this.suggestIssues = this.suggestIssues.bind(this);
          this.suggestProjects = this.suggestProjects.bind(this);
          this.linkIssue = this.linkIssue.bind(this);
+         this.changeIssueProject= this.changeIssueProject.bind(this);
       }
 
     componentWillReceiveProps(nextProps) {
@@ -59,6 +60,12 @@ class Issues extends SubComponent {
     componentDidMount(){
         super.componentDidMount();
         this.onTestcaseUpdated = this.props.onTestcaseUpdated;
+
+        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
+            .then(response => {
+                 this.state.suggestedIssueProjects = response.data;
+                 this.setState(this.state);
+        })
     }
 
     unlinkIssue(issueId){
@@ -69,17 +76,17 @@ class Issues extends SubComponent {
     }
 
     createIssue(event){
-        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue' , this.state.issueToEdit)
+        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue' , this.state.issue)
             .then(response => {
                 $('#issue-modal').modal('hide');
-                this.state.issueToEdit = Object.assign({}, this.defaultIssue);
+                this.state.issue = Object.assign({}, this.defaultIssue);
                 this.onTestcaseUpdated();
         })
         event.preventDefault();
     }
 
     linkIssue(event){
-        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/link/' + this.state.linkIssueView.value || "" , this.state.issueToEdit)
+        axios.post('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id + '/issue/link/' + this.state.linkIssueView.value || "" , this.state.issue)
             .then(response => {
                 this.state.linkIssueView = {};
                 $('#issue-modal').modal('hide');
@@ -90,12 +97,12 @@ class Issues extends SubComponent {
     }
 
     handleChange(event) {
-       this.state.issueToEdit[event.target.name] = event.target.value;
+       this.state.issue[event.target.name] = event.target.value;
        this.setState(this.state);
     }
 
     handleSelectChange(value, event) {
-       this.state.issueToEdit[event.name] = value.value;
+       this.state.issue[event.name] = value.value;
        this.setState(this.state);
     }
 
@@ -111,7 +118,7 @@ class Issues extends SubComponent {
     suggestProjects(value, callback){
         axios.get('/api/' + this.state.projectId + '/testcase/issue/projects/suggest?text=' + value)
             .then(response => {
-                 this.state.suggestIssueProjects = response.data;
+                 this.state.suggestedIssueProjects = response.data;
                  this.setState(this.state);
                  callback(this.mapIssueProjectsToView(this.state.suggestedIssueProjects));
         })
@@ -122,8 +129,8 @@ class Issues extends SubComponent {
         this.setState(this.state);
     }
 
-    changeIssueProjectId(value){
-        this.state.issue.issueProject = value;
+    changeIssueProject(value){
+        this.state.issue.issueProject = {name: value.label, id: value.value};
         this.setState(this.state);
     }
 
@@ -132,8 +139,8 @@ class Issues extends SubComponent {
         return (issues || []).map(function(issue){return {value: issue.id, label: issue.name}});
     }
 
-    mapIssueProjectsToView(issueProject){
-        return (issueProject || []).map(function(issue){return {value: issueProject, label: issueProject}});
+    mapIssueProjectsToView(issueProjects){
+        return (issueProjects || []).map(function(issueProject){return {value: issueProject.id, label: issueProject.name}});
     }
 
     getIssueUrl(issue){
@@ -206,10 +213,9 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Project</label>
                                                 <div className="col-sm-9">
-                                                    <AsyncSelect value={{value: this.state.issueToEdit.issueProject, label: this.state.issueToEdit.issueProject}}
+                                                    <Select value={{value: this.state.issue.issueProject.id, label: this.state.issue.issueProject.name}}
                                                             cacheOptions
-                                                            loadOptions={this.suggestProjects}
-                                                            onChange={this.changeIssueProjectId}
+                                                            onChange={this.changeIssueProject}
                                                             options={this.mapIssueProjectsToView(this.state.suggestedIssueProjects)}
                                                            />
                                                 </div>
@@ -219,13 +225,13 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Name</label>
                                                 <div className="col-sm-9">
-                                                    <input type="text" className="form-control" name="name" onChange={this.handleChange} value={this.state.issueToEdit.name} />
+                                                    <input type="text" className="form-control" name="name" onChange={this.handleChange} value={this.state.issue.name} />
                                                 </div>
                                             </div>
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Type</label>
                                                 <div className="col-sm-9">
-                                                    <Select name="type" value={{label: this.state.issueToEdit.type, value: this.state.issueToEdit.type}}
+                                                    <Select name="type" value={{label: this.state.issue.type, value: this.state.issue.type}}
                                                         onChange={this.handleSelectChange}
                                                         options={this.types}
                                                        />
@@ -234,7 +240,7 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Priority</label>
                                                 <div className="col-sm-9">
-                                                    <Select name="type" value={{label: this.state.issueToEdit.priority, value: this.state.issueToEdit.priority}}
+                                                    <Select name="type" value={{label: this.state.issue.priority, value: this.state.issue.priority}}
                                                         name="priority"
                                                         onChange={this.handleSelectChange}
                                                         options={this.priorities}
@@ -244,7 +250,7 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Description</label>
                                                 <div className="col-sm-9">
-                                                <textarea rows="7" name="description" className="form-control" onChange={this.handleChange} value={this.state.issueToEdit.description} ></textarea>
+                                                <textarea rows="7" name="description" className="form-control" onChange={this.handleChange} value={this.state.issue.description} ></textarea>
                                                 </div>
                                             </div>
                                         </form>
