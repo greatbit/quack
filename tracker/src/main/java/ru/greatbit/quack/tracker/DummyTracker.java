@@ -3,7 +3,6 @@ package ru.greatbit.quack.tracker;
 import ru.greatbit.quack.beans.Issue;
 import ru.greatbit.quack.beans.IssuePriority;
 import ru.greatbit.quack.beans.IssueType;
-import ru.greatbit.quack.beans.Project;
 import ru.greatbit.quack.beans.TrackerProject;
 import ru.greatbit.whoru.auth.Session;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

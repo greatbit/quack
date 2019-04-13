@@ -53,6 +53,11 @@ class Issues extends SubComponent {
       }
       if(nextProps.projectId){
         this.state.projectId = nextProps.projectId;
+        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
+            .then(response => {
+                 this.state.suggestedTrackerProjects = response.data;
+                 this.setState(this.state);
+        })
       }
       this.setState(this.state);
     }
@@ -60,12 +65,6 @@ class Issues extends SubComponent {
     componentDidMount(){
         super.componentDidMount();
         this.onTestcaseUpdated = this.props.onTestcaseUpdated;
-
-        axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
-            .then(response => {
-                 this.state.suggestedTrackerProjects = response.data;
-                 this.setState(this.state);
-        })
     }
 
     unlinkIssue(issueId){

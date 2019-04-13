@@ -17,6 +17,11 @@
             <artifactId>services</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jira-tracker</artifactId>
+        </dependency>
+
         <!-- Jersey + Spring -->
         <dependency>
             <groupId>javax.servlet</groupId>

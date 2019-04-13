@@ -29,27 +29,47 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="JiraProjectMeta">
-        <xs:sequence>
-            <xs:element name="projects" type="JiraProject" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:element name="issue" type="JiraIssue"/>
     <xs:complexType name="JiraIssue">
         <xs:complexContent>
             <xs:extension base="JiraField">
                 <xs:sequence>
-                    <xs:element name="description" type="xs:string"/>
-                    <xs:element name="project" type="JiraProject"/>
-                    <xs:element name="issuetype" type="JiraField"/>
-                    <xs:element name="priority" type="JiraField"/>
+                    <xs:element name="fields" type="JiraIssueFields"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CreateJiraIssue">
+        <xs:complexContent>
+            <xs:extension base="JiraField">
+                <xs:sequence>
+                    <xs:element name="fields" type="CreateJiraIssueFields"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CreateJiraIssueFields">
+        <xs:sequence>
+            <xs:element name="project" type="JiraField"/>
+            <xs:element name="summary" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="issuetype" type="JiraField"/>
+            <xs:element name="priority" type="JiraField"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="JiraIssueFields">
+        <xs:complexContent>
+            <xs:extension base="CreateJiraIssueFields">
+                <xs:sequence>
                     <xs:element name="status" type="JiraField"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
+
 
     <xs:element name="createIssue" type="CreateIssue"/>
     <xs:complexType name="CreateIssue">
