@@ -133,13 +133,13 @@ public class TestCaseService extends BaseService<TestCase> {
         return storage.get(attachment);
     }
 
-    public TestCase createIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, Issue issue) {
+    public TestCase createIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, Issue issue) throws Exception {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
         testCase.getIssues().add(tracker.createIssue(request, userSession, issue));
         return update(userSession, projectId, testCase);
     }
 
-    public TestCase linkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) {
+    public TestCase linkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) throws Exception {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
         testCase.getIssues().add(tracker.linkIssue(request, userSession, issueId));
         return update(userSession, projectId, testCase);
@@ -154,11 +154,11 @@ public class TestCaseService extends BaseService<TestCase> {
         return update(userSession, projectId, testCase);
     }
 
-    public List<Issue> suggestIssue(HttpServletRequest request, Session userSession, String issueProject, String text) {
+    public List<Issue> suggestIssue(HttpServletRequest request, Session userSession, String issueProject, String text) throws Exception {
         return tracker.suggestIssue(request, userSession, issueProject, text);
     }
 
-    public List<String> suggestProjects(HttpServletRequest request, Session userSession, String projectId, String text) {
+    public List<TrackerProject> suggestProjects(HttpServletRequest request, Session userSession, String projectId, String text) throws Exception {
         return tracker.suggestProjects(request, userSession, projectId, text);
     }
 }

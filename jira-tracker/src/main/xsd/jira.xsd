@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="urn:tracker.quack.greatbit.ru"
-           targetNamespace="urn:tracker.quack.greatbit.ru"
+           xmlns="urn:jira.tracker.quack.greatbit.ru"
+           targetNamespace="urn:jira.tracker.quack.greatbit.ru"
            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
            xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
            jaxb:extensionBindingPrefixes="inheritance"
            jaxb:version="2.1"
            elementFormDefault="qualified">
 
-    <xs:complexType name="Field">
+    <xs:element name="field" type="JiraField"/>
+    <xs:complexType name="JiraField">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
@@ -17,19 +18,34 @@
     </xs:complexType>
 
 
-    <xs:complexType name="Project">
+    <xs:element name="project" type="JiraProject"/>
+    <xs:complexType name="JiraProject">
         <xs:complexContent>
-            <xs:extension base="Field"/>
+            <xs:extension base="JiraField">
+                <xs:sequence>
+                    <xs:element name="issueTypes" type="JiraField" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
-    <xs:complexType name="Issue">
+    <xs:complexType name="JiraProjectMeta">
+        <xs:sequence>
+            <xs:element name="projects" type="JiraProject" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="issue" type="JiraIssue"/>
+    <xs:complexType name="JiraIssue">
         <xs:complexContent>
-            <xs:extension base="Field">
+            <xs:extension base="JiraField">
                 <xs:sequence>
                     <xs:element name="description" type="xs:string"/>
-                    <xs:element name="project" type="Project"/>
-                    <xs:element name="issuetype" type="Project"/>
+                    <xs:element name="project" type="JiraProject"/>
+                    <xs:element name="issuetype" type="JiraField"/>
+                    <xs:element name="priority" type="JiraField"/>
+                    <xs:element name="status" type="JiraField"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -45,11 +61,19 @@
     <xs:element name="fields" type="Fields"/>
     <xs:complexType name="Fields">
         <xs:sequence>
-            <xs:element name="project" type="Project"/>
+            <xs:element name="project" type="JiraProject"/>
             <xs:element name="summary" type="xs:string"/>
-            <xs:element name="issueType" type="Field"/>
-            <xs:element name="priority" type="Field"/>
+            <xs:element name="issueType" type="JiraField"/>
+            <xs:element name="priority" type="JiraField"/>
             <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="issuesSearchResults" type="IssuesSearchResults"/>
+    <xs:complexType name="IssuesSearchResults">
+        <xs:sequence>
+            <xs:element name="total" type="xs:long"/>
+            <xs:element name="issues" type="JiraIssue" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

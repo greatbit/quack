@@ -1,6 +1,10 @@
 package ru.greatbit.quack.tracker;
 
 import ru.greatbit.quack.beans.Issue;
+import ru.greatbit.quack.beans.IssuePriority;
+import ru.greatbit.quack.beans.IssueType;
+import ru.greatbit.quack.beans.Project;
+import ru.greatbit.quack.beans.TrackerProject;
 import ru.greatbit.whoru.auth.Session;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -48,7 +52,17 @@ public class DummyTracker implements Tracker {
     }
 
     @Override
-    public List<String> suggestProjects(HttpServletRequest request, Session userSession, String project, String text) {
-        return Collections.singletonList("Issue");
+    public List<TrackerProject> suggestProjects(HttpServletRequest request, Session userSession, String project, String text) {
+        return Collections.singletonList(new TrackerProject().withId("Issue").withName("Tracker Project Name"));
+    }
+
+    @Override
+    public List<IssueType> getIssueTypes(HttpServletRequest request, Session userSession, String issueProject) throws Exception {
+        return Arrays.asList(new IssueType("BUG", "Bug"), new IssueType("TASK", "Task"));
+    }
+
+    @Override
+    public List<IssuePriority> getIssuePriorities(HttpServletRequest request, Session userSession, String issueProject) throws Exception {
+        return Arrays.asList(new IssuePriority("HIGH", "High"), new IssuePriority("LOW", "Low"));
     }
 }

@@ -56,6 +56,14 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="TrackerProject">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="url" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="Issue">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
@@ -65,7 +73,7 @@
             <xs:element name="name" type="xs:string"/>
             <xs:element name="sourceLaunch" type="xs:string"/>
             <xs:element name="type" type="IssueType"/>
-            <xs:element name="status" type="Status"/>
+            <xs:element name="status" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
             <xs:element name="isClosed" type="xs:boolean"/>
             <xs:element name="parentIssueId" type="xs:string"/>
@@ -74,24 +82,19 @@
     </xs:complexType>
 
 
-    <xs:simpleType name="IssuePriority">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="BLOCKER"/>
-            <xs:enumeration value="CRITICAL"/>
-            <xs:enumeration value="NORMAL"/>
-            <xs:enumeration value="MINOR"/>
-            <xs:enumeration value="TRIVIAL"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="IssuePriority">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 
-    <xs:simpleType name="IssueType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="BUG"/>
-            <xs:enumeration value="TASK"/>
-            <xs:enumeration value="FEATURE"/>
-            <xs:enumeration value="AUTOMATION"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="IssueType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 
 
     <xs:complexType name="Attachment">

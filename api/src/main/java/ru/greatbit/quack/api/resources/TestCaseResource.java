@@ -98,7 +98,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     @Path("/{testcaseId}/issue")
     public TestCase createIssue(@PathParam("projectId") String projectId,
                                 @PathParam("testcaseId") final String testcaseId,
-                                @RequestBody Issue issue) {
+                                @RequestBody Issue issue) throws Exception {
         return service.createIssue(request, getUserSession(), projectId, testcaseId, issue);
     }
 
@@ -106,7 +106,7 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     @Path("/{testcaseId}/issue/link/{issueId}")
     public TestCase linkIssueById(@PathParam("projectId") String projectId,
                                   @PathParam("testcaseId") final String testcaseId,
-                                  @PathParam("issueId") final String issueId) {
+                                  @PathParam("issueId") final String issueId) throws Exception {
         return service.linkIssue(request, getUserSession(), projectId, testcaseId, issueId);
     }
 
@@ -122,14 +122,14 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     @GET
     @Path("/issue/suggest")
     public List<Issue> suggestIssue(@PathParam("projectId") String projectId,
-                                    @QueryParam("text") String text) {
+                                    @QueryParam("text") String text) throws Exception {
         return service.suggestIssue(request, getUserSession(), projectId, text);
     }
 
     @GET
     @Path("/issue/projects/suggest")
-    public List<String> suggestProjects(@PathParam("projectId") String projectId,
-                                        @QueryParam("text") String text) {
+    public List<TrackerProject> suggestProjects(@PathParam("projectId") String projectId,
+                                                @QueryParam("text") String text) throws Exception {
         return service.suggestProjects(request, getUserSession(), projectId, text);
     }
 }
