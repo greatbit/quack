@@ -68,7 +68,7 @@
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="trackerType" type="xs:string"/>
-            <xs:element name="trackerProject" type="xs:string"/>
+            <xs:element name="trackerProject" type="TrackerProject"/>
             <xs:element name="url" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="sourceLaunch" type="xs:string"/>

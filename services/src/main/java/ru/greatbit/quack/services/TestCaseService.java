@@ -165,4 +165,12 @@ public class TestCaseService extends BaseService<TestCase> {
     public List<TrackerProject> getAllProjects(HttpServletRequest request, Session userSession, String projectId) throws Exception {
         return tracker.getAllProjects(request, userSession, projectId);
     }
+
+    public List<IssueType> getIssueTypes(HttpServletRequest request, Session userSession, String issueProjectId) throws Exception {
+        return tracker.getIssueTypes(request, userSession, issueProjectId);
+    }
+
+    public List<IssuePriority> getIssuePriorities(HttpServletRequest request, Session userSession, String issueProjectId) throws Exception {
+        return tracker.getIssuePriorities(request, userSession, issueProjectId);
+    }
 }

@@ -121,7 +121,7 @@ public class JiraTracker implements Tracker {
                 withIsClosed(isClosed(jiraIssue)).
                 withPriority(convertPriority(jiraIssue.getPriority())).
                 withStatus(jiraIssue.getStatus().getName()).
-                withTrackerProject(jiraIssue.getProject().getId()).
+                withTrackerProject(new TrackerProject().withId(jiraIssue.getProject().getId()).withName(jiraIssue.getProject().getName())).
                 withTrackerType(TRACKER_TYPE).
                 withType(new IssueType(jiraIssue.getIssuetype().getId(), jiraIssue.getIssuetype().getName())).
                 withUrl(jiraIssue.getSelf());
@@ -137,7 +137,7 @@ public class JiraTracker implements Tracker {
                 withDescription(issue.getDescription()).
                 withIssuetype(new JiraField().withId((issue.getType().getId()))).
                 withName(issue.getName()).
-                withProject(new JiraProject().withId(issue.getTrackerProject())).
+                withProject(new JiraProject().withId(issue.getTrackerProject().getId())).
                 withSelf(getJiraIssueUrl(issue));
     }
 

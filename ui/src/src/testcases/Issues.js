@@ -14,10 +14,10 @@ class Issues extends SubComponent {
 
         this.defaultIssue = {
             name: "",
-            type: "BUG",
+            type: {},
             description: "",
-            priority: "NORMAL",
-            issueProject: {}
+            priority: {},
+            trackerProject: {}
         }
 
         this.state = {
@@ -26,14 +26,10 @@ class Issues extends SubComponent {
              issue: Object.assign({}, this.defaultIssue),
              linkIssueView: {},
              suggestIssues: [],
-             suggestIssueProjects: []
+             suggestTrackerProjects: [],
+             issueTypes: [],
+             issuePriorities: []
          };
-
-         this.types = [{value: "BUG", label: "BUG"}, {value: "TASK", label: "TASK" },
-                        {value: "FEATURE", label: "FEATURE"}, {value: "AUTOMATION", label: "AUTOMATION"}];
-         this.priorities = [{value: "BLOCKER", label: "BLOCKER"}, {value: "CRITICAL", label: "CRITICAL"},
-                            {value: "NORMAL", label: "NORMAL"}, {value: "MINOR", label: "MINOR"},
-                            {value: "TRIVIAL", label: "TRIVIAL"}];
 
          this.unlinkIssue = this.unlinkIssue.bind(this);
          this.getIssueUrl = this.getIssueUrl.bind(this);
@@ -44,7 +40,11 @@ class Issues extends SubComponent {
          this.suggestIssues = this.suggestIssues.bind(this);
          this.suggestProjects = this.suggestProjects.bind(this);
          this.linkIssue = this.linkIssue.bind(this);
-         this.changeIssueProject= this.changeIssueProject.bind(this);
+         this.changeTrackerProject = this.changeTrackerProject.bind(this);
+         this.mapIssuePrioritiesToView = this.mapIssuePrioritiesToView.bind(this);
+         this.mapIssueTypesToView = this.mapIssueTypesToView.bind(this);
+         this.changeIssueType = this.changeIssueType.bind(this);
+         this.changeIssuePriority = this.changeIssuePriority.bind(this);
       }
 
     componentWillReceiveProps(nextProps) {
@@ -63,7 +63,7 @@ class Issues extends SubComponent {
 
         axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
             .then(response => {
-                 this.state.suggestedIssueProjects = response.data;
+                 this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
         })
     }
@@ -118,9 +118,9 @@ class Issues extends SubComponent {
     suggestProjects(value, callback){
         axios.get('/api/' + this.state.projectId + '/testcase/issue/projects/suggest?text=' + value)
             .then(response => {
-                 this.state.suggestedIssueProjects = response.data;
+                 this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
-                 callback(this.mapIssueProjectsToView(this.state.suggestedIssueProjects));
+                 callback(this.mapTrackerProjectsToView(this.state.suggestedTrackerProjects));
         })
     }
 
@@ -129,8 +129,31 @@ class Issues extends SubComponent {
         this.setState(this.state);
     }
 
-    changeIssueProject(value){
-        this.state.issue.issueProject = {name: value.label, id: value.value};
+    changeTrackerProject(value){
+        this.state.issue.trackerProject = {name: value.label, id: value.value};
+        this.setState(this.state);
+
+
+        axios.get('/api/' + this.state.projectId + '/testcase/issue/types?project=' + this.state.issue.trackerProject.id)
+            .then(response => {
+                 this.state.issueTypes = response.data;
+                 this.setState(this.state);
+        })
+
+        axios.get('/api/' + this.state.projectId + '/testcase/issue/priorities?project=' + this.state.issue.trackerProject.id)
+            .then(response => {
+                 this.state.issuePriorities = response.data;
+                 this.setState(this.state);
+        })
+    }
+
+    changeIssueType(value){
+        this.state.issue.type = {name: value.label, id: value.value};
+        this.setState(this.state);
+    }
+
+    changeIssuePriority(value){
+        this.state.issue.priority = {name: value.label, id: value.value};
         this.setState(this.state);
     }
 
@@ -139,8 +162,16 @@ class Issues extends SubComponent {
         return (issues || []).map(function(issue){return {value: issue.id, label: issue.name}});
     }
 
-    mapIssueProjectsToView(issueProjects){
-        return (issueProjects || []).map(function(issueProject){return {value: issueProject.id, label: issueProject.name}});
+    mapTrackerProjectsToView(trackerProjects){
+        return (trackerProjects || []).map(function(trackerProject){return {value: trackerProject.id, label: trackerProject.name}});
+    }
+
+    mapIssueTypesToView(issueTypes){
+        return (issueTypes || []).map(function(issueType){return {value: issueType.id, label: issueType.name}});
+    }
+
+    mapIssuePrioritiesToView(issuePriorities){
+        return (issuePriorities || []).map(function(issuePriority){return {value: issuePriority.id, label: issuePriority.name}});
     }
 
     getIssueUrl(issue){
@@ -150,10 +181,10 @@ class Issues extends SubComponent {
                     <a href={issue.url || ""} target='_blank'>{issue.name}</a>
                 </td>
                 <td>
-                    {issue.type}
+                    {issue.type.name}
                 </td>
                 <td>
-                    {issue.priority}
+                    {issue.priority.name}
                 </td>
                 <td>
                     <span className="clickable edit-icon-visible red" onClick={(e) => this.unlinkIssue(issue.id, e)}>
@@ -213,10 +244,10 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Project</label>
                                                 <div className="col-sm-9">
-                                                    <Select value={{value: this.state.issue.issueProject.id, label: this.state.issue.issueProject.name}}
+                                                    <Select value={{value: this.state.issue.trackerProject.id, label: this.state.issue.trackerProject.name}}
                                                             cacheOptions
-                                                            onChange={this.changeIssueProject}
-                                                            options={this.mapIssueProjectsToView(this.state.suggestedIssueProjects)}
+                                                            onChange={this.changeTrackerProject}
+                                                            options={this.mapTrackerProjectsToView(this.state.suggestedTrackerProjects)}
                                                            />
                                                 </div>
                                             </div>
@@ -231,19 +262,19 @@ class Issues extends SubComponent {
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Type</label>
                                                 <div className="col-sm-9">
-                                                    <Select name="type" value={{label: this.state.issue.type, value: this.state.issue.type}}
-                                                        onChange={this.handleSelectChange}
-                                                        options={this.types}
+                                                    <Select name="type" value={{label: this.state.issue.type.name, value: this.state.issue.type.value}}
+                                                        onChange={this.changeIssueType}
+                                                        options={this.mapIssueTypesToView(this.state.issueTypes)}
                                                        />
                                                 </div>
                                             </div>
                                             <div className="form-group row">
                                                 <label className="col-sm-3 col-form-label">Priority</label>
                                                 <div className="col-sm-9">
-                                                    <Select name="type" value={{label: this.state.issue.priority, value: this.state.issue.priority}}
+                                                    <Select name="type" value={{label: this.state.issue.priority.name, value: this.state.issue.priority.id}}
                                                         name="priority"
-                                                        onChange={this.handleSelectChange}
-                                                        options={this.priorities}
+                                                        onChange={this.changeIssuePriority}
+                                                        options={this.mapIssuePrioritiesToView(this.state.issuePriorities)}
                                                        />
                                                 </div>
                                             </div>

@@ -9,6 +9,7 @@ import ru.greatbit.quack.beans.*;
 import ru.greatbit.quack.services.BaseService;
 import ru.greatbit.quack.services.TestCaseService;
 import ru.greatbit.quack.services.errors.EntityValidationException;
+import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,5 +138,19 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     @Path("/issue/projects")
     public List<TrackerProject> getProjects(@PathParam("projectId") String projectId) throws Exception {
         return service.getAllProjects(request, getUserSession(), projectId);
+    }
+
+    @GET
+    @Path("/issue/types")
+    public List<IssueType> getIssueTypes(@PathParam("projectId") String projectId,
+                                         @QueryParam("project") String issueProjectId) throws Exception {
+        return service.getIssueTypes(request, getUserSession(), issueProjectId);
+    }
+
+    @GET
+    @Path("/issue/priorities")
+    public List<IssuePriority> getIssuePriorities(@PathParam("projectId") String projectId,
+                                                  @QueryParam("project") String issueProjectId) throws Exception {
+        return service.getIssuePriorities(request, getUserSession(), issueProjectId);
     }
 }
