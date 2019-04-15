@@ -158,7 +158,7 @@ class Issues extends SubComponent {
 
 
     mapIssuesToView(issues){
-        return (issues || []).map(function(issue){return {value: issue.id, label: issue.name}});
+        return (issues || []).map(function(issue){return {value: issue.id, label: issue.id + " - " + issue.name}});
     }
 
     mapTrackerProjectsToView(trackerProjects){

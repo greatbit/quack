@@ -28,7 +28,7 @@ public interface JiraRestClient {
     @POST("issue")
     Call<JiraIssue> createIssue(@Body CreateJiraIssue jiraIssue);
 
-    @GET("issue")
+    @GET("search")
     Call<IssuesSearchResults> suggestIssues(@Query("jql") String jql);
 
     @GET("priority")

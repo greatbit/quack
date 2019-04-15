@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.greatbit.quack.services.errors.EntityAccessDeniedException;
 import ru.greatbit.quack.services.errors.EntityNotFoundException;
 import ru.greatbit.quack.services.errors.EntityValidationException;
+import ru.greatbit.quack.tracker.errors.TrackerValidationException;
 import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.auth.error.UnauthorizedException;
 
@@ -37,7 +38,7 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
             throw error;
         } catch (NotFoundException | EntityNotFoundException e) {
             return createResponse(NOT_FOUND, e);
-        } catch (EntityValidationException e) {
+        } catch (EntityValidationException | TrackerValidationException e) {
             return createResponse(BAD_REQUEST, e);
         } catch (UnauthorizedException e ) {
             return createResponse(UNAUTHORIZED, e);

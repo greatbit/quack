@@ -14,6 +14,7 @@
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="self" type="xs:string"/>
+            <xs:element name="key" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

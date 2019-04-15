@@ -5,12 +5,12 @@ import ru.greatbit.quack.beans.Issue;
 import ru.greatbit.quack.beans.IssuePriority;
 import ru.greatbit.quack.beans.IssueType;
 import ru.greatbit.quack.beans.TrackerProject;
+import ru.greatbit.quack.tracker.errors.TrackerValidationException;
 import ru.greatbit.quack.tracker.jira.CreateJiraIssue;
 import ru.greatbit.quack.tracker.jira.CreateJiraIssueFields;
 import ru.greatbit.quack.tracker.jira.IssuesSearchResults;
 import ru.greatbit.quack.tracker.jira.JiraField;
 import ru.greatbit.quack.tracker.jira.JiraIssue;
-import ru.greatbit.quack.tracker.jira.JiraIssueFields;
 import ru.greatbit.quack.tracker.jira.JiraProject;
 import ru.greatbit.whoru.auth.Session;
 
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -44,6 +45,7 @@ public class JiraTracker implements Tracker {
 
     @Override
     public Issue createIssue(HttpServletRequest request, Session userSession, Issue issue) throws IOException {
+        validateIssue(issue);
         JiraIssue emptyIssue = getClient(request).createIssue(convertToCreateIssue(issue)).execute().body();
         return getIssue(request, userSession, emptyIssue.getId());
     }
@@ -119,30 +121,23 @@ public class JiraTracker implements Tracker {
 
     private Issue convertIssue(JiraIssue jiraIssue) {
         return new Issue().withName(jiraIssue.getFields().getSummary()).
-                withId(jiraIssue.getId()).
+                withId(jiraIssue.getKey()).
                 withDescription(jiraIssue.getFields().getDescription()).
                 withIsClosed(isClosed(jiraIssue)).
                 withPriority(convertPriority(jiraIssue.getFields().getPriority())).
                 withStatus(jiraIssue.getFields().getStatus().getName()).
-                withTrackerProject(new TrackerProject().withId(jiraIssue.getFields().getProject().getId()).withName(jiraIssue.getFields().getProject().getName())).
+                withTrackerProject(
+                        new TrackerProject().withId(jiraIssue.getFields().getProject().getKey()).
+                                withName(jiraIssue.getFields().getProject().getName())
+                ).
                 withTrackerType(TRACKER_TYPE).
                 withType(new IssueType(jiraIssue.getFields().getIssuetype().getId(), jiraIssue.getFields().getIssuetype().getName())).
-                withUrl(getJiraIssueUrl(jiraIssue.getFields().getProject().getId(), jiraIssue.getId()));
+                withUrl(getJiraIssueUrl(jiraIssue.getKey()));
     }
 
     private boolean isClosed(JiraIssue jiraIssue) {
         //ToDo: implement
         return false;
-    }
-
-    private JiraIssue convertIssue(Issue issue) {
-        JiraIssueFields fields = new JiraIssueFields().
-                withIssuetype(new JiraField().withId(issue.getType().getId())).
-                withPriority(new JiraField().withId(issue.getPriority().getId())).
-                withProject(new JiraField().withId(issue.getTrackerProject().getId())).
-                withSummary(issue.getName()).
-                withDescription(issue.getDescription());
-        return new JiraIssue().withName(issue.getName()).withFields(fields);
     }
 
     private CreateJiraIssue convertToCreateIssue(Issue issue) {
@@ -156,9 +151,8 @@ public class JiraTracker implements Tracker {
     }
 
 
-    private String getJiraIssueUrl(String issueProject, String issueId) {
-        return isEmpty(issueId) ? null : jiraUiEndpoint + "projects/" + issueProject +
-                "/issues/" + issueId;
+    private String getJiraIssueUrl(String issueId) {
+        return isEmpty(issueId) ? null : jiraUiEndpoint + "/browse/" + issueId;
     }
 
     private TrackerProject convertProject(JiraProject jiraProject) {
@@ -168,6 +162,23 @@ public class JiraTracker implements Tracker {
     }
 
     private String getSearchIssueJql(String text) {
-        return null;
+        return format("summary ~ \"%s\" OR " +
+                        "description ~ \"%s\"",
+                text, text);
+    }
+
+    private void validateIssue(Issue issue) {
+        if (isEmpty(issue.getType())) {
+            throw new TrackerValidationException("Issue type shouldn't be blank");
+        }
+        if (isEmpty(issue.getName())) {
+            throw new TrackerValidationException("Issue name shouldn't be blank");
+        }
+        if (isEmpty(issue.getPriority())) {
+            throw new TrackerValidationException("Issue priority shouldn't be blank");
+        }
+        if (isEmpty(issue.getTrackerProject())) {
+            throw new TrackerValidationException("Issue project shouldn't be blank");
+        }
     }
 }
