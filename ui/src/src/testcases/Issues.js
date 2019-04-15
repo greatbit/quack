@@ -177,10 +177,18 @@ class Issues extends SubComponent {
         return (
             <tr>
                 <td>
-                    <a href={issue.url || ""} target='_blank'>{issue.name}</a>
+                    {issue.isClosed &&
+                        <s><a href={issue.url || ""} target='_blank'>{issue.name}</a></s>
+                    }
+                    {!issue.isClosed &&
+                        <a href={issue.url || ""} target='_blank'>{issue.name}</a>
+                    }
                 </td>
                 <td>
                     {issue.type.name}
+                </td>
+                <td>
+                    {issue.status}
                 </td>
                 <td>
                     {issue.priority.name}

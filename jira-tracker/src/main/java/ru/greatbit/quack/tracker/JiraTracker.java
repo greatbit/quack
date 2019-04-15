@@ -136,8 +136,7 @@ public class JiraTracker implements Tracker {
     }
 
     private boolean isClosed(JiraIssue jiraIssue) {
-        //ToDo: implement
-        return false;
+        return jiraIssue.getFields().getResolution() != null;
     }
 
     private CreateJiraIssue convertToCreateIssue(Issue issue) {

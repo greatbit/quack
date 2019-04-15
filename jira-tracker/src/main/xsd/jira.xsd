@@ -66,6 +66,7 @@
             <xs:extension base="CreateJiraIssueFields">
                 <xs:sequence>
                     <xs:element name="status" type="JiraField"/>
+                    <xs:element name="resolution" type="JiraField"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
