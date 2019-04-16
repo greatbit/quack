@@ -121,6 +121,12 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
     }
 
     @GET
+    @Path("/issue/{issueId}")
+    public Issue getIssue(@PathParam("issueId") String issueId) throws Exception {
+        return service.getIssue(request, getUserSession(), issueId);
+    }
+
+    @GET
     @Path("/issue/suggest")
     public List<Issue> suggestIssue(@PathParam("projectId") String projectId,
                                     @QueryParam("text") String text) throws Exception {

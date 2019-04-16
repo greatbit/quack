@@ -45,21 +45,23 @@ class Issues extends SubComponent {
          this.mapIssueTypesToView = this.mapIssueTypesToView.bind(this);
          this.changeIssueType = this.changeIssueType.bind(this);
          this.changeIssuePriority = this.changeIssuePriority.bind(this);
+         this.refreshIssues = this.refreshIssues.bind(this);
       }
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.testcase){
         this.state.testcase = nextProps.testcase;
+        this.setState(this.state);
       }
-      if(nextProps.projectId){
+      if(nextProps.projectId && nextProps.projectId != this.state.projectId){
         this.state.projectId = nextProps.projectId;
         axios.get('/api/' + this.state.projectId + '/testcase/issue/projects')
             .then(response => {
                  this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
+                 this.refreshIssues();
         })
       }
-      this.setState(this.state);
     }
 
     componentDidMount(){
@@ -93,6 +95,17 @@ class Issues extends SubComponent {
         })
         event.preventDefault();
 
+    }
+
+    refreshIssues(){
+        if (!this.state.testcase || !this.state.projectId) return;
+        (this.state.testcase.issues || []).forEach(function(issue, index) {
+            axios.get('/api/' + this.state.projectId + '/testcase/issue/' + issue.id)
+                .then(response => {
+                    this.state.testcase.issues[index] = response.data;
+                    this.setState(this.state);
+            })
+        }.bind(this))
     }
 
     handleChange(event) {

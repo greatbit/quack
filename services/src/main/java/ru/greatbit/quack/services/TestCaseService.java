@@ -139,6 +139,10 @@ public class TestCaseService extends BaseService<TestCase> {
         return update(userSession, projectId, testCase);
     }
 
+    public Issue getIssue(HttpServletRequest request, Session userSession, String issueId) throws Exception {
+        return tracker.getIssue(request, userSession, issueId);
+    }
+
     public TestCase linkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) throws Exception {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
         testCase.getIssues().add(tracker.linkIssue(request, userSession, issueId));
