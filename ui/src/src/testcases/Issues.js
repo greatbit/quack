@@ -192,10 +192,10 @@ class Issues extends SubComponent {
             <tr>
                 <td>
                     {issue.isClosed &&
-                        <s><a href={issue.url || ""} target='_blank'>{issue.name}</a></s>
+                        <s><a href={issue.url || ""} target='_blank'>{issue.id} - {issue.name}</a></s>
                     }
                     {!issue.isClosed &&
-                        <a href={issue.url || ""} target='_blank'>{issue.name}</a>
+                        <a href={issue.url || ""} target='_blank'>{issue.id} - {issue.name}</a>
                     }
                 </td>
                 <td>
