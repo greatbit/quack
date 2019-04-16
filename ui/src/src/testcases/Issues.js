@@ -119,9 +119,10 @@ class Issues extends SubComponent {
     }
 
     suggestIssues(value, callback){
+        var existingIssuesIds = (this.state.testcase.issues || []).map(issue => issue.id);
         axios.get('/api/' + this.state.projectId + '/testcase/issue/suggest?text=' + value)
             .then(response => {
-                 this.state.suggestedIssues = response.data;
+                 this.state.suggestedIssues = (response.data || []).filter(issue => !existingIssuesIds.includes(issue.id));
                  this.setState(this.state);
                  callback(this.mapIssuesToView(this.state.suggestedIssues));
         })
@@ -321,7 +322,6 @@ class Issues extends SubComponent {
                                                 <label className="col-sm-3 col-form-label">Search</label>
                                                 <div className="col-sm-9">
                                                     <AsyncSelect value={this.state.linkIssueView}
-                                                            cacheOptions
                                                             loadOptions={this.suggestIssues}
                                                             onChange={this.changeLinkIssueId}
                                                             options={this.mapIssuesToView(this.state.suggestedIssues)}
