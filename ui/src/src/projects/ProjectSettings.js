@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
 import { withRouter } from 'react-router';
+import * as Utils from '../common/Utils';
 
 class ProjectSettings extends SubComponent {
 
@@ -34,8 +35,7 @@ class ProjectSettings extends SubComponent {
             this.state.project = response.data;
             this.refreshGroupsToDisplay();
             this.setState(this.state);
-          })
-          .catch(error => console.log(error));
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
      }
 
      getGroups(literal, callback){
@@ -65,7 +65,7 @@ class ProjectSettings extends SubComponent {
                 this.state.project = response.data;
                 this.refreshGroupsToDisplay();
                 this.setState(this.state);
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.message)});
         event.preventDefault();
     }
 

@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import CreatableSelect from 'react-select/lib/Creatable'
+import * as Utils from '../common/Utils';
+
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -100,7 +102,7 @@ class TestCase extends SubComponent {
             this.state.attributesInEdit.clear();
             this.setState(this.state);
           })
-          .catch(error => console.log(error));
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcase: " + error.message)});
     }
 
     handleChange(fieldName, event, index){
@@ -135,7 +137,7 @@ class TestCase extends SubComponent {
                     this.toggleEdit(fieldName, event, index);
                 }
 
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't save testcase: " + error.message)});
         event.preventDefault();
 
     }

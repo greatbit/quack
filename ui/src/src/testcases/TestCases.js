@@ -67,7 +67,7 @@ class TestCases extends SubComponent {
                this.setState(this.state);
                this.refreshTree();
           })
-          .catch(error => console.log(error));
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: " + error.message)});
      }
 
      editTestcase(testcaseId){
@@ -101,7 +101,7 @@ class TestCases extends SubComponent {
                 onResponse();
             }
           })
-          .catch(error => console.log(error));
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases tree: " + error.message)});
           if (!params.testSuite){
             this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(filter));
           }

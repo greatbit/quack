@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import * as Utils from '../common/Utils';
 
 class LaunchTestcaseControls extends Component {
 
@@ -35,7 +36,7 @@ class LaunchTestcaseControls extends Component {
                 this.setState(this.state);
                 this.callback(this.state.testcase);
 
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: " + error.message)});
         event.preventDefault();
 
     }

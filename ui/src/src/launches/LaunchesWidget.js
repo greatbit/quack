@@ -30,8 +30,7 @@ class LaunchesWidget extends SubComponent {
             .then(response => {
                  this.state.launches = response.data;
                  this.setState(this.state);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => {Utils.onErrorMessage("Couldn't get launch: " + error.message)});
     }
 
     getProgressBar(launch){

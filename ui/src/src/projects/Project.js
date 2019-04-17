@@ -7,6 +7,7 @@ import axios from "axios";
 import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
+import * as Utils from '../common/Utils';
 
 class Project extends SubComponent {
 
@@ -31,8 +32,7 @@ class Project extends SubComponent {
               project: response.data
             });
             this.setState(newState);
-          })
-          .catch(error => console.log(error));
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
      }
 
 

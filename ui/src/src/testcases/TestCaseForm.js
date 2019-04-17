@@ -6,6 +6,8 @@ import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+import * as Utils from '../common/Utils';
+
 
 class TestCaseForm extends SubComponent {
     constructor(props) {
@@ -41,7 +43,7 @@ class TestCaseForm extends SubComponent {
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
             this.onTestCaseAdded(response.data);
-        });
+        }).catch(error => {Utils.onErrorMessage("Couldn't create testcase: " + error.message)});;
         event.preventDefault();
       }
 

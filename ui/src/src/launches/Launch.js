@@ -64,8 +64,7 @@ class Launch extends SubComponent {
                  }
                  this.checkUpdatedTestCases();
 
-        })
-            .catch(error => console.log(error));
+        }).catch(error => {Utils.onErrorMessage("Couldn't get launch: " + error.message)});
     }
 
     buildTree(){

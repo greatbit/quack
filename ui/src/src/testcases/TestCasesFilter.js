@@ -9,6 +9,7 @@ import queryString from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
+import * as Utils from '../common/Utils';
 
 class TestCasesFilter extends Component {
     constructor(props) {
@@ -79,7 +80,7 @@ class TestCasesFilter extends Component {
                    this.setState(this.state);
                    this.props.onFilter(this.state.testSuite.filter);
               })
-              .catch(error => console.log(error));
+              .catch(error => {Utils.onErrorMessage("Couldn't fetch testsuite: " + error.message)});
         } else {
             if (params.groups){
                 if(!Array.isArray(params.groups)){
@@ -190,7 +191,7 @@ class TestCasesFilter extends Component {
                 this.setState(this.state);
                 $("#suite-modal").modal('toggle');
                 this.props.history.push('/' + this.props.match.params.project + '/testcases?testSuite=' + this.state.testSuite.id)
-            })
+            }).catch(error => {Utils.onErrorMessage("Couldn't save testsuite: " + error.message)});
         event.preventDefault();
     }
 

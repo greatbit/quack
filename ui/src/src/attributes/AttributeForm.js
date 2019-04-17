@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+import * as Utils from '../common/Utils';
 
 import axios from "axios";
 
@@ -51,7 +52,7 @@ class AttributeForm extends Component {
                 values: []
             }
             this.setState(this.state);
-        });
+        }).catch(error => {Utils.onErrorMessage("Couldn't save attributes: " + error.message)});;
         event.preventDefault();
       }
 
@@ -66,7 +67,7 @@ class AttributeForm extends Component {
                 values: []
             }
             this.setState(this.state);
-        });
+        }).catch(error => {Utils.onErrorMessage("Couldn't remove attribute: " + error.message)});;
         event.preventDefault();
       }
 

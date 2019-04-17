@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
 import axios from "axios";
+import * as Utils from '../common/Utils';
 require('popper.js/dist/umd/popper.min.js');
 require('bootstrap-fileinput/js/fileinput.min.js');
 require('bootstrap-fileinput/css/fileinput.min.css');
@@ -55,8 +56,7 @@ class Attachments extends SubComponent {
               this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== attachmentId);
               this.setState(this.state);
               this.onTestcaseUpdated();
-          })
-          .catch(error => console.log(error));
+          }).catch(error => {Utils.onErrorMessage("Couldn't remove attachment: " + error.message)});
     }
 
     getAttachmentUrl(attachment){

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
+import * as Utils from '../common/Utils';
+
 
 class ProjectForm extends Component {
 
@@ -34,7 +36,7 @@ class ProjectForm extends Component {
         axios.post('/api/project', this.state.project)
         .then(response => {
             this.props.history.push('/projects');
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.message)});
         event.preventDefault();
       }
 
@@ -47,8 +49,7 @@ class ProjectForm extends Component {
                   project: response.data
                 });
                 this.setState(newState);
-              })
-              .catch(error => console.log(error));
+              }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
         }
      }
 

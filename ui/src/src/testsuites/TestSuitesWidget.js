@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import * as Utils from '../common/Utils';
 
 class TestSuitesWidget extends SubComponent {
 
@@ -32,8 +33,7 @@ class TestSuitesWidget extends SubComponent {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice(0, this.limit);
                  this.setState(this.state);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => {Utils.onErrorMessage("Couldn't save testsuites: " + error.message)});
     }
 
     onFilter(event){

@@ -64,8 +64,7 @@ class Launches extends SubComponent {
             .then(response => {
                  this.state.launches = response.data;
                  this.setState(this.state);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => {Utils.onErrorMessage("Couldn't get launches: " + error.message)});
     }
 
     getPager(){
@@ -77,8 +76,7 @@ class Launches extends SubComponent {
                  this.state.pager.current = this.state.filter.skip / this.state.filter.limit;
                  this.state.pager.visiblePage = Math.min(response.data / this.state.pager.itemsOnPage + 1, this.state.pager.maxVisiblePage);
                  this.setState(this.state);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => console.log(error));
     }
 
     queryToFilter(){

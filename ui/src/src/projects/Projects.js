@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
+import * as Utils from '../common/Utils';
 axios.defaults.withCredentials = true;
+
+
 
 class Projects extends Component {
     state = {
@@ -19,8 +22,7 @@ class Projects extends Component {
               projects: projects
             });
             this.setState(newState);
-          })
-          .catch(error => console.log(error));
+          }).catch(error => {Utils.onErrorMessage("Couldn't get projects: " + error.message)});
      }
 
 

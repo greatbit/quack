@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import * as Utils from '../common/Utils';
 
 class TestSuites extends SubComponent {
 
@@ -30,8 +31,7 @@ class TestSuites extends SubComponent {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice();
                  this.setState(this.state);
-        })
-            .catch(error => console.log(error));
+        }).catch(error => {Utils.onErrorMessage("Couldn't get testsuites: " + error.message)});
     }
 
     onFilter(event){

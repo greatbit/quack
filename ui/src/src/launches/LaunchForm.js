@@ -5,6 +5,8 @@ import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
 import $ from 'jquery';
+import * as Utils from '../common/Utils';
+
 
 class LaunchForm extends SubComponent {
     constructor(props) {
@@ -36,7 +38,7 @@ class LaunchForm extends SubComponent {
         .then(response => {
             this.state.launch = response.data;
             this.setState(this.state);
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't save launch: " + error.message)});
         event.preventDefault();
       }
 
