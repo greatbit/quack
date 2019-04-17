@@ -27,6 +27,18 @@ class Main extends Component {
     render() {
         return(
             <main>
+
+                <div className="row justify-content-end">
+                    <div className="alert alert-success alert-message col-4" id="success-alert">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <span id="success-message-text"></span>
+                    </div>
+                    <div className="alert alert-danger alert-message col-4" id="error-alert" >
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <span id="error-message-text"></span>
+                    </div>
+                </div>
+
                 <Switch>
                   <Route exact path='/' component={Projects}/>
                   <Route exact path='/projects' component={Projects}/>

@@ -189,3 +189,11 @@ h5:hover .edit-icon {
 .testcase-inplace-buttons-down {
     margin-top: 10px;
 }
+
+.alert-message {
+    position: absolute;
+
+    z-index: 1;
+    display: none;
+    float: right;
+}

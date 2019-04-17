@@ -7,6 +7,7 @@ import Select from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
 import $ from 'jquery';
 import axios from "axios";
+import * as Utils from '../common/Utils';
 
 class Issues extends SubComponent {
     constructor(props) {
@@ -60,7 +61,10 @@ class Issues extends SubComponent {
                  this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
                  this.refreshIssues();
-        })
+        }).catch(
+          error => {
+              Utils.onErrorMessage("Couldn't fetch projects from tracker: " + error.message);
+        });
       }
     }
 
@@ -73,7 +77,7 @@ class Issues extends SubComponent {
         axios.delete('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id  + '/issue/' + issueId)
             .then(response => {
                 this.onTestcaseUpdated();
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't unlink issue: " + error.message)});
     }
 
     createIssue(event){
@@ -82,7 +86,7 @@ class Issues extends SubComponent {
                 $('#issue-modal').modal('hide');
                 this.state.issue = Object.assign({}, this.defaultIssue);
                 this.onTestcaseUpdated();
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't create issue: " + error.message)});
         event.preventDefault();
     }
 
@@ -92,7 +96,7 @@ class Issues extends SubComponent {
                 this.state.linkIssueView = {};
                 $('#issue-modal').modal('hide');
                 this.onTestcaseUpdated();
-        })
+        }).catch(error => {Utils.onErrorMessage("Couldn't link issue: " + error.message)});
         event.preventDefault();
 
     }
@@ -104,7 +108,7 @@ class Issues extends SubComponent {
                 .then(response => {
                     this.state.testcase.issues[index] = response.data;
                     this.setState(this.state);
-            })
+            });
         }.bind(this))
     }
 
@@ -125,7 +129,7 @@ class Issues extends SubComponent {
                  this.state.suggestedIssues = (response.data || []).filter(issue => !existingIssuesIds.includes(issue.id));
                  this.setState(this.state);
                  callback(this.mapIssuesToView(this.state.suggestedIssues));
-        })
+        });
     }
 
     suggestProjects(value, callback){
@@ -134,7 +138,7 @@ class Issues extends SubComponent {
                  this.state.suggestedTrackerProjects = response.data;
                  this.setState(this.state);
                  callback(this.mapTrackerProjectsToView(this.state.suggestedTrackerProjects));
-        })
+        });
     }
 
     changeLinkIssueId(value){
@@ -146,18 +150,17 @@ class Issues extends SubComponent {
         this.state.issue.trackerProject = {name: value.label, id: value.value};
         this.setState(this.state);
 
-
         axios.get('/api/' + this.state.projectId + '/testcase/issue/types?project=' + this.state.issue.trackerProject.id)
             .then(response => {
                  this.state.issueTypes = response.data;
                  this.setState(this.state);
-        })
+        });
 
         axios.get('/api/' + this.state.projectId + '/testcase/issue/priorities?project=' + this.state.issue.trackerProject.id)
             .then(response => {
                  this.state.issuePriorities = response.data;
                  this.setState(this.state);
-        })
+        });
     }
 
     changeIssueType(value){

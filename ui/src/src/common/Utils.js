@@ -1,5 +1,6 @@
 import Moment from 'moment/min/moment.min.js';
 import * as UserSession  from '../user/UserSession';
+import $ from 'jquery';
 
 
 export function intDiv(val, by){
@@ -101,4 +102,21 @@ export function getDatepickerTime(timeMillis){
 
 export function isUserOwnerOrAdmin(createdById){
     return UserSession.getSession() && (UserSession.getSession().isAdmin || UserSession.getSession().login === createdById);
+}
+
+export function onErrorMessage(message){
+     $("#error-message-text").html(message);
+     $("#error-alert").show();
+     $("#error-alert").fadeTo(5000, 500).slideUp(500, function(){
+         $("#error-alert").slideUp(500);
+         $("#error-message-text").html("");
+      });
+}
+
+export function onSuccessMessage(message){
+    $("#success-message-text").html(message);
+    $("#success-alert").fadeTo(5000, 500).slideUp(500, function(){
+        $("#success-alert").slideUp(500);
+        $("#success-message-text").html("");
+     });
 }
