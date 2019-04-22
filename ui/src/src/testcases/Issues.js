@@ -13,6 +13,8 @@ class Issues extends SubComponent {
     constructor(props) {
         super(props);
 
+        this.issueToRemove = null;
+
         this.defaultIssue = {
             name: "",
             type: {},
@@ -33,6 +35,8 @@ class Issues extends SubComponent {
          };
 
          this.unlinkIssue = this.unlinkIssue.bind(this);
+         this.unlinkIssueConfirmation = this.unlinkIssueConfirmation.bind(this);
+         this.cancelUnlinkIssueConfirmation = this.cancelUnlinkIssueConfirmation.bind(this);
          this.getIssueUrl = this.getIssueUrl.bind(this);
          this.createIssue = this.createIssue.bind(this);
          this.handleChange = this.handleChange.bind(this);
@@ -66,6 +70,9 @@ class Issues extends SubComponent {
               Utils.onErrorMessage("Couldn't fetch projects from tracker: " + error.message);
         });
       }
+      if (nextProps.testcase && (nextProps.testcase.issues || []).length != this.state.testcase.issues){
+        this.refreshIssues();
+      }
     }
 
     componentDidMount(){
@@ -73,9 +80,21 @@ class Issues extends SubComponent {
         this.onTestcaseUpdated = this.props.onTestcaseUpdated;
     }
 
-    unlinkIssue(issueId){
-        axios.delete('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id  + '/issue/' + issueId)
+    unlinkIssueConfirmation(issueId){
+        this.issueToRemove = issueId;
+        $("#unlink-issue-confirmation").modal("show");
+    }
+
+    cancelUnlinkIssueConfirmation(issueId){
+        this.issueToRemove = null;
+        $("#unlink-issue-confirmation").modal("hide");
+    }
+
+    unlinkIssue(){
+        axios.delete('/api/' + this.state.projectId + '/testcase/' + this.state.testcase.id  + '/issue/' + this.issueToRemove)
             .then(response => {
+                this.issueToRemove = null;
+                $("#unlink-issue-confirmation").modal("hide");
                 this.onTestcaseUpdated();
         }).catch(error => {Utils.onErrorMessage("Couldn't unlink issue: " + error.message)});
     }
@@ -211,7 +230,7 @@ class Issues extends SubComponent {
                     {issue.priority.name}
                 </td>
                 <td>
-                    <span className="clickable edit-icon-visible red" onClick={(e) => this.unlinkIssue(issue.id, e)}>
+                    <span className="clickable edit-icon-visible red" onClick={(e) => this.unlinkIssueConfirmation(issue.id, e)}>
                         <FontAwesomeIcon icon={faMinusCircle}/>
                     </span>
                 </td>
@@ -343,6 +362,24 @@ class Issues extends SubComponent {
                         </div>
                     </div>
                 </div>
+
+                <div  className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" id="unlink-issue-confirmation">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title">Unlink Issue</h5>
+                            <button type="button" className="close" onClick={this.cancelUnlinkIssueConfirmation} aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">Are you sure you want to unlink issue?</div>
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={this.cancelUnlinkIssueConfirmation}>Close</button>
+                            <button type="button" className="btn btn-danger" onClick={this.unlinkIssue}>Unlink Issue</button>
+                          </div>
+                        </div>
+                     </div>
+                 </div>
             </div>
 
         );
