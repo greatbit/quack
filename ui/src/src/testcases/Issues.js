@@ -85,7 +85,7 @@ class Issues extends SubComponent {
         $("#unlink-issue-confirmation").modal("show");
     }
 
-    cancelUnlinkIssueConfirmation(issueId){
+    cancelUnlinkIssueConfirmation(){
         this.issueToRemove = null;
         $("#unlink-issue-confirmation").modal("hide");
     }
@@ -363,7 +363,7 @@ class Issues extends SubComponent {
                     </div>
                 </div>
 
-                <div  className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" id="unlink-issue-confirmation">
+                <div className="modal fade" tabIndex="-1" role="dialog" id="unlink-issue-confirmation">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                           <div className="modal-header">

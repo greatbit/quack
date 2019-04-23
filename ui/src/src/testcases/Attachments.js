@@ -13,6 +13,9 @@ require('bootstrap-fileinput/css/fileinput.min.css');
 class Attachments extends SubComponent {
     constructor(props) {
         super(props);
+
+        this.attachmentToRemove = null;
+
         this.state = {
              testcase: {
                  attachments: []
@@ -22,6 +25,8 @@ class Attachments extends SubComponent {
          };
          this.getAttachmentUrl = this.getAttachmentUrl.bind(this);
          this.removeAttachment = this.removeAttachment.bind(this);
+         this.removeAttachmentConfirmation = this.removeAttachmentConfirmation.bind(this);
+         this.cancelRemoveAttachmentConfirmation = this.cancelRemoveAttachmentConfirmation.bind(this);
       }
 
     componentWillReceiveProps(nextProps) {
@@ -49,14 +54,26 @@ class Attachments extends SubComponent {
         this.onTestcaseUpdated = this.props.onTestcaseUpdated;
     }
 
-    removeAttachment(attachmentId){
+    removeAttachment(){
         axios
-          .delete('/api/' + this.state.projectId + '/testcase/' +  this.state.testcase.id + '/attachment/' + attachmentId)
+          .delete('/api/' + this.state.projectId + '/testcase/' +  this.state.testcase.id + '/attachment/' + this.attachmentToRemove)
           .then(response => {
-              this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== attachmentId);
+              this.attachmentToRemove = null;
+              $("#remove-attachment-confirmation").modal("hide");
+              this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== this.attachmentToRemove);
               this.setState(this.state);
               this.onTestcaseUpdated();
           }).catch(error => {Utils.onErrorMessage("Couldn't remove attachment: " + error.message)});
+    }
+
+    removeAttachmentConfirmation(attachmentId){
+        this.attachmentToRemove = attachmentId;
+        $("#remove-attachment-confirmation").modal("show");
+    }
+
+    cancelRemoveAttachmentConfirmation(){
+        this.issueToRemove = null;
+        $("#remove-attachment-confirmation").modal("hide");
     }
 
     getAttachmentUrl(attachment){
@@ -68,7 +85,7 @@ class Attachments extends SubComponent {
                         attachment.id} target='_blank'>{attachment.title}</a>
                 </div>
                 <div className="col-sm-1">
-                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeAttachment(attachment.id, e)}>
+                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeAttachmentConfirmation(attachment.id, e)}>
                         <FontAwesomeIcon icon={faMinusCircle}/>
                     </span>
                 </div>
@@ -96,6 +113,26 @@ class Attachments extends SubComponent {
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
+
+
+                <div className="modal fade" tabIndex="-1" role="dialog" id="remove-attachment-confirmation">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title">Remove Attachment</h5>
+                            <button type="button" className="close" onClick={this.cancelRemoveAttachmentConfirmation} aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">Are you sure you want to remove attachment?</div>
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={this.cancelRemoveAttachmentConfirmation}>Close</button>
+                            <button type="button" className="btn btn-danger" onClick={this.removeAttachment}>Remove Attachment</button>
+                          </div>
+                        </div>
+                     </div>
+                 </div>
+
             </div>
 
         );
