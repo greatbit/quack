@@ -4,8 +4,13 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
+import $ from 'jquery';
 
 class TestSuites extends SubComponent {
+
+    testSuiteToRemove = null;
 
     state = {
         testSuites: [],
@@ -17,6 +22,9 @@ class TestSuites extends SubComponent {
         super(props);
         this.getTestSuites = this.getTestSuites.bind(this);
         this.onFilter = this.onFilter.bind(this);
+        this.removeTestSuite = this.removeTestSuite.bind(this);
+        this.removeTestSuiteConfirmation = this.removeTestSuiteConfirmation.bind(this);
+        this.cancelRemoveTestSuiteConfirmation = this.cancelRemoveTestSuiteConfirmation.bind(this);
     }
 
     componentDidMount() {
@@ -41,6 +49,27 @@ class TestSuites extends SubComponent {
         this.setState(this.state);
     }
 
+    removeTestSuiteConfirmation(testSuiteId){
+        this.testSuiteToRemove = testSuiteId;
+        $("#remove-testsuite-confirmation").modal("show");
+    }
+
+    cancelRemoveTestSuiteConfirmation(){
+        this.testSuiteToRemove = null;
+        $("#remove-testsuite-confirmation").modal("hide");
+    }
+
+    removeTestSuite(event){
+        axios.delete("/api/"  + this.props.match.params.project + "/testsuite/" + this.testSuiteToRemove)
+            .then(response => {
+                this.state.testSuites = this.state.testSuites.filter(testSuite => testSuite.id != this.testSuiteToRemove);
+                this.state.testSuitesToDisplay = this.state.testSuites;
+                this.testSuiteToRemove = null;
+                $("#remove-testsuite-confirmation").modal("hide");
+                this.setState(this.state);
+        }).catch(error => {Utils.onErrorMessage("Couldn't delete testsuite: " + error.message)});
+    }
+
     render() {
         return (
           <div>
@@ -57,9 +86,18 @@ class TestSuites extends SubComponent {
                             <div className="col-sm-6">
                                 <div className="card testsuite-card col-sm-10">
                                   <div className="card-body">
-                                    <h5 className="card-title">
-                                        {testSuite.name}
-                                    </h5>
+                                    <div className="row">
+                                        <div className="col-11">
+                                            <h5 className="card-title">
+                                                {testSuite.name}
+                                            </h5>
+                                        </div>
+                                        <div className="col1">
+                                            <span className="clickable edit-icon-visible red float-right" onClick={(e) => this.removeTestSuiteConfirmation(testSuite.id)}>
+                                                <FontAwesomeIcon icon={faMinusCircle}/>
+                                            </span>
+                                        </div>
+                                    </div>
                                     <p className="card-text">
                                         <Link to={'/' + this.props.match.params.project + '/testcases?testSuite=' + testSuite.id}>
                                             View
@@ -72,6 +110,24 @@ class TestSuites extends SubComponent {
                            );
                 }.bind(this))}
             </div>
+
+            <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testsuite-confirmation">
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title">Remove Test Suite</h5>
+                        <button type="button" className="close" onClick={this.cancelRemoveTestSuiteConfirmation} aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div className="modal-body">Are you sure you want to remove Test Suite?</div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={this.cancelRemoveTestSuiteConfirmation}>Close</button>
+                        <button type="button" className="btn btn-danger" onClick={this.removeTestSuite}>Remove Test Suite</button>
+                      </div>
+                    </div>
+                 </div>
+             </div>
           </div>
         );
       }
