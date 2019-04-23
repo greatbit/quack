@@ -12,6 +12,9 @@ import * as Utils from '../common/Utils';
 class Comments extends SubComponent {
     constructor(props) {
         super(props);
+
+        this.commentToRemove = null;
+
         this.state = {
              comments: [],
              commentToEdit: {}
@@ -27,6 +30,8 @@ class Comments extends SubComponent {
          this.cancelEdit = this.cancelEdit.bind(this);
          this.refreshCommentToEdit = this.refreshCommentToEdit.bind(this);
          this.removeComment = this.removeComment.bind(this);
+         this.removeCommentConfirmation = this.removeCommentConfirmation.bind(this);
+         this.cancelRemoveCommentConfirmation = this.cancelRemoveCommentConfirmation.bind(this);
          this.refreshCommentToEdit();
          this.handleUpdateChange = this.handleUpdateChange.bind(this);
          this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
@@ -92,13 +97,26 @@ class Comments extends SubComponent {
         $("#comment-" + index + "-form").show();
     }
 
-    removeComment(commentId, event){
-        axios.delete("/api/"  + this.projectId + "/comment/" + commentId)
+    removeCommentConfirmation(commentId){
+        this.commentToRemove = commentId;
+        $("#remove-comment-confirmation").modal("show");
+    }
+
+    cancelRemoveCommentConfirmation(){
+        this.commentToRemove = null;
+        $("#remove-comment-confirmation").modal("hide");
+    }
+
+
+    removeComment(event){
+        axios.delete("/api/"  + this.projectId + "/comment/" + this.commentToRemove)
             .then(response => {
-                this.state.comments = this.state.comments.filter(comment => comment.id != commentId);
+                this.state.comments = this.state.comments.filter(comment => comment.id != this.commentToRemove);
                 if (this.onCommentsNumberChanged){
                     this.onCommentsNumberChanged(this.state.comments.length);
                 }
+                this.commentToRemove = null;
+                $("#remove-comment-confirmation").modal("hide");
                 this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't delete a comment: " + error.message)});
     }
@@ -151,7 +169,7 @@ class Comments extends SubComponent {
                                             <span className="clickable edit-icon-visible" onClick={(e) => this.toggleEdit(i, e)}>
                                                 <FontAwesomeIcon icon={faPencilAlt}/>
                                             </span>
-                                            <span className="clickable edit-icon-visible red" onClick={(e) => this.removeComment(comment.id, e)}>
+                                            <span className="clickable edit-icon-visible red" onClick={(e) => this.removeCommentConfirmation(comment.id, e)}>
                                                 <FontAwesomeIcon icon={faMinusCircle}/>
                                             </span>
                                         </div>
@@ -184,6 +202,26 @@ class Comments extends SubComponent {
                         </div>
                     </form>
                 </div>
+
+
+                <div className="modal fade" tabIndex="-1" role="dialog" id="remove-comment-confirmation">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title">Remove Comment</h5>
+                            <button type="button" className="close" onClick={this.cancelRemoveCommentConfirmation} aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">Are you sure you want to remove comment?</div>
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={this.cancelRemoveCommentConfirmation}>Close</button>
+                            <button type="button" className="btn btn-danger" onClick={this.removeComment}>Remove Comment</button>
+                          </div>
+                        </div>
+                     </div>
+                 </div>
+
             </div>
         );
 
