@@ -57,6 +57,7 @@ class TestCase extends SubComponent {
          this.getAttributeKeysToAdd = this.getAttributeKeysToAdd.bind(this);
          this.onTestcaseUpdated = this.onTestcaseUpdated.bind(this);
          this.onCommentsCountChanged = this.onCommentsCountChanged.bind(this);
+         this.removeTestcase = this.removeTestcase.bind(this);
       }
 
     componentDidMount() {
@@ -265,6 +266,14 @@ class TestCase extends SubComponent {
     onCommentsCountChanged(count){
          this.state.commentsCount = count;
          this.setState(this.state);
+    }
+
+    removeTestcase(){
+        axios.delete('/api/' + this.projectId + '/testcase/' + this.state.testcase.id)
+            .then(response => {
+//                this.props.history.goBack();
+                window.location.href = window.location.href.replace("testcase=" + this.state.testcase.id, "")
+        }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: " + error.message)});
     }
 
     render() {
@@ -548,6 +557,25 @@ class TestCase extends SubComponent {
                 </div>
 
               </div>
+
+              <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-testcase-confirmation">Remove Testcase</button>
+              <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testcase-confirmation">
+                  <div className="modal-dialog" role="document">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h5 className="modal-title">Remove Test Case</h5>
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div className="modal-body">Are you sure you want to remove Test Case?</div>
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
+                          <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeTestcase}>Remove Test Case</button>
+                        </div>
+                      </div>
+                   </div>
+               </div>
             </div>
         );
 
@@ -555,4 +583,4 @@ class TestCase extends SubComponent {
 
 }
 
-export default TestCase;
+export default withRouter(TestCase);
