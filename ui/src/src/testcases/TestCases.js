@@ -28,6 +28,8 @@ class TestCases extends SubComponent {
         attributes: {}
     };
 
+    testCasesFetchLimit = 50;
+
     state = {
         testcasesTree: {children: []},
         testcaseToEdit: Object.assign({}, this.defaultTestcase),
@@ -45,6 +47,9 @@ class TestCases extends SubComponent {
         this.getGroupingQParams = this.getGroupingQParams.bind(this);
         this.onTestcaseSelected = this.onTestcaseSelected.bind(this);
         this.onTestCaseAdded = this.onTestCaseAdded.bind(this);
+        this.loadMoreTestCases = this.loadMoreTestCases.bind(this);
+        this.showLoadMore = this.showLoadMore.bind(this);
+        this.updateCount = this.updateCount.bind(this);
     }
 
     componentDidMount() {
@@ -86,11 +91,17 @@ class TestCases extends SubComponent {
      }
 
      onFilter(filter, onResponse){
-        this.state.filter = filter;
         var params = queryString.parse(this.props.location.search);
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
         }
+
+        if (!filter.groups || filter.groups.length == 0){
+            filter.skip = filter.skip || 0;
+            filter.limit = this.testCasesFetchLimit;
+        }
+
+        this.state.filter = filter;
         axios
           .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
@@ -100,11 +111,40 @@ class TestCases extends SubComponent {
             if (onResponse){
                 onResponse();
             }
+            this.updateCount();
           })
           .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases tree: " + error.message)});
           if (!params.testSuite){
             this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(filter));
           }
+     }
+
+     updateCount(){
+        axios
+            .get("/api/" + this.props.match.params.project + "/testcase/count?" + this.getFilterApiRequestParams(this.state.filter))
+            .then(response => {
+              this.state.count = response.data;
+              this.setState(this.state);
+            })
+            .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases number: " + error.message)});
+     }
+
+     loadMoreTestCases(event){
+        this.state.filter.skip = (this.state.filter.skip || 0) + this.testCasesFetchLimit;
+        axios
+          .get("/api/" + this.props.match.params.project + "/testcase?" + this.getFilterApiRequestParams(this.state.filter))
+          .then(response => {
+            if (response.data){
+                this.state.testcasesTree.testCases = this.state.testcasesTree.testCases.concat(response.data);
+                this.setState(this.state);
+                this.refreshTree();
+            } else {
+                this.state.filter.skip = (this.state.filter.skip || 0) - this.testCasesFetchLimit;
+                this.setState(this.state);
+            }
+          })
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases: " + error.message)});
+          event.preventDefault();
      }
 
      getFilterApiRequestParams(filter){
@@ -113,7 +153,13 @@ class TestCases extends SubComponent {
              filter.values.forEach(function(value){
                  tokens.push("attributes." + filter.id + "=" + value);
              })
-         })
+         });
+         if(filter.skip){
+            tokens.push("skip=" + filter.skip);
+         }
+         if (filter.limit){
+            tokens.push("limit=" + filter.limit);
+         }
          return tokens.join("&");
      }
 
@@ -180,6 +226,13 @@ class TestCases extends SubComponent {
         return filter.groups.map(function(group){return "groups=" + group}).join("&") || "";
     }
 
+    showLoadMore(){
+        if (((this.state.filter || {}).groups || []).length > 0 || !this.state.count) {
+            return false
+        }
+        return ((this.state.filter || {}).skip || 0) + this.testCasesFetchLimit <= this.state.count;
+    }
+
     render() {
         var that = this;
 
@@ -188,18 +241,6 @@ class TestCases extends SubComponent {
               <div>
                 <TestCasesFilter projectAttributes={this.state.projectAttributes}
                         onFilter={this.onFilter} project={this.props.match.params.project}/>
-              </div>
-
-              <div className="row">
-                <div className="tree-side col-5">
-                    <div id="tree"></div>
-                </div>
-                <div id="testCase" className="testcase-side col-7">
-                    {this.state.selectedTestCase && this.state.selectedTestCase.id &&
-                        <TestCase projectId={this.props.match.params.project} projectAttributes={this.state.projectAttributes}
-                                testcaseId={this.state.selectedTestCase.id}/>
-                    }
-                </div>
               </div>
 
               <div>
@@ -213,6 +254,21 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
+
+              <div className="row">
+                <div className="tree-side col-5">
+                    <div id="tree"></div>
+                    {this.showLoadMore() && <div><a href="" onClick={this.loadMoreTestCases}>Load more</a></div>}
+                </div>
+                <div id="testCase" className="testcase-side col-7">
+                    {this.state.selectedTestCase && this.state.selectedTestCase.id &&
+                        <TestCase projectId={this.props.match.params.project} projectAttributes={this.state.projectAttributes}
+                                testcaseId={this.state.selectedTestCase.id}/>
+                    }
+                </div>
+              </div>
+
+
 
             </div>
         );
