@@ -5,6 +5,7 @@ import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 import $ from 'jquery';
 
@@ -23,7 +24,8 @@ class Launch extends SubComponent {
         launch: {},
         selectedTestCase: {
             uuid: null
-        }
+        },
+        loading: true
     };
 
     constructor(props) {
@@ -58,13 +60,18 @@ class Launch extends SubComponent {
                  if (this.state.selectedTestCase.uuid){
                      this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
                  }
+                 this.state.loading = false;
                  this.setState(this.state);
                  if (buildTree){
                     this.buildTree();
                  }
                  this.checkUpdatedTestCases();
 
-        }).catch(error => {Utils.onErrorMessage("Couldn't get launch: " + error.message)});
+        }).catch(error => {
+            Utils.onErrorMessage("Couldn't get launch: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+        });
     }
 
     buildTree(){
@@ -139,6 +146,16 @@ class Launch extends SubComponent {
         return (
           <div>
               <div className="row">
+
+                  <div className='sweet-loading'>
+                         <FadeLoader
+                           sizeUnit={"px"}
+                           size={100}
+                           color={'#135f38'}
+                           loading={this.state.loading}
+                         />
+                   </div>
+
                   <div className="tree-side col-5">
                       <div id="tree"></div>
                   </div>
