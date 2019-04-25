@@ -6,6 +6,7 @@ import queryString from 'query-string';
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import $ from 'jquery';
+import { FadeLoader } from 'react-spinners';
 
 import DatePicker from 'react-date-picker';
 
@@ -25,7 +26,8 @@ class Launches extends SubComponent {
             current: 0,
             maxVisiblePage: 7,
             itemsOnPage: 20
-        }
+        },
+        loading: true
     };
 
     constructor(props) {
@@ -63,8 +65,13 @@ class Launches extends SubComponent {
             .get("/api/" + this.props.match.params.project + "/launch?" + this.filterToQuery(this.state.filter))
             .then(response => {
                  this.state.launches = response.data;
+                 this.state.loading = false;
                  this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't get launches: " + error.message)});
+        }).catch(error => {
+            Utils.onErrorMessage("Couldn't get launches: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+        });
     }
 
     getPager(){
@@ -177,6 +184,14 @@ class Launches extends SubComponent {
                 </form>
               </div>
               <div className="col-sm-9">
+                  <div className='sweet-loading'>
+                         <FadeLoader
+                           sizeUnit={"px"}
+                           size={100}
+                           color={'#135f38'}
+                           loading={this.state.loading}
+                         />
+                   </div>
                   <table class="table table-striped">
                       <thead>
                           <tr>
