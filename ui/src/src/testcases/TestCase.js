@@ -12,6 +12,7 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import CreatableSelect from 'react-select/lib/Creatable'
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 
 class TestCase extends SubComponent {
@@ -33,7 +34,8 @@ class TestCase extends SubComponent {
              projectAttributes: [],
              readonly: false,
              attributesInEdit: new Set(),
-             commentsCount: 0
+             commentsCount: 0,
+             loading: true
          };
          this.getTestCase = this.getTestCase.bind(this);
          this.handleSubmit = this.handleSubmit.bind(this);
@@ -101,9 +103,14 @@ class TestCase extends SubComponent {
             this.state.testcase = response.data;
             this.state.originalTestcase = this.state.testcase;
             this.state.attributesInEdit.clear();
+            this.state.loading = false;
             this.setState(this.state);
           })
-          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcase: " + error.message)});
+          .catch(error => {
+            Utils.onErrorMessage("Couldn't fetch testcase: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+          });
     }
 
     handleChange(fieldName, event, index){
@@ -271,7 +278,6 @@ class TestCase extends SubComponent {
     removeTestcase(){
         axios.delete('/api/' + this.projectId + '/testcase/' + this.state.testcase.id)
             .then(response => {
-//                this.props.history.goBack();
                 window.location.href = window.location.href.replace("testcase=" + this.state.testcase.id, "")
         }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: " + error.message)});
     }
@@ -314,6 +320,14 @@ class TestCase extends SubComponent {
             </ul>
 
             <div className="tab-content" id="tcTabContent">
+                <div className='sweet-loading'>
+                       <FadeLoader
+                         sizeUnit={"px"}
+                         size={100}
+                         color={'#135f38'}
+                         loading={this.state.loading}
+                       />
+                 </div>
                <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display">
