@@ -4,13 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
+
 axios.defaults.withCredentials = true;
 
 
 
 class Projects extends Component {
     state = {
-        projects: []
+        projects: [],
+        loading: true
     };
 
     componentDidMount() {
@@ -18,17 +21,30 @@ class Projects extends Component {
           .get("/api/project")
           .then(response => {
             const projects = response.data;
+            this.state.loading = false;
             const newState = Object.assign({}, this.state, {
               projects: projects
             });
             this.setState(newState);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get projects: " + error.message)});
+          }).catch(error => {
+            Utils.onErrorMessage("Couldn't get projects: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+          });
      }
 
 
     render() {
         return (
           <div className='container'>
+            <div className='sweet-loading'>
+                 <FadeLoader
+                   sizeUnit={"px"}
+                   size={100}
+                   color={'#135f38'}
+                   loading={this.state.loading}
+                 />
+           </div>
             {
                 this.state.projects.map(function(project){
                     return (
