@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios";
 import $ from 'jquery';
+import { FadeLoader } from 'react-spinners';
 
 class Attributes extends SubComponent {
     constructor(props) {
@@ -15,7 +16,8 @@ class Attributes extends SubComponent {
                  id: null,
                  name: "",
                  values: []
-             }
+             },
+             loading: true
          }
         this.onAttributeAdded = this.onAttributeAdded.bind(this);
         this.onAttributeRemoved = this.onAttributeRemoved.bind(this);
@@ -56,6 +58,7 @@ class Attributes extends SubComponent {
         axios
           .get("/api/" + this.props.match.params.project +  "/attribute")
           .then(response => {
+            this.state.loading = false;
             const newState = Object.assign({}, this.state, {
               attributes: response.data
             });
@@ -68,6 +71,14 @@ class Attributes extends SubComponent {
     render() {
         return (
           <div>
+            <div className='sweet-loading'>
+                    <FadeLoader
+                      sizeUnit={"px"}
+                      size={100}
+                      color={'#135f38'}
+                      loading={this.state.loading}
+                    />
+              </div>
             {
                 this.state.attributes.map(function(attribute, i){
                     return (
