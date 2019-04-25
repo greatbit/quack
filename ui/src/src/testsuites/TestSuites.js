@@ -7,6 +7,7 @@ import * as Utils from '../common/Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
+import { FadeLoader } from 'react-spinners';
 
 class TestSuites extends SubComponent {
 
@@ -14,7 +15,8 @@ class TestSuites extends SubComponent {
 
     state = {
         testSuites: [],
-        testSuitesToDisplay: []
+        testSuitesToDisplay: [],
+        loading: true
     };
 
 
@@ -38,8 +40,13 @@ class TestSuites extends SubComponent {
             .then(response => {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice();
+                 this.state.loading = false;
                  this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't get testsuites: " + error.message)});
+        }).catch(error => {
+            Utils.onErrorMessage("Couldn't get testsuites: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+        });
     }
 
     onFilter(event){
@@ -81,6 +88,14 @@ class TestSuites extends SubComponent {
                 </form>
             </div>
             <div className="row">
+                <div className='sweet-loading'>
+                       <FadeLoader
+                         sizeUnit={"px"}
+                         size={100}
+                         color={'#135f38'}
+                         loading={this.state.loading}
+                       />
+                 </div>
                 {this.state.testSuitesToDisplay.map(function(testSuite){
                     return (
                             <div className="col-sm-6">
