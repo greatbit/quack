@@ -8,6 +8,7 @@ import axios from "axios";
 import $ from 'jquery';
 import queryString from 'query-string';
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 var jQuery = require('jquery');
 window.jQuery = jQuery;
@@ -35,7 +36,8 @@ class TestCases extends SubComponent {
         testcaseToEdit: Object.assign({}, this.defaultTestcase),
         projectAttributes: [],
         selectedTestCase: {},
-        filter: {}
+        filter: {},
+        loading: true
     };
 
     constructor(props) {
@@ -102,10 +104,13 @@ class TestCases extends SubComponent {
         }
 
         this.state.filter = filter;
+        this.state.loading = true;
+        this.setState(this.state);
         axios
           .get("/api/" + this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
           .then(response => {
             this.state.testcasesTree = response.data;
+            this.state.loading = false;
             this.setState(this.state);
             this.refreshTree();
             if (onResponse){
@@ -113,7 +118,11 @@ class TestCases extends SubComponent {
             }
             this.updateCount();
           })
-          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases tree: " + error.message)});
+          .catch(error => {
+                Utils.onErrorMessage("Couldn't fetch testcases tree: " + error.message);
+                this.state.loading = false;
+                this.setState(this.state);
+           });
           if (!params.testSuite){
             this.props.history.push("/" + this.props.match.params.project + '/testcases?' + this.getQueryParams(filter));
           }
@@ -254,8 +263,15 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
-
               <div className="row">
+                <div className='sweet-loading'>
+                        <FadeLoader
+                          sizeUnit={"px"}
+                          size={100}
+                          color={'#135f38'}
+                          loading={this.state.loading}
+                        />
+                  </div>
                 <div className="tree-side col-5">
                     <div id="tree"></div>
                     {this.showLoadMore() && <div><a href="" onClick={this.loadMoreTestCases}>Load more</a></div>}
