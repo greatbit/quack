@@ -4,12 +4,14 @@ import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 class TestSuitesWidget extends SubComponent {
 
     state = {
         testSuites: [],
-        testSuitesToDisplay: []
+        testSuitesToDisplay: [],
+        loading: true
     };
 
 
@@ -32,8 +34,13 @@ class TestSuitesWidget extends SubComponent {
             .then(response => {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice(0, this.limit);
+                 this.state.loading = false;
                  this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save testsuites: " + error.message)});
+        }).catch(error => {
+            Utils.onErrorMessage("Couldn't save testsuites: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+        });
     }
 
     onFilter(event){
@@ -54,6 +61,14 @@ class TestSuitesWidget extends SubComponent {
                 </form>
             </div>
             <div>
+                <div className='sweet-loading'>
+                       <FadeLoader
+                         sizeUnit={"px"}
+                         size={100}
+                         color={'#135f38'}
+                         loading={this.state.loading}
+                       />
+                 </div>
                 {this.state.testSuitesToDisplay.map(function(testSuite){
                     return (
                             <div>
