@@ -5,11 +5,13 @@ import axios from "axios";
 import queryString from 'query-string';
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 class LaunchesWidget extends SubComponent {
 
     state = {
-        launches: []
+        launches: [],
+        loading: true
     };
 
     constructor(props) {
@@ -29,8 +31,13 @@ class LaunchesWidget extends SubComponent {
             .get("/api/" + this.projectId + "/launch?limit=" + this.limit)
             .then(response => {
                  this.state.launches = response.data;
+                 this.state.loading = false;
                  this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't get launch: " + error.message)});
+        }).catch(error => {
+            Utils.onErrorMessage("Couldn't get launch: " + error.message);
+            this.state.loading = false;
+            this.setState(this.state);
+        });
     }
 
     getProgressBar(launch){
@@ -51,6 +58,14 @@ class LaunchesWidget extends SubComponent {
     render() {
         return (
           <div>
+              <div className='sweet-loading'>
+                     <FadeLoader
+                       sizeUnit={"px"}
+                       size={100}
+                       color={'#135f38'}
+                       loading={this.state.loading}
+                     />
+               </div>
               <table class="table table-striped">
                   <thead>
                       <tr>
