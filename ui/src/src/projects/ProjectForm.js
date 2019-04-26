@@ -35,7 +35,7 @@ class ProjectForm extends Component {
       handleSubmit(event) {
         axios.post('/api/project', this.state.project)
         .then(response => {
-            this.props.history.push('/projects');
+            this.props.history.push('/projects/' + response.id);
         }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.message)});
         event.preventDefault();
       }
@@ -56,17 +56,25 @@ class ProjectForm extends Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                Name:
-                <input type="text" name="name" value={this.state.project.name} onChange={this.handleChange} />
-              </label>
-              <label>
-                Description:
-                <input type="text" name="description" value={this.state.project.description} onChange={this.handleChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
+            <div>
+                <h1>Create Project</h1>
+                <form>
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">Name</label>
+                      <div className="col-sm-9">
+                        <input type="text" name="name" value={this.state.project.name} onChange={this.handleChange} />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="col-sm-3 col-form-label">Description</label>
+                      <div className="col-sm-9">
+                        <input type="text" name="description" value={this.state.project.description} onChange={this.handleChange} />
+                      </div>
+                    </div>
+                    <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create</button>
+                </form>
+            </div>
         );
       }
 
