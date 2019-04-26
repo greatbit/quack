@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import axios from "axios";
 import * as UserSession  from '../user/UserSession';
+import * as Utils from '../common/Utils';
 
 class Header extends Component {
 
@@ -101,6 +102,12 @@ class Header extends Component {
                            <Link to={'/projects/' + project.id} className='dropdown-item'>{project.name}</Link>
                       )
                   })}
+                  {Utils.isUserOwnerOrAdmin() &&
+                      <div>
+                        <hr/>
+                        <Link to={'/projects/new'} className='dropdown-item'>Create Project</Link>
+                      </div>
+                  }
                 </div>
               </li>
           </ul>
