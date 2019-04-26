@@ -60,15 +60,15 @@ class ProjectForm extends Component {
                 <h1>Create Project</h1>
                 <form>
                     <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">Name</label>
-                      <div className="col-sm-9">
+                      <label className="col-sm-2 col-form-label">Name</label>
+                      <div className="col-sm-10">
                         <input type="text" name="name" value={this.state.project.name} onChange={this.handleChange} />
                       </div>
                     </div>
 
                     <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">Description</label>
-                      <div className="col-sm-9">
+                      <label className="col-sm-2 col-form-label">Description</label>
+                      <div className="col-sm-10">
                         <input type="text" name="description" value={this.state.project.description} onChange={this.handleChange} />
                       </div>
                     </div>
