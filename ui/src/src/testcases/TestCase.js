@@ -82,6 +82,7 @@ class TestCase extends SubComponent {
     componentWillReceiveProps(nextProps) {
       if (nextProps.testcase){
         this.state.testcase = nextProps.testcase;
+        this.state.loading = false;
       } else if(nextProps.testcaseId){
         this.projectId = nextProps.projectId;
         this.getTestCase(nextProps.projectId, nextProps.testcaseId);
