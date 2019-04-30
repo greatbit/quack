@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
 import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
@@ -6,6 +7,8 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import * as ReactD3 from 'react-d3-components';
+
 
 import $ from 'jquery';
 
@@ -18,10 +21,17 @@ global.jQuery = $;
 require('gijgo/js/gijgo.min.js');
 require('gijgo/css/gijgo.min.css');
 
+var PieChart = ReactD3.PieChart;
+
 class Launch extends SubComponent {
 
     state = {
-        launch: {},
+        launch: {
+            launchStats: {
+                statusCounters: {}
+            },
+            testSuite: {}
+        },
         selectedTestCase: {
             uuid: null
         },
@@ -37,6 +47,7 @@ class Launch extends SubComponent {
             this.state.selectedTestCase = {uuid: this.props.match.params.testcaseUuid};
         }
         this.state.projectId = this.props.match.params.project;
+        this.showLaunchStats = this.showLaunchStats.bind(this);
     }
 
     componentDidMount() {
@@ -142,9 +153,22 @@ class Launch extends SubComponent {
         }.bind(this))
     }
 
+    showLaunchStats(event){
+        this.state.selectedTestCase.id = null;
+        this.setState(this.state);
+    }
+
     render() {
         return (
           <div>
+              <div>
+                <h3>
+                    <Link to={'/' + this.state.projectId + '/launch/' + this.state.launch.id} onClick={this.showLaunchStats}>
+                        {this.state.launch.name}
+                    </Link>
+                </h3>
+
+              </div>
               <div className="row">
 
                   <div className='sweet-loading'>
@@ -175,6 +199,44 @@ class Launch extends SubComponent {
                                 callback={this.onTestcaseStateChanged}
                             />
                       }
+                      {!this.state.selectedTestCase.id &&
+                              <div>
+                               {this.state.launch.testSuite.id &&
+                                <div className="row">
+                                    <div className="col-4">
+                                        <Link to={'/' + this.state.projectId + '/testcases?testSuite=' + this.state.launch.testSuite.id} >
+                                            {this.state.launch.testsuite.name}
+                                        </Link>
+                                    </div>
+                                </div>
+                                }
+                                <div className="row">
+                                    <div className="col-4">
+                                        Created at: {Utils.timeToDate(this.state.launch.createdTime)}
+                                    </div>
+                                    <div className="col-4">
+                                        Started at: {Utils.timeToDate(this.state.launch.startTime)}
+                                    </div>
+                                    <div className="col-4">
+                                        Finished at: {Utils.timeToDate(this.state.launch.finishTime)}
+                                    </div>
+                                </div>
+                                <div className="progress">
+                                  <div class="progress-bar progress-bar-striped" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}>
+                                    {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}
+                                  </div>
+                                  <div class="progress-bar bg-success" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.PASSED, this.state.launch.launchStats.total)}>
+                                    {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.PASSED, this.state.launch.launchStats.total)}
+                                  </div>
+                                  <div class="progress-bar bg-danger" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.FAILED, this.state.launch.launchStats.total)}>
+                                    {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.FAILED, this.state.launch.launchStats.total)}
+                                  </div>
+                                  <div class="progress-bar bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}>
+                                    {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}
+                                  </div>
+                                </div>
+                              </div>
+                        }
                   </div>
                 </div>
           </div>
@@ -183,4 +245,4 @@ class Launch extends SubComponent {
 
 }
 
-export default Launch;
+export default withRouter(Launch);

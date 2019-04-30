@@ -120,3 +120,14 @@ export function onSuccessMessage(message){
         $("#success-message-text").html("");
      });
 }
+
+export function getProgressBarStyle(value, total){
+    return {width:  (value * 100) / total + '%'};
+}
+
+export function getProgressBarNumber(value, total){
+    if (!value || value == 0 || (value * 100) / total < 2) {
+        return  "";
+    }
+    return value;
+}
