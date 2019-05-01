@@ -261,7 +261,7 @@ class TestCasesFilter extends Component {
                     </div>
                 </div>
                 <div className="modal fade" id="launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
-                    <LaunchForm filter={this.state.testSuite.filter} launch={this.state.createdLaunch}/>
+                    <LaunchForm launch={this.state.createdLaunch} testSuite={this.state.testSuite}/>
                 </div>
 
                 <div className="modal fade" id="suite-modal" tabIndex="-1" role="dialog" aria-labelledby="suiteLabel" aria-hidden="true">

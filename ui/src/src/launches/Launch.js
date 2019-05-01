@@ -202,15 +202,16 @@ class Launch extends SubComponent {
                       {!this.state.selectedTestCase.id &&
                               <div>
                                {this.state.launch.testSuite.id &&
-                                <div className="row">
+                                <div className="row launch-summary-block">
+                                    <div className="col-2">Test Suite:</div>
                                     <div className="col-4">
                                         <Link to={'/' + this.state.projectId + '/testcases?testSuite=' + this.state.launch.testSuite.id} >
-                                            {this.state.launch.testsuite.name}
+                                            {this.state.launch.testSuite.name}
                                         </Link>
                                     </div>
                                 </div>
                                 }
-                                <div className="row">
+                                <div className="row launch-summary-block">
                                     <div className="col-4">
                                         Created at: {Utils.timeToDate(this.state.launch.createdTime)}
                                     </div>
@@ -221,7 +222,7 @@ class Launch extends SubComponent {
                                         Finished at: {Utils.timeToDate(this.state.launch.finishTime)}
                                     </div>
                                 </div>
-                                <div className="progress">
+                                <div className="progress launch-summary-block">
                                   <div class="progress-bar progress-bar-striped" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}
                                   </div>

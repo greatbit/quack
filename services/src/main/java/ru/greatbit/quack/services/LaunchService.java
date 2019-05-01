@@ -28,6 +28,9 @@ public class LaunchService extends BaseService<Launch> {
     @Autowired
     private TestCaseService testCaseService;
 
+    @Autowired
+    private TestSuiteService testSuiteSerbice;
+
     @Override
     protected CommonRepository<Launch> getRepository() {
         return repository;
@@ -51,7 +54,7 @@ public class LaunchService extends BaseService<Launch> {
     @Override
     protected void beforeCreate(Session session, String projectId, Launch launch) {
         if (launch.getTestSuite() != null && !isEmpty(launch.getTestSuite().getId())){
-            fillLaunchBySuite(launch);
+            fillLaunchBySuite(session, projectId, launch);
         } else if ( launch.getTestSuite() != null && launch.getTestSuite().getFilter() != null){
             fillLaunchByFilter(session, projectId, launch);
         }
@@ -96,10 +99,11 @@ public class LaunchService extends BaseService<Launch> {
             launchStats.getStatusCounters().put(testCase.getLaunchStatus(), counter+1);
         });
     }
-    
-    private void fillLaunchByFilter(Session session, String projectId, Launch launch) {
+
+    private Launch fillLaunchByFilter(Session session, String projectId, Launch launch) {
         TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, (TestcaseFilter) launch.getTestSuite().getFilter());
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
+        return launch;
     }
 
     private LaunchTestCaseTree convertToLaunchTestCases(TestCaseTree tcTree){
@@ -128,8 +132,16 @@ public class LaunchService extends BaseService<Launch> {
         return launchTestCaseTree;
     }
 
-    private void fillLaunchBySuite(Launch launch) {
-
+    private Launch fillLaunchBySuite(Session session, String projectId, Launch launch) {
+        if (launch.getTestSuite() == null || launch.getTestSuite().getId() == null) {
+            return launch;
+        }
+        TestSuite testSuite = testSuiteSerbice.findOne(session, projectId, launch.getTestSuite().getId());
+        if (testSuite == null) {
+            return launch;
+        }
+        launch.setTestSuite(testSuite);
+        return fillLaunchByFilter(session, projectId, launch);
     }
 
     private LaunchTestCase findLaunchTestCaseInTree(LaunchTestCaseTree tree, String uuid){

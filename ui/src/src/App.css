@@ -197,3 +197,7 @@ h5:hover .edit-icon {
     display: none;
     float: right;
 }
+
+.launch-summary-block {
+     margin-bottom: 10px;
+}

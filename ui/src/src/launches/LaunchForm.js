@@ -43,8 +43,8 @@ class LaunchForm extends SubComponent {
       }
 
     componentWillReceiveProps(nextProps) {
-      if(nextProps.filter){
-        this.state.launch.testSuite.filter = nextProps.filter;
+      if(nextProps.testSuite){
+          this.state.launch.testSuite = nextProps.testSuite;
       }
       if(nextProps.launch && nextProps.launch.id){
           this.state.launch = nextProps.launch;
