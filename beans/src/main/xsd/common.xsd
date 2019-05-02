@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="urn:beans.quack.greatbit.ru"
-           targetNamespace="urn:beans.quack.greatbit.ru"
+           xmlns="urn:beans.quack.com"
+           targetNamespace="urn:beans.quack.com"
            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
            xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
            jaxb:extensionBindingPrefixes="inheritance"

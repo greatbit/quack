@@ -10,7 +10,7 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <context:component-scan base-package="ru.greatbit.quack, ru.greatbit.whoru" />
+    <context:component-scan base-package="com.quack, ru.greatbit.whoru"/>
 
     <bean id="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
         <property name="ignoreResourceNotFound" value="true"/>
@@ -23,7 +23,7 @@
         </property>
     </bean>
 
-    <mongo:repositories base-package="ru.greatbit.quack.dal" repository-impl-postfix="CustomImpl"/>
+    <mongo:repositories base-package="com.quack.dal" repository-impl-postfix="CustomImpl"/>
 
     <mongo:mongo-client id="mongo" replica-set="${mongo.replicaSet}">
         <mongo:client-options

@@ -14,7 +14,7 @@
     <import resource="classpath*:dal-context.xml"/>
 
     <bean id="embedMongo" class="ru.yandex.qatools.embed.service.MongoEmbeddedService" init-method="start">
-        <constructor-arg name="replicaSet" value="localhost:37017"/>
+        <constructor-arg name="replicaSet" value="localhost:37027"/>
         <constructor-arg name="mongoDatabaseName" value="test"/>
     </bean>
 

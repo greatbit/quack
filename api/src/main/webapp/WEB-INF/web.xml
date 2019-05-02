@@ -16,7 +16,7 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>ru.greatbit.quack.api.Application</param-value>
+            <param-value>com.quack.api.Application</param-value>
         </init-param>
         <load-on-startup>0</load-on-startup>
     </servlet>
