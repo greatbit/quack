@@ -15,6 +15,7 @@
         <module>api</module>
         <module>ui</module>
         <module>jira-tracker</module>
+        <module>assembly</module>
     </modules>
 
     <name>quack System</name>
@@ -54,7 +55,7 @@
         <camel.version>2.18.3</camel.version>
         <swagger.version>1.5.10</swagger.version>
         <jaxb.version>0.11.1</jaxb.version>
-        <whoru.version>1.0-SNAPSHOT</whoru.version>
+        <whoru.version>1.1</whoru.version>
         <retrofit.version>2.3.0</retrofit.version>
         <okhttp.version>3.8.0</okhttp.version>
     </properties>
