@@ -223,6 +223,9 @@ class TestCase extends SubComponent {
     }
 
     editAttributeKey(key, data, reRender){
+        if(this.state.projectAttributes.find(function(attribute){return attribute.id === data.value}) == undefined){
+            this.state.projectAttributes.push({id: data.value, name: data.value});
+        }
         this.state.attributesInEdit.delete(key);
         this.state.attributesInEdit.add(data.value);
         this.state.testcase.attributes[data.value] = this.state.testcase.attributes[key];
