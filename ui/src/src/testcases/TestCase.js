@@ -60,6 +60,7 @@ class TestCase extends SubComponent {
          this.onTestcaseUpdated = this.onTestcaseUpdated.bind(this);
          this.onCommentsCountChanged = this.onCommentsCountChanged.bind(this);
          this.removeTestcase = this.removeTestcase.bind(this);
+         this.getAttributes = this.getAttributes.bind(this);
       }
 
     componentDidMount() {
@@ -95,6 +96,7 @@ class TestCase extends SubComponent {
 
     onTestcaseUpdated(count){
         this.getTestCase(this.projectId, this.state.testcase.id);
+        this.getAttributes();
     }
 
     getTestCase(projectId, testcaseId){
@@ -140,8 +142,9 @@ class TestCase extends SubComponent {
             .then(response => {
                 this.state.testcase = response.data;
                 this.state.originalTestcase = this.state.testcase;
-                this.state.attributesInEdit.clear();
+                this.state.attributesInEdit.clear()
                 this.setState(this.state);
+                this.getAttributes();
                 if (!ignoreToggleEdit){
                     this.toggleEdit(fieldName, event, index);
                 }
@@ -149,6 +152,16 @@ class TestCase extends SubComponent {
         }).catch(error => {Utils.onErrorMessage("Couldn't save testcase: " + error.message)});
         event.preventDefault();
 
+    }
+
+    getAttributes(reRender){
+        axios
+          .get("/api/" + this.projectId + "/attribute")
+          .then(response => {
+               this.state.projectAttributes = response.data;
+               this.setState(this.state);
+          })
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: " + error.message)});
     }
 
     toggleEdit(fieldName, event, index){
@@ -491,7 +504,7 @@ class TestCase extends SubComponent {
                           if(attributeId && attributeId != "null"){
                             return (
                               <div className="row form-group attribute-block">
-                                  <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
+                                  <div id={"attributes-" + attributeId + "-display"} className="inplace-display col-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
                                     <div index={attributeId}>
                                       <div>
                                         <b>{this.getAttributeName(attributeId)}</b>
@@ -511,7 +524,7 @@ class TestCase extends SubComponent {
                                     </div>
                                   </div>
                                   {!this.state.readonly &&
-                                      <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
+                                      <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
                                         <form>
                                           <div index={attributeId}>
                                             {this.getAttributeName(attributeId)}
