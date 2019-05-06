@@ -19,8 +19,8 @@ public class CommentService extends BaseService<Comment> {
     }
 
     @Override
-    protected void beforeSave(Session session, Comment entity) {
-        super.beforeSave(session, entity);
+    protected void beforeSave(Session session, String projectId, Comment entity) {
+        super.beforeSave(session, projectId, entity);
         entity.setTextFormatted(entity.getText());
     }
 

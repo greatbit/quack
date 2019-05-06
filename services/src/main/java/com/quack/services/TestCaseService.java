@@ -1,6 +1,8 @@
 package com.quack.services;
 
 import com.quack.beans.Attachment;
+import com.quack.beans.Attribute;
+import com.quack.beans.Filter;
 import com.quack.beans.Issue;
 import com.quack.beans.IssuePriority;
 import com.quack.beans.IssueType;
@@ -32,6 +34,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
     @Autowired
     private SequencerService sequencerService;
+
+    @Autowired
+    private AttributeService attributeService;
 
     @Autowired
     private Storage storage;
@@ -103,6 +108,36 @@ public class TestCaseService extends BaseService<TestCase> {
         super.beforeCreate(session, projectId, entity);
         Sequencer sequencer = sequencerService.increment(projectId);
         entity.setId(Long.toString(sequencer.getIndex()));
+    }
+
+    @Override
+    protected void beforeSave(Session session, String projectId, TestCase entity) {
+        super.beforeSave(session, projectId, entity);
+        createMissingAttributes(session, projectId, entity);
+    }
+
+    private TestCase createMissingAttributes(Session session, String projectId, TestCase testCase) {
+        Filter attributeFilter = new Filter().withIncludedField("id");
+        List<Attribute> attributes = attributeService.findFiltered(session, projectId, attributeFilter);
+        if (attributes.size() == 0) {
+            return testCase;
+        }
+
+        Set<String> attributeKeys = attributes.stream().map(Attribute::getId).collect(Collectors.toSet());
+        Map<String, Set<String>> newAttributes = new HashMap<>();
+        testCase.getAttributes().entrySet().forEach(attribute -> {
+            if (!attributeKeys.contains(attribute.getKey())) {
+                Attribute newAttribute = attributeService.create(session, projectId,
+                        new Attribute().withValues(attribute.getValue()).withName(attribute.getKey())
+                );
+                newAttributes.put(newAttribute.getId(), attribute.getValue());
+            } else {
+                newAttributes.put(attribute.getKey(), attribute.getValue());
+            }
+        });
+        testCase.getAttributes().clear();
+        testCase.getAttributes().putAll(newAttributes);
+        return testCase;
     }
 
     public TestCase uploadAttachment(Session userSession, String projectId, String testcaseId, InputStream uploadedInputStream, String fileName, long size) throws IOException {

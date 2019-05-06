@@ -19,8 +19,8 @@ public class TestSuiteService extends BaseService<TestSuite> {
     }
 
     @Override
-    protected void beforeSave(Session session, TestSuite testSuite) {
-        super.beforeSave(session, testSuite);
+    protected void beforeSave(Session session, String projectId, TestSuite testSuite) {
+        super.beforeSave(session, projectId, testSuite);
         if (testSuite.getFilter() != null) {
             testSuite.getFilter().setLimit(0);
             testSuite.getFilter().setSkip(0);

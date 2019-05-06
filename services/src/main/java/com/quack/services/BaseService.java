@@ -60,7 +60,7 @@ public abstract class BaseService<E extends Entity> {
                     format("User %s can't read entity %s", session.getPerson().getId(), id)
             );
         }
-        return beforeReturn(session, entity);
+        return beforeReturn(session, projectId, entity);
     }
 
     public E save(Session user, String projectId, E entity){
@@ -86,14 +86,14 @@ public abstract class BaseService<E extends Entity> {
 
 
     public void delete(Session session, String projectId, String id){
-        beforeDelete(session, id);
+        beforeDelete(session, projectId, id);
         if (!userCanDelete(session, projectId, id)){
             throw new EntityAccessDeniedException(
                     format("User %s can't delete entity %s", session.getPerson().getId(), id)
             );
         }
         getRepository().delete(projectId, id);
-        afterDelete(session, id);
+        afterDelete(session, projectId, id);
     }
 
     public long count(Session session, String projectId, Filter filter){
@@ -140,17 +140,31 @@ public abstract class BaseService<E extends Entity> {
         entity.setCreatedTime(System.currentTimeMillis());
         entity.setCreatedBy(session.getPerson().getId());
     }
-    protected void afterCreate(Session session, E entity){}
-    protected void beforeUpdate(Session session, E entity){}
-    protected void afterUpdate(Session session, E entity){}
-    protected void beforeSave(Session session, E entity){
+
+    protected void afterCreate(Session session, String projectId, E entity) {
+    }
+
+    protected void beforeUpdate(Session session, String projectId, E entity) {
+    }
+
+    protected void afterUpdate(Session session, String projectId, E entity) {
+    }
+
+    protected void beforeSave(Session session, String projectId, E entity) {
         entity.setLastModifiedTime(System.currentTimeMillis());
         entity.setLastModifiedBy(session.getLogin());
     }
-    protected void afterSave(Session session, E entity){}
-    protected void beforeDelete(Session session, String id){}
-    protected void afterDelete(Session session, String id){}
-    protected E beforeReturn(Session session, E entity) {
+
+    protected void afterSave(Session session, String projectId, E entity) {
+    }
+
+    protected void beforeDelete(Session session, String projectId, String id) {
+    }
+
+    protected void afterDelete(Session session, String projectId, String id) {
+    }
+
+    protected E beforeReturn(Session session, String projectId, E entity) {
         return entity;
     }
 
@@ -165,7 +179,7 @@ public abstract class BaseService<E extends Entity> {
             throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "CREATE"));
         }
         entity = doSave(session, projectId, entity);
-        afterCreate(session, entity);
+        afterCreate(session, projectId, entity);
         return entity;
     }
 
@@ -180,7 +194,7 @@ public abstract class BaseService<E extends Entity> {
         ILock lock = hazelcastInstance.getLock(entity.getClass()+ entity.getId());
         try{
             lock.lock(lockTtl, TimeUnit.MINUTES);
-            beforeUpdate(session, entity);
+            beforeUpdate(session, projectId, entity);
             E savedEntity = findOne(session, projectId, entity.getId());
             if (savedEntity != null){
                 if (savedEntity.getLastModifiedTime() > entity.getLastModifiedTime()){
@@ -189,7 +203,7 @@ public abstract class BaseService<E extends Entity> {
                 entity = (E) convector.transform(savedEntity, entity);
             }
             entity = doSave(session, projectId, entity);
-            afterUpdate(session, entity);
+            afterUpdate(session, projectId, entity);
             return entity;
         } finally {
             lock.unlock();
@@ -197,10 +211,10 @@ public abstract class BaseService<E extends Entity> {
     }
 
     private E doSave(Session session, String projectId, E entity){
-        beforeSave(session, entity);
+        beforeSave(session, projectId, entity);
         if (validateEntity(entity)){
             entity = getRepository().save(projectId, entity);
-            afterSave(session, entity);
+            afterSave(session, projectId, entity);
             return entity;
         } else throw new EntityValidationException(getAccessDeniedMessage(session, entity, "SAVE"));
     }
@@ -209,6 +223,10 @@ public abstract class BaseService<E extends Entity> {
         String login = session != null && session.getPerson() != null ? session.getPerson().getId() : "unknown";
         String entId = ent != null && ent.getId() != null ? ent.getId().toString() : "new entity";
         return format("User %s doesn't have %s permissions on %s", login, action, entId);
+    }
+
+    protected boolean exists(String projectId, String entityId) {
+        return getRepository().exists(projectId, entityId);
     }
 
 }

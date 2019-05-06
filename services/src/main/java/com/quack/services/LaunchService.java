@@ -70,8 +70,8 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     @Override
-    protected void beforeSave(Session session, Launch launch) {
-        super.beforeSave(session, launch);
+    protected void beforeSave(Session session, String projectId, Launch launch) {
+        super.beforeSave(session, projectId, launch);
         updateLaunchStatus(launch);
     }
 
