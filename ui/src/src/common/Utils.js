@@ -8,24 +8,32 @@ export function intDiv(val, by){
 }
 
 export function parseTree(testcasesTree){
-    return getTreeNode(testcasesTree).children || [];
+    return getTreeNode(testcasesTree, []).children || [];
 }
 
-export function getTreeNode(node){
+export function getTreeNode(node, parentsToUpdate){
     var resultNode = {text: node.title, isLeaf: false, id: node.id, uuid: node.uuid};
+    parentsToUpdate.push(resultNode);
     if (node.testCases && node.testCases.length > 0){
-        resultNode.children = node.testCases.map(function(testCase){
-            return {
+        resultNode.children = [];
+        node.testCases.forEach(function(testCase){
+            resultNode.children.push({
                 text: testCase.name,
                 id: testCase.id,
                 uuid: testCase.uuid,
                 isLeaf: true,
                 statusUrl: getStatusUrl(testCase)
-            }
+            });
+            parentsToUpdate.forEach(function(parent){
+                if (!parent[testCase.launchStatus]){
+                    parent[testCase.launchStatus] = 0;
+                }
+                parent[testCase.launchStatus] = parent[testCase.launchStatus] + 1;
+            })
         })
     }
     if (node.children && node.children.length > 0){
-        resultNode.children = node.children.map(function(child){return getTreeNode(child)});
+        resultNode.children = node.children.map(function(child){return getTreeNode(child, parentsToUpdate.slice(0))});
     }
     return resultNode;
 }

@@ -7,7 +7,6 @@ import com.quack.beans.LaunchTestCase;
 import com.quack.beans.LaunchTestCaseTree;
 import com.quack.beans.TestCaseTree;
 import com.quack.beans.TestSuite;
-import com.quack.beans.TestcaseFilter;
 import com.quack.services.errors.EntityAccessDeniedException;
 import com.quack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +107,7 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private Launch fillLaunchByFilter(Session session, String projectId, Launch launch) {
-        TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, (TestcaseFilter) launch.getTestSuite().getFilter());
+        TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, launch.getTestSuite().getFilter());
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
         return launch;
     }
