@@ -29,6 +29,8 @@ export function getTreeNode(node, parentsToUpdate){
                     parent[testCase.launchStatus] = 0;
                 }
                 parent[testCase.launchStatus] = parent[testCase.launchStatus] + 1;
+                parent.TOTAL = (parent.TOTAL || 0) + 1;
+                parent.statusUrl = getNodeStatusUrl(parent);
             })
         })
     }
@@ -56,6 +58,26 @@ export function getTestCaseFromTree(id, head, matcher){
                 find(function(child){return child !== undefined})
     }
     return undefined;
+}
+
+
+export function getNodeStatusUrl(node){
+    if ((node.FAILED || 0) > 0){
+        return '/images/fail.png';
+    }
+    if ((node.BROKEN || 0) > 0){
+        return '/images/broken.png';
+    }
+    if ((node.RUNNING || 0) > 0){
+        return '/images/running.png';
+    }
+    if ((node.PASSED || 0) > 0 && node.PASSED == node.TOTAL){
+        return '/images/passed.png';
+    }
+    if ((node.SKIPPED || 0) == node.TOTAL){
+        return '/images/skipped.png';
+    }
+    return '/images/1px.png';
 }
 
 export function getStatusUrl(testCase){
