@@ -60,6 +60,20 @@ export function getTestCaseFromTree(id, head, matcher){
     return undefined;
 }
 
+export function getNodeFromDataSource(id, head){
+    if(!head){
+        head = this.state.testcasesTree;
+    }
+    if (head.id == id){
+        return head;
+    } else {
+        return (head.children || []).
+                map(function(child){return getNodeFromDataSource(id, child)}.bind(this)).
+                find(function(child){return child !== undefined})
+    }
+    return undefined;
+}
+
 
 export function getNodeStatusUrl(node){
     if ((node.FAILED || 0) > 0){

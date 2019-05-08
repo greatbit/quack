@@ -119,10 +119,20 @@ class Launch extends SubComponent {
     }
 
     onTestcaseStateChanged(testcase){
-        var updatedTestCase = Utils.getTestCaseFromTree(testcase.uuid, this.state.launch.testCaseTree, function(testcase, id){return testcase.uuid === testcase.uuid} );
+        var updatedTestCase = Utils.getTestCaseFromTree(testcase.uuid, this.state.launch.testCaseTree, function(existingTestCase, id){return existingTestCase.uuid === testcase.uuid} );
         Object.assign(updatedTestCase, testcase);
         this.tree.dataSource = Utils.parseTree(this.state.launch.testCaseTree);
-        $("li[data-id='" + testcase.uuid + "']").find("img").attr("src", Utils.getStatusUrl(testcase));
+
+        var testCaseHtmlNode = $("li[data-id='" + testcase.uuid + "']").find("img");
+        testCaseHtmlNode.attr("src", Utils.getStatusUrl(testcase));
+
+        $(this.tree.getNodeById(testcase.uuid)[0]).parents('.list-group-item').each((num, node) => {
+                var nodeId = ((node.dataset || {}).id || "");
+                var dataNode = Utils.getNodeFromDataSource(nodeId, {children: this.tree.dataSource});
+                var htmlImageNode = $(node).find("img")[0];
+                var nodeImage = Utils.getNodeStatusUrl(dataNode);
+                $(htmlImageNode).attr("src", nodeImage);
+        }).bind(this);
     }
 
     checkUpdatedTestCases(){
