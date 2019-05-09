@@ -60,7 +60,7 @@ class LaunchForm extends SubComponent {
         let modalBody;
         if (this.state.launch.id){
             modalBody = <div className="modal-body" id="launch-created">
-                            Launch created
+                            <Link to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
                         </div>
         } else {
             modalBody =
@@ -91,7 +91,9 @@ class LaunchForm extends SubComponent {
 
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                    {!this.state.launch.id &&
                     <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create Launch</button>
+                    }
                   </div>
                 </div>
              </div>
