@@ -13,6 +13,13 @@ export function parseTree(testcasesTree){
 
 export function getTreeNode(node, parentsToUpdate){
     var resultNode = {text: node.title, isLeaf: false, id: node.id, uuid: node.uuid};
+    resultNode.TOTAL = 0;
+    resultNode.PASSED = 0;
+    resultNode.FAILED = 0;
+    resultNode.BROKEN = 0;
+    resultNode.SKIPPED = 0;
+    resultNode.RUNNING = 0;
+    resultNode.RUNNABLE = 0;
     parentsToUpdate.push(resultNode);
     if (node.testCases && node.testCases.length > 0){
         resultNode.children = [];
@@ -64,7 +71,7 @@ export function getNodeFromDataSource(id, head){
     if(!head){
         head = this.state.testcasesTree;
     }
-    if (head.id == id){
+    if (head.uuid == id){
         return head;
     } else {
         return (head.children || []).

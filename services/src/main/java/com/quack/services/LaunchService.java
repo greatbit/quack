@@ -131,7 +131,7 @@ public class LaunchService extends BaseService<Launch> {
         launchTestCaseTree.setTitle(tcTree.getTitle());
         launchTestCaseTree.setId(tcTree.getId());
         if (!tcTree.isIsLeaf()){
-            launchTestCaseTree.setUuid(tcTree.getId());
+            launchTestCaseTree.setUuid(tcTree.getId() + ":" + UUID.randomUUID().toString());
         }
         launchTestCaseTree.setCount(tcTree.getCount());
         launchTestCaseTree.setIsLeaf(tcTree.isIsLeaf());
