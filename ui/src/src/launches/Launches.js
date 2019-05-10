@@ -17,7 +17,7 @@ class Launches extends SubComponent {
         filter: {
             skip: 0,
             limit: 20,
-            orderby: "createdTime",
+            orderby: "id",
             orderdir: "DESC",
             includedFields: "name,launchStats,id,createdTime"
         },

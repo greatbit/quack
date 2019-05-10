@@ -92,7 +92,7 @@ class Launch extends SubComponent {
         this.tree = $("#tree").tree({
             primaryKey: 'uuid',
             uiLibrary: 'bootstrap4',
-            imageUrlField: 'statusUrl',
+            imageHtmlField: 'statusHtml',
             dataSource: Utils.parseTree(this.state.launch.testCaseTree)
         });
 
@@ -124,13 +124,13 @@ class Launch extends SubComponent {
         this.tree.dataSource = Utils.parseTree(this.state.launch.testCaseTree);
 
         var testCaseHtmlNode = $("li[data-id='" + testcase.uuid + "']").find("img");
-        testCaseHtmlNode.attr("src", Utils.getStatusUrl(testcase));
+        testCaseHtmlNode.attr("src", Utils.getStatusImg(testcase));
 
         $(this.tree.getNodeById(testcase.uuid)[0]).parents('.list-group-item').each((num, node) => {
                 var nodeId = ((node.dataset || {}).id || "");
                 var dataNode = Utils.getNodeFromDataSource(nodeId, {children: this.tree.dataSource});
                 var htmlImageNode = $(node).find("img")[0];
-                var nodeImage = Utils.getNodeStatusUrl(dataNode);
+                var nodeImage = Utils.getNodeStatusImg(dataNode);
                 $(htmlImageNode).attr("src", nodeImage);
         }).bind(this);
     }

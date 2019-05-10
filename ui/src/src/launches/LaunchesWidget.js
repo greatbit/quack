@@ -28,7 +28,7 @@ class LaunchesWidget extends SubComponent {
 
     getLaunches(){
         axios
-            .get("/api/" + this.projectId + "/launch?limit=" + this.limit)
+            .get("/api/" + this.projectId + "/launch?includedFields=name,id&orderby=id&orderdir=DESC&limit=" + this.limit)
             .then(response => {
                  this.state.launches = response.data;
                  this.state.loading = false;

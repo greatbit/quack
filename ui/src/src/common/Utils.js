@@ -29,7 +29,7 @@ export function getTreeNode(node, parentsToUpdate){
                 id: testCase.id,
                 uuid: testCase.uuid,
                 isLeaf: true,
-                statusUrl: getStatusUrl(testCase)
+                statusHtml: getStatusHtml(testCase)
             });
             parentsToUpdate.forEach(function(parent){
                 if (!parent[testCase.launchStatus]){
@@ -37,7 +37,7 @@ export function getTreeNode(node, parentsToUpdate){
                 }
                 parent[testCase.launchStatus] = parent[testCase.launchStatus] + 1;
                 parent.TOTAL = (parent.TOTAL || 0) + 1;
-                parent.statusUrl = getNodeStatusUrl(parent);
+                parent.statusHtml = getNodeStatusHtml(parent);
             })
         })
     }
@@ -82,7 +82,7 @@ export function getNodeFromDataSource(id, head){
 }
 
 
-export function getNodeStatusUrl(node){
+export function getNodeStatusImg(node){
     if ((node.FAILED || 0) > 0){
         return '/images/fail.png';
     }
@@ -101,7 +101,12 @@ export function getNodeStatusUrl(node){
     return '/images/1px.png';
 }
 
-export function getStatusUrl(testCase){
+export function getNodeStatusHtml(node){
+    return '<img src="' + getNodeStatusImg(node) + '" height="18" width="18"/>';
+}
+
+
+export function getStatusImg(testCase){
     if (testCase && testCase.launchStatus){
         switch (testCase.launchStatus) {
           case 'FAILED':
@@ -123,6 +128,10 @@ export function getStatusUrl(testCase){
         return '/images/1px.png';
     }
     return undefined;
+}
+
+export function getStatusHtml(testCase){
+    return '<img src="' + getStatusImg(testCase) + '" height="18" width="18"/>';
 }
 
 export function timeToDate(time) {
