@@ -77,7 +77,6 @@ class Launch extends SubComponent {
                     this.buildTree();
                  }
                  this.checkUpdatedTestCases();
-
         }).catch(error => {
             Utils.onErrorMessage("Couldn't get launch: " + error.message);
             this.state.loading = false;
@@ -101,7 +100,7 @@ class Launch extends SubComponent {
             this.props.history.push("/" + this.state.projectId + '/launch/' + this.state.launch.id + '/' + id);
             this.setState(this.state);
         }.bind(this));
-        if (this.state.selectedTestCase.uuid){
+        if (this.state.selectedTestCase && this.state.selectedTestCase.uuid){
             var node = this.tree.getNodeById(this.state.selectedTestCase.uuid);
             this.tree.select(node);
             this.state.launch.testSuite.filter.groups.forEach(function(groupId){
@@ -126,13 +125,17 @@ class Launch extends SubComponent {
         var testCaseHtmlNode = $("li[data-id='" + testcase.uuid + "']").find("img");
         testCaseHtmlNode.attr("src", Utils.getStatusImg(testcase));
 
-        $(this.tree.getNodeById(testcase.uuid)[0]).parents('.list-group-item').each((num, node) => {
-                var nodeId = ((node.dataset || {}).id || "");
-                var dataNode = Utils.getNodeFromDataSource(nodeId, {children: this.tree.dataSource});
-                var htmlImageNode = $(node).find("img")[0];
-                var nodeImage = Utils.getNodeStatusImg(dataNode);
-                $(htmlImageNode).attr("src", nodeImage);
-        }).bind(this);
+        var that = this;
+        if (testcase && testcase.uuid){
+            $(that.tree.getNodeById(testcase.uuid)[0]).parents('.list-group-item').each((num, node) => {
+                    var nodeId = ((node.dataset || {}).id || "");
+                    var dataNode = Utils.getNodeFromDataSource(nodeId, {children: that.tree.dataSource});
+                    var htmlImageNode = $(node).find("img")[0];
+                    var nodeImage = Utils.getNodeStatusImg(dataNode);
+                    $(htmlImageNode).attr("src", nodeImage);
+            });
+        }
+
     }
 
     checkUpdatedTestCases(){
@@ -209,7 +212,7 @@ class Launch extends SubComponent {
                                 callback={this.onTestcaseStateChanged}
                             />
                       }
-                      {!this.state.selectedTestCase || this.state.selectedTestCase.id &&
+                      {(!this.state.selectedTestCase || !this.state.selectedTestCase.id) &&
                               <div>
                                {this.state.launch.testSuite.id &&
                                 <div className="row launch-summary-block">
