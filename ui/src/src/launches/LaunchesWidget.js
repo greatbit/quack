@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import queryString from 'query-string';
+import qs from 'qs';
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';

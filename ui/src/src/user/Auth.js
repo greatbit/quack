@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import axios from "axios";
-import queryString from 'query-string';
+import qs from 'qs';
 
 class Auth extends Component {
     render() {
@@ -13,7 +13,7 @@ class Auth extends Component {
       }
 
     componentDidMount() {
-        var params = queryString.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search);
         axios
           .get("/api/user/login-redirect")
           .then(response => {

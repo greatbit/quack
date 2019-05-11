@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
-import queryString from 'query-string';
+import qs from 'qs';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';

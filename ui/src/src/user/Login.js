@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import axios from "axios";
-import queryString from 'query-string';
+import qs from 'qs';
 
 class Login extends Component {
 
@@ -29,7 +29,7 @@ class Login extends Component {
         axios.post('/api/user/login?login=' + this.state.login + '&password=' + this.state.password)
         .then(response => {
             this.onSessionChange(response.data);
-            var params = queryString.parse(this.props.location.search);
+            var params = qs.parse(this.props.location.search);
             var retpath = decodeURIComponent(params.retpath || "");
             window.location = decodeURI(retpath);
         })

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';
-import queryString from 'query-string';
+import qs from 'qs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
@@ -66,7 +66,7 @@ class TestCasesFilter extends Component {
     }
 
     componentDidMount(){
-        var params = queryString.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search);
 
         if (params.testSuite){
             axios

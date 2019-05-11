@@ -6,7 +6,7 @@ import TestCasesFilter from '../testcases/TestCasesFilter'
 import TestCase from '../testcases/TestCase'
 import axios from "axios";
 import $ from 'jquery';
-import queryString from 'query-string';
+import qs from 'qs';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 
@@ -56,7 +56,7 @@ class TestCases extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        var params = queryString.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search);
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
             this.setState(this.state);
@@ -93,7 +93,7 @@ class TestCases extends SubComponent {
      }
 
      onFilter(filter, onResponse){
-        var params = queryString.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search);
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
         }
