@@ -26,5 +26,5 @@ COPY assembly/quack.conf /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/quack.conf /etc/nginx/sites-enabled/quack.conf
 RUN nginx
 
-#CMD ["nginx", "&&", "java", "-Xbootclasspath/a:/etc/quack", "-jar", "/usr/quack/lib/jetty-runner.jar", "/usr/quack/quack.war"]
-CMD ["java", "-Xbootclasspath/a:/etc/quack", "-jar", "/usr/quack/lib/jetty-runner.jar", "/usr/quack/quack.war"]
+ENTRYPOINT ["java", "-Xbootclasspath/a:/etc/quack", "-jar", "/usr/quack/lib/jetty-runner.jar", "/usr/quack/quack.war"]
+
