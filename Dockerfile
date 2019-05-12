@@ -26,5 +26,9 @@ COPY assembly/quack.conf /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/quack.conf /etc/nginx/sites-enabled/quack.conf
 RUN nginx
 
-ENTRYPOINT ["java", "-Xbootclasspath/a:/etc/quack", "-jar", "/usr/quack/lib/jetty-runner.jar", "/usr/quack/quack.war"]
+#Startup
+RUN mkdir -p /usr/quack/bin
+COPY assembly/startup.sh /usr/quack/bin
+
+ENTRYPOINT ["sh", "/usr/quack/bin/startup.sh"]
 
