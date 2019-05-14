@@ -38,7 +38,7 @@ class LaunchForm extends SubComponent {
         .then(response => {
             this.state.launch = response.data;
             this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save launch: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save launch: " + error.response.data.message)});
         event.preventDefault();
       }
 

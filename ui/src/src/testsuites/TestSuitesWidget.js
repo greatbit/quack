@@ -37,7 +37,7 @@ class TestSuitesWidget extends SubComponent {
                  this.state.loading = false;
                  this.setState(this.state);
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't save testsuites: " + error.message);
+            Utils.onErrorMessage("Couldn't save testsuites: " + error.response.data.message);
             this.state.loading = false;
             this.setState(this.state);
         });

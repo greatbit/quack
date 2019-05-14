@@ -47,7 +47,7 @@ class ProjectSettings extends SubComponent {
             this.state.originalProject = this.state.project;
             this.refreshGroupsToDisplay();
             this.setState(this.state);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.response.data.message)});
      }
 
      getGroups(literal, callback){
@@ -79,7 +79,7 @@ class ProjectSettings extends SubComponent {
                 this.toggleEdit(name);
                 this.refreshGroupsToDisplay();
                 this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)});
         event.preventDefault();
     }
 

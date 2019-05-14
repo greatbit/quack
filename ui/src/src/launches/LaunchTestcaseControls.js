@@ -36,7 +36,7 @@ class LaunchTestcaseControls extends Component {
                 this.setState(this.state);
                 this.callback(this.state.testcase);
 
-        }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: " + error.response.data.message)});
         event.preventDefault();
 
     }

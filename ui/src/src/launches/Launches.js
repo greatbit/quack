@@ -68,7 +68,7 @@ class Launches extends SubComponent {
                  this.state.loading = false;
                  this.setState(this.state);
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't get launches: " + error.message);
+            Utils.onErrorMessage("Couldn't get launches: " + error.response.data.message);
             this.state.loading = false;
             this.setState(this.state);
         });

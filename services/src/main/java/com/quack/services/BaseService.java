@@ -70,7 +70,8 @@ public abstract class BaseService<E extends Entity> {
             );
         }
         return isEmpty(entity.getId()) ?
-                create(user, projectId, entity) : update(user, projectId, entity, (origEnt, newEnt) -> newEnt);
+                create(user, projectId, entity) :
+                update(user, projectId, entity, (origEnt, newEnt) -> newEnt);
     }
 
     public Collection<E> save(Session user, String projectId, Collection<E> entities){

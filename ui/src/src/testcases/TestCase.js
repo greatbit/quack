@@ -110,7 +110,7 @@ class TestCase extends SubComponent {
             this.setState(this.state);
           })
           .catch(error => {
-            Utils.onErrorMessage("Couldn't fetch testcase: " + error.message);
+            Utils.onErrorMessage("Couldn't fetch testcase: " + error.response.data.message);
             this.state.loading = false;
             this.setState(this.state);
           });
@@ -149,7 +149,7 @@ class TestCase extends SubComponent {
                     this.toggleEdit(fieldName, event, index);
                 }
 
-        }).catch(error => {Utils.onErrorMessage("Couldn't save testcase: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save testcase: " + error.response.data.message)});
         event.preventDefault();
 
     }
@@ -161,7 +161,7 @@ class TestCase extends SubComponent {
                this.state.projectAttributes = response.data;
                this.setState(this.state);
           })
-          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: " + error.message)});
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: " + error.response.data.message)});
     }
 
     toggleEdit(fieldName, event, index){
@@ -296,7 +296,7 @@ class TestCase extends SubComponent {
         axios.delete('/api/' + this.projectId + '/testcase/' + this.state.testcase.id)
             .then(response => {
                 window.location.href = window.location.href.replace("testcase=" + this.state.testcase.id, "")
-        }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: " + error.response.data.message)});
     }
 
     render() {

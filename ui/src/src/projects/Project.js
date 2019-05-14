@@ -32,7 +32,7 @@ class Project extends SubComponent {
               project: response.data
             });
             this.setState(newState);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.response.data.message)});
      }
 
 

@@ -80,7 +80,7 @@ class TestCasesFilter extends Component {
                    this.setState(this.state);
                    this.props.onFilter(this.state.testSuite.filter);
               })
-              .catch(error => {Utils.onErrorMessage("Couldn't fetch testsuite: " + error.message)});
+              .catch(error => {Utils.onErrorMessage("Couldn't fetch testsuite: " + error.response.data.message)});
         } else {
             if (params.groups){
                 if(!Array.isArray(params.groups)){
@@ -191,7 +191,7 @@ class TestCasesFilter extends Component {
                 this.setState(this.state);
                 $("#suite-modal").modal('toggle');
                 this.props.history.push('/' + this.props.match.params.project + '/testcases?testSuite=' + this.state.testSuite.id)
-            }).catch(error => {Utils.onErrorMessage("Couldn't save testsuite: " + error.message)});
+            }).catch(error => {Utils.onErrorMessage("Couldn't save testsuite: " + error.response.data.message)});
         event.preventDefault();
     }
 

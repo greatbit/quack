@@ -27,7 +27,7 @@ class Projects extends Component {
             });
             this.setState(newState);
           }).catch(error => {
-            Utils.onErrorMessage("Couldn't get projects: " + error.message);
+            Utils.onErrorMessage("Couldn't get projects: " + error.response.data.message);
             this.state.loading = false;
             this.setState(this.state);
           });

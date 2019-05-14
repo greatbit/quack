@@ -59,8 +59,8 @@ public class ProjectResource extends BaseResource<Project> {
             @ApiResponse(code = 200, message = "Created entity")
     })
     public Project create(@ApiParam(value = "Entity", required = true) Project entity) {
-        entity.setId(null);
-        return getService().save(getUserSession(), null, entity);
+        ProjectService service = (ProjectService) getService();
+        return service.createProject(getUserSession(), entity);
     }
 
     @PUT

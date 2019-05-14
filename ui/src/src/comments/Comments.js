@@ -118,7 +118,7 @@ class Comments extends SubComponent {
                 this.commentToRemove = null;
                 $("#remove-comment-confirmation").modal("hide");
                 this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't delete a comment: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't delete a comment: " + error.response.data.message)});
     }
 
     handleSubmit(event){
@@ -130,7 +130,7 @@ class Comments extends SubComponent {
                     this.onCommentsNumberChanged(this.state.comments.length);
                 }
                 this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't create a comment: " + error.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't create a comment: " + error.response.data.message)});
         event.preventDefault();
     }
 
@@ -146,7 +146,7 @@ class Comments extends SubComponent {
                     this.state.comments[index] = response.data;
                     this.setState(this.state);
                     this.cancelEdit(index, event);
-            }).catch(error => {Utils.onErrorMessage("Couldn't update comment: " + error.message)});
+            }).catch(error => {Utils.onErrorMessage("Couldn't update comment: " + error.response.data.message)});
     }
 
 

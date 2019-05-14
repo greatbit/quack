@@ -26,6 +26,9 @@ class ProjectForm extends Component {
       handleChange(event) {
         var projectUpd = this.state.project;
         projectUpd[event.target.name] = event.target.value;
+        if (event.target.name == "name"){
+            projectUpd.id = this.normalizeId(event.target.value);
+        }
         const newState = Object.assign({}, this.state, {
           project: projectUpd
         });
@@ -35,8 +38,10 @@ class ProjectForm extends Component {
       handleSubmit(event) {
         axios.post('/api/project', this.state.project)
         .then(response => {
-            this.props.history.push('/projects/' + response.id);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.message)});
+            this.props.history.push('/projects/' + response.data.id);
+        }).catch((error) => {
+            Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)
+        });
         event.preventDefault();
       }
 
@@ -49,10 +54,15 @@ class ProjectForm extends Component {
                   project: response.data
                 });
                 this.setState(newState);
-              }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.message)});
+              }).catch(error => {
+                Utils.onErrorMessage("Couldn't get project: " + error.response.data.message);
+              });
         }
      }
 
+    normalizeId(id){
+        return id.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, "");
+    }
 
     render() {
         return (
@@ -63,6 +73,13 @@ class ProjectForm extends Component {
                       <label className="col-sm-2 col-form-label">Name</label>
                       <div className="col-sm-10">
                         <input type="text" name="name" value={this.state.project.name} onChange={this.handleChange} />
+                      </div>
+                    </div>
+
+                    <div className="form-group row">
+                      <label className="col-sm-2 col-form-label">Project ID</label>
+                      <div className="col-sm-10">
+                        <input type="text" name="id" value={this.state.project.id || ""} onChange={this.handleChange} />
                       </div>
                     </div>
 

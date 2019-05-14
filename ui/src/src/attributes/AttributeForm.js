@@ -52,7 +52,7 @@ class AttributeForm extends Component {
                 values: []
             }
             this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save attributes: " + error.message)});;
+        }).catch(error => {Utils.onErrorMessage("Couldn't save attributes: " + error.response.data.message)});;
         event.preventDefault();
       }
 
@@ -67,7 +67,7 @@ class AttributeForm extends Component {
                 values: []
             }
             this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't remove attribute: " + error.message)});;
+        }).catch(error => {Utils.onErrorMessage("Couldn't remove attribute: " + error.response.data.message)});;
         event.preventDefault();
       }
 
