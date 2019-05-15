@@ -17,7 +17,7 @@ class LaunchesWidget extends SubComponent {
     constructor(props) {
         super(props);
         this.limit = props.limit || 5;
-        this.projectId = props.projectId;
+        this.state.projectId = props.projectId;
         this.getLaunches = this.getLaunches.bind(this);
     }
 
@@ -26,9 +26,17 @@ class LaunchesWidget extends SubComponent {
         this.getLaunches();
     }
 
+    componentWillReceiveProps(nextProps) {
+        var nextProjectId = nextProps.projectId;
+        if(nextProjectId && this.state.projectId != nextProjectId){
+            this.state.projectId = nextProjectId;
+            this.getLaunches();
+        }
+     }
+
     getLaunches(){
         axios
-            .get("/api/" + this.projectId + "/launch?includedFields=name,id&orderby=id&orderdir=DESC&limit=" + this.limit)
+            .get("/api/" + this.state.projectId + "/launch?includedFields=name,id&orderby=id&orderdir=DESC&limit=" + this.limit)
             .then(response => {
                  this.state.launches = response.data;
                  this.state.loading = false;

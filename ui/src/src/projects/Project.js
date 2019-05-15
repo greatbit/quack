@@ -21,17 +21,31 @@ class Project extends SubComponent {
                  allowedGroups: []
              }
          };
+         this.getProject = this.getProject.bind(this);
+         this.onProjectChange = props.onProjectChange;
       }
 
     componentDidMount() {
         super.componentDidMount();
+        this.state.project.id = this.props.match.params.project;
+        this.getProject();
+    }
+
+     componentWillReceiveProps(nextProps) {
+        var nextProjectId = nextProps.match.params.project;
+        if(nextProjectId && this.state.project.id != nextProjectId){
+            this.state.project.id = nextProjectId;
+            this.onProjectChange(this.state.project.id);
+            this.getProject();
+        }
+     }
+
+     getProject(){
         axios
-          .get("/api/project/" + this.props.match.params.project)
+          .get("/api/project/" + this.state.project.id)
           .then(response => {
-            const newState = Object.assign({}, this.state, {
-              project: response.data
-            });
-            this.setState(newState);
+            this.state.project = response.data;
+            this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.response.data.message)});
      }
 
@@ -56,7 +70,7 @@ class Project extends SubComponent {
                             </span>
                           </div>
                           <div className="card-body">
-                            <TestSuitesWidget limit={11} projectId={this.props.match.params.project}/>
+                            <TestSuitesWidget limit={11} projectId={this.state.project.id}/>
                           </div>
                         </div>
                     </div>
@@ -68,7 +82,7 @@ class Project extends SubComponent {
                             </span>
                           </div>
                           <div className="card-body">
-                            <LaunchesWidget limit={5} projectId={this.props.match.params.project}/>
+                            <LaunchesWidget limit={5} projectId={this.state.project.id}/>
                           </div>
                         </div>
                     </div>

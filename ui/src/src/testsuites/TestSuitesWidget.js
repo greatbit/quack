@@ -18,10 +18,18 @@ class TestSuitesWidget extends SubComponent {
     constructor(props) {
         super(props);
         this.limit = props.limit || 5;
-        this.projectId = props.projectId;
+        this.state.projectId = props.projectId;
         this.getTestSuites = this.getTestSuites.bind(this);
         this.onFilter = this.onFilter.bind(this);
     }
+
+     componentWillReceiveProps(nextProps) {
+        var nextProjectId = nextProps.projectId;
+        if(nextProjectId && this.state.projectId != nextProjectId){
+            this.state.projectId = nextProjectId;
+            this.getTestSuites();
+        }
+     }
 
     componentDidMount() {
         super.componentDidMount();
@@ -30,7 +38,7 @@ class TestSuitesWidget extends SubComponent {
 
     getTestSuites(){
         axios
-            .get("/api/" + this.projectId + "/testsuite")
+            .get("/api/" + this.state.projectId + "/testsuite")
             .then(response => {
                  this.state.testSuites = response.data;
                  this.state.testSuitesToDisplay = this.state.testSuites.slice(0, this.limit);
