@@ -36,6 +36,7 @@ class ProjectSettings extends SubComponent {
          this.mapGroupsToView = this.mapGroupsToView.bind(this);
          this.toggleEdit = this.toggleEdit.bind(this);
          this.handleChange = this.handleChange.bind(this);
+         this.removeProject = this.removeProject.bind(this);
       }
 
     componentDidMount() {
@@ -81,6 +82,15 @@ class ProjectSettings extends SubComponent {
                 this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)});
         event.preventDefault();
+    }
+
+    removeProject(event){
+        axios.delete('/api/project/' + this.state.project.id)
+            .then(response => {
+                window.location.href = "/";
+        }).catch(error => {Utils.onErrorMessage("Couldn't delete project: " + error.response.data.message)});
+        event.preventDefault();
+
     }
 
     refreshGroupsToDisplay(){
@@ -155,6 +165,25 @@ class ProjectSettings extends SubComponent {
                 <div className="row">
                     <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
                 </div>
+
+                <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
+                <div className="modal fade" tabIndex="-1" role="dialog" id="remove-project-confirmation">
+                  <div className="modal-dialog" role="document">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <h5 className="modal-title">Remove Project</h5>
+                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div className="modal-body">Are you sure you want to remove Project?</div>
+                        <div className="modal-footer">
+                          <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
+                          <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeProject}>Remove Project</button>
+                        </div>
+                      </div>
+                   </div>
+               </div>
             </div>
         );
       }
