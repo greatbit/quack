@@ -36,7 +36,7 @@ class Header extends Component {
 
             });
         axios
-          .get("/api/project?includedFields=name,description,id")
+          .get("/api/project?includedFields=name,description,id,allowedGroups")
           .then(response => {
               this.state.projects = response.data;
               this.setState(this.state);
