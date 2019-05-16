@@ -1,5 +1,6 @@
 package com.quack.api.resources;
 
+import com.quack.api.utils.FilterUtils;
 import com.quack.beans.Filter;
 import com.quack.beans.Project;
 import com.quack.services.BaseService;
@@ -27,7 +28,7 @@ public class ProjectResource extends BaseResource<Project> {
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        return new Filter();
+        return FilterUtils.initFilter(hsr);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ProjectResource extends BaseResource<Project> {
             @ApiResponse(code = 200, message = "Successful operation")
     })
     public Project findOne(@ApiParam(value = "Entity Id", required = true) @PathParam("id") String id) {
-        return getService().findOne(getUserSession(), null, id);
+        return getService().findOne(getUserSession(), id, id);
     }
 
     @POST

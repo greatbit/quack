@@ -37,6 +37,7 @@ class ProjectSettings extends SubComponent {
          this.toggleEdit = this.toggleEdit.bind(this);
          this.handleChange = this.handleChange.bind(this);
          this.removeProject = this.removeProject.bind(this);
+         this.undelete = this.undelete.bind(this);
       }
 
     componentDidMount() {
@@ -80,6 +81,7 @@ class ProjectSettings extends SubComponent {
                 this.toggleEdit(name);
                 this.refreshGroupsToDisplay();
                 this.setState(this.state);
+                Utils.onSuccessMessage("Project Settings successfully saved");
         }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)});
         event.preventDefault();
     }
@@ -91,6 +93,11 @@ class ProjectSettings extends SubComponent {
         }).catch(error => {Utils.onErrorMessage("Couldn't delete project: " + error.response.data.message)});
         event.preventDefault();
 
+    }
+
+    undelete(event){
+        this.state.project.deleted = false;
+        this.submit(event);
     }
 
     refreshGroupsToDisplay(){
@@ -130,9 +137,18 @@ class ProjectSettings extends SubComponent {
             <div>
                 <div id="name">
                     <div id="name-display" className="inplace-display">
-                        <h1>{this.state.project.name}
-                            <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                        </h1>
+                        {this.state.project.deleted &&
+                            <h1>
+                                <s>{this.state.project.name}</s> - DELETED
+                                <button type="button" className="btn" onClick={this.undelete}>Undelete</button>
+                            </h1>
+                        }
+                        {!this.state.project.deleted &&
+                            <h1>
+                                {this.state.project.name}
+                                <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                            </h1>
+                        }
                     </div>
                     <div id="name-form" className="inplace-form" style={{display: 'none'}}>
                         <form>
@@ -162,10 +178,7 @@ class ProjectSettings extends SubComponent {
                                />
                     </div>
                 </div>
-                <div className="row">
-                    <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
-                </div>
-
+                <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
                 <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-project-confirmation">
                   <div className="modal-dialog" role="document">
@@ -179,7 +192,9 @@ class ProjectSettings extends SubComponent {
                         <div className="modal-body">Are you sure you want to remove Project?</div>
                         <div className="modal-footer">
                           <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
-                          <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeProject}>Remove Project</button>
+                          {!this.state.project.deleted &&
+                            <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeProject}>Remove Project</button>
+                          }
                         </div>
                       </div>
                    </div>

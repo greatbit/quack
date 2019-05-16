@@ -115,6 +115,9 @@ public abstract class BaseService<E extends Entity> {
             return true;
         }
         Project project = projectRepository.findOne(null, projectId);
+        if (project.isDeleted()) {
+            throw new EntityNotFoundException(format("Project %s does not exist", projectId));
+        }
         return project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains);
 
     }

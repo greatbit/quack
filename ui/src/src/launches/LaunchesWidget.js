@@ -23,7 +23,9 @@ class LaunchesWidget extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        this.getLaunches();
+        if (this.state.projectId){
+            this.getLaunches();
+        }
     }
 
     componentWillReceiveProps(nextProps) {

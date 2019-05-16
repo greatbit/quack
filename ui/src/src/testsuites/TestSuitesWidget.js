@@ -33,7 +33,10 @@ class TestSuitesWidget extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        this.getTestSuites();
+        if (this.state.projectId){
+            this.getTestSuites();
+        }
+
     }
 
     getTestSuites(){
@@ -45,7 +48,7 @@ class TestSuitesWidget extends SubComponent {
                  this.state.loading = false;
                  this.setState(this.state);
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't save testsuites: " + error.response.data.message);
+            Utils.onErrorMessage("Couldn't get testsuites: " + error.response.data.message);
             this.state.loading = false;
             this.setState(this.state);
         });

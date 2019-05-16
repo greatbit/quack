@@ -1,6 +1,5 @@
 package com.quack.services;
 
-import com.quack.services.errors.EntityAccessDeniedException;
 import com.quack.services.errors.EntityValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
