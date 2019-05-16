@@ -1,6 +1,7 @@
 import Moment from 'moment/min/moment.min.js';
 import * as UserSession  from '../user/UserSession';
 import $ from 'jquery';
+import qs from 'qs';
 
 
 export function intDiv(val, by){
@@ -190,4 +191,26 @@ export function getProgressBarNumber(value, total){
         return  "";
     }
     return value;
+}
+
+export function queryToFilter(locationSearch){
+    var params = qs.parse(locationSearch);
+    var filter = {};
+    filter.skip = params.skip || 0;
+    filter.limit = params.limit || 20;
+    if (params.from_createdTime){
+        filter.from_createdTime = params.from_createdTime;
+    }
+    if (params.to_createdTime){
+        filter.to_createdTime = params.to_createdTime;
+    }
+    if (params.like_name){
+        filter.like_name = params.like_name;
+    }
+    return filter;
+}
+
+export function filterToQuery(filter){
+    return Object.keys(filter).
+                map((key) => {return key + "=" + filter[key]}).join("&");
 }

@@ -7,8 +7,6 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
-import * as ReactD3 from 'react-d3-components';
-
 
 import $ from 'jquery';
 
@@ -20,8 +18,6 @@ global.jQuery = $;
 
 require('gijgo/js/gijgo.min.js');
 require('gijgo/css/gijgo.min.css');
-
-var PieChart = ReactD3.PieChart;
 
 class Launch extends SubComponent {
 

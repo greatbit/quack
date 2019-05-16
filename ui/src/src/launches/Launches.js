@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import qs from 'qs';
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import $ from 'jquery';
@@ -32,8 +31,6 @@ class Launches extends SubComponent {
 
     constructor(props) {
         super(props);
-        this.queryToFilter = this.queryToFilter.bind(this);
-        this.filterToQuery = this.filterToQuery.bind(this);
         this.getLaunches = this.getLaunches.bind(this);
         this.getPager = this.getPager.bind(this);
         this.handlePageChanged = this.handlePageChanged.bind(this);
@@ -46,7 +43,7 @@ class Launches extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        this.queryToFilter();
+        Utils.queryToFilter();
         this.getLaunches();
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);
@@ -62,7 +59,7 @@ class Launches extends SubComponent {
 
     getLaunches(){
         axios
-            .get("/api/" + this.props.match.params.project + "/launch?" + this.filterToQuery(this.state.filter))
+            .get("/api/" + this.props.match.params.project + "/launch?" + Utils.filterToQuery(this.state.filter))
             .then(response => {
                  this.state.launches = response.data;
                  this.state.loading = false;
@@ -77,34 +74,13 @@ class Launches extends SubComponent {
     getPager(){
         var countFilter = Object.assign({skip:0, limit:0}, this.state.filter);
         axios
-            .get("/api/" + this.props.match.params.project + "/launch/count?" + this.filterToQuery(countFilter))
+            .get("/api/" + this.props.match.params.project + "/launch/count?" + Utils.filterToQuery(countFilter))
             .then(response => {
                  this.state.pager.total = response.data;
                  this.state.pager.current = this.state.filter.skip / this.state.filter.limit;
                  this.state.pager.visiblePage = Math.min(response.data / this.state.pager.itemsOnPage + 1, this.state.pager.maxVisiblePage);
                  this.setState(this.state);
         }).catch(error => console.log(error));
-    }
-
-    queryToFilter(){
-        var params = qs.parse(this.props.location.search);
-        this.state.filter.skip = params.skip || 0;
-        this.state.filter.limit = params.limit || 20;
-        if (params.from_createdTime){
-            this.state.filter.from_createdTime = params.from_createdTime;
-        }
-        if (params.to_createdTime){
-            this.state.filter.to_createdTime = params.to_createdTime;
-        }
-        if (params.like_name){
-            this.state.filter.like_name = params.like_name;
-        }
-        this.setState(this.state);
-    }
-
-    filterToQuery(filter){
-        return Object.keys(filter).
-                    map((key) => {return key + "=" + filter[key]}).join("&");
     }
 
     handleFilterChange(fieldName, event, index){
@@ -142,7 +118,7 @@ class Launches extends SubComponent {
     }
 
     updateUrl(){
-        this.props.history.push("/" + this.props.match.params.project + '/launches?' + this.filterToQuery(this.state.filter));
+        this.props.history.push("/" + this.props.match.params.project + '/launches?' + Utils.filterToQuery(this.state.filter));
     }
 
     getProgressBar(launch){
