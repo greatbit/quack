@@ -1,0 +1,10 @@
+version: '3'
+services:
+  quack:
+    image: quack
+    ports:
+      - "80:80"
+    links:
+      - mongo
+  mongo:
+    image: mongo
