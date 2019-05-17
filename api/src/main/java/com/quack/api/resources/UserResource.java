@@ -34,6 +34,12 @@ public class UserResource extends BaseResource<User> {
     }
 
     @GET
+    @Path("/{login}")
+    public User getUser(@PathParam("login") String login) {
+        return service.findOne(getSession(), null, login);
+    }
+
+    @GET
     @Path("/session")
     public Session getSession() {
         return authProvider.getSession(request);

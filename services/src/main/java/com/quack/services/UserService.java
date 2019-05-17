@@ -22,7 +22,7 @@ public class UserService extends BaseService<User> {
 
     @Override
     protected boolean userCanRead(Session session, String projectId, User entity) {
-        return entity.getId().equals(session.getPerson().getId()) || session.isIsAdmin();
+        return true;
     }
 
     @Override
@@ -48,5 +48,10 @@ public class UserService extends BaseService<User> {
     @Override
     protected boolean userCanUpdate(Session session, String projectId, User entity) {
         return entity.getId().equals(session.getPerson().getId()) || session.isIsAdmin();
+    }
+
+    @Override
+    public User findOne(Session session, String projectId, String id) {
+        return super.findOne(session, projectId, id).withToken(null);
     }
 }

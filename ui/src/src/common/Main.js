@@ -14,6 +14,7 @@ import TestCaseForm from '../testcases/TestCaseForm'
 import TestCase from '../testcases/TestCase'
 import Auth from '../user/Auth'
 import Login from '../user/Login'
+import Profile from '../user/Profile'
 
 class Main extends Component {
 
@@ -44,6 +45,7 @@ class Main extends Component {
                   <Route exact path='/projects/new' component={ProjectForm}/>
 
                   <Route exact path='/auth' component={Auth}/>
+                  <Route exact path='/user/profile/:profileId' component={Profile}/>
                   <Route path='/login'
                       render={(props) => <Login {...props}  onProjectChange={this.onProjectChange.bind(this)}
                       onSessionChange={this.onSessionChange.bind(this)} /> }/>

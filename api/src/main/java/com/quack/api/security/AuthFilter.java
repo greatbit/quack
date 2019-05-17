@@ -71,7 +71,9 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
                                 withId(session.getPerson().getId()).
                                 withLogin(session.getPerson().getId()).
                                 withToken(session.getPerson().getToken()).
-                                withLastModifiedTime(System.currentTimeMillis())
+                                withLastModifiedTime(System.currentTimeMillis()).
+                                withFirstName(session.getPerson().getFirstName()).
+                                withLastName(session.getPerson().getLastName())
                 );
             }
             if (!isTokenAccessRequest(request))

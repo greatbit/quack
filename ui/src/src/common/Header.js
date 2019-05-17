@@ -120,7 +120,7 @@ class Header extends Component {
         if (this.state.session.id){
             profileContext = (
             <span>
-                <a className="dropdown-item" href="/user/profile">Profile</a>
+                <a className="dropdown-item" href={"/user/profile/" + this.state.session.login}>Profile</a>
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" href="#" onClick={this.logOut}>Log out</a>
             </span>
