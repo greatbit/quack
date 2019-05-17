@@ -43,7 +43,7 @@ class Launches extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        Utils.queryToFilter();
+        Utils.queryToFilter(this.props.location.search);
         this.getLaunches();
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);
@@ -132,15 +132,18 @@ class Launches extends SubComponent {
         )
     }
 
-
-
     render() {
         return (
             <div className="row">
               <div className="col-sm-3 launch-filter">
                 <form>
                   <div class="form-group">
-                    <label for="title"><h5>Name</h5></label>
+                    <span className="float-right">
+                        <Link to={'/' + this.props.match.params.project + '/launches/statistics?' + Utils.filterToQuery(this.state.filter)}>
+                            Statistics
+                        </Link>
+                    </span>
+                    <label for="title"><h5>Launch Name</h5></label>
                     <input type="text" class="form-control" id="name" name="name" aria-describedby="Launch title" placeholder="Launch title"
                         value={this.state.filter.like_name || ""} onChange={(e) => this.handleFilterChange("like_name", e)} />
                     <small id="titleHelp" class="form-text text-muted">Find by partly matching Launch title</small>
