@@ -23,9 +23,15 @@ Please note - the system is in active development state. Alpha version should be
 
 [More information on Wiki](https://github.com/greatbit/quack/wiki/QuAck)
 
-How to run
+How to run test server using docker
+==========
+1. Just run "docker-compose up" from the root folder of the project
+2. Go to localhost in the browser
+
+How to run on a standalone server
 ==========
 1. Install NGINX and add conf/quack.conf
-2. Run mongo docker run --name mongodb --restart always -p 27017:27017 -d mongo
+2. Run mongo, e.g.:
+   mongo docker run --name mongodb --restart always -p 27017:27017 -d mongo
 3. Place conf/quack.properties somewhere in the system (e.g. /etc/quack)
 4. Override boot classpath when running -Xbootclasspath/a:/etc/quack
