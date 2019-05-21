@@ -1,6 +1,7 @@
 package com.quack.api.resources;
 
 import com.quack.beans.Launch;
+import com.quack.beans.LaunchStatistics;
 import com.quack.beans.LaunchStatus;
 import com.quack.beans.LaunchTestCase;
 import com.quack.services.BaseService;
@@ -9,9 +10,11 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import java.util.Map;
 
 @Authenticable
 @Path("/{projectId}/launch")
@@ -31,9 +34,14 @@ public class LaunchResource extends BaseCrudResource<Launch> {
             @ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId,
             @ApiParam(value = "Launch Id", required = true) @PathParam("launchId") String launchId,
             @ApiParam(value = "Launch TestCase UUID", required = true) @PathParam("testcaseUUID") String testcaseUUID,
-            @ApiParam(value = "New Status", required = true) @PathParam("status") LaunchStatus status
-    ){
+            @ApiParam(value = "New Status", required = true) @PathParam("status") LaunchStatus status) {
         return service.updateLaunchTestCaseStatus(getUserSession(), projectId, launchId, testcaseUUID, status);
+    }
+
+    @GET
+    @Path("/statistics")
+    public Map<String, LaunchStatistics> getLaunchesStatistics(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) throws Exception {
+        return service.getLaunchesStatistics(getUserSession(), projectId, initFilter(request));
     }
 
 

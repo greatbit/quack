@@ -1,12 +1,15 @@
 package com.quack.services;
 
+import com.quack.beans.Filter;
 import com.quack.beans.Launch;
+import com.quack.beans.LaunchStatistics;
 import com.quack.beans.LaunchStats;
 import com.quack.beans.LaunchStatus;
 import com.quack.beans.LaunchTestCase;
 import com.quack.beans.LaunchTestCaseTree;
 import com.quack.beans.TestCaseTree;
 import com.quack.beans.TestSuite;
+import com.quack.dal.impl.DBUtils;
 import com.quack.services.errors.EntityAccessDeniedException;
 import com.quack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +18,15 @@ import com.quack.dal.CommonRepository;
 import com.quack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.quack.dal.impl.CommonRepositoryImpl.getCollectionName;
 import static java.lang.String.format;
+import static java.util.Collections.emptyMap;
 import static org.springframework.util.StringUtils.isEmpty;
 import static com.quack.beans.LaunchStatus.*;
 import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
@@ -36,6 +42,9 @@ public class LaunchService extends BaseService<Launch> {
 
     @Autowired
     private TestSuiteService testSuiteSerbice;
+
+    @Autowired
+    DBUtils dbUtils;
 
     @Override
     protected CommonRepository<Launch> getRepository() {
@@ -182,5 +191,13 @@ public class LaunchService extends BaseService<Launch> {
         if (!launchTestCase.getUsers().contains(userId)){
             launchTestCase.getUsers().add(userId);
         }
+    }
+
+    public Map<String, LaunchStatistics> getLaunchesStatistics(Session session, String projectId, Filter filter) throws Exception {
+        if (userCanReadProject(session, projectId)) {
+            return dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
+                    "launchStatsMap.js", "launchStatsReduce.js", filter, LaunchStatistics.class);
+        }
+        return emptyMap();
     }
 }
