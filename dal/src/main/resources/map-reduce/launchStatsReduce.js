@@ -20,17 +20,12 @@ function reduce(key, values) {
         result.launchTimes.lastStart = Math.max(result.launchTimes.lastStart, launch.launchTimes.lastStart);
         result.launchTimes.lastFinish = Math.max(result.launchTimes.lastFinish, launch.launchTimes.lastFinish);
 
-
         result.launchTimes.duration += launch.launchTimes.duration;
 
-
-        result.statuses.PASSED += launch.statuses.PASSED;
-        result.statuses.FAILED += launch.statuses.FAILED;
-        result.statuses.BROKEN += launch.statuses.BROKEN;
-        result.statuses.SKIPPED += launch.statuses.SKIPPED;
-        result.statuses.RUNNABLE += launch.statuses.RUNNABLE;
-        result.statuses.RUNNING += launch.statuses.RUNNING;
-        result.statuses.TOTAL += launch.statuses.TOTAL;
+        Object.keys(result.launchStats.statusCounters).forEach(function(key){
+            result.launchStats.statusCounters[key] += launch.launchStats.statusCounters[key];
+        })
+        result.launchStats.total += launch.launchStats.total;
 
         Object.keys(launch.users).forEach(function(user) {
             if(!result.users[user]) {

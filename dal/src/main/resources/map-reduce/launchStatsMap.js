@@ -27,7 +27,6 @@ function map() {
     this.totalCases = 0;
     traverseTree(this.testCaseTree, this);
 
-    this.launchStats.statusCounters.TOTAL = this.launchStats.total;
     var objectTiEmit = {
         launchCount: 1,
         casesCount: this.totalCases,
@@ -38,7 +37,7 @@ function map() {
             lastFinish: this.finishTime,
             idle: 0
         },
-        statuses: this.launchStats.statusCounters,
+        launchStats: this.launchStats,
         continuousExec: [{start: this.startTime, finish: this.finishTime}],
         users: this.users,
         startTime: this.startTime

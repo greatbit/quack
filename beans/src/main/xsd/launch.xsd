@@ -67,7 +67,6 @@
             <xs:element name="versionName" type="xs:string"/>
             <xs:element name="launchCount" type="xs:int"/>
             <xs:element name="launchTimes" type="LaunchTimes"/>
-            <xs:element name="statuses" type="StatusCounter"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -81,19 +80,5 @@
             <xs:element name="lastFinish" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
-
-    <xs:element name="statusCounter" type="StatusCounter"/>
-    <xs:complexType name="StatusCounter">
-        <xs:sequence>
-            <xs:element name="passed" type="xs:int"/>
-            <xs:element name="failed" type="xs:int"/>
-            <xs:element name="broken" type="xs:int"/>
-            <xs:element name="skipped" type="xs:int"/>
-            <xs:element name="runnable" type="xs:int"/>
-            <xs:element name="running" type="xs:int"/>
-            <xs:element name="total" type="xs:int"/>
-        </xs:sequence>
-    </xs:complexType>
-
 
 </xs:schema>
