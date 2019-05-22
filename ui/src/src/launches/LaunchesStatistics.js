@@ -56,32 +56,32 @@ class LaunchesStatistics extends SubComponent {
                 {
                   name: 'Passed',
                   y: this.state.stats.all.launchStats.statusCounters.PASSED,
-                  color: '#3498db'
+                  color: '#28a745'
                 },
                 {
                   name: 'Failed',
                   y: this.state.stats.all.launchStats.statusCounters.FAILED,
-                  color: '#9b59b6'
+                  color: '#dc3545'
                 },
                 {
                   name: 'Broken',
                   y: this.state.stats.all.launchStats.statusCounters.BROKEN,
-                  color: '#2ecc71'
+                  color: '#ffc107'
                 },
                 {
                   name: 'Skipped',
                   y: this.state.stats.all.launchStats.statusCounters.SKIPPED,
-                  color: '#f1c40f'
+                  color: '#6c757d'
                 },
                 {
                   name: 'Runnable',
                   y: this.state.stats.all.launchStats.statusCounters.RUNNABLE,
-                  color: '#f1c40f'
+                  color: '#7cb5ec'
                 },
                 {
                   name: 'Running',
                   y: this.state.stats.all.launchStats.statusCounters.RUNNING,
-                  color: '#f1c40f'
+                  color: '#007bff'
                 }
               ]
             }]
