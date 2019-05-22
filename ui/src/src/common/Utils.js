@@ -214,3 +214,30 @@ export function filterToQuery(filter){
     return Object.keys(filter).
                 map((key) => {return key + "=" + filter[key]}).join("&");
 }
+
+export function timePassed(passedTime){
+   var passedTimeDisplayValue = "0";
+
+   if (passedTime == null || passedTime == undefined || passedTime == 'undefined' || passedTime == "" || passedTime == 0){
+       return passedTimeDisplayValue;
+   }
+
+   if (passedTime > 0 && passedTime < 1000 ){
+       return "Less than 1 second";
+   }
+
+   if (passedTime >= 1000 && passedTime < 60000 ){
+       return Math.floor(passedTime / 1000) + " sec"
+   }
+
+   if (passedTime >= 60000 && passedTime < 3600000 ){
+       return Math.floor(passedTime / 60000) + " min"
+   }
+
+   if (passedTime >= 3600000 ){
+       passedTimeDisplayValue = Math.floor(passedTime / 3600000) + " hour "
+       passedTimeDisplayValue = passedTimeDisplayValue +
+           Math.floor(((passedTime/3600000 - Math.floor(passedTime / 3600000)) * 60)) +  " min"
+   }
+   return passedTimeDisplayValue;
+}
