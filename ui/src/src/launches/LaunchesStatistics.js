@@ -151,28 +151,18 @@ class LaunchesStatistics extends SubComponent {
         return (
         <div>
           <div className="row">
-              <div className="col-3">
+              <div className="col-6">
                 <table class="table">
                   <tbody>
                     <tr>
-                      <td>Total Launches</td>
-                      <td>{this.state.stats.all.launchCount || 0}</td>
+                      <td>Total Launches: {this.state.stats.all.launchCount || 0}</td>
+                      <td>Total Duration: {Utils.timePassed(this.state.stats.all.launchTimes.duration || 0)}</td>
+                      <td>Idle Time: {Utils.timePassed(this.state.stats.all.launchTimes.idle || 0)}</td>
                     </tr>
                     <tr>
-                      <td>First Started</td>
-                      <td>{Utils.timeToDate(this.state.stats.all.launchTimes.firstStart || 0)}</td>
-                    </tr>
-                    <tr>
-                      <td>Last Finished</td>
-                      <td>{Utils.timeToDate(this.state.stats.all.launchTimes.lastFinish || 0)}</td>
-                    </tr>
-                    <tr>
-                      <td>Total Duration</td>
-                      <td>{Utils.timePassed(this.state.stats.all.launchTimes.duration || 0)}</td>
-                    </tr>
-                    <tr>
-                      <td>Idle Time</td>
-                      <td>{Utils.timePassed(this.state.stats.all.launchTimes.idle || 0)}</td>
+                      <td>First Started: {Utils.timeToDate(this.state.stats.all.launchTimes.firstStart || 0)}</td>
+                      <td>Last Finished: {Utils.timeToDate(this.state.stats.all.launchTimes.lastFinish || 0)}</td>
+                      <td></td>
                     </tr>
                   </tbody>
                 </table>
