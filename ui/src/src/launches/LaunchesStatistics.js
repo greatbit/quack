@@ -22,6 +22,8 @@ class LaunchesStatistics extends SubComponent {
         this.getStats = this.getStats.bind(this);
         this.statusPieChartRender = this.statusPieChartRender.bind(this);
         this.setUpStatusPieSeries = this.setUpStatusPieSeries.bind(this);
+        this.setUpUsersPieSeries = this.setUpUsersPieSeries.bind(this);
+        this.usersPieChartRender = this.usersPieChartRender.bind(this);
     }
 
     componentDidMount() {
@@ -36,8 +38,10 @@ class LaunchesStatistics extends SubComponent {
             .then(response => {
                  this.state.stats = response.data;
                  this.setUpStatusPieSeries();
+                 this.setUpUsersPieSeries();
                  this.setState(this.state);
                  this.statusPieChartRender();
+                 this.usersPieChartRender();
         }).catch(error => {
             Utils.onErrorMessage("Couldn't get launch statistics: " + (error.response || {data: {message: ""}}).data.message);
             this.state.loading = false;
@@ -110,8 +114,42 @@ class LaunchesStatistics extends SubComponent {
       	});
     }
 
+    setUpUsersPieSeries(){
+        this.state.userSeries = [{
+              name: 'Statuses',
+              data: Object.keys(this.state.stats.all.users).map(function(user){return {name: user, y: this.state.stats.all.users[user]}}.bind(this))
+        }]
+    }
+
+    usersPieChartRender() {
+    	Highcharts.chart({
+    	    chart: {
+    	      type: 'pie',
+    	      renderTo: 'pie-by-users'
+    	    },
+    	    title: {
+    	      verticalAlign: 'middle',
+    	      floating: true,
+    	      text: 'Users',
+    	      style: {
+    	      	fontSize: '10px',
+    	      }
+    	    },
+    	    plotOptions: {
+    	      pie: {
+    	      	dataLabels: {
+    	      		format: '{point.name}: {point.percentage:.1f} %'
+    	      	},
+    	        innerSize: '70%'
+    	      }
+    	    },
+    	    series: this.state.userSeries
+      	});
+    }
+
     render() {
         return (
+        <div>
           <div className="row">
               <div className="col-3">
                 <table class="table">
@@ -139,10 +177,12 @@ class LaunchesStatistics extends SubComponent {
                   </tbody>
                 </table>
               </div>
-              <div className="col-6" id="pie-by-statuses">
-
-              </div>
           </div>
+          <div className="row">
+            <div className="col-6" id="pie-by-statuses"/>
+            <div className="col-6" id="pie-by-users"/>
+          </div>
+        </div>
         );
       }
 
