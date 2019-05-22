@@ -32,9 +32,9 @@ function map() {
         casesCount: this.totalCases,
         launchTimes: {
             duration : duration,
-            firstStart: this.startTime,
-            lastStart: this.startTime,
-            lastFinish: this.finishTime,
+            firstStart: NumberLong(this.startTime).valueOf(),
+            lastStart: NumberLong(this.startTime).valueOf(),
+            lastFinish: NumberLong(this.finishTime).valueOf(),
             idle: 0
         },
         launchStats: this.launchStats,
