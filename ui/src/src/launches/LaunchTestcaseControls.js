@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from "axios";
+import $ from 'jquery';
 import * as Utils from '../common/Utils';
 
 class LaunchTestcaseControls extends Component {
+    defaultFailureDetails = {text: ""};
 
     state = {
-
+        failureDetails: Object.assign({}, this.defaultFailureDetails)
     };
 
     constructor(props) {
@@ -13,6 +15,7 @@ class LaunchTestcaseControls extends Component {
         this.state.testcase = this.props.testcase;
         this.state.launchId = this.props.launchId;
         this.state.projectId = this.props.projectId;
+        this.handleDetailsFailureChange = this.handleDetailsFailureChange.bind(this);
     }
 
     componentDidMount() {
@@ -29,13 +32,16 @@ class LaunchTestcaseControls extends Component {
       this.setState(this.state);
     }
 
-    handleStatusSubmit(status, event){
-        axios.post('/api/' + this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/status/' + status)
+    handleStatusSubmit(status, event, dialogToDismiss){
+        axios.post('/api/' + this.state.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/status/' + status, this.state.failureDetails)
             .then(response => {
                 this.state.testcase = response.data;
+                this.state.failureDetails = Object.assign({}, this.defaultFailureDetails)
                 this.setState(this.state);
                 this.callback(this.state.testcase);
-
+                if (dialogToDismiss){
+                    $('#' + dialogToDismiss).modal('hide');
+                }
         }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: " + error.response.data.message)});
         event.preventDefault();
 
@@ -49,7 +55,7 @@ class LaunchTestcaseControls extends Component {
         return(
             <div>
                 <button type="button" class="btn btn-success" onClick={(e) => this.handleStatusSubmit("PASSED", e)}>Pass</button>
-                <button type="button" class="btn btn-danger" onClick={(e) => this.handleStatusSubmit("FAILED", e)}>Fail</button>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#fail-dialog">Fail</button>
                 <button type="button" class="btn btn-warning" onClick={(e) => this.handleStatusSubmit("BROKEN", e)}>Broken</button>
                 <button type="button" class="btn btn-secondary" onClick={(e) => this.handleStatusSubmit("SKIPPED", e)}>Skip</button>
                 <button type="button" class="btn btn-warning" onClick={(e) => this.handleStatusSubmit("RUNNABLE", e)}>X</button>
@@ -66,6 +72,11 @@ class LaunchTestcaseControls extends Component {
                 <button type="button" class="btn" onClick={(e) => this.handleStatusSubmit("RUNNABLE", e)}>X</button>
             </div>
         )
+    }
+
+    handleDetailsFailureChange(event){
+        this.state.failureDetails[event.target.name] = event.target.value;
+        this.setState(this.state);
     }
 
     getStatusAlertClass(){
@@ -98,9 +109,32 @@ class LaunchTestcaseControls extends Component {
 
     render() {
         return (
-          <div class="btn-group" role="group">
-            {this.renderButtons()}
-          </div>
+            <div>
+                <div class="btn-group" role="group">
+                    {this.renderButtons()}
+                </div>
+
+                <div className="modal fade" tabIndex="-1" role="dialog" id="fail-dialog">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h5 className="modal-title">Fail Test Case</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div className="modal-body">
+                          <textarea rows="7" id="failure-text" name="text" className="form-control" value={this.state.failureDetails.text}
+                                        placeholder="Reason of Failure" onChange={this.handleDetailsFailureChange} />
+                          </div>
+                          <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
+                            <button type="button" class="btn btn-danger" onClick={(e) => this.handleStatusSubmit("FAILED", e, 'fail-dialog')}>Fail</button>
+                          </div>
+                        </div>
+                     </div>
+                 </div>
+             </div>
         );
       }
 

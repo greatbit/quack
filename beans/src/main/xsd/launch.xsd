@@ -9,6 +9,7 @@
            elementFormDefault="qualified">
 
     <xs:include schemaLocation="common.xsd"/>
+    <xs:include schemaLocation="comment.xsd"/>
     <xs:include schemaLocation="testcase.xsd"/>
     <xs:include schemaLocation="testsuite.xsd"/>
 
@@ -42,6 +43,19 @@
                     <xs:element name="startTime" type="xs:long"/>
                     <xs:element name="finishTime" type="xs:long"/>
                     <xs:element name="duration" type="xs:long"/>
+                    <xs:element name="failureDetails" type="FailureDetails" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="failureDetails" type="FailureDetails"/>
+    <xs:complexType name="FailureDetails">
+        <xs:complexContent>
+            <xs:extension base="Comment">
+                <xs:sequence>
+                    <xs:element name="failedStep" type="xs:string"/>
+                    <xs:element name="linkedIssue" type="Issue"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

@@ -1,23 +1,28 @@
 package com.quack.services;
 
+import com.quack.beans.FailureDetails;
 import com.quack.beans.Filter;
+import com.quack.beans.Issue;
 import com.quack.beans.Launch;
 import com.quack.beans.LaunchStatistics;
 import com.quack.beans.LaunchStats;
 import com.quack.beans.LaunchStatus;
 import com.quack.beans.LaunchTestCase;
 import com.quack.beans.LaunchTestCaseTree;
+import com.quack.beans.TestCase;
 import com.quack.beans.TestCaseTree;
 import com.quack.beans.TestSuite;
 import com.quack.dal.impl.DBUtils;
 import com.quack.services.errors.EntityAccessDeniedException;
 import com.quack.services.errors.EntityNotFoundException;
+import com.quack.tracker.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.quack.dal.CommonRepository;
 import com.quack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +49,9 @@ public class LaunchService extends BaseService<Launch> {
     private TestSuiteService testSuiteSerbice;
 
     @Autowired
+    private Tracker tracker;
+
+    @Autowired
     DBUtils dbUtils;
 
     @Override
@@ -51,9 +59,10 @@ public class LaunchService extends BaseService<Launch> {
         return repository;
     }
 
-    public LaunchTestCase updateLaunchTestCaseStatus(Session session, String projectId,
+    public LaunchTestCase updateLaunchTestCaseStatus(HttpServletRequest request,
+                                                     Session session, String projectId,
                                                      String launchId, String testCaseUUID,
-                                                     LaunchStatus status){
+                                                     LaunchStatus status, FailureDetails failureDetails) throws Exception {
         Launch launch = findOne(session, projectId, launchId);
         LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
         if (launchTestCase == null){
@@ -61,9 +70,41 @@ public class LaunchService extends BaseService<Launch> {
                     format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
             );
         }
+        if (isFailedStatus(status) && isFailureDetailsValid(failureDetails)) {
+            addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
+        }
         updateStatus(session.getPerson().getId(), launchTestCase, status);
         update(session, projectId, launch);
         return launchTestCase;
+    }
+
+    private boolean isFailureDetailsValid(FailureDetails failureDetails) {
+        Issue issue = failureDetails.getLinkedIssue();
+        return !isEmpty(failureDetails.getText()) ||
+                (issue != null &&
+                        (!isEmpty(issue.getId()) || !isEmpty(issue.getName()))
+                );
+    }
+
+    private boolean isFailedStatus(LaunchStatus status) {
+        return status.equals(FAILED) || status.equals(BROKEN) || status.equals(SKIPPED);
+    }
+
+    private void addFailureDetails(HttpServletRequest request, Session session, String projectId, LaunchTestCase launchTestCase, FailureDetails failureDetails) throws Exception {
+        failureDetails.setCreatedBy(session.getLogin());
+        failureDetails.setCreatedTime(System.currentTimeMillis());
+
+        if (failureDetails.getLinkedIssue() != null) {
+            Issue issue = failureDetails.getLinkedIssue();
+            if (isEmpty(issue.getId())) {
+                issue = tracker.createIssue(request, session, issue);
+            } else {
+                issue = tracker.linkIssue(request, session, issue.getId());
+            }
+            testCaseService.linkIssue(request, session, projectId, launchTestCase.getId(), issue.getId());
+            failureDetails.setLinkedIssue(issue);
+        }
+        launchTestCase.getFailureDetails().add(failureDetails);
     }
 
     @Override

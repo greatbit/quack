@@ -189,6 +189,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
     public TestCase linkIssue(HttpServletRequest request, Session userSession, String projectId, String testcaseId, String issueId) throws Exception {
         TestCase testCase = findOne(userSession, projectId, testcaseId);
+        if (testCase.getIssues().stream().map(Issue::getId).filter(id -> id.equals(issueId)).count() > 0) {
+            return testCase;
+        }
         testCase.getIssues().add(tracker.linkIssue(request, userSession, issueId));
         return update(userSession, projectId, testCase);
     }
