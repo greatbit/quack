@@ -1,5 +1,6 @@
 package com.quack.services;
 
+import com.quack.beans.Comment;
 import com.quack.beans.FailureDetails;
 import com.quack.beans.Filter;
 import com.quack.beans.Issue;
@@ -52,7 +53,12 @@ public class LaunchService extends BaseService<Launch> {
     private Tracker tracker;
 
     @Autowired
+    private CommentService commentService;
+
+    @Autowired
     DBUtils dbUtils;
+
+    private final String FAILURE_DETAILS_TYPE = "failureDetails";
 
     @Override
     protected CommonRepository<Launch> getRepository() {
@@ -91,9 +97,8 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private void addFailureDetails(HttpServletRequest request, Session session, String projectId, LaunchTestCase launchTestCase, FailureDetails failureDetails) throws Exception {
-        failureDetails.setCreatedBy(session.getLogin());
-        failureDetails.setCreatedTime(System.currentTimeMillis());
-
+        Comment comment = new Comment().withEntityId(launchTestCase.getUuid()).withEntityType(FAILURE_DETAILS_TYPE).withText(failureDetails.getText());
+        commentService.save(session, projectId, comment);
         if (failureDetails.getLinkedIssue() != null) {
             Issue issue = failureDetails.getLinkedIssue();
             if (isEmpty(issue.getId())) {
@@ -102,26 +107,7 @@ public class LaunchService extends BaseService<Launch> {
                 issue = tracker.linkIssue(request, session, issue.getId());
             }
             testCaseService.linkIssue(request, session, projectId, launchTestCase.getId(), issue.getId());
-            failureDetails.setLinkedIssue(issue);
         }
-        failureDetails.setUuid(UUID.randomUUID().toString());
-        launchTestCase.getFailureDetails().add(0, failureDetails);
-    }
-
-    public void removeFailureDetails(Session session, String projectId, String launchId, String testCaseUUID, String failureDetailsUuid) throws Exception {
-        Launch launch = findOne(session, projectId, launchId);
-        LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
-        if (launchTestCase == null) {
-            throw new EntityNotFoundException(
-                    format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
-            );
-        }
-        List<FailureDetails> filteredFailures = launchTestCase.getFailureDetails().stream().
-                filter(details -> !failureDetailsUuid.equals(details.getUuid())).
-                collect(Collectors.toList());
-        launchTestCase.getFailureDetails().clear();
-        launchTestCase.getFailureDetails().addAll(filteredFailures);
-        update(session, projectId, launch);
     }
 
     @Override

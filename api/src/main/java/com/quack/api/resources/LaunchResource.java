@@ -49,14 +49,4 @@ public class LaunchResource extends BaseCrudResource<Launch> {
         return service.getLaunchesStatistics(getUserSession(), projectId, initFilter(request));
     }
 
-    @DELETE
-    @Path("/{launchId}/{testcaseUUID}/failure/{failureId}")
-    public Response removeFailureDetails(@PathParam("projectId") String projectId,
-                                         @PathParam("launchId") String launchId,
-                                         @PathParam("testcaseUUID") String testcaseUUID,
-                                         @PathParam("failureId") String failureId) throws Exception {
-        service.removeFailureDetails(getUserSession(), projectId, launchId, testcaseUUID, failureId);
-        return Response.ok().build();
-    }
-
 }

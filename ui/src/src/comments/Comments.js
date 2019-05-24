@@ -59,6 +59,9 @@ class Comments extends SubComponent {
         fetchCommentsNeeded = fetchCommentsNeeded || (this.projectId != nextProps.projectId);
         this.projectId = nextProps.projectId;
       }
+      if (nextProps.hideForm){
+        this.hideForm = nextProps.hideForm;
+      }
       if (fetchCommentsNeeded){
         this.getComments();
       } else {
@@ -194,6 +197,7 @@ class Comments extends SubComponent {
                       }.bind(this))
                     }
                 </div>
+                {!this.hideForm &&
                 <div id="comment-form">
                     <form>
                         <textarea rows="7" cols="70" name="text" onChange={(e) => this.handleChange("text", e)} value={this.state.commentToEdit.text}></textarea>
@@ -202,7 +206,7 @@ class Comments extends SubComponent {
                         </div>
                     </form>
                 </div>
-
+                }
 
                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-comment-confirmation">
                     <div className="modal-dialog" role="document">
