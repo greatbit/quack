@@ -121,6 +121,11 @@ class Launch extends SubComponent {
         var testCaseHtmlNode = $("li[data-id='" + testcase.uuid + "']").find("img");
         testCaseHtmlNode.attr("src", Utils.getStatusImg(testcase));
 
+        if(this.state.selectedTestCase.uuid == testcase.uuid){
+            this.state.selectedTestCase = testcase;
+            this.setState(this.state);
+        }
+
         var that = this;
         if (testcase && testcase.uuid){
             $(that.tree.getNodeById(testcase.uuid)[0]).parents('.list-group-item').each((num, node) => {
@@ -198,6 +203,8 @@ class Launch extends SubComponent {
                             testcase={this.state.selectedTestCase}
                             projectAttributes={this.state.projectAttributes}
                             readonly={true}
+                            launchId={this.state.launch.id}
+                            projectId={this.state.projectId}
                           />
                       }
                       {this.state.selectedTestCase && this.state.selectedTestCase.id &&

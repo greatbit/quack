@@ -55,6 +55,7 @@
             <xs:extension base="Comment">
                 <xs:sequence>
                     <xs:element name="failedStep" type="xs:string"/>
+                    <xs:element name="uuid" type="xs:string"/>
                     <xs:element name="linkedIssue" type="Issue"/>
                 </xs:sequence>
             </xs:extension>

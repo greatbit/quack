@@ -61,6 +61,8 @@ class TestCase extends SubComponent {
          this.onCommentsCountChanged = this.onCommentsCountChanged.bind(this);
          this.removeTestcase = this.removeTestcase.bind(this);
          this.getAttributes = this.getAttributes.bind(this);
+         this.removeFailureDetails = this.removeFailureDetails.bind(this);
+         this.removeFailureDetailsConfirmation = this.removeFailureDetailsConfirmation.bind(this);
       }
 
     componentDidMount() {
@@ -77,6 +79,9 @@ class TestCase extends SubComponent {
             this.projectId = this.props.match.params.project;
             this.getTestCase(this.props.match.params.project, this.props.match.params.testcase);
         }
+        if (this.props.launchId){
+            this.state.launchId = this.props.launchId;
+        }
         this.setState(this.state);
      }
 
@@ -90,6 +95,12 @@ class TestCase extends SubComponent {
       }
       if (nextProps.projectAttributes){
         this.state.projectAttributes = nextProps.projectAttributes;
+      }
+      if (nextProps.launchId){
+          this.state.launchId = nextProps.launchId;
+      }
+      if (nextProps.projectId){
+          this.projectId = nextProps.launchId;
       }
       this.setState(this.state);
     }
@@ -297,6 +308,23 @@ class TestCase extends SubComponent {
             .then(response => {
                 window.location.href = window.location.href.replace("testcase=" + this.state.testcase.id, "")
         }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: " + error.response.data.message)});
+    }
+
+    toggleEditFailureDetails(uuid, event){}
+
+    removeFailureDetailsConfirmation(uuid, event){
+        this.state.failureDetailsToRemove = uuid;
+        $('#remove-failure-details-confirmation').modal('show');
+    }
+
+    removeFailureDetails(event){
+        axios.delete('/api/' + this.projectId + '/launch/' + this.state.launchId + '/' + this.state.testcase.uuid + '/failure/' + this.state.failureDetailsToRemove)
+            .then(response => {
+                this.state.testcase.failureDetails = this.state.testcase.failureDetails.filter(testcase => testcase.uuid && testcase.uuid != this.state.failureDetailsToRemove);
+                delete this.state.failureDetailsToRemove;
+                this.state.setState();
+                $('#remove-failure-details-confirmation').modal('hide');
+        }).catch(error => {Utils.onErrorMessage("Couldn't remove failure details: " + error.response.data.message)});
     }
 
     render() {
@@ -569,6 +597,36 @@ class TestCase extends SubComponent {
                           </div>
                       }
                   </div>
+                  {this.state.testcase.failureDetails &&
+                    <div className="testcase-section">
+                        <h5>Failure details</h5>
+                        {
+                            this.state.testcase.failureDetails.map(function(failureDetail){
+                                return (
+                                    <div className="card project-card container">
+                                        <div className="card-header row">
+                                            <div className="col-10">
+                                                <Link to={"/user/profile/" + failureDetail.createdBy}>{failureDetail.createdBy}</Link>  {Utils.timeToDate(failureDetail.createdTime)}
+                                            </div>
+                                            {Utils.isUserOwnerOrAdmin(this.state.testcase.createdBy) &&
+                                                <div className="col-2">
+                                                    <span className="clickable edit-icon-visible" onClick={(e) => this.toggleEditFailureDetails(failureDetail.uuid, e)}>
+                                                        <FontAwesomeIcon icon={faPencilAlt}/>
+                                                    </span>
+                                                    <span className="clickable edit-icon-visible red" onClick={(e) => this.removeFailureDetailsConfirmation(failureDetail.uuid, e)}>
+                                                        <FontAwesomeIcon icon={faMinusCircle}/>
+                                                    </span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div className="card-body">{failureDetail.text}</div>
+
+                                    </div>
+                                )
+                            }.bind(this))
+                        }
+                    </div>
+                  }
                 </div>
 
                 <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
@@ -607,6 +665,25 @@ class TestCase extends SubComponent {
                       </div>
                    </div>
                </div>
+
+                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-failure-details-confirmation">
+                     <div className="modal-dialog" role="document">
+                         <div className="modal-content">
+                           <div className="modal-header">
+                             <h5 className="modal-title">Remove Failure Details</h5>
+                             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                             </button>
+                           </div>
+                           <div className="modal-body">Are you sure you want to remove Failure Details?</div>
+                           <div className="modal-footer">
+                             <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
+                             <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeFailureDetails}>Remove Failure Details</button>
+                           </div>
+                         </div>
+                      </div>
+                  </div>
+
             </div>
         );
 

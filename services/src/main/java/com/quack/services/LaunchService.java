@@ -104,6 +104,7 @@ public class LaunchService extends BaseService<Launch> {
             testCaseService.linkIssue(request, session, projectId, launchTestCase.getId(), issue.getId());
             failureDetails.setLinkedIssue(issue);
         }
+        failureDetails.setUuid(UUID.randomUUID().toString());
         launchTestCase.getFailureDetails().add(failureDetails);
     }
 
