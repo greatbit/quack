@@ -105,7 +105,23 @@ public class LaunchService extends BaseService<Launch> {
             failureDetails.setLinkedIssue(issue);
         }
         failureDetails.setUuid(UUID.randomUUID().toString());
-        launchTestCase.getFailureDetails().add(failureDetails);
+        launchTestCase.getFailureDetails().add(0, failureDetails);
+    }
+
+    public void removeFailureDetails(Session session, String projectId, String launchId, String testCaseUUID, String failureDetailsUuid) throws Exception {
+        Launch launch = findOne(session, projectId, launchId);
+        LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
+        if (launchTestCase == null) {
+            throw new EntityNotFoundException(
+                    format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
+            );
+        }
+        List<FailureDetails> filteredFailures = launchTestCase.getFailureDetails().stream().
+                filter(details -> !failureDetailsUuid.equals(details.getUuid())).
+                collect(Collectors.toList());
+        launchTestCase.getFailureDetails().clear();
+        launchTestCase.getFailureDetails().addAll(filteredFailures);
+        update(session, projectId, launch);
     }
 
     @Override

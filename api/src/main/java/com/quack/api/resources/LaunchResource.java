@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import retrofit2.http.Body;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 import java.util.Map;
 
 @Authenticable
@@ -47,5 +49,14 @@ public class LaunchResource extends BaseCrudResource<Launch> {
         return service.getLaunchesStatistics(getUserSession(), projectId, initFilter(request));
     }
 
+    @DELETE
+    @Path("/{launchId}/{testcaseUUID}/failure/{failureId}")
+    public Response removeFailureDetails(@PathParam("projectId") String projectId,
+                                         @PathParam("launchId") String launchId,
+                                         @PathParam("testcaseUUID") String testcaseUUID,
+                                         @PathParam("failureId") String failureId) throws Exception {
+        service.removeFailureDetails(getUserSession(), projectId, launchId, testcaseUUID, failureId);
+        return Response.ok().build();
+    }
 
 }

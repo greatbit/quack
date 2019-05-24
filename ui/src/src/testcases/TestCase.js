@@ -82,6 +82,9 @@ class TestCase extends SubComponent {
         if (this.props.launchId){
             this.state.launchId = this.props.launchId;
         }
+        if (this.props.projectId){
+            this.projectId = this.props.projectId;
+        }
         this.setState(this.state);
      }
 
@@ -100,7 +103,7 @@ class TestCase extends SubComponent {
           this.state.launchId = nextProps.launchId;
       }
       if (nextProps.projectId){
-          this.projectId = nextProps.launchId;
+          this.projectId = nextProps.projectId;
       }
       this.setState(this.state);
     }
@@ -322,7 +325,7 @@ class TestCase extends SubComponent {
             .then(response => {
                 this.state.testcase.failureDetails = this.state.testcase.failureDetails.filter(testcase => testcase.uuid && testcase.uuid != this.state.failureDetailsToRemove);
                 delete this.state.failureDetailsToRemove;
-                this.state.setState();
+                this.setState(this.state);
                 $('#remove-failure-details-confirmation').modal('hide');
         }).catch(error => {Utils.onErrorMessage("Couldn't remove failure details: " + error.response.data.message)});
     }
