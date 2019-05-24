@@ -538,15 +538,16 @@ class TestCase extends SubComponent {
                                   <div id={"attributes-" + attributeId + "-display"} className="inplace-display col-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
                                     <div index={attributeId}>
                                       <div>
-                                        <b>{this.getAttributeName(attributeId)}</b>
+                                        <b>{this.getAttributeName(attributeId)}
                                         {!this.state.readonly &&
-                                            <span className="edit edit-icon-visible clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                            <span className="edit edit-icon clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
                                         }
                                         {!this.state.readonly &&
-                                            <span className="clickable edit-icon-visible red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
+                                            <span className="clickable edit-icon red" index={attributeId} onClick={(e) => this.removeAttribute(attributeId, e)}>
                                                 <FontAwesomeIcon icon={faMinusCircle}/>
                                             </span>
                                         }
+                                        </b>
                                       </div>
                                       {
                                           <div>{attributeValues.join(", ")}</div>

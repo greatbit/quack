@@ -134,6 +134,11 @@ code {
     visibility: hidden;
 }
 
+b:hover .edit-icon {
+    margin-left: 10px;
+    visibility: visible;
+}
+
 h1:hover .edit-icon {
     margin-left: 10px;
     visibility: visible;
