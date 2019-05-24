@@ -650,7 +650,9 @@ class TestCase extends SubComponent {
 
               </div>
 
-              <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-testcase-confirmation">Remove Testcase</button>
+              {!this.state.launchId &&
+                <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-testcase-confirmation">Remove Testcase</button>
+              }
               <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testcase-confirmation">
                   <div className="modal-dialog" role="document">
                       <div className="modal-content">
