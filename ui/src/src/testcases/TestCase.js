@@ -579,15 +579,16 @@ class TestCase extends SubComponent {
                           </div>
                       }
                   </div>
-                </div>
 
-                {this.state.launchId &&
-                    <div className="testcase-section">
-                        <h5>Failure details</h5>
-                        <Comments entityId={this.state.testcase.uuid} projectId={this.projectId}
-                                entityType="failureDetails" hideForm={true} forceFetch={true}/>
-                    </div>
-                }
+                  {this.state.launchId &&
+                      <div className="testcase-section">
+                          <h5>Failure details</h5>
+                          <Comments entityId={this.state.testcase.uuid} projectId={this.projectId}
+                                  entityType="failureDetails" hideForm={true} forceFetch={true}/>
+                      </div>
+                  }
+
+                </div>
 
                 <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
                     <Attachments testcase={this.state.testcase} projectId={this.projectId} onTestcaseUpdated={this.onTestcaseUpdated}/>

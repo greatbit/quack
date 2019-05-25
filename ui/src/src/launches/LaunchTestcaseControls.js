@@ -109,8 +109,8 @@ class LaunchTestcaseControls extends Component {
 
     render() {
         return (
-            <div>
-                <div class="btn-group" role="group">
+            <div className="launch-status-controls">
+                <div className="btn-group" role="group">
                     {this.renderButtons()}
                 </div>
 
