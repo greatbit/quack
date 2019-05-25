@@ -80,9 +80,6 @@ class TestCase extends SubComponent {
         if (this.props.launchId){
             this.state.launchId = this.props.launchId;
         }
-        if (this.props.projectId){
-            this.projectId = this.props.projectId;
-        }
         this.setState(this.state);
      }
 
@@ -587,7 +584,8 @@ class TestCase extends SubComponent {
                 {this.state.launchId &&
                     <div className="testcase-section">
                         <h5>Failure details</h5>
-                        <Comments entityId={this.state.testcase.uuid} projectId={this.projectId} entityType="failureDetails" hideForm={true} fetchCommentsNeeded={true}/>
+                        <Comments entityId={this.state.testcase.uuid} projectId={this.projectId}
+                                entityType="failureDetails" hideForm={true} forceFetch={true}/>
                     </div>
                 }
 
@@ -609,7 +607,7 @@ class TestCase extends SubComponent {
 
               </div>
 
-              {!this.state.launchId &&
+              {!this.state.readonly &&
                 <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-testcase-confirmation">Remove Testcase</button>
               }
               <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testcase-confirmation">

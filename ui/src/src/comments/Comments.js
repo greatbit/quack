@@ -42,7 +42,7 @@ class Comments extends SubComponent {
      }
 
     componentWillReceiveProps(nextProps) {
-      var fetchCommentsNeeded = false;
+      var fetchCommentsNeeded = nextProps.forceFetch || false;
       if (nextProps.entityId){
         fetchCommentsNeeded = fetchCommentsNeeded || (this.entityId != nextProps.entityId);
         this.entityId = nextProps.entityId;

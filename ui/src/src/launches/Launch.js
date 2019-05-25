@@ -136,7 +136,6 @@ class Launch extends SubComponent {
                     $(htmlImageNode).attr("src", nodeImage);
             });
         }
-
     }
 
     checkUpdatedTestCases(){
