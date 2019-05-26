@@ -89,7 +89,7 @@ class LaunchesWidget extends SubComponent {
                             return (
                                    <tr>
                                        <td>
-                                            <Link to={'/' + this.projectId + '/launch/' + launch.id}>
+                                            <Link to={'/' + this.state.projectId + '/launch/' + launch.id}>
                                                 {launch.name}
                                             </Link>
                                        </td>

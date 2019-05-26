@@ -83,7 +83,7 @@ class TestSuitesWidget extends SubComponent {
                 {this.state.testSuitesToDisplay.map(function(testSuite){
                     return (
                             <div>
-                                <Link to={'/' + this.projectId + '/testcases?testSuite=' + testSuite.id}>
+                                <Link to={'/' + this.state.projectId + '/testcases?testSuite=' + testSuite.id}>
                                     {testSuite.name}
                                 </Link>
                             </div>
