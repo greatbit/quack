@@ -13,7 +13,7 @@ class Auth extends Component {
       }
 
     componentDidMount() {
-        var params = qs.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search.substring(1));
         axios
           .get("/api/user/login-redirect")
           .then(response => {

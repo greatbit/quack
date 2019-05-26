@@ -34,7 +34,7 @@ class LaunchesStatistics extends SubComponent {
 
     getStats(){
         axios
-            .get("/api/" + this.state.projectId + "/launch/statistics" + this.props.location.search)
+            .get("/api/" + this.state.projectId + "/launch/statistics" + this.props.location.search.substring(1))
             .then(response => {
                  this.state.stats = response.data;
                  this.setUpStatusPieSeries();

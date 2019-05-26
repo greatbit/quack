@@ -56,7 +56,7 @@ class TestCases extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        var params = qs.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search.substring(1));
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
             this.setState(this.state);
@@ -93,7 +93,7 @@ class TestCases extends SubComponent {
      }
 
      onFilter(filter, onResponse){
-        var params = qs.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search.substring(1));
         if (params.testcase){
             this.state.selectedTestCase = {id: params.testcase};
         }

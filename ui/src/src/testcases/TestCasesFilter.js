@@ -66,7 +66,7 @@ class TestCasesFilter extends Component {
     }
 
     componentDidMount(){
-        var params = qs.parse(this.props.location.search);
+        var params = qs.parse(this.props.location.search.substring(1));
 
         if (params.testSuite){
             axios

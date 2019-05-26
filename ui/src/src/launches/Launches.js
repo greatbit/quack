@@ -43,7 +43,7 @@ class Launches extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        Utils.queryToFilter(this.props.location.search);
+        Utils.queryToFilter(this.props.location.search.substring(1));
         this.getLaunches();
         this.getPager();
         this.intervalId = setInterval(this.getLaunches, 30000);

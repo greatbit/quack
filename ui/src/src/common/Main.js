@@ -58,7 +58,7 @@ class Main extends Component {
                       render={(props) => <ProjectSettings {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testcase/:testcase'
                       render={(props) => <TestCase {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
-                  <Route path='/:project/testcases'
+                  <Route exact path='/:project/testcases'
                       render={(props) => <TestCases {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/testsuites'
                       render={(props) => <TestSuites {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
