@@ -467,7 +467,7 @@ class TestCase extends SubComponent {
                                                   }
 
                                                   {!this.state.readonly &&
-                                                    <a href="#" className="card-link red" onClick={(e) => this.removeStep(e, i)}>Remove</a>
+                                                    <a href="#" className="card-link red float-right" onClick={(e) => this.removeStep(e, i)}>Remove</a>
                                                   }
                                                 </div>
                                               </div>
