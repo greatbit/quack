@@ -53,7 +53,6 @@ public class TestCaseService extends BaseService<TestCase> {
 
     public TestCaseTree findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
         TestCaseTree head = new TestCaseTree();
-        filter.getIncludedFields().addAll(Arrays.asList("name", "id", "attributes"));
 
         List<TestCase> testCases = super.findFiltered(session, projectId, filter);
         head.getTestCases().addAll(testCases);

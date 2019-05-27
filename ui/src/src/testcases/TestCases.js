@@ -102,6 +102,10 @@ class TestCases extends SubComponent {
             filter.skip = filter.skip || 0;
             filter.limit = this.testCasesFetchLimit;
         }
+        filter.includedFields = filter.includedFields || [];
+        filter.includedFields.push('name');
+        filter.includedFields.push('id');
+        filter.includedFields.push('attributes');
 
         this.state.filter = filter;
         this.state.loading = true;

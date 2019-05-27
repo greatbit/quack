@@ -13,6 +13,7 @@ import com.quack.beans.LaunchTestCaseTree;
 import com.quack.beans.TestCase;
 import com.quack.beans.TestCaseTree;
 import com.quack.beans.TestSuite;
+import com.quack.beans.TestcaseFilter;
 import com.quack.dal.impl.DBUtils;
 import com.quack.services.errors.EntityAccessDeniedException;
 import com.quack.services.errors.EntityNotFoundException;
@@ -24,6 +25,7 @@ import com.quack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -160,7 +162,8 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private Launch fillLaunchByFilter(Session session, String projectId, Launch launch) {
-        TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, launch.getTestSuite().getFilter());
+        TestcaseFilter filter = (TestcaseFilter) launch.getTestSuite().getFilter().withSkip(0).withLimit(0);
+        TestCaseTree tcTree = testCaseService.findFilteredTree(session, projectId, filter);
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
         return launch;
     }
