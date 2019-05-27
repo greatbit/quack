@@ -98,9 +98,10 @@ class Attributes extends SubComponent {
                 }.bind(this))
             }
 
-            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editAttribute">
-              Add
-            </button>
+
+            <div className="attributes-controls">
+                <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editAttribute">Add</button>
+            </div>
             <div className="modal fade" id="editAttribute" tabindex="-1" role="dialog" aria-labelledby="editAttributeLabel" aria-hidden="true">
                 <AttributeForm project={this.props.match.params.project}
                                 attribute={this.state.attributeToEdit}
