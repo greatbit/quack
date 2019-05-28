@@ -1,0 +1,14 @@
+{
+  "options": {},
+  "indexes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_",
+      "ns": "test.sequencer"
+    }
+  ],
+  "uuid": "c378a76f3cb74e43b84792352d265bcf"
+}

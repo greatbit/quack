@@ -1,0 +1,12 @@
+version: '3'
+services:
+  quack:
+    image: greatbit/quack
+    ports:
+      - "80:80"
+    links:
+      - quack-mongo-demo
+  quack-mongo-demo:
+    image: greatbit/quack-mongo-demo
+    ports:
+      - "27017:27017"
