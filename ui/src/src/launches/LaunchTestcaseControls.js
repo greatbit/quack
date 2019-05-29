@@ -42,7 +42,7 @@ class LaunchTestcaseControls extends Component {
                 if (dialogToDismiss){
                     $('#' + dialogToDismiss).modal('hide');
                 }
-        }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save launch testcase status: ", error)});
         event.preventDefault();
 
     }

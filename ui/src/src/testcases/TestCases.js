@@ -74,7 +74,7 @@ class TestCases extends SubComponent {
                this.setState(this.state);
                this.refreshTree();
           })
-          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: " + error.response.data.message)});
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch attributes: ", error)});
      }
 
      editTestcase(testcaseId){
@@ -123,7 +123,7 @@ class TestCases extends SubComponent {
             this.updateCount();
           })
           .catch(error => {
-                Utils.onErrorMessage("Couldn't fetch testcases tree: " + error.response.data.message);
+                Utils.onErrorMessage("Couldn't fetch testcases tree: ", error);
                 this.state.loading = false;
                 this.setState(this.state);
            });
@@ -139,7 +139,7 @@ class TestCases extends SubComponent {
               this.state.count = response.data;
               this.setState(this.state);
             })
-            .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases number: " + error.response.data.message)});
+            .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases number: ", error)});
      }
 
      loadMoreTestCases(event){
@@ -156,7 +156,7 @@ class TestCases extends SubComponent {
                 this.setState(this.state);
             }
           })
-          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases: " + error.response.data.message)});
+          .catch(error => {Utils.onErrorMessage("Couldn't fetch testcases: ", error)});
           event.preventDefault();
      }
 

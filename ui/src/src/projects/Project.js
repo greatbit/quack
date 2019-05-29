@@ -46,7 +46,7 @@ class Project extends SubComponent {
           .then(response => {
             this.state.project = response.data;
             this.setState(this.state);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.response.data.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
      }
 
 

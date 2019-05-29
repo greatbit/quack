@@ -63,7 +63,7 @@ class Attachments extends SubComponent {
               this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(attachment => attachment.id !== this.attachmentToRemove);
               this.setState(this.state);
               this.onTestcaseUpdated();
-          }).catch(error => {Utils.onErrorMessage("Couldn't remove attachment: " + error.response.data.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't remove attachment: ", error)});
     }
 
     removeAttachmentConfirmation(attachmentId){

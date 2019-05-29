@@ -40,7 +40,7 @@ class ProjectForm extends Component {
         .then(response => {
             this.props.history.push('/projects/' + response.data.id);
         }).catch((error) => {
-            Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)
+            Utils.onErrorMessage("Couldn't save project: ", error)
         });
         event.preventDefault();
       }
@@ -55,7 +55,7 @@ class ProjectForm extends Component {
                 });
                 this.setState(newState);
               }).catch(error => {
-                Utils.onErrorMessage("Couldn't get project: " + error.response.data.message);
+                Utils.onErrorMessage("Couldn't get project: ", error);
               });
         }
      }

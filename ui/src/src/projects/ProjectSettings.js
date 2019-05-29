@@ -49,7 +49,7 @@ class ProjectSettings extends SubComponent {
             this.state.originalProject = this.state.project;
             this.refreshGroupsToDisplay();
             this.setState(this.state);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get project: " + error.response.data.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
      }
 
      getGroups(literal, callback){
@@ -82,7 +82,7 @@ class ProjectSettings extends SubComponent {
                 this.refreshGroupsToDisplay();
                 this.setState(this.state);
                 Utils.onSuccessMessage("Project Settings successfully saved");
-        }).catch(error => {Utils.onErrorMessage("Couldn't save project: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't save project: ", error)});
         event.preventDefault();
     }
 
@@ -90,7 +90,7 @@ class ProjectSettings extends SubComponent {
         axios.delete('/api/project/' + this.state.project.id)
             .then(response => {
                 window.location.href = "/";
-        }).catch(error => {Utils.onErrorMessage("Couldn't delete project: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't delete project: ", error)});
         event.preventDefault();
 
     }

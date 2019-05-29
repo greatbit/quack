@@ -44,7 +44,7 @@ class LaunchesWidget extends SubComponent {
                  this.state.loading = false;
                  this.setState(this.state);
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't get launch: " + error.response.data.message);
+            Utils.onErrorMessage("Couldn't get launch: ", error);
             this.state.loading = false;
             this.setState(this.state);
         });

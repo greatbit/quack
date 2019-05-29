@@ -43,7 +43,7 @@ class LaunchesStatistics extends SubComponent {
                  this.statusPieChartRender();
                  this.usersPieChartRender();
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't get launch statistics: " + (error.response || {data: {message: ""}}).data.message);
+            Utils.onErrorMessage("Couldn't get launch statistics: ", error);
             this.state.loading = false;
             this.setState(this.state);
         });
