@@ -214,23 +214,23 @@ class TestCasesFilter extends Component {
             <div>
                 <h2>{this.state.testSuiteNameToDisplay}</h2>
                 <div>
-                    <div className="row">
+                    <div className="row filter-control-row">
                         <div className="col-1">Grouping</div>
-                        <div className="col-6">
+                        <div className="col-5 grouping-control">
                             <Select value={this.state.groupsToDisplay}
                                     isMulti
                                     onChange={this.changeGrouping}
                                     options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
                                    />
                         </div>
-                        <div className="col-2"></div>
+                        <div className="col-3"></div>
                         <div className="col-3 btn-group" role="group" >
                             <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
                             <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>Save</button>
                             <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>Launch</button>
                         </div>
                     </div>
-                    <div className="row">
+                    <div className="row filter-control-row">
                         <div className="col-1">Filter</div>
                             {
                                 this.state.testSuite.filter.filters.map(function(filter, i){
