@@ -33,7 +33,7 @@ class TestCases extends SubComponent {
 
     state = {
         testcasesTree: {children: []},
-        testcaseToEdit: Object.assign({}, this.defaultTestcase),
+        testcaseToEdit: Object.assign({}, this.defaultTestcase, {attributes: {}, steps: []}),
         projectAttributes: [],
         selectedTestCase: {},
         filter: {},
@@ -87,9 +87,9 @@ class TestCases extends SubComponent {
 
 
      onTestCaseAdded(testcase){
+        this.state.testcaseToEdit = Object.assign({}, this.defaultTestcase, {attributes: {}, steps: []});
         this.onFilter(this.state.filter, function(){this.onTestcaseSelected(testcase.id); this.refreshTree();}.bind(this));
         $('#editTestcase').modal('hide');
-        this.state.testcaseToEdit = Object.assign({}, this.defaultTestcase);
      }
 
      onFilter(filter, onResponse){
