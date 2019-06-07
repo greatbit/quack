@@ -26,6 +26,8 @@ Please note - the system is in active development state. Alpha version should be
 How to run test server using docker
 ==========
 1. Just run "docker-compose up" from the root folder of the project
+or
+   "docker-compose -f docker-compose-demo.yml up" for QuAck with demo data
 2. Go to localhost in the browser
 
 How to run on a standalone server
