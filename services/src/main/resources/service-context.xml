@@ -32,5 +32,6 @@
     </hz:hazelcast>
 
     <bean id="storage" class="${storage.provider}"/>
+    <bean id="tracker" class="${quack.tracker}"/>
 
 </beans>

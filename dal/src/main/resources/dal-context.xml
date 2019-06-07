@@ -18,7 +18,7 @@
         <property name="locations">
             <list>
                 <value>classpath*:quack.properties</value>
-                <value>file:quack.properties</value>
+                <value>file/:quack.properties</value>
             </list>
         </property>
     </bean>

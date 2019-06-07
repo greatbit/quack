@@ -21,9 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:quack-test-context.xml"})
-public class ProjectRepositoryTest {
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = {"classpath*:quack-test-context.xml"})
+public class ProjectRepositoryTest extends DalBaseTest {
 
     @Autowired
     private ProjectRepository projectRepository;
