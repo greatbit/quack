@@ -67,7 +67,7 @@ class Issues extends SubComponent {
                  this.refreshIssues();
         }).catch(
           error => {
-              Utils.onErrorMessage("Couldn't fetch projects from tracker: " + error.response.data.message);
+              Utils.onErrorMessage("Couldn't fetch projects from tracker: ", error);
         });
       }
       if (nextProps.testcase && (nextProps.testcase.issues || []).length != this.state.testcase.issues){
@@ -96,7 +96,7 @@ class Issues extends SubComponent {
                 this.issueToRemove = null;
                 $("#unlink-issue-confirmation").modal("hide");
                 this.onTestcaseUpdated();
-        }).catch(error => {Utils.onErrorMessage("Couldn't unlink issue: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't unlink issue: ", error)});
     }
 
     createIssue(event){
@@ -105,7 +105,7 @@ class Issues extends SubComponent {
                 $('#issue-modal').modal('hide');
                 this.state.issue = Object.assign({}, this.defaultIssue);
                 this.onTestcaseUpdated();
-        }).catch(error => {Utils.onErrorMessage("Couldn't create issue: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't create issue: ", error)});
         event.preventDefault();
     }
 
@@ -115,7 +115,7 @@ class Issues extends SubComponent {
                 this.state.linkIssueView = {};
                 $('#issue-modal').modal('hide');
                 this.onTestcaseUpdated();
-        }).catch(error => {Utils.onErrorMessage("Couldn't link issue: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't link issue: ", error)});
         event.preventDefault();
 
     }

@@ -43,7 +43,7 @@ class TestSuites extends SubComponent {
                  this.state.loading = false;
                  this.setState(this.state);
         }).catch(error => {
-            Utils.onErrorMessage("Couldn't get testsuites: " + error.response.data.message);
+            Utils.onErrorMessage("Couldn't get testsuites: ", error);
             this.state.loading = false;
             this.setState(this.state);
         });
@@ -74,7 +74,7 @@ class TestSuites extends SubComponent {
                 this.testSuiteToRemove = null;
                 $("#remove-testsuite-confirmation").modal("hide");
                 this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't delete testsuite: " + error.response.data.message)});
+        }).catch(error => {Utils.onErrorMessage("Couldn't delete testsuite: ", error)});
     }
 
     render() {

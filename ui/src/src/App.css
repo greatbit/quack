@@ -214,3 +214,11 @@ h5:hover .edit-icon {
 .attributes-controls {
     margin-top: 20px;
 }
+
+.grouping-control {
+    max-width: 38.2%;
+}
+
+.filter-control-row {
+    margin-bottom: 10px;
+}

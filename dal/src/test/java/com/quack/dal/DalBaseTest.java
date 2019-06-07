@@ -10,8 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:quack-test-context.xml"})
-public class DalBaseTest {
+@ContextConfiguration(locations = {"classpath:quack-test-context.xml"})
+public abstract class DalBaseTest {
 
     @Autowired
     protected ProjectRepository projectRepository;

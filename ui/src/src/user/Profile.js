@@ -28,7 +28,7 @@ class Profile extends SubComponent {
           .then(response => {
             this.state.profile = response.data;
             this.setState(this.state);
-          }).catch(error => {Utils.onErrorMessage("Couldn't get user: " + error.response.data.message)});
+          }).catch(error => {Utils.onErrorMessage("Couldn't get user: ", error)});
      }
 
 

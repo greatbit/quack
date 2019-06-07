@@ -165,7 +165,10 @@ export function isUserOwnerOrAdmin(createdById){
     return UserSession.getSession() && (UserSession.getSession().isAdmin || UserSession.getSession().login === createdById);
 }
 
-export function onErrorMessage(message){
+export function onErrorMessage(message, error){
+    if (error && error.response && error.response.message){
+        message = message + error.response.data.message;
+    }
      $("#error-message-text").html(message);
      $("#error-alert").show();
      $("#error-alert").fadeTo(5000, 500).slideUp(500, function(){

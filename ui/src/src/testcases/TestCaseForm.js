@@ -43,7 +43,7 @@ class TestCaseForm extends SubComponent {
         axios.post('/api/' + this.props.match.params.project + '/testcase/', this.state.testcase)
         .then(response => {
             this.onTestCaseAdded(response.data);
-        }).catch(error => {Utils.onErrorMessage("Couldn't create testcase: " + error.response.data.message)});;
+        }).catch(error => {Utils.onErrorMessage("Couldn't create testcase: ", error)});;
         event.preventDefault();
       }
 
