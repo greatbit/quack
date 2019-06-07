@@ -7,14 +7,14 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>beans</module>
+        <module>dal</module>
+        <module>services</module>
         <module>storage</module>
         <module>s3-storage</module>
         <module>tracker</module>
-        <module>dal</module>
-        <module>services</module>
+        <module>jira-tracker</module>
         <module>api</module>
         <module>ui</module>
-        <module>jira-tracker</module>
         <module>assembly</module>
     </modules>
 
