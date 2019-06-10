@@ -6,6 +6,8 @@ services:
       - "80:80"
     links:
       - mongo
+    depends_on:
+      - mongo
   mongo:
     image: greatbit/quack-mongo-demo
     ports:

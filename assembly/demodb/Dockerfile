@@ -9,5 +9,7 @@ COPY test /tmp/test
 RUN mkdir -p /usr/quack/exampledb
 RUN mkdir -p /var/log/mongo
 
-EXPOSE 27017
-ENTRYPOINT ["/usr/bin/supervisord"]
+COPY mongod.conf /etc/mongod.conf
+
+CMD ["/usr/bin/supervisord"]
+EXPOSE 27017 28017
