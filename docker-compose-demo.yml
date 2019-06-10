@@ -5,8 +5,8 @@ services:
     ports:
       - "80:80"
     links:
-      - quack-mongo-demo
-  quack-mongo-demo:
+      - mongo
+  mongo:
     image: greatbit/quack-mongo-demo
     ports:
       - "27017:27017"

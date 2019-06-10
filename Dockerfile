@@ -30,5 +30,6 @@ RUN nginx
 RUN mkdir -p /usr/quack/bin
 COPY assembly/startup.sh /usr/quack/bin
 
+EXPOSE 80
 ENTRYPOINT ["sh", "/usr/quack/bin/startup.sh"]
 

@@ -9,15 +9,12 @@ import com.quack.services.BaseService;
 import com.quack.services.LaunchService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import retrofit2.http.Body;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 import java.util.Map;
 
 @Authenticable
@@ -39,7 +36,7 @@ public class LaunchResource extends BaseCrudResource<Launch> {
             @ApiParam(value = "Launch Id", required = true) @PathParam("launchId") String launchId,
             @ApiParam(value = "Launch TestCase UUID", required = true) @PathParam("testcaseUUID") String testcaseUUID,
             @ApiParam(value = "New Status", required = true) @PathParam("status") LaunchStatus status,
-            @Body FailureDetails failureDetails) throws Exception {
+            FailureDetails failureDetails) throws Exception {
         return service.updateLaunchTestCaseStatus(request, getUserSession(), projectId, launchId, testcaseUUID, status, failureDetails);
     }
 
