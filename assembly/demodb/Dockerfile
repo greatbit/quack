@@ -12,4 +12,3 @@ RUN mkdir -p /var/log/mongo
 COPY mongod.conf /etc/mongod.conf
 
 CMD ["/usr/bin/supervisord"]
-EXPOSE 27017 28017

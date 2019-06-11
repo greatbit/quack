@@ -19,10 +19,11 @@
             <type>war</type>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jira-tracker</artifactId>
-        </dependency>
+        <!-- Uncomment if jira tracker is needed -->
+        <!--<dependency>-->
+        <!--<groupId>${project.groupId}</groupId>-->
+        <!--<artifactId>jira-tracker</artifactId>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
