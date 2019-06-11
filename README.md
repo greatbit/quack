@@ -16,9 +16,16 @@ The usage of the service is free of charge.
 
 [More information on Wiki](https://github.com/greatbit/quack/wiki/QuAck)
 
+#### Test Cases Tree and Filter
 ![Test Cases Tree](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/tree-800.png)
+
+#### Test Launch
 ![Test Launch](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/launch-800.png)
+
+#### Test Launches
 ![Launches](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/launches-800.png)
+
+#### Statistics
 ![Statistics](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/stats-800.png)
 
 How to run test server using docker
