@@ -15,11 +15,7 @@ The main feature is that you don't have to stick to a specific test tree any mor
 
 The service is built with integration patterns in mind. Pluggable architecuture allows to implement custom authentication providers, integrations with tracking and test executing systems.
 
-Next versions of the service will allow users to analyze test runs, find gaps and bottle necks in their SDL process.
-
 The usage of the service is free of charge.
-
-Please note - the system is in active development state. Alpha version should be ready by the end of April 2019.
 
 [More information on Wiki](https://github.com/greatbit/quack/wiki/QuAck)
 
