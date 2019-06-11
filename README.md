@@ -33,8 +33,10 @@ or
 
 How to run on a standalone server
 ==========
-1. Install NGINX and add conf/quack.conf
+1. Install NGINX and add [conf/quack.conf](https://github.com/greatbit/quack/blob/master/assembly/quack.conf)
 2. Run mongo, e.g.:
    mongo docker run --name mongodb --restart always -p 27017:27017 -d mongo
-3. Place conf/quack.properties somewhere in the system (e.g. /etc/quack)
+3. Place [conf/quack.properties](https://github.com/greatbit/quack/blob/master/assembly/quack.properties) somewhere in the system (e.g. /etc/quack)
 4. Override boot classpath when running -Xbootclasspath/a:/etc/quack
+e.g., starting war using jetty-runner:
+java -Xbootclasspath/a:/etc/quack -jar /usr/quack/lib/jetty-runner.jar /usr/quack/quack.war
