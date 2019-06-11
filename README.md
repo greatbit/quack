@@ -28,6 +28,12 @@ The usage of the service is free of charge.
 #### Statistics
 ![Statistics](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/stats-800.png)
 
+#### Project Dashboard
+![Project](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/project-800.png)
+
+#### Test Suites
+![Test Suites](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/suites-800.png)
+
 How to run test server using docker
 ==========
 1. Just run "docker-compose up" from the root folder of the project
