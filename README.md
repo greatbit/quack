@@ -49,7 +49,7 @@ docker-compose -f docker-compose-demo.yml up
 
 for QuAck with demo data
 
-2. Go to localhost in the browser
+2. Navigate to ```localhost``` in your browser
 
 3. Use following credentials: "root:rootpass" for admin and "somelogin:somepass" for a regular user
 
