@@ -62,6 +62,9 @@ How to run on a standalone server
 
 3. Place [conf/quack.properties](https://github.com/greatbit/quack/blob/master/assembly/quack.properties) somewhere in the system (e.g. /etc/quack)
 
-4. Override boot classpath when running -Xbootclasspath/a:/etc/quack
+4. Override boot classpath when running ```-Xbootclasspath/a:/etc/quack```
 e.g., starting war using jetty-runner:
+
+```
 java -Xbootclasspath/a:/etc/quack -jar /usr/quack/lib/jetty-runner.jar /usr/quack/quack.war
+```
