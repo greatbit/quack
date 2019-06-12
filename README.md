@@ -39,7 +39,6 @@ How to run test server using docker
 1. Just run 
 ```
 docker-compose up
-
 ``` 
 
 from the root folder of the project or
