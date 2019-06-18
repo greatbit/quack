@@ -34,4 +34,6 @@
     <bean id="storage" class="${storage.provider}"/>
     <bean id="tracker" class="${quack.tracker}"/>
 
+    <bean class="ru.greatbit.plow.PluginsPostProcessor"/>
+
 </beans>

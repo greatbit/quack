@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.quack.com"
+           targetNamespace="urn:beans.quack.com"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="launcherConfig" type="LauncherConfig"/>
+    <xs:complexType name="LauncherConfig">
+        <xs:sequence>
+            <xs:element name="launcherId" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="launcherConfigDescriptor" type="LauncherConfigDescriptor"/>
+    <xs:complexType name="LauncherConfigDescriptor">
+        <xs:sequence>
+            <xs:element name="launcherId" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="configDescriptors" type="LauncherConfigDescriptorItem" minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="launcherConfigDescriptorItem" type="LauncherConfigDescriptorItem"/>
+    <xs:complexType name="LauncherConfigDescriptorItem">
+        <xs:sequence>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="defaultValues" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="restricted" type="xs:boolean"/>
+            <xs:element name="multi" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+</xs:schema>

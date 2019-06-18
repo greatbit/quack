@@ -17,6 +17,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>launcher</artifactId>
+        </dependency>
 
         <!-- Jersey + Spring -->
         <dependency>
