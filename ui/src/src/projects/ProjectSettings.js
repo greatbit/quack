@@ -4,6 +4,7 @@ import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import { withRouter } from 'react-router';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
@@ -17,7 +18,8 @@ class ProjectSettings extends SubComponent {
                  id: null,
                  name: "",
                  description: "",
-                 allowedGroups: []
+                 allowedGroups: [],
+                 launcherConfigs: []
              },
              originalProject: {
                   id: null,
@@ -27,6 +29,7 @@ class ProjectSettings extends SubComponent {
               },
              groups: [],
              groupsToDisplay: [],
+             launcherDescriptors: []
          };
          this.state.projectId = this.props.match.params.project;
          this.changeGroups = this.changeGroups.bind(this);
@@ -38,6 +41,9 @@ class ProjectSettings extends SubComponent {
          this.handleChange = this.handleChange.bind(this);
          this.removeProject = this.removeProject.bind(this);
          this.undelete = this.undelete.bind(this);
+         this.getLauncherForm = this.getLauncherForm.bind(this);
+         this.getDescriptor = this.getDescriptor.bind(this);
+         this.addLauncher = this.addLauncher.bind(this);
       }
 
     componentDidMount() {
@@ -50,6 +56,13 @@ class ProjectSettings extends SubComponent {
             this.refreshGroupsToDisplay();
             this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
+
+          axios
+            .get("/api/launcher/descriptors")
+            .then(response => {
+              this.state.launcherDescriptors = response.data;
+              this.setState(this.state);
+            }).catch(error => {Utils.onErrorMessage("Couldn't get launcher descriptors: ", error)});
      }
 
      getGroups(literal, callback){
@@ -126,10 +139,69 @@ class ProjectSettings extends SubComponent {
         this.setState(this.state);
     }
 
+    handleLauncherChange(event, index, propertyKey){
+        this.state.project.launcherConfigs[index][propertyKey] = event.target.value;
+        this.setState(this.state);
+    }
+
     cancelEdit(fieldName, event){
         this.state.project[fieldName] = this.state.originalProject[fieldName];
         this.setState(this.state);
         this.toggleEdit(fieldName, event);
+    }
+
+    getLauncherForm(config, index){
+        var descriptor = this.getDescriptor(config.launcherId);
+        return (
+            <p className="card-text">
+                <form>
+                    <select id="launcherId" index={index}>
+                        <option> </option>
+                        {
+                            this.state.launcherDescriptors.map(function(descriptor){
+                                return (
+                                    <option value={descriptor.launcherId}>{descriptor.name}</option>
+                                )
+
+                            }.bind(this))
+                        }
+                    </select>
+                    {
+                        config.properties.map(function(property, index){
+                            return this.getLauncherPropertyTemplate(property, index, descriptor)
+                        }.bind(this))
+                    }
+                </form>
+            </p>
+        )
+    }
+
+    getDescriptor(launcherId){
+        return this.state.launcherDescriptors.find(descriptor => descriptor.launcherId == launcherId);
+    }
+
+    getLauncherPropertyTemplate(property, index, descriptor){
+        //ToDo: use descriptor to render correct form
+        return this.getLauncherPropertyTextTemplate(property, index);
+    }
+
+    getLauncherPropertyTextTemplate(property, index){
+        return (
+            <div className="form-group row">
+                <label className="col-sm-2 col-form-label">{property.name}</label>
+                <div className="col-sm-10">
+                    <input type="text" name={property.key} value={property.value} index={index}  onChange={(e) => this.handleLauncherChange(e, index, property.key)} />
+                </div>
+            </div>
+        )
+    }
+
+    addLauncher(){
+        this.state.project.launcherConfigs = this.state.project.launcherConfigs || [];
+        this.state.project.launcherConfigs.push({
+            properties: []
+        });
+        this.setState(this.state);
     }
 
     render() {
@@ -178,6 +250,37 @@ class ProjectSettings extends SubComponent {
                                />
                     </div>
                 </div>
+
+                <h3>Launchers</h3>
+                 <div className="row">
+                    {
+                        (this.state.project.launcherConfigs || []).map(function(config, i){
+                            return(
+                                <div className="card project-card">
+                                  <div className="card-header">
+                                    <span>
+                                        {config.name}
+                                    </span>
+                                    <span className='float-right clickable edit-icon red'>
+                                        <FontAwesomeIcon icon={faMinusCircle} index={i}/>
+                                    </span>
+                                  </div>
+                                  <div className="card-body">
+                                    {
+                                        this.getLauncherForm(config, i)
+                                    }
+                                  </div>
+                                </div>
+                            )
+                        }.bind(this))
+                    }
+                </div>
+                <div className="row">
+                  <button type="button" className="btn btn-primary" onClick={this.addLauncher}>
+                     Add Launcher
+                  </button>
+                </div>
+
                 <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
                 <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-project-confirmation">
