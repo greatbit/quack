@@ -26,7 +26,7 @@
                     <xs:element name="status" type="LaunchStatus"/>
                     <xs:element name="startTime" type="xs:long"/>
                     <xs:element name="finishTime" type="xs:long"/>
-                    <xs:element name="launcherConfig" type="LauncherConfig"/>
+                    <xs:element name="launcherConfig" type="LauncherConfigBase"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>

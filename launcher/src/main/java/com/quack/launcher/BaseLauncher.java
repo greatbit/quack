@@ -49,7 +49,7 @@ public abstract class BaseLauncher<Config> implements Launcher {
 
     @Override
     public Config getPluginConfig(Object destination, LauncherConfig config) {
-        config.getProperties().forEach(configItem -> {
+        config.getProperties().entrySet().forEach(configItem -> {
             Field field;
             try {
                 field = destination.getClass().getDeclaredField(configItem.getKey());

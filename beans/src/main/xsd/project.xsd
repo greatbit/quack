@@ -33,7 +33,7 @@
                     <xs:element name="descriptionToDisplay" type="xs:string"/>
                     <xs:element name="projectGroupId" type="xs:string"/>
                     <xs:element name="allowedGroups" type="xs:string" maxOccurs="unbounded"/>
-                    <xs:element name="launcherConfigs" type="LauncherConfig" maxOccurs="unbounded"/>
+                    <xs:element name="launcherConfigs" type="LauncherConfigBase" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

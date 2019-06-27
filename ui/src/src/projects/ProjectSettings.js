@@ -140,7 +140,7 @@ class ProjectSettings extends SubComponent {
     }
 
     handleLauncherChange(event, index, propertyKey){
-        this.state.project.launcherConfigs[index][propertyKey] = event.target.value;
+        this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
         this.setState(this.state);
     }
 
@@ -151,25 +151,28 @@ class ProjectSettings extends SubComponent {
     }
 
     getLauncherForm(config, index){
-        var descriptor = this.getDescriptor(config.launcherId);
+        var descriptor = this.getDescriptor(config.launcherId) || {};
         return (
             <p className="card-text">
                 <form>
-                    <select id="launcherId" index={index}>
+                    <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
                         <option> </option>
                         {
                             this.state.launcherDescriptors.map(function(descriptor){
-                                return (
-                                    <option value={descriptor.launcherId}>{descriptor.name}</option>
-                                )
+                                var selected = descriptor.launcherId == config.launcherId;
+                                if (selected){
+                                    return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
+                                }
+                                return (<option value={descriptor.launcherId}>{descriptor.name}</option>)
 
                             }.bind(this))
                         }
                     </select>
                     {
-                        config.properties.map(function(property, index){
-                            return this.getLauncherPropertyTemplate(property, index, descriptor)
+                        (descriptor.configDescriptors || []).map(function(descriptorItem){
+                            return this.getLauncherPropertyTemplate(descriptorItem, config, index)
                         }.bind(this))
+
                     }
                 </form>
             </p>
@@ -180,17 +183,17 @@ class ProjectSettings extends SubComponent {
         return this.state.launcherDescriptors.find(descriptor => descriptor.launcherId == launcherId);
     }
 
-    getLauncherPropertyTemplate(property, index, descriptor){
+    getLauncherPropertyTemplate(descriptorItem, config, index){
         //ToDo: use descriptor to render correct form
-        return this.getLauncherPropertyTextTemplate(property, index);
+        return this.getLauncherPropertyTextTemplate(descriptorItem, config, index);
     }
 
-    getLauncherPropertyTextTemplate(property, index){
+    getLauncherPropertyTextTemplate(descriptorItem, config, index){
         return (
             <div className="form-group row">
-                <label className="col-sm-2 col-form-label">{property.name}</label>
+                <label className="col-sm-2 col-form-label">{descriptorItem.name}</label>
                 <div className="col-sm-10">
-                    <input type="text" name={property.key} value={property.value} index={index}  onChange={(e) => this.handleLauncherChange(e, index, property.key)} />
+                    <input type="text" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
                 </div>
             </div>
         )
@@ -199,7 +202,7 @@ class ProjectSettings extends SubComponent {
     addLauncher(){
         this.state.project.launcherConfigs = this.state.project.launcherConfigs || [];
         this.state.project.launcherConfigs.push({
-            properties: []
+            properties: {}
         });
         this.setState(this.state);
     }

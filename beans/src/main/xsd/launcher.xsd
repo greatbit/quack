@@ -10,12 +10,11 @@
 
     <xs:include schemaLocation="common.xsd"/>
 
-    <xs:element name="launcherConfig" type="LauncherConfig"/>
-    <xs:complexType name="LauncherConfig">
+    <xs:element name="launcherConfigBase" type="LauncherConfigBase"/>
+    <xs:complexType name="LauncherConfigBase" abstract="true">
         <xs:sequence>
             <xs:element name="launcherId" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
