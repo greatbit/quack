@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
+import LauncherForm from '../launches/LauncherForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
@@ -29,7 +30,8 @@ class ProjectSettings extends SubComponent {
               },
              groups: [],
              groupsToDisplay: [],
-             launcherDescriptors: []
+             launcherDescriptors: [],
+             launcherIndexToRemove: null
          };
          this.state.projectId = this.props.match.params.project;
          this.changeGroups = this.changeGroups.bind(this);
@@ -41,9 +43,10 @@ class ProjectSettings extends SubComponent {
          this.handleChange = this.handleChange.bind(this);
          this.removeProject = this.removeProject.bind(this);
          this.undelete = this.undelete.bind(this);
-         this.getLauncherForm = this.getLauncherForm.bind(this);
-         this.getDescriptor = this.getDescriptor.bind(this);
          this.addLauncher = this.addLauncher.bind(this);
+         this.removeLauncher = this.removeLauncher.bind(this);
+         this.cancelRemoveLauncherConfirmation = this.cancelRemoveLauncherConfirmation.bind(this);
+         this.handleLauncherChange = this.handleLauncherChange.bind(this);
       }
 
     componentDidMount() {
@@ -140,7 +143,11 @@ class ProjectSettings extends SubComponent {
     }
 
     handleLauncherChange(event, index, propertyKey){
-        this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
+        if(propertyKey == 'launcherId'){
+            this.state.project.launcherConfigs[index].launcherId = event.target.value;
+        } else {
+            this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
+        }
         this.setState(this.state);
     }
 
@@ -150,54 +157,6 @@ class ProjectSettings extends SubComponent {
         this.toggleEdit(fieldName, event);
     }
 
-    getLauncherForm(config, index){
-        var descriptor = this.getDescriptor(config.launcherId) || {};
-        return (
-            <p className="card-text">
-                <form>
-                    <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
-                        <option> </option>
-                        {
-                            this.state.launcherDescriptors.map(function(descriptor){
-                                var selected = descriptor.launcherId == config.launcherId;
-                                if (selected){
-                                    return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
-                                }
-                                return (<option value={descriptor.launcherId}>{descriptor.name}</option>)
-
-                            }.bind(this))
-                        }
-                    </select>
-                    {
-                        (descriptor.configDescriptors || []).map(function(descriptorItem){
-                            return this.getLauncherPropertyTemplate(descriptorItem, config, index)
-                        }.bind(this))
-
-                    }
-                </form>
-            </p>
-        )
-    }
-
-    getDescriptor(launcherId){
-        return this.state.launcherDescriptors.find(descriptor => descriptor.launcherId == launcherId);
-    }
-
-    getLauncherPropertyTemplate(descriptorItem, config, index){
-        //ToDo: use descriptor to render correct form
-        return this.getLauncherPropertyTextTemplate(descriptorItem, config, index);
-    }
-
-    getLauncherPropertyTextTemplate(descriptorItem, config, index){
-        return (
-            <div className="form-group row">
-                <label className="col-sm-2 col-form-label">{descriptorItem.name}</label>
-                <div className="col-sm-10">
-                    <input type="text" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
-                </div>
-            </div>
-        )
-    }
 
     addLauncher(){
         this.state.project.launcherConfigs = this.state.project.launcherConfigs || [];
@@ -205,6 +164,24 @@ class ProjectSettings extends SubComponent {
             properties: {}
         });
         this.setState(this.state);
+    }
+
+    removeLauncherConfirmation(index){
+        this.state.launcherIndexToRemove = index;
+        $("#remove-launcher-confirmation").modal("show");
+    }
+
+    cancelRemoveLauncherConfirmation(){
+        this.state.launcherIndexToRemove = null;
+        $("#remove-launcher-confirmation").modal("hide");
+    }
+
+    removeLauncher(){
+        if (this.state.launcherIndexToRemove == null) return;
+        this.state.project.launcherConfigs.splice(this.state.launcherIndexToRemove, 1);
+        this.state.launcherIndexToRemove = null;
+        this.setState(this.state);
+        $("#remove-launcher-confirmation").modal("hide");
     }
 
     render() {
@@ -259,19 +236,20 @@ class ProjectSettings extends SubComponent {
                     {
                         (this.state.project.launcherConfigs || []).map(function(config, i){
                             return(
-                                <div className="card project-card">
-                                  <div className="card-header">
-                                    <span>
-                                        {config.name}
-                                    </span>
-                                    <span className='float-right clickable edit-icon red'>
-                                        <FontAwesomeIcon icon={faMinusCircle} index={i}/>
-                                    </span>
+                                <div className="card col-6">
+                                  <div className="card-header row">
+                                    <div className="col-11">
+                                        {config.name || ""}
+                                    </div>
+                                    <div className="col-1">
+                                        <span className='float-right clickable edit-icon-visible red'>
+                                            <FontAwesomeIcon icon={faMinusCircle} index={i} onClick={(e) => this.removeLauncherConfirmation(i)}/>
+                                        </span>
+                                    </div>
                                   </div>
                                   <div className="card-body">
-                                    {
-                                        this.getLauncherForm(config, i)
-                                    }
+                                        <LauncherForm launcherDescriptors={this.state.launcherDescriptors}
+                                                launcherConfig={config} configIndex={i} handleLauncherChange={this.handleLauncherChange}/>
                                   </div>
                                 </div>
                             )
@@ -305,6 +283,23 @@ class ProjectSettings extends SubComponent {
                       </div>
                    </div>
                </div>
+               <div className="modal fade" tabIndex="-1" role="dialog" id="remove-launcher-confirmation">
+                   <div className="modal-dialog" role="document">
+                       <div className="modal-content">
+                         <div className="modal-header">
+                           <h5 className="modal-title">Remove Launcher</h5>
+                           <button type="button" className="close" onClick={this.cancelRemoveLauncherConfirmation} aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                           </button>
+                         </div>
+                         <div className="modal-body">Are you sure you want to remove Launcher?</div>
+                         <div className="modal-footer">
+                           <button type="button" className="btn btn-secondary" onClick={this.cancelRemoveLauncherConfirmation}>Close</button>
+                           <button type="button" className="btn btn-danger" onClick={this.removeLauncher}>Remove Launcher</button>
+                         </div>
+                       </div>
+                    </div>
+                </div>
             </div>
         );
       }

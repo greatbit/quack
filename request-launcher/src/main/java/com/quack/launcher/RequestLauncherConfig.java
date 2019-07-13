@@ -1,7 +1,7 @@
 package com.quack.launcher;
 
 public class RequestLauncherConfig {
-    @ConfigItem(title = "endpoint")
+    @ConfigItem(title = "Endpoint")
     private final String endpoint;
 
     @ConfigItem(title = "Request type", restricted = true, defaultValues = {"POST", "GET", "PUT"})
