@@ -80,6 +80,12 @@ class LauncherForm extends SubComponent {
                             </select>
                         </div>
                      </div>
+                     <div className="form-group row">
+                         <label className="col-3 col-form-label">Name</label>
+                         <div className="col-9">
+                            <input type="text" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
+                         </div>
+                     </div>
                     {
                         (descriptor.configDescriptors || []).map(function(descriptorItem){
                             return this.getLauncherPropertyTemplate(descriptorItem, config, index)

@@ -145,6 +145,8 @@ class ProjectSettings extends SubComponent {
     handleLauncherChange(event, index, propertyKey){
         if(propertyKey == 'launcherId'){
             this.state.project.launcherConfigs[index].launcherId = event.target.value;
+        } else if (propertyKey == 'name'){
+            this.state.project.launcherConfigs[index].name = event.target.value;
         } else {
             this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
         }
