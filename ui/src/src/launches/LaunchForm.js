@@ -85,7 +85,7 @@ class LaunchForm extends SubComponent {
        if(propertyKey == 'uuid'){
             this.state.launch.launcherConfig = this.state.project.launcherConfigs.find(config => config.uuid == event.target.value);
         } else {
-            this.state.launch.properties[propertyKey] = event.target.value;
+            this.state.launch.launcherConfig.properties[propertyKey] = event.target.value;
         }
         this.setState(this.state);
     }
