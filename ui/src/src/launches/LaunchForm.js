@@ -48,6 +48,9 @@ class LaunchForm extends SubComponent {
         axios.post('/api/' + this.props.match.params.project + '/launch/', this.state.launch)
         .then(response => {
             this.state.launch = response.data;
+            if (!this.state.launch.id){
+                this.state.launch.triggeredByLauncher = true;
+            }
             this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't save launch: ", error)});
         event.preventDefault();
@@ -96,6 +99,10 @@ class LaunchForm extends SubComponent {
             modalBody = <div className="modal-body" id="launch-created">
                             <Link to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
                         </div>
+        } else if (this.state.launch.triggeredByLauncher) {
+            modalBody = <div className="modal-body" id="launch-created">
+                                        Launch was triggered using {this.state.launch.launcherConfig.name}
+                                    </div>
         } else {
             modalBody =
                 <div className="modal-body" id="launch-creation-form">
