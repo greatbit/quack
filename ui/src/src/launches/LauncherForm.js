@@ -12,15 +12,17 @@ class LauncherForm extends SubComponent {
     state = {
         launcherDescriptors: [],
         launcherConfig: {},
-        configIndex: 0
+        configIndex: 0,
+        selectableType: true
     };
 
     constructor(props) {
         super(props);
         this.state.projectId = props.projectId;
-        this.state.launcherDescriptors = props.launcherDescriptors;
+        this.state.launcherDescriptors = props.launcherDescriptors || [];
         this.state.launcherConfig = props.launcherConfig;
         this.state.configIndex = props.configIndex;
+        this.state.selectableType = props.selectableType;
         if (this.state.projectId){
             this.getProject();
         }
@@ -62,30 +64,40 @@ class LauncherForm extends SubComponent {
         return (
             <p className="card-text">
                 <form>
-                    <div className="form-group row">
-                        <label className="col-3 col-form-label">Launcher</label>
-                        <div className="col-9">
-                            <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
-                                <option> </option>
-                                {
-                                    this.state.launcherDescriptors.map(function(descriptor){
-                                        var selected = descriptor.launcherId == config.launcherId;
-                                        if (selected){
-                                            return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
-                                        }
-                                        return (<option value={descriptor.launcherId}>{descriptor.name}</option>)
+                    {this.state.selectableType &&
+                        <div>
+                            <div className="form-group row">
+                                <label className="col-3 col-form-label">Launcher</label>
+                                <div className="col-9">
+                                    <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
+                                        <option> </option>
+                                        {
+                                            this.state.launcherDescriptors.map(function(descriptor){
+                                                var selected = descriptor.launcherId == config.launcherId;
+                                                if (selected){
+                                                    return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
+                                                }
+                                                return (<option value={descriptor.launcherId}>{descriptor.name}</option>)
 
-                                    }.bind(this))
-                                }
-                            </select>
-                        </div>
-                     </div>
-                     <div className="form-group row">
-                         <label className="col-3 col-form-label">Name</label>
-                         <div className="col-9">
-                            <input type="text" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
+                                            }.bind(this))
+                                        }
+                                    </select>
+                                </div>
+                             </div>
+
+                             <div className="form-group row">
+                                 <label className="col-3 col-form-label">Name</label>
+                                 <div className="col-9">
+                                    <input type="text" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
+                                 </div>
+                             </div>
                          </div>
-                     </div>
+                    }
+                    {!this.state.selectableType &&
+                        <div className="form-group row">
+                             <label className="col-3 col-form-label">{((this.state.launcherConfig || {}).name) || ""}</label>
+                         </div>
+                    }
                     {
                         (descriptor.configDescriptors || []).map(function(descriptorItem){
                             return this.getLauncherPropertyTemplate(descriptorItem, config, index)

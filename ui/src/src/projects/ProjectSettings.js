@@ -250,7 +250,7 @@ class ProjectSettings extends SubComponent {
                                     </div>
                                   </div>
                                   <div className="card-body">
-                                        <LauncherForm launcherDescriptors={this.state.launcherDescriptors}
+                                        <LauncherForm launcherDescriptors={this.state.launcherDescriptors} selectableType={true}
                                                 launcherConfig={config} configIndex={i} handleLauncherChange={this.handleLauncherChange}/>
                                   </div>
                                 </div>

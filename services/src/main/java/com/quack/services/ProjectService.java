@@ -10,6 +10,7 @@ import com.quack.dal.ProjectRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -55,5 +56,15 @@ public class ProjectService extends BaseService<Project> {
                         project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains
                         )
         ).collect(toList());
+    }
+
+    @Override
+    protected void beforeSave(Session session, String projectId, Project project) {
+        super.beforeSave(session, projectId, project);
+        project.getLauncherConfigs().forEach(launcherConfig -> {
+            if (isEmpty(launcherConfig.getUuid())) {
+                launcherConfig.setUuid(UUID.randomUUID().toString());
+            }
+        });
     }
 }

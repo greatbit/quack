@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
+import LauncherForm from '../launches/LauncherForm';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
 
@@ -15,12 +16,22 @@ class LaunchForm extends SubComponent {
              launch: {
                  name: "",
                  testSuite: {filter: {}},
-                 properties: []
-             }
+                 properties: [],
+                 launcherConfig: {properties: {}}
+             },
+             project: {
+                  id: null,
+                  name: "",
+                  description: "",
+                  allowedGroups: [],
+                  launcherConfigs: []
+              },
+             launcherDescriptors: []
          };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLauncherChange = this.handleLauncherChange.bind(this);
       }
 
       handleChange(event) {
@@ -54,6 +65,29 @@ class LaunchForm extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
+
+        axios
+          .get("/api/project/" + this.props.match.params.project)
+          .then(response => {
+            this.state.project = response.data;
+            this.setState(this.state);
+          }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
+
+        axios
+            .get("/api/launcher/descriptors")
+            .then(response => {
+              this.state.launcherDescriptors = response.data;
+              this.setState(this.state);
+            }).catch(error => {Utils.onErrorMessage("Couldn't get launcher descriptors: ", error)});
+    }
+
+    handleLauncherChange(event, index, propertyKey){
+       if(propertyKey == 'uuid'){
+            this.state.launch.launcherConfig = this.state.project.launcherConfigs.find(config => config.uuid == event.target.value);
+        } else {
+            this.state.launch.properties[propertyKey] = event.target.value;
+        }
+        this.setState(this.state);
     }
 
     render() {
@@ -72,7 +106,29 @@ class LaunchForm extends SubComponent {
                                 <input type="text" className="form-control" name="name" onChange={this.handleChange} />
                             </div>
                         </div>
+                        <div className="form-group row">
+                            <label className="col-3 col-form-label">Launcher</label>
+                            <div className="col-9">
+                                <select id="launcherUUID" onChange={(e) => this.handleLauncherChange(e, 0, "uuid")}>
+                                    <option> </option>
+                                    {
+                                        this.state.project.launcherConfigs.map(function(config){
+                                            var selected = config.uuid == (this.state.launch.launcherConfig || {}).uuid;
+                                            if (selected){
+                                                return (<option value={config.uuid} selected>{config.name}</option>)
+                                            }
+                                            return (<option value={config.uuid} >{config.name}</option>)
+
+                                        }.bind(this))
+                                    }
+                                </select>
+                            </div>
+                         </div>
                     </form>
+                    <div>
+                        <LauncherForm launcherConfig={this.state.launch.launcherConfig} configIndex={0} selectableType={false}
+                            handleLauncherChange={this.handleLauncherChange} launcherDescriptors={this.state.launcherDescriptors}/>
+                    </div>
                 </div>
         }
 
