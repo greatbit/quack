@@ -32,7 +32,9 @@ public abstract class BaseLauncher<Config> implements Launcher {
             if (field.isAnnotationPresent(ConfigItem.class)) {
                 ConfigItem annotation = field.getAnnotation(ConfigItem.class);
                 configDescriptor.getConfigDescriptors().add(new LauncherConfigDescriptorItem(
-                        field.getName(), annotation.title(), Arrays.asList(annotation.defaultValues()), annotation.restricted(), annotation.multi()
+                        field.getName(), annotation.title(), Arrays.asList(annotation.defaultValues()),
+                        annotation.restricted(), annotation.multi(),
+                        field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)
                 ));
             }
         }

@@ -37,6 +37,7 @@
             <xs:element name="defaultValues" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="restricted" type="xs:boolean"/>
             <xs:element name="multi" type="xs:boolean"/>
+            <xs:element name="boolean" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
 

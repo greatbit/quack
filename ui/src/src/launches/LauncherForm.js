@@ -30,6 +30,8 @@ class LauncherForm extends SubComponent {
         this.getProject = this.getProject.bind(this);
         this.getLauncherPropertyFormTemplate = this.getLauncherPropertyFormTemplate.bind(this);
         this.getLauncherPropertyTemplate = this.getLauncherPropertyTemplate.bind(this);
+        this.getLauncherPropertyBooleanTemplate = this.getLauncherPropertyBooleanTemplate.bind(this);
+        this.handleLauncherBooleanChange = this.handleLauncherBooleanChange.bind(this);
         this.setState(this.state);
     }
 
@@ -118,6 +120,11 @@ class LauncherForm extends SubComponent {
         return this.state.launcherDescriptors.find(descriptor => descriptor.launcherId == launcherId);
     }
 
+    handleLauncherBooleanChange(event, index, propertyKey){
+        event.target.value = event.target.checked;
+        this.handleLauncherChange(event, index, propertyKey);
+    }
+
     getLauncherPropertyTemplate(descriptorItem, config, index){
         return (
             <div className="form-group row">
@@ -130,12 +137,14 @@ class LauncherForm extends SubComponent {
     }
 
     getLauncherPropertyFormTemplate(descriptorItem, config, index){
-        //ToDo: use descriptor to render correct form
         if (descriptorItem.defaultValues.length > 1 && !descriptorItem.restricted){
             return this.getLauncherPropertySelectEditableTemplate(descriptorItem, config, index);
         }
         if (descriptorItem.defaultValues.length > 1 && descriptorItem.restricted){
             return this.getLauncherPropertySelectRestrictedTemplate(descriptorItem, config, index);
+        }
+        if (descriptorItem.boolean){
+            return this.getLauncherPropertyBooleanTemplate(descriptorItem, config, index);
         }
         if (descriptorItem.restricted){
             return this.getLauncherPropertyTextDisabledTemplate(descriptorItem, config, index);
@@ -176,9 +185,27 @@ class LauncherForm extends SubComponent {
     }
 
     getLauncherPropertySelectEditableTemplate(descriptorItem, config, index){
-        //ToDo implement editable list
+        return (
+                <input type="text" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+            placeholder={descriptorItem.defaultValues.join(", ")} onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
+        )
     }
 
+    getLauncherPropertyBooleanTemplate(descriptorItem, config, index){
+        return(
+            <div>
+            {config.properties[descriptorItem.key] && config.properties[descriptorItem.key].toLowerCase() == "true" &&
+                <input type="checkbox" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                    placeholder={descriptorItem.defaultValues.join(", ")} onChange={(e) => this.handleLauncherBooleanChange(e, index, descriptorItem.key)} checked />
+            }
+            {(!config.properties[descriptorItem.key] || config.properties[descriptorItem.key].toLowerCase() != "true") &&
+
+                <input type="checkbox" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                    placeholder={descriptorItem.defaultValues.join(", ")} onChange={(e) => this.handleLauncherBooleanChange(e, index, descriptorItem.key)} />
+            }
+            </div>
+        )
+    }
 
     render() {
         return(
