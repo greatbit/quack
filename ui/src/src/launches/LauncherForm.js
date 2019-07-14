@@ -28,6 +28,8 @@ class LauncherForm extends SubComponent {
         }
         this.handleLauncherChange = props.handleLauncherChange;
         this.getProject = this.getProject.bind(this);
+        this.getLauncherPropertyFormTemplate = this.getLauncherPropertyFormTemplate.bind(this);
+        this.getLauncherPropertyTemplate = this.getLauncherPropertyTemplate.bind(this);
         this.setState(this.state);
     }
 
@@ -72,7 +74,7 @@ class LauncherForm extends SubComponent {
                             <div className="form-group row">
                                 <label className="col-4 col-form-label">Launcher</label>
                                 <div className="col-8">
-                                    <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
+                                    <select id="launcherId" className="form-control" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
                                         <option> </option>
                                         {
                                             this.state.launcherDescriptors.map(function(descriptor){
@@ -91,7 +93,7 @@ class LauncherForm extends SubComponent {
                              <div className="form-group row">
                                  <label className="col-4 col-form-label">Name</label>
                                  <div className="col-8">
-                                    <input type="text" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
+                                    <input type="text" className="form-control" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
                                  </div>
                              </div>
                          </div>
@@ -117,20 +119,64 @@ class LauncherForm extends SubComponent {
     }
 
     getLauncherPropertyTemplate(descriptorItem, config, index){
+        return (
+            <div className="form-group row">
+                <label className="col-4 col-form-label">{descriptorItem.name}</label>
+                <div className="col-8">
+                    {this.getLauncherPropertyFormTemplate(descriptorItem, config, index)}
+                </div>
+            </div>
+        )
+    }
+
+    getLauncherPropertyFormTemplate(descriptorItem, config, index){
         //ToDo: use descriptor to render correct form
+        if (descriptorItem.defaultValues.length > 1 && !descriptorItem.restricted){
+            return this.getLauncherPropertySelectEditableTemplate(descriptorItem, config, index);
+        }
+        if (descriptorItem.defaultValues.length > 1 && descriptorItem.restricted){
+            return this.getLauncherPropertySelectRestrictedTemplate(descriptorItem, config, index);
+        }
+        if (descriptorItem.restricted){
+            return this.getLauncherPropertyTextDisabledTemplate(descriptorItem, config, index);
+        }
         return this.getLauncherPropertyTextTemplate(descriptorItem, config, index);
     }
 
     getLauncherPropertyTextTemplate(descriptorItem, config, index){
         return (
-            <div className="form-group row">
-                <label className="col-4 col-form-label">{descriptorItem.name}</label>
-                <div className="col-8">
-                    <input type="text" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
-                        onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
-                </div>
-            </div>
+            <input type="text" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                       onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
         )
+    }
+
+    getLauncherPropertyTextDisabledTemplate(descriptorItem, config, index){
+        return (
+            <input type="text" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                 disabled="true" onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
+        )
+    }
+
+    getLauncherPropertySelectRestrictedTemplate(descriptorItem, config, index){
+        return(
+            <select className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                        onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)}>
+                {
+                    descriptorItem.defaultValues.map(function(defaultValue){
+                        var selected = defaultValue == config.properties[descriptorItem.key];
+                        if (selected){
+                            return (<option value={defaultValue} selected>{defaultValue}</option>)
+                        }
+                        return (<option value={defaultValue}>{defaultValue}</option>)
+
+                    }.bind(this))
+                }
+            </select>
+        )
+    }
+
+    getLauncherPropertySelectEditableTemplate(descriptorItem, config, index){
+        //ToDo implement editable list
     }
 
 
