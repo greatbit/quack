@@ -10,7 +10,6 @@ import com.quack.beans.LaunchStats;
 import com.quack.beans.LaunchStatus;
 import com.quack.beans.LaunchTestCase;
 import com.quack.beans.LaunchTestCaseTree;
-import com.quack.beans.TestCase;
 import com.quack.beans.TestCaseTree;
 import com.quack.beans.TestSuite;
 import com.quack.beans.TestcaseFilter;
@@ -25,8 +24,6 @@ import com.quack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

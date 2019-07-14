@@ -5,10 +5,12 @@ import com.quack.beans.Launch;
 import com.quack.beans.LaunchStatistics;
 import com.quack.beans.LaunchStatus;
 import com.quack.beans.LaunchTestCase;
+import com.quack.launcher.Launcher;
 import com.quack.services.BaseService;
 import com.quack.services.LaunchService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.greatbit.plow.PluginsContainer;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.ws.rs.GET;
@@ -23,6 +25,9 @@ public class LaunchResource extends BaseCrudResource<Launch> {
 
     @Autowired
     private LaunchService service;
+
+    @Autowired
+    private PluginsContainer pluginsContainer;
 
     @Override
     protected BaseService<Launch> getService() {
@@ -46,4 +51,19 @@ public class LaunchResource extends BaseCrudResource<Launch> {
         return service.getLaunchesStatistics(getUserSession(), projectId, initFilter(request));
     }
 
+    @Override
+    public Launch create(String projectId, Launch launch) {
+        if (launch.getLauncherConfig() != null) {
+            Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
+            try {
+                launcher.launch(launch, projectId, request);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            if (!launcher.isToCreateLaunch()) {
+                return launch;
+            }
+        }
+        return super.create(projectId, launch);
+    }
 }
