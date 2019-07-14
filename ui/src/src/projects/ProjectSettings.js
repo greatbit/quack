@@ -264,8 +264,15 @@ class ProjectSettings extends SubComponent {
                   </button>
                 </div>
 
-                <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
-                <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
+                <div className="project-settings-control row">
+                    <div className="col-10">
+                        <button type="button" className="btn btn-success" onClick={this.submit}>Save</button>
+                    </div>
+                    <div className="col-2">
+                        <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
+                    </div>
+                </div>
+
                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-project-confirmation">
                   <div className="modal-dialog" role="document">
                       <div className="modal-content">
