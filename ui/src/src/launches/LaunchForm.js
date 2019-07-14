@@ -101,15 +101,15 @@ class LaunchForm extends SubComponent {
                 <div className="modal-body" id="launch-creation-form">
                     <form>
                         <div className="form-group row">
-                            <label className="col-sm-3 col-form-label">Name</label>
-                            <div className="col-sm-9">
+                            <label className="col-4 col-form-label">Name</label>
+                            <div className="col-8">
                                 <input type="text" className="form-control" name="name" onChange={this.handleChange} />
                             </div>
                         </div>
                         <div className="form-group row">
-                            <label className="col-3 col-form-label">Launcher</label>
-                            <div className="col-9">
-                                <select id="launcherUUID" onChange={(e) => this.handleLauncherChange(e, 0, "uuid")}>
+                            <label className="col-4 col-form-label">Launcher</label>
+                            <div className="col-8">
+                                <select id="launcherUUID" className="form-control" onChange={(e) => this.handleLauncherChange(e, 0, "uuid")}>
                                     <option> </option>
                                     {
                                         this.state.project.launcherConfigs.map(function(config){

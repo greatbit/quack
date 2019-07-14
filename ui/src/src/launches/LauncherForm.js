@@ -70,8 +70,8 @@ class LauncherForm extends SubComponent {
                     {this.state.selectableType &&
                         <div>
                             <div className="form-group row">
-                                <label className="col-3 col-form-label">Launcher</label>
-                                <div className="col-9">
+                                <label className="col-4 col-form-label">Launcher</label>
+                                <div className="col-8">
                                     <select id="launcherId" index={index} onChange={(e) => this.handleLauncherChange(e, index, "launcherId")}>
                                         <option> </option>
                                         {
@@ -89,8 +89,8 @@ class LauncherForm extends SubComponent {
                              </div>
 
                              <div className="form-group row">
-                                 <label className="col-3 col-form-label">Name</label>
-                                 <div className="col-9">
+                                 <label className="col-4 col-form-label">Name</label>
+                                 <div className="col-8">
                                     <input type="text" name="name" value={config.name || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, "name")} />
                                  </div>
                              </div>
@@ -98,7 +98,7 @@ class LauncherForm extends SubComponent {
                     }
                     {!this.state.selectableType &&
                         <div className="form-group row">
-                             <label className="col-3 col-form-label">{((this.state.launcherConfig || {}).name) || ""}</label>
+                             <label className="col-4 col-form-label">Launcher: {((this.state.launcherConfig || {}).name) || ""}</label>
                          </div>
                     }
                     {
@@ -124,9 +124,10 @@ class LauncherForm extends SubComponent {
     getLauncherPropertyTextTemplate(descriptorItem, config, index){
         return (
             <div className="form-group row">
-                <label className="col-3 col-form-label">{descriptorItem.name}</label>
-                <div className="col-9">
-                    <input type="text" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}  onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
+                <label className="col-4 col-form-label">{descriptorItem.name}</label>
+                <div className="col-8">
+                    <input type="text" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                        onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
                 </div>
             </div>
         )
