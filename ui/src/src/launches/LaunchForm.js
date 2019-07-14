@@ -83,7 +83,7 @@ class LaunchForm extends SubComponent {
 
     handleLauncherChange(event, index, propertyKey){
        if(propertyKey == 'uuid'){
-            this.state.launch.launcherConfig = this.state.project.launcherConfigs.find(config => config.uuid == event.target.value);
+            this.state.launch.launcherConfig = this.state.project.launcherConfigs.find(config => config.uuid == event.target.value) || {};
         } else {
             this.state.launch.launcherConfig.properties[propertyKey] = event.target.value;
         }
@@ -126,8 +126,10 @@ class LaunchForm extends SubComponent {
                          </div>
                     </form>
                     <div>
-                        <LauncherForm launcherConfig={this.state.launch.launcherConfig} configIndex={0} selectableType={false}
-                            handleLauncherChange={this.handleLauncherChange} launcherDescriptors={this.state.launcherDescriptors}/>
+                        {this.state.launch.launcherConfig && this.state.launch.launcherConfig.uuid &&
+                            <LauncherForm launcherConfig={this.state.launch.launcherConfig} configIndex={0} selectableType={false}
+                                handleLauncherChange={this.handleLauncherChange} launcherDescriptors={this.state.launcherDescriptors}/>
+                        }
                     </div>
                 </div>
         }
