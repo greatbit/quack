@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
+import LauncherForm from '../launches/LauncherForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import { withRouter } from 'react-router';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
@@ -17,7 +19,8 @@ class ProjectSettings extends SubComponent {
                  id: null,
                  name: "",
                  description: "",
-                 allowedGroups: []
+                 allowedGroups: [],
+                 launcherConfigs: []
              },
              originalProject: {
                   id: null,
@@ -27,6 +30,8 @@ class ProjectSettings extends SubComponent {
               },
              groups: [],
              groupsToDisplay: [],
+             launcherDescriptors: [],
+             launcherIndexToRemove: null
          };
          this.state.projectId = this.props.match.params.project;
          this.changeGroups = this.changeGroups.bind(this);
@@ -38,6 +43,10 @@ class ProjectSettings extends SubComponent {
          this.handleChange = this.handleChange.bind(this);
          this.removeProject = this.removeProject.bind(this);
          this.undelete = this.undelete.bind(this);
+         this.addLauncher = this.addLauncher.bind(this);
+         this.removeLauncher = this.removeLauncher.bind(this);
+         this.cancelRemoveLauncherConfirmation = this.cancelRemoveLauncherConfirmation.bind(this);
+         this.handleLauncherChange = this.handleLauncherChange.bind(this);
       }
 
     componentDidMount() {
@@ -50,6 +59,13 @@ class ProjectSettings extends SubComponent {
             this.refreshGroupsToDisplay();
             this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
+
+          axios
+            .get("/api/launcher/descriptors")
+            .then(response => {
+              this.state.launcherDescriptors = response.data;
+              this.setState(this.state);
+            }).catch(error => {Utils.onErrorMessage("Couldn't get launcher descriptors: ", error)});
      }
 
      getGroups(literal, callback){
@@ -126,10 +142,48 @@ class ProjectSettings extends SubComponent {
         this.setState(this.state);
     }
 
+    handleLauncherChange(event, index, propertyKey){
+        if(propertyKey == 'launcherId'){
+            this.state.project.launcherConfigs[index].launcherId = event.target.value;
+        } else if (propertyKey == 'name'){
+            this.state.project.launcherConfigs[index].name = event.target.value;
+        } else {
+            this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
+        }
+        this.setState(this.state);
+    }
+
     cancelEdit(fieldName, event){
         this.state.project[fieldName] = this.state.originalProject[fieldName];
         this.setState(this.state);
         this.toggleEdit(fieldName, event);
+    }
+
+
+    addLauncher(){
+        this.state.project.launcherConfigs = this.state.project.launcherConfigs || [];
+        this.state.project.launcherConfigs.push({
+            properties: {}
+        });
+        this.setState(this.state);
+    }
+
+    removeLauncherConfirmation(index){
+        this.state.launcherIndexToRemove = index;
+        $("#remove-launcher-confirmation").modal("show");
+    }
+
+    cancelRemoveLauncherConfirmation(){
+        this.state.launcherIndexToRemove = null;
+        $("#remove-launcher-confirmation").modal("hide");
+    }
+
+    removeLauncher(){
+        if (this.state.launcherIndexToRemove == null) return;
+        this.state.project.launcherConfigs.splice(this.state.launcherIndexToRemove, 1);
+        this.state.launcherIndexToRemove = null;
+        this.setState(this.state);
+        $("#remove-launcher-confirmation").modal("hide");
     }
 
     render() {
@@ -178,6 +232,38 @@ class ProjectSettings extends SubComponent {
                                />
                     </div>
                 </div>
+
+                <h3>Launchers</h3>
+                 <div className="row">
+                    {
+                        (this.state.project.launcherConfigs || []).map(function(config, i){
+                            return(
+                                <div className="card col-6">
+                                  <div className="card-header row">
+                                    <div className="col-11">
+                                        {config.name || ""}
+                                    </div>
+                                    <div className="col-1">
+                                        <span className='float-right clickable edit-icon-visible red'>
+                                            <FontAwesomeIcon icon={faMinusCircle} index={i} onClick={(e) => this.removeLauncherConfirmation(i)}/>
+                                        </span>
+                                    </div>
+                                  </div>
+                                  <div className="card-body">
+                                        <LauncherForm launcherDescriptors={this.state.launcherDescriptors} selectableType={true}
+                                                launcherConfig={config} configIndex={i} handleLauncherChange={this.handleLauncherChange}/>
+                                  </div>
+                                </div>
+                            )
+                        }.bind(this))
+                    }
+                </div>
+                <div className="row">
+                  <button type="button" className="btn btn-primary" onClick={this.addLauncher}>
+                     Add Launcher
+                  </button>
+                </div>
+
                 <button type="button" className="btn btn-primary" onClick={this.submit}>Save</button>
                 <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-project-confirmation">Remove Project</button>
                 <div className="modal fade" tabIndex="-1" role="dialog" id="remove-project-confirmation">
@@ -199,6 +285,23 @@ class ProjectSettings extends SubComponent {
                       </div>
                    </div>
                </div>
+               <div className="modal fade" tabIndex="-1" role="dialog" id="remove-launcher-confirmation">
+                   <div className="modal-dialog" role="document">
+                       <div className="modal-content">
+                         <div className="modal-header">
+                           <h5 className="modal-title">Remove Launcher</h5>
+                           <button type="button" className="close" onClick={this.cancelRemoveLauncherConfirmation} aria-label="Close">
+                             <span aria-hidden="true">&times;</span>
+                           </button>
+                         </div>
+                         <div className="modal-body">Are you sure you want to remove Launcher?</div>
+                         <div className="modal-footer">
+                           <button type="button" className="btn btn-secondary" onClick={this.cancelRemoveLauncherConfirmation}>Close</button>
+                           <button type="button" className="btn btn-danger" onClick={this.removeLauncher}>Remove Launcher</button>
+                         </div>
+                       </div>
+                    </div>
+                </div>
             </div>
         );
       }

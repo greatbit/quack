@@ -1,5 +1,6 @@
 package com.quack.api;
 
+import com.quack.api.utils.ObjectMapperFactory;
 import io.swagger.jaxrs.config.BeanConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -16,6 +17,7 @@ public class Application extends ResourceConfig {
         register(RequestContextFilter.class);
         register(MultiPartFeature.class);
         register(JacksonFeature.class);
+        register(ObjectMapperFactory.class);
         register(RolesAllowedDynamicFeature.class);
         registerFinder(packageScanner(".resources"));
         registerFinder(packageScanner(".security"));

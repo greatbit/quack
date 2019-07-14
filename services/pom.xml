@@ -23,6 +23,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>tracker</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>request-launcher</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
@@ -37,6 +41,16 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-spring</artifactId>
+        </dependency>
+
+        <!-- Plow -->
+        <dependency>
+            <groupId>ru.greatbit.plow</groupId>
+            <artifactId>plow-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.greatbit.plow</groupId>
+            <artifactId>plow-contract</artifactId>
         </dependency>
 
         <!-- Test -->

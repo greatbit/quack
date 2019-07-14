@@ -13,6 +13,8 @@
         <module>s3-storage</module>
         <module>tracker</module>
         <module>jira-tracker</module>
+        <module>launcher</module>
+        <module>request-launcher</module>
         <module>api</module>
         <module>ui</module>
         <module>assembly</module>
@@ -58,6 +60,8 @@
         <whoru.version>1.1</whoru.version>
         <retrofit.version>2.3.0</retrofit.version>
         <okhttp.version>3.8.0</okhttp.version>
+        <!--<plow.version>1.2</plow.version>-->
+        <plow.version>1.4-SNAPSHOT</plow.version>
     </properties>
 
 
@@ -91,6 +95,16 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>launcher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>request-launcher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>dal</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -117,12 +131,6 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>commons-logging</groupId>-->
-                        <!--<artifactId>commons-logging</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -134,10 +142,6 @@
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
                 <exclusions>
-                    <!--<exclusion>-->
-                        <!--<groupId>commons-logging</groupId>-->
-                        <!--<artifactId>commons-logging</artifactId>-->
-                    <!--</exclusion>-->
                     <exclusion>
                         <artifactId>spring-expression</artifactId>
                         <groupId>org.springframework</groupId>
@@ -243,6 +247,32 @@
                 <groupId>ru.greatbit.whoru</groupId>
                 <artifactId>jira-auth-provider</artifactId>
                 <version>${whoru.version}</version>
+            </dependency>
+
+            <!--Plow-->
+            <dependency>
+                <groupId>ru.greatbit.plow</groupId>
+                <artifactId>plow-core</artifactId>
+                <version>${plow.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-expression</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>ru.greatbit.plow</groupId>
+                <artifactId>plow-contract</artifactId>
+                <version>${plow.version}</version>
             </dependency>
 
             <!--Swagger-->

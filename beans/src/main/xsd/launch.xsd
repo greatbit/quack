@@ -12,6 +12,7 @@
     <xs:include schemaLocation="comment.xsd"/>
     <xs:include schemaLocation="testcase.xsd"/>
     <xs:include schemaLocation="testsuite.xsd"/>
+    <xs:include schemaLocation="launcher.xsd"/>
 
     <xs:element name="launch" type="LaunchBase"/>
     <xs:complexType name="LaunchBase">
@@ -25,6 +26,7 @@
                     <xs:element name="status" type="LaunchStatus"/>
                     <xs:element name="startTime" type="xs:long"/>
                     <xs:element name="finishTime" type="xs:long"/>
+                    <xs:element name="launcherConfig" type="LauncherConfigBase"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>

@@ -143,6 +143,9 @@ public abstract class BaseService<E extends Entity> {
         }
         entity.setCreatedTime(System.currentTimeMillis());
         entity.setCreatedBy(session.getPerson().getId());
+        if (entity.getName() == "") {
+            entity.setName(entity.getClass().getSimpleName());
+        }
     }
 
     protected void afterCreate(Session session, String projectId, E entity) {
