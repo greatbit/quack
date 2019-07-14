@@ -94,12 +94,16 @@ class ProjectSettings extends SubComponent {
             .then(response => {
                 this.state.project = response.data;
                 this.state.originalProject = this.state.project;
-                this.toggleEdit(name);
+                if (name){
+                    this.toggleEdit(name);
+                }
                 this.refreshGroupsToDisplay();
                 this.setState(this.state);
                 Utils.onSuccessMessage("Project Settings successfully saved");
         }).catch(error => {Utils.onErrorMessage("Couldn't save project: ", error)});
-        event.preventDefault();
+        if (event){
+            event.preventDefault();
+        }
     }
 
     removeProject(event){
@@ -184,6 +188,7 @@ class ProjectSettings extends SubComponent {
         this.state.launcherIndexToRemove = null;
         this.setState(this.state);
         $("#remove-launcher-confirmation").modal("hide");
+        this.submit();
     }
 
     render() {
