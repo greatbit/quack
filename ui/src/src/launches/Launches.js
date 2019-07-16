@@ -6,6 +6,8 @@ import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import $ from 'jquery';
 import { FadeLoader } from 'react-spinners';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlug } from '@fortawesome/free-solid-svg-icons'
 
 import DatePicker from 'react-date-picker';
 
@@ -18,7 +20,7 @@ class Launches extends SubComponent {
             limit: 20,
             orderby: "id",
             orderdir: "DESC",
-            includedFields: "name,launchStats,id,createdTime,startTime,finishTime"
+            includedFields: "name,launchStats,id,createdTime,startTime,finishTime,launcherConfig"
         },
         pager: {
             total: 0,
@@ -177,6 +179,7 @@ class Launches extends SubComponent {
                             <th scope="col">Created</th>
                             <th scope="col">Started</th>
                             <th scope="col">Finished</th>
+                            <th></th>
                           </tr>
                       </thead>
                       <tbody>
@@ -193,6 +196,11 @@ class Launches extends SubComponent {
                                            <td>{Utils.timeToDate(launch.createdTime)}</td>
                                            <td>{Utils.timeToDate(launch.startTime)}</td>
                                            <td>{Utils.timeToDate(launch.finishTime)}</td>
+                                           <td>
+                                                {launch.launcherConfig && launch.launcherConfig.launcherId &&
+                                                    <FontAwesomeIcon icon={faPlug}/>
+                                                }
+                                           </td>
                                        </tr>
                                        );
                             }.bind(this))
