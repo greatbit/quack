@@ -15,4 +15,6 @@ public @interface ConfigItem {
     boolean restricted() default false;
 
     boolean multi() default false;
+
+    boolean password() default false;
 }

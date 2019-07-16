@@ -146,10 +146,20 @@ class LauncherForm extends SubComponent {
         if (descriptorItem.boolean){
             return this.getLauncherPropertyBooleanTemplate(descriptorItem, config, index);
         }
+        if (descriptorItem.password){
+            return this.getLauncherPropertyPasswordTemplate(descriptorItem, config, index);
+        }
         if (descriptorItem.restricted){
             return this.getLauncherPropertyTextDisabledTemplate(descriptorItem, config, index);
         }
         return this.getLauncherPropertyTextTemplate(descriptorItem, config, index);
+    }
+
+    getLauncherPropertyPasswordTemplate(descriptorItem, config, index){
+        return (
+            <input type="password" className="form-control" name={descriptorItem.key} value={config.properties[descriptorItem.key] || ""} index={index}
+                       onChange={(e) => this.handleLauncherChange(e, index, descriptorItem.key)} />
+        )
     }
 
     getLauncherPropertyTextTemplate(descriptorItem, config, index){

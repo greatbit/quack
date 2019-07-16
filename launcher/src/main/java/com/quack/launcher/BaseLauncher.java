@@ -34,7 +34,8 @@ public abstract class BaseLauncher<Config> implements Launcher {
                 configDescriptor.getConfigDescriptors().add(new LauncherConfigDescriptorItem(
                         field.getName(), annotation.title(), Arrays.asList(annotation.defaultValues()),
                         annotation.restricted(), annotation.multi(),
-                        field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)
+                        field.getType().equals(boolean.class) || field.getType().equals(Boolean.class),
+                        annotation.password()
                 ));
             }
         }
@@ -100,7 +101,7 @@ public abstract class BaseLauncher<Config> implements Launcher {
 
     @Override
     public boolean isToCreateLaunch() {
-        return false;
+        return true;
     }
 
 }

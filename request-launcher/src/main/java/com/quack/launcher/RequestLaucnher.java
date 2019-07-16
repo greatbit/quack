@@ -19,6 +19,11 @@ public class RequestLaucnher extends BaseLauncher<RequestLauncherConfig> {
         return null;
     }
 
+    @Override
+    public boolean isToCreateLaunch() {
+        return false;
+    }
+
     private void send(RequestLauncherConfig config) throws Exception {
         URL obj = new URL(config.getEndpoint());
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();

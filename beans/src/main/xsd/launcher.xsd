@@ -16,6 +16,8 @@
             <xs:element name="launcherId" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="uuid" type="xs:string"/>
+            <xs:element name="launchUrl" type="xs:string"/>
+            <xs:element name="reportUrl" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -37,7 +39,8 @@
             <xs:element name="defaultValues" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="restricted" type="xs:boolean"/>
             <xs:element name="multi" type="xs:boolean"/>
-            <xs:element name="boolean" type="xs:boolean"/>
+            <xs:element name="boolean" type="xs:boolean" default="false"/>
+            <xs:element name="password" type="xs:boolean" default="false"/>
         </xs:sequence>
     </xs:complexType>
 
