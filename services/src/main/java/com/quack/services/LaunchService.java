@@ -24,14 +24,19 @@ import com.quack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.quack.dal.impl.CommonRepositoryImpl.getCollectionName;
 import static java.lang.String.format;
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
 import static com.quack.beans.LaunchStatus.*;
 import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
@@ -63,6 +68,8 @@ public class LaunchService extends BaseService<Launch> {
     protected CommonRepository<Launch> getRepository() {
         return repository;
     }
+
+    private final static Set<LaunchStatus> NON_FAILED_STATUSES = Stream.of(RUNNING, RUNNABLE, SKIPPED, PASSED).collect(toSet());
 
     public LaunchTestCase updateLaunchTestCaseStatus(HttpServletRequest request,
                                                      Session session, String projectId,
@@ -111,19 +118,31 @@ public class LaunchService extends BaseService<Launch> {
 
     @Override
     protected void beforeCreate(Session session, String projectId, Launch launch) {
-        if (launch.getTestSuite() != null && !isEmpty(launch.getTestSuite().getId())){
-            fillLaunchBySuite(session, projectId, launch);
-        } else if ( launch.getTestSuite() != null && launch.getTestSuite().getFilter() != null){
-            fillLaunchByFilter(session, projectId, launch);
+        if (isLaunchTescasesTreeEmpty(launch)) {
+            fillLaunchTestCases(session, projectId, launch);
         }
         launch.setStatus(RUNNABLE);
         super.beforeCreate(session, projectId, launch);
     }
 
+
     @Override
     protected void beforeSave(Session session, String projectId, Launch launch) {
         super.beforeSave(session, projectId, launch);
         updateLaunchStatus(launch);
+    }
+
+    private boolean isLaunchTescasesTreeEmpty(Launch launch) {
+        return launch.getTestCaseTree() == null ||
+                (launch.getTestCaseTree().getChildren().isEmpty() && launch.getTestCaseTree().getTestCases().isEmpty());
+    }
+
+    private void fillLaunchTestCases(Session session, String projectId, Launch launch) {
+        if (launch.getTestSuite() != null && !isEmpty(launch.getTestSuite().getId())) {
+            fillLaunchBySuite(session, projectId, launch);
+        } else if (launch.getTestSuite() != null && launch.getTestSuite().getFilter() != null) {
+            fillLaunchByFilter(session, projectId, launch);
+        }
     }
 
     private void updateLaunchStatus(Launch launch) {
@@ -243,5 +262,47 @@ public class LaunchService extends BaseService<Launch> {
                     "launchStatsMap.js", "launchStatsReduce.js", filter, LaunchStatistics.class);
         }
         return emptyMap();
+    }
+
+    public Launch cleanLaunchForRestart(Session session, String projectId, Launch launch, boolean failedOnly) {
+        Launch sourceLaunch = findOne(session, projectId, launch.getId());
+        launch.setTestCaseTree(sourceLaunch.getTestCaseTree());
+        cleanUpLaunchForRestart(launch, failedOnly);
+        return launch;
+    }
+
+    private void cleanUpLaunchForRestart(Launch launch, boolean failedOnly) {
+        launch.withId(null).withCreatedBy(null).withCreatedTime(0).withFinishTime(0).withLastModifiedBy(null).withLastModifiedTime(0).withStatus(RUNNABLE);
+        launch.setLaunchStats(null);
+        cleanUpLaunchesTestCases(launch.getTestCaseTree(), failedOnly);
+    }
+
+    private LaunchTestCaseTree cleanUpLaunchesTestCases(LaunchTestCaseTree testCaseTree, boolean failedOnly) {
+        List<LaunchTestCase> newTopLevelLaunchTestCases = testCaseTree.getTestCases().stream().
+                filter(launchTestCase -> !failedOnly || isFailedState(launchTestCase.getLaunchStatus())).
+                map(launchTestCase -> cleanUpLauncheTestCase(launchTestCase)).
+                collect(Collectors.toList());
+        testCaseTree.setTestCases(newTopLevelLaunchTestCases);
+
+        List<LaunchTestCaseTree> newChildren = testCaseTree.getChildren().stream().
+                map(child -> cleanUpLaunchesTestCases(child, failedOnly)).
+                filter(child -> !child.getTestCases().isEmpty() || !child.getChildren().isEmpty()).
+                collect(Collectors.toList());
+        testCaseTree.setChildren(newChildren);
+
+        return testCaseTree;
+
+    }
+
+    private LaunchTestCase cleanUpLauncheTestCase(LaunchTestCase launchTestCase) {
+        launchTestCase.getUsers().clear();
+        launchTestCase.withDuration(0).withCurrentUser(null).withFinishTime(0).withStartTime(0).
+                withLaunchStatus(RUNNABLE).withUuid(UUID.randomUUID().toString());
+        return launchTestCase;
+    }
+
+
+    private boolean isFailedState(LaunchStatus launchStatus) {
+        return !NON_FAILED_STATUSES.contains(launchStatus);
     }
 }

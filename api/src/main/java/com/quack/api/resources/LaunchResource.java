@@ -17,6 +17,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import java.util.Map;
 
 @Authenticable
@@ -65,5 +66,15 @@ public class LaunchResource extends BaseCrudResource<Launch> {
             }
         }
         return super.create(projectId, launch);
+    }
+
+    @POST
+    @Path("/{launchId}/restart")
+    public Launch restartLaunch(
+            @ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId,
+            @ApiParam(value = "Source Launch ID", required = true) @PathParam("launchId") String launchId,
+            @ApiParam(value = "Restart Failed Only", defaultValue = "false") @QueryParam("failedOnly") boolean failedOnly,
+            Launch launch) {
+        return create(projectId, service.cleanLaunchForRestart(getUserSession(), projectId, launch, failedOnly));
     }
 }
