@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
 import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
+import LaunchForm from '../launches/LaunchForm'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -26,7 +27,8 @@ class Launch extends SubComponent {
             launchStats: {
                 statusCounters: {}
             },
-            testSuite: {}
+            testSuite: {},
+            restartFailedOnly: false
         },
         selectedTestCase: {
             uuid: null
@@ -171,6 +173,13 @@ class Launch extends SubComponent {
         this.setState(this.state);
     }
 
+    onLaunchRestart(failedOnly, event){
+        this.state.restartFailedOnly = failedOnly;
+         this.setState(this.state);
+        $("#restart-launch-modal").modal('toggle');
+        event.preventDefault();
+    }
+
     render() {
         return (
           <div>
@@ -252,6 +261,11 @@ class Launch extends SubComponent {
                                   </div>
                                 </div>
 
+                                <div className="restart-launch-control">
+                                    <button type="button" className="btn btn-primary" onClick={(e) => this.onLaunchRestart(false, e)}>Restart All</button>
+                                    <button type="button" className="btn btn-danger" onClick={(e) => this.onLaunchRestart(true, e)}>Restart Failed</button>
+                                </div>
+
                                 {this.state.launch.launcherConfig && this.state.launch.launcherConfig.launcherId &&
                                     <div className="launcher-details">
                                         <h5>External Launch: { this.state.launch.launcherConfig.name}</h5>
@@ -285,6 +299,11 @@ class Launch extends SubComponent {
                         }
                   </div>
                 </div>
+
+                <div className="modal fade" id="restart-launch-modal" tabIndex="-1" role="dialog" aria-labelledby="launchLabel" aria-hidden="true">
+                    <LaunchForm launch={this.state.launch} restart={true} failedOnly={this.state.restartFailedOnly}/>
+                </div>
+
           </div>
         );
       }

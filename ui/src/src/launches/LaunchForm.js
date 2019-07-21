@@ -26,7 +26,9 @@ class LaunchForm extends SubComponent {
                   allowedGroups: [],
                   launcherConfigs: []
               },
-             launcherDescriptors: []
+             launcherDescriptors: [],
+             restart: props.restart || false,
+             failedOnly: props.failedOnly || false
          };
 
         this.handleChange = this.handleChange.bind(this);
@@ -45,18 +47,28 @@ class LaunchForm extends SubComponent {
         this.state.launch.testSuite.filter.filters.forEach(function(filter){
             delete filter.title;
         })
-        axios.post('/api/' + this.props.match.params.project + '/launch/', this.state.launch)
+        var url = '/api/' + this.props.match.params.project + '/launch/';
+        if (this.state.restart){
+            url = '/api/' + this.props.match.params.project + '/launch/' + this.state.launch.id + '/restart';
+            if (this.state.failedOnly){
+                url += '?failedOnly=true';
+            }
+        }
+        axios.post(url, this.state.launch)
         .then(response => {
             this.state.launch = response.data;
             if (!this.state.launch.id){
                 this.state.launch.triggeredByLauncher = true;
             }
+            this.state.restart = false;
             this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't save launch: ", error)});
         event.preventDefault();
       }
 
     componentWillReceiveProps(nextProps) {
+      this.state.restart = nextProps.restart || false;
+      this.state.failedOnly = nextProps.failedOnly || false;
       if(nextProps.testSuite){
           this.state.launch.testSuite = nextProps.testSuite;
       }
@@ -95,11 +107,11 @@ class LaunchForm extends SubComponent {
 
     render() {
         let modalBody;
-        if (this.state.launch.id){
+        if (this.state.launch.id && !this.state.restart){
             modalBody = <div className="modal-body" id="launch-created">
                             <Link to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
                         </div>
-        } else if (this.state.launch.triggeredByLauncher) {
+        } else if (this.state.launch.triggeredByLauncher && !this.state.restart) {
             modalBody = <div className="modal-body" id="launch-created">
                                         Launch was triggered using {this.state.launch.launcherConfig.name}
                                     </div>
@@ -110,7 +122,7 @@ class LaunchForm extends SubComponent {
                         <div className="form-group row">
                             <label className="col-4 col-form-label">Name</label>
                             <div className="col-8">
-                                <input type="text" className="form-control" name="name" onChange={this.handleChange} />
+                                <input type="text" className="form-control" name="name" value={this.state.launch.name || ""} onChange={this.handleChange} />
                             </div>
                         </div>
                         <div className="form-group row">
@@ -156,7 +168,7 @@ class LaunchForm extends SubComponent {
 
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                    {!this.state.launch.id &&
+                    {(!this.state.launch.id || this.state.restart) &&
                     <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create Launch</button>
                     }
                   </div>
