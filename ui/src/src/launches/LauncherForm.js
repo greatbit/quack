@@ -102,7 +102,7 @@ class LauncherForm extends SubComponent {
                     }
                     {!this.state.selectableType &&
                         <div className="form-group row">
-                             <label className="col-4 col-form-label">Launcher: {((this.state.launcherConfig || {}).name) || ""}</label>
+                             <label className="col-12 col-form-label">Launcher: {((this.state.launcherConfig || {}).name) || ""}</label>
                          </div>
                     }
                     {
