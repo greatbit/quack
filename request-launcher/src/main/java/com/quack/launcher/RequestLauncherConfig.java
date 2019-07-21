@@ -2,19 +2,22 @@ package com.quack.launcher;
 
 public class RequestLauncherConfig {
     @ConfigItem(title = "Endpoint")
-    private final String endpoint;
+    private String endpoint;
 
     @ConfigItem(title = "Request type", restricted = true, defaultValues = {"POST", "GET", "PUT"})
-    private final String requestType;
+    private String requestType;
 
     @ConfigItem(title = "Request Body")
-    private final String requestBody;
+    private String requestBody;
 
     @ConfigItem(title = "Request Headers")
-    private final String requestHeaders;
+    private String requestHeaders;
 
     @ConfigItem(title = "Timeout", defaultValues = "30000")
-    private final int timeout;
+    private int timeout;
+
+    public RequestLauncherConfig() {
+    }
 
     public RequestLauncherConfig(String endpoint, String requestType, String requestBody, String requestHeaders, int timeout) {
         this.endpoint = endpoint;

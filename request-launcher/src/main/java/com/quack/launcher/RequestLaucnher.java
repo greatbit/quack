@@ -16,6 +16,7 @@ public class RequestLaucnher extends BaseLauncher<RequestLauncherConfig> {
 
     @Override
     public Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
+        send(getPluginConfig(new RequestLauncherConfig(), launch.getLauncherConfig()));
         return null;
     }
 
