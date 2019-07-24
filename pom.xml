@@ -29,9 +29,9 @@
     </organization>
 
     <scm>
-        <url>https://github.com/azee/quack.git</url>
-        <connection>https://github.com/azee/quack.git</connection>
-        <developerConnection>https://github.com/azee/quack.git</developerConnection>
+        <url>https://github.com/greatbit/quack.git</url>
+        <connection>https://github.com/greatbit/quack.git</connection>
+        <developerConnection>https://github.com/greatbit/quack.git</developerConnection>
     </scm>
 
     <licenses>
