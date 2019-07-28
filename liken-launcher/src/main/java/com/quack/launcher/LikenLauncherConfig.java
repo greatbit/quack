@@ -14,11 +14,18 @@ public class LikenLauncherConfig {
     @ConfigItem(title = "Timeout", defaultValues = "30000")
     private int timeout;
 
+    @ConfigItem(title = "Prefix A")
+    private String prefixA;
+
     @ConfigItem(title = "URL A")
     private String urlA;
 
     @ConfigItem(title = "Params A")
     private String paramsA;
+
+
+    @ConfigItem(title = "Prefix B")
+    private String prefixB;
 
     @ConfigItem(title = "URL B")
     private String urlB;
@@ -89,5 +96,21 @@ public class LikenLauncherConfig {
 
     public void setParamsB(String paramsB) {
         this.paramsB = paramsB;
+    }
+
+    public String getPrefixA() {
+        return prefixA;
+    }
+
+    public void setPrefixA(String prefixA) {
+        this.prefixA = prefixA;
+    }
+
+    public String getPrefixB() {
+        return prefixB;
+    }
+
+    public void setPrefixB(String prefixB) {
+        this.prefixB = prefixB;
     }
 }

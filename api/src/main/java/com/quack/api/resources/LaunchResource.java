@@ -56,16 +56,18 @@ public class LaunchResource extends BaseCrudResource<Launch> {
     public Launch create(String projectId, Launch launch) {
         if (launch.getLauncherConfig() != null) {
             Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
+            if (launcher.isToCreateLaunch()) {
+                launch = super.create(projectId, launch);
+            }
             try {
                 launcher.launch(launch, projectId, request);
+                return launch;
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            if (!launcher.isToCreateLaunch()) {
-                return launch;
-            }
+        } else {
+            return super.create(projectId, launch);
         }
-        return super.create(projectId, launch);
     }
 
     @POST
