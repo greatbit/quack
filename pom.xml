@@ -17,13 +17,16 @@
         <module>services</module>
         <module>storage</module>
         <module>s3-storage</module>
+        <module>common-client</module>
         <module>tracker</module>
         <module>jira-tracker</module>
         <module>launcher</module>
         <module>request-launcher</module>
+        <module>liken-launcher</module>
         <module>api</module>
         <module>ui</module>
         <module>assembly</module>
+
     </modules>
 
     <name>quack System</name>
@@ -130,6 +133,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>auth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>common-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package com.quack.tracker;
+package com.quack.client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

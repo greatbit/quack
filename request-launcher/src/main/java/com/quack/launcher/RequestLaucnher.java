@@ -15,7 +15,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public class RequestLaucnher extends BaseLauncher<RequestLauncherConfig> {
 
     @Override
-    public Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
+    public com.greatbit.liken.beans.Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
         send(getPluginConfig(new RequestLauncherConfig(), launch.getLauncherConfig()));
         return null;
     }

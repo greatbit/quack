@@ -9,27 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jira-tracker</artifactId>
+    <artifactId>liken-launcher</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>tracker</artifactId>
+            <artifactId>launcher</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>common-client</artifactId>
         </dependency>
+        <dependency>
+            <artifactId>beans</artifactId>
+            <groupId>com.greatbit.liken</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jvnet.jaxb2.maven2</groupId>
-                <artifactId>maven-jaxb2-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>
