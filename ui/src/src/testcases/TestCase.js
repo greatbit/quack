@@ -634,7 +634,7 @@ class TestCase extends SubComponent {
                       {
                         Object.keys(this.state.testcase.properties || {}).map(function(property, i){
                             return(
-                                <div>
+                                <div className="attribute-block">
                                     {this.state.propertiesInEdit.has(i) &&
                                     <form id={"properties-" + i + "-form"} className="inplace-edit col-12">
                                         <div className="form-group row">
