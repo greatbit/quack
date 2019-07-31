@@ -9,6 +9,7 @@ import com.quack.launcher.Launcher;
 import com.quack.services.BaseService;
 import com.quack.services.LaunchService;
 import io.swagger.annotations.ApiParam;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.plow.PluginsContainer;
 import ru.greatbit.whoru.jaxrs.Authenticable;
@@ -56,11 +57,16 @@ public class LaunchResource extends BaseCrudResource<Launch> {
     public Launch create(String projectId, Launch launch) {
         if (launch.getLauncherConfig() != null) {
             Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
+            //Create launch to have an id in launcher
             if (launcher.isToCreateLaunch()) {
                 launch = super.create(projectId, launch);
             }
             try {
                 launcher.launch(launch, projectId, request);
+                //Update launch with enriched data from launcher
+                if (launcher.isToCreateLaunch()) {
+                    launch = super.update(projectId, launch);
+                }
                 return launch;
             } catch (Exception e) {
                 throw new RuntimeException(e);

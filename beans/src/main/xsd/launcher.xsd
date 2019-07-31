@@ -16,8 +16,9 @@
             <xs:element name="launcherId" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
             <xs:element name="uuid" type="xs:string"/>
-            <xs:element name="launchUrl" type="xs:string"/>
-            <xs:element name="reportUrl" type="xs:string"/>
+            <xs:element name="externalLaunchId" type="xs:string"/>
+            <xs:element name="externalLaunchUrl" type="xs:string"/>
+            <xs:element name="externalReportUrl" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
