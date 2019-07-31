@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <import resource="classpath:service-context.xml"/>
+
+    <bean id="embedMongo" class="ru.yandex.qatools.embed.service.MongoEmbeddedService" init-method="start">
+        <constructor-arg name="replicaSet" value="localhost:37017"/>
+        <constructor-arg name="mongoDatabaseName" value="test"/>
+    </bean>
+
+    <bean id="props" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath:quack-service-test.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+</beans>
