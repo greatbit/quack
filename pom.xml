@@ -14,7 +14,6 @@
     <modules>
         <module>beans</module>
         <module>dal</module>
-        <module>services</module>
         <module>storage</module>
         <module>s3-storage</module>
         <module>common-client</module>
@@ -23,6 +22,7 @@
         <module>launcher</module>
         <module>request-launcher</module>
         <module>liken-launcher</module>
+        <module>services</module>
         <module>api</module>
         <module>ui</module>
         <module>assembly</module>
