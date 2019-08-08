@@ -5,7 +5,9 @@ import com.quack.beans.Launch;
 import com.quack.beans.LaunchTestCase;
 import com.quack.beans.Property;
 import com.quack.client.HttpClientBuilder;
+import com.quack.launcher.error.LauncherException;
 import org.springframework.beans.factory.annotation.Value;
+import retrofit2.Response;
 import ru.greatbit.plow.contract.Plugin;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +34,11 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
     public Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
         LikenLauncherConfig config = getPluginConfig(new LikenLauncherConfig(), launch.getLauncherConfig());
         com.greatbit.liken.beans.Launch likenLaunch = convert(config, launch, projectId);
-        likenLaunch = getClient(config, request).createLaunch(likenLaunch).execute().body();
+        Response<com.greatbit.liken.beans.Launch> response = getClient(config, request).createLaunch(likenLaunch).execute();
+        if (response.code() != 200) {
+            throw new LauncherException(format("Unable to launch Liken, got response code %s", response.code()));
+        }
+        likenLaunch = response.body();
         launch.getLauncherConfig().setExternalLaunchUrl(
                 format("%s/launch/%s", config.getFrontendEndpoint(), likenLaunch.getId())
         );
