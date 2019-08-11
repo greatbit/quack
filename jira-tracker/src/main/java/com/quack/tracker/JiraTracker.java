@@ -1,5 +1,6 @@
 package com.quack.tracker;
 
+import com.quack.client.HttpClientBuilder;
 import com.quack.tracker.jira.IssuesSearchResults;
 import com.quack.tracker.jira.JiraField;
 import com.quack.tracker.jira.JiraIssue;

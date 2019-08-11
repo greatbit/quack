@@ -188,6 +188,9 @@
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
+                    <httpConnector>
+                        <port>8089</port>
+                    </httpConnector>
                     <stopPort>9847</stopPort>
                     <stopKey>quackstop</stopKey>
                     <jvmArgs>

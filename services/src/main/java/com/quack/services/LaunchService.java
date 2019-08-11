@@ -82,7 +82,7 @@ public class LaunchService extends BaseService<Launch> {
                     format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
             );
         }
-        if (isFailedStatus(status) && isFailureDetailsValid(failureDetails)) {
+        if (isFailedStatus(status) && failureDetails != null && isFailureDetailsValid(failureDetails)) {
             addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
         }
         updateStatus(session.getPerson().getId(), launchTestCase, status);

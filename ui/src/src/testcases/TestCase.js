@@ -25,7 +25,8 @@ class TestCase extends SubComponent {
                  description: "",
                  steps: [],
                  attributes: {},
-                 attachments: []
+                 attachments: [],
+                 properties: []
              },
              originalTestcase: {
                 steps: [],
@@ -34,6 +35,7 @@ class TestCase extends SubComponent {
              projectAttributes: [],
              readonly: false,
              attributesInEdit: new Set(),
+             propertiesInEdit: new Set(),
              commentsCount: 0,
              loading: true
          };
@@ -50,6 +52,7 @@ class TestCase extends SubComponent {
          this.cancelEditAttributeKey = this.cancelEditAttributeKey.bind(this);
          this.removeAttribute = this.removeAttribute.bind(this);
          this.addAttribute = this.addAttribute.bind(this);
+         this.addProperty = this.addProperty.bind(this);
          this.editAttributeKey = this.editAttributeKey.bind(this);
          this.handleStepActionChange = this.handleStepActionChange.bind(this);
          this.handleStepExpectationChange = this.handleStepExpectationChange.bind(this);
@@ -61,6 +64,8 @@ class TestCase extends SubComponent {
          this.onCommentsCountChanged = this.onCommentsCountChanged.bind(this);
          this.removeTestcase = this.removeTestcase.bind(this);
          this.getAttributes = this.getAttributes.bind(this);
+         this.cancelEditProperty = this.cancelEditProperty.bind(this);
+         this.toggleEditProperty = this.toggleEditProperty.bind(this);
       }
 
     componentDidMount() {
@@ -113,8 +118,9 @@ class TestCase extends SubComponent {
           .get("/api/"  + projectId + "/testcase/"+ testcaseId)
           .then(response => {
             this.state.testcase = response.data;
-            this.state.originalTestcase = this.state.testcase;
+            this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
             this.state.attributesInEdit.clear();
+            this.state.propertiesInEdit.clear();
             this.state.loading = false;
             this.setState(this.state);
           })
@@ -125,9 +131,13 @@ class TestCase extends SubComponent {
           });
     }
 
-    handleChange(fieldName, event, index){
-        if (index){
-            this.state.testcase[fieldName][index] = event.target.value;
+    handleChange(fieldName, event, index, arrObjectKey){
+        if (index != undefined){
+            if (arrObjectKey){
+                this.state.testcase[fieldName][index][arrObjectKey] = event.target.value;
+            } else {
+                this.state.testcase[fieldName][index] = event.target.value;
+            }
         } else {
             this.state.testcase[fieldName] = event.target.value;
         }
@@ -150,8 +160,9 @@ class TestCase extends SubComponent {
         axios.put('/api/' + this.projectId + '/testcase/', this.state.testcase)
             .then(response => {
                 this.state.testcase = response.data;
-                this.state.originalTestcase = this.state.testcase;
+                this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
                 this.state.attributesInEdit.clear()
+                this.state.propertiesInEdit.clear();
                 this.setState(this.state);
                 this.getAttributes();
                 if (!ignoreToggleEdit){
@@ -180,9 +191,9 @@ class TestCase extends SubComponent {
         }
         if($("#" + fieldId + "-display").offsetParent !== null){
             if (index){
-                this.state.originalTestcase[fieldName][index] = this.state.testcase[fieldName][index];
+                this.state.originalTestcase[fieldName][index] = JSON.parse(JSON.stringify(this.state.testcase[fieldName][index]));
             } else {
-                this.state.originalTestcase[fieldName] = this.state.testcase[fieldName];
+                this.state.originalTestcase[fieldName] = JSON.parse(JSON.stringify(this.state.testcase[fieldName]));
             }
         }
         $("#" + fieldId + "-display").toggle();
@@ -242,6 +253,42 @@ class TestCase extends SubComponent {
         this.state.testcase.attributes[null] = [];
         this.state.attributesInEdit.add(null);
         this.setState(this.state);
+    }
+
+    addProperty(event){
+        if (!this.state.testcase.properties){
+            this.state.testcase.properties = [];
+            this.state.originalTestcase.properties = [];
+        }
+        this.state.testcase.properties.push({key: "", value: ""});
+        this.state.originalTestcase.properties.push({key: "", value: ""});
+        this.state.propertiesInEdit.add(this.state.testcase.properties.length - 1);
+        this.setState(this.state);
+    }
+
+    toggleEditProperty(event, index){
+        this.state.originalTestcase.properties[index] = JSON.parse(JSON.stringify(this.state.testcase.properties[index]));
+        this.state.propertiesInEdit.add(index);
+        this.setState(this.state);
+    }
+
+    removeProperty(index, event){
+        this.state.testcase.properties.splice(index, 1)
+        this.state.propertiesInEdit.delete(index);
+        this.handleSubmit("properties", event, 0, true);
+
+    }
+
+    cancelEditProperty(index, event){
+        var originalProperty = this.state.originalTestcase.properties[index];
+        if (originalProperty.key == "" && originalProperty.value == ""){
+            this.removeProperty(index, event);
+        } else {
+            this.state.testcase.properties[index] = originalProperty;
+            this.state.propertiesInEdit.delete(index);
+            this.toggleEdit("properties", event, index, true);
+            this.setState(this.state);
+        }
     }
 
     editAttributeKey(key, data, reRender){
@@ -579,6 +626,65 @@ class TestCase extends SubComponent {
                           </div>
                       }
                   </div>
+
+                  <div id="properties" className="testcase-section">
+                      <h5>
+                          Properties
+                      </h5>
+                      {
+                        Object.keys(this.state.testcase.properties || {}).map(function(property, i){
+                            return(
+                                <div className="attribute-block">
+                                    {this.state.propertiesInEdit.has(i) &&
+                                    <form id={"properties-" + i + "-form"} className="inplace-edit col-12">
+                                        <div className="form-group row">
+                                            <label className="col-sm-2 col-form-label">Key</label>
+                                            <div className="col-10">
+                                                <input type="text" name="key" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "key")} value={this.state.testcase.properties[i].key}/>
+                                            </div>
+                                        </div>
+                                        <div className="form-group row">
+                                            <label className="col-sm-2 col-form-label">Value</label>
+                                            <div className="col-10">
+                                                <input type="text" name="key" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "value")} value={this.state.testcase.properties[i].value}/>
+                                            </div>
+                                        </div>
+                                        <button type="button" className="btn btn-success" onClick={(e) => this.handleSubmit("properties", e, i, true)}>Save</button>
+                                        <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditProperty(i, e)}>Cancel</button>
+                                    </form>
+                                    }
+                                    {!this.state.propertiesInEdit.has(i) &&
+                                    <div id={"properties-" + i + "-display"} className="inplace-display col-12" style={{ display: (this.state.propertiesInEdit.has(i) ? 'none' : 'block') }}>
+                                        <div>
+                                            <b>{this.state.testcase.properties[i].key}
+                                                {!this.state.readonly &&
+                                                    <span className="edit edit-icon clickable" onClick={(e) => this.toggleEditProperty(e, i)}>
+                                                        <FontAwesomeIcon icon={faPencilAlt}/>
+                                                    </span>
+                                                }
+                                                {!this.state.readonly &&
+                                                    <span className="clickable edit-icon red" onClick={(e) => this.removeProperty(i, e)}>
+                                                        <FontAwesomeIcon icon={faMinusCircle}/>
+                                                    </span>
+                                                }
+                                            </b>
+                                        </div>
+                                       <div>{this.state.testcase.properties[i].value}</div>
+                                    </div>
+                                    }
+                                </div>
+                            )
+                          }.bind(this))
+
+                       }
+                       {!this.state.readonly &&
+                            <div className="row">
+                              <button type="button" className="btn btn-primary" onClick={(e) => this.addProperty(e)}>
+                                 Add Property
+                              </button>
+                            </div>
+                       }
+                    </div>
 
                   {this.state.launchId &&
                       <div className="testcase-section">

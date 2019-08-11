@@ -16,6 +16,7 @@
     "moment": "^2.24.0",
     "popper.js": "^1.14.3",
     "prop-types": "^15.7.2",
+    "qs": "^6.7.0",
     "query-string": "^6.5.0",
     "react": "^16.4.1",
     "react-axios": "^2.0.3",
@@ -25,7 +26,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "react-select": "^2.0.0",
-    "react-spinners": "^0.5.4"
+    "react-spinners": "^0.5.4",
+    "webpack": "^3.8.1"
   },
   "scripts": {
     "start": "react-scripts start",

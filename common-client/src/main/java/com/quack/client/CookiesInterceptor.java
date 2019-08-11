@@ -1,4 +1,4 @@
-package com.quack.tracker;
+package com.quack.client;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
