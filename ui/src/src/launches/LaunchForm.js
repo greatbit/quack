@@ -105,11 +105,15 @@ class LaunchForm extends SubComponent {
         this.setState(this.state);
     }
 
+    launchModalDismiss(){
+        $("#launch-modal").modal("hide");
+    }
+
     render() {
         let modalBody;
         if (this.state.launch.id && !this.state.restart){
             modalBody = <div className="modal-body" id="launch-created">
-                            <Link to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
+                            <Link onClick={this.launchModalDismiss} to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
                         </div>
         } else if (this.state.launch.triggeredByLauncher && !this.state.restart) {
             modalBody = <div className="modal-body" id="launch-created">
