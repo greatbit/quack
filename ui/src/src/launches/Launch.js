@@ -268,14 +268,17 @@ class Launch extends SubComponent {
 
                                 {this.state.launch.launcherConfig && this.state.launch.launcherConfig.launcherId &&
                                     <div className="launcher-details">
-                                        <h5>External Launch: { this.state.launch.launcherConfig.name}</h5>
+                                        <h5>External Launch:
+                                            { this.state.launch.launcherConfig.externalLaunchUrl &&
+                                                <a href={this.state.launch.launcherConfig.externalLaunchUrl}>
+                                                    {this.state.launch.launcherConfig.name}
+                                                </a>
+                                            }
+                                            { !this.state.launch.launcherConfig.externalLaunchUrl &&
+                                                this.state.launch.launcherConfig.name
+                                            }
+                                        </h5>
                                         <dl>
-                                        {this.state.launch.launcherConfig.launchUrl &&
-                                            <span>
-                                                <dt>Launch</dt>
-                                                <dd><a href={this.state.launch.launcherConfig.launchUrl}>View</a></dd>
-                                            </span>
-                                        }
                                         {this.state.launch.launcherConfig.reportUrl &&
                                             <span>
                                                 <dt>Report</dt>

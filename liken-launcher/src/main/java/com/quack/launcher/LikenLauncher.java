@@ -80,7 +80,7 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
                                 withName(launchTestCase.getName()).
                                 withUrlA(replaceUrl(property, config.getUrlA(), placeholders, config.getPrefixA(), config.getParamsA())).
                                 withUrlB(replaceUrl(property, config.getUrlB(), placeholders, config.getPrefixB(), config.getParamsB())).
-                                withUuid(launchTestCase.getUuid()).
+                                withExternalUuid(launchTestCase.getUuid()).
                                 withExternalUrl(format("%s/%s/launch/%s/%s", quackUiEndpoint, projectId, launch.getId(), launchTestCase.getId()))
                 );
     }
