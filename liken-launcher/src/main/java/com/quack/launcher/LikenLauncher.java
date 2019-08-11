@@ -30,6 +30,8 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
     @Value("${quack.ui.url}")
     String quackUiEndpoint;
 
+    private final String PROJECT_ID_META_KEY = "projectId";
+
     @Override
     public Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
         LikenLauncherConfig config = getPluginConfig(new LikenLauncherConfig(), launch.getLauncherConfig());
@@ -56,6 +58,7 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
         likenLaunch.setPrefixB(config.getPrefixB());
         likenLaunch.setExternalId(launch.getId());
         likenLaunch.setName(launch.getName());
+        likenLaunch.getMetadata().put(PROJECT_ID_META_KEY, projectId);
         likenLaunch.setExternalUrl(format("%s/%s/launch/%s", quackUiEndpoint, projectId, launch.getId()));
         Set<String> placeholders = Stream.of(
                 ofNullable(config.getPlaceholders()).orElseGet(String::new).split(",")).
