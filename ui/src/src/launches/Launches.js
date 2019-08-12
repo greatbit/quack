@@ -28,6 +28,7 @@ class Launches extends SubComponent {
             maxVisiblePage: 7,
             itemsOnPage: 20
         },
+        launcherDescriptors: [],
         loading: true
     };
 
@@ -41,6 +42,7 @@ class Launches extends SubComponent {
         this.handleFilterChange = this.handleFilterChange.bind(this);
         this.handleFromDateFilterChange = this.handleFromDateFilterChange.bind(this);
         this.handleToDateFilterChange = this.handleToDateFilterChange.bind(this);
+        this.getLauncherDescriptors = this.getLauncherDescriptors.bind(this);
     }
 
     componentDidMount() {
@@ -48,6 +50,7 @@ class Launches extends SubComponent {
         Utils.queryToFilter(this.props.location.search.substring(1));
         this.getLaunches();
         this.getPager();
+        this.getLauncherDescriptors();
         this.intervalId = setInterval(this.getLaunches, 30000);
     }
 
@@ -83,6 +86,15 @@ class Launches extends SubComponent {
                  this.state.pager.visiblePage = Math.min(response.data / this.state.pager.itemsOnPage + 1, this.state.pager.maxVisiblePage);
                  this.setState(this.state);
         }).catch(error => console.log(error));
+    }
+
+    getLauncherDescriptors(){
+        axios
+            .get("/api/launcher/descriptors")
+            .then(response => {
+              this.state.launcherDescriptors = response.data;
+              this.setState(this.state);
+            }).catch(error => {Utils.onErrorMessage("Couldn't get launcher descriptors: ", error)});
     }
 
     handleFilterChange(fieldName, event, index){
@@ -157,6 +169,25 @@ class Launches extends SubComponent {
                                 onChange={this.handleFromDateFilterChange} placeholder="Created after" />
                       <DatePicker id="to_createdTime" value={Utils.getDatepickerTime(this.state.filter.to_createdTime)}
                                 onChange={this.handleToDateFilterChange}  placeholder="Created before"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="created"><h5>Launcher</h5></label>
+                        <div class="input-group mb-2">
+                            <select id="launcher-select" className="form-control" onChange={(e) => this.handleFilterChange("launcherConfig.launcherId", e)}>
+                                <option> </option>
+                                {
+                                    this.state.launcherDescriptors.map(function(descriptor){
+                                        var selected = this.state.filter["launcherConfig.launcherId"] == descriptor.launcherId;
+                                        if (selected){
+                                            return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
+                                        }
+                                        return (<option value={descriptor.launcherId} >{descriptor.name}</option>)
+
+                                    }.bind(this))
+                                }
+                            </select>
+                        </div>
+
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
