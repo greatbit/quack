@@ -118,11 +118,11 @@
                 <artifactId>request-launcher</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+           <!-- <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>liken-launcher</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>dal</artifactId>
