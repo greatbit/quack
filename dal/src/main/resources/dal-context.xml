@@ -10,7 +10,7 @@
             http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-    <context:component-scan base-package="com.quack, ru.greatbit.whoru, ru.greatbit.plow">
+    <context:component-scan base-package="com.testquack, ru.greatbit.whoru, ru.greatbit.plow">
         <context:include-filter type="annotation" expression="ru.greatbit.plow.contract.Plugin"/>
     </context:component-scan>
 
@@ -25,7 +25,7 @@
         </property>
     </bean>
 
-    <mongo:repositories base-package="com.quack.dal" repository-impl-postfix="CustomImpl"/>
+    <mongo:repositories base-package="com.testquack.dal" repository-impl-postfix="CustomImpl"/>
 
     <mongo:mongo-client id="mongo" replica-set="${mongo.replicaSet}">
         <mongo:client-options

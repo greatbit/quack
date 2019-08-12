@@ -12,19 +12,19 @@
     </jaxb:globalBindings>
 
     <jaxb:bindings schemaLocation="testsuite.xsd" node="xs:complexType[@name='TestcaseFilter']">
-        <jaxb:class ref="com.quack.beans.TestcaseFilter"/>
+        <jaxb:class ref="com.testquack.beans.TestcaseFilter"/>
     </jaxb:bindings>
 
     <jaxb:bindings schemaLocation="testcase.xsd" node="xs:complexType[@name='TestCase']">
-        <jaxb:class ref="com.quack.beans.TestCase"/>
+        <jaxb:class ref="com.testquack.beans.TestCase"/>
     </jaxb:bindings>
 
     <jaxb:bindings schemaLocation="project.xsd" node="xs:complexType[@name='Project']/xs:complexContent/xs:extension/xs:sequence/xs:element[@name='launcherConfigs']">
-        <jaxb:class ref="com.quack.beans.LauncherConfig"/>
+        <jaxb:class ref="com.testquack.beans.LauncherConfig"/>
     </jaxb:bindings>
 
     <jaxb:bindings schemaLocation="launch.xsd" node="xs:complexType[@name='LaunchBase']/xs:complexContent/xs:extension/xs:sequence/xs:element[@name='launcherConfig']">
-        <jaxb:class ref="com.quack.beans.LauncherConfig"/>
+        <jaxb:class ref="com.testquack.beans.LauncherConfig"/>
     </jaxb:bindings>
 
 
