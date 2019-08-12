@@ -270,7 +270,7 @@ class Launch extends SubComponent {
                                     <div className="launcher-details">
                                         <h5>External Launch:
                                             { this.state.launch.launcherConfig.externalLaunchUrl &&
-                                                <a href={this.state.launch.launcherConfig.externalLaunchUrl}>
+                                                <a className="external-launch-link" href={this.state.launch.launcherConfig.externalLaunchUrl}>
                                                     {this.state.launch.launcherConfig.name}
                                                 </a>
                                             }

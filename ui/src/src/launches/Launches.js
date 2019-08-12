@@ -196,7 +196,6 @@ class Launches extends SubComponent {
                               }
                           </select>
                       </div>
-
                   </div>
                   <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
                 </form>
