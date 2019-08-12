@@ -99,9 +99,17 @@ class Launches extends SubComponent {
 
     handleFilterChange(fieldName, event, index){
         if (index){
-            this.state.filter[fieldName][index] = event.target.value;
+            if (event.target.value == ""){
+                delete this.state.filter[fieldName][index];
+            } else {
+                this.state.filter[fieldName][index] = event.target.value;
+            }
         } else {
-            this.state.filter[fieldName] = event.target.value;
+            if (event.target.value == ""){
+                delete this.state.filter[fieldName];
+            } else {
+                this.state.filter[fieldName] = event.target.value;
+            }
         }
         this.setState(this.state);
     }
