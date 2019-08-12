@@ -586,7 +586,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-Dmaven.javadoc.skip=true</arguments>
+                   <!-- <arguments>-Dmaven.javadoc.skip=true</arguments>-->
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
