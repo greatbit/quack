@@ -21,7 +21,7 @@
         <module>jira-tracker</module>
         <module>launcher</module>
         <module>request-launcher</module>
-        <module>liken-launcher</module>
+        <!-- <module>liken-launcher</module> -->
         <module>services</module>
         <module>api</module>
         <module>ui</module>
