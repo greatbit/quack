@@ -178,25 +178,25 @@ class Launches extends SubComponent {
                       <DatePicker id="to_createdTime" value={Utils.getDatepickerTime(this.state.filter.to_createdTime)}
                                 onChange={this.handleToDateFilterChange}  placeholder="Created before"/>
                     </div>
-                    <div class="form-group">
-                        <label for="created"><h5>Launcher</h5></label>
-                        <div class="input-group mb-2">
-                            <select id="launcher-select" className="form-control" onChange={(e) => this.handleFilterChange("launcherConfig.launcherId", e)}>
-                                <option> </option>
-                                {
-                                    this.state.launcherDescriptors.map(function(descriptor){
-                                        var selected = this.state.filter["launcherConfig.launcherId"] == descriptor.launcherId;
-                                        if (selected){
-                                            return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
-                                        }
-                                        return (<option value={descriptor.launcherId} >{descriptor.name}</option>)
+                  </div>
+                  <div class="form-group">
+                      <label for="created"><h5>Launcher</h5></label>
+                      <div class="input-group mb-2">
+                          <select id="launcher-select" className="form-control" onChange={(e) => this.handleFilterChange("launcherConfig.launcherId", e)}>
+                              <option> </option>
+                              {
+                                  this.state.launcherDescriptors.map(function(descriptor){
+                                      var selected = this.state.filter["launcherConfig.launcherId"] == descriptor.launcherId;
+                                      if (selected){
+                                          return (<option value={descriptor.launcherId} selected>{descriptor.name}</option>)
+                                      }
+                                      return (<option value={descriptor.launcherId} >{descriptor.name}</option>)
 
-                                    }.bind(this))
-                                }
-                            </select>
-                        </div>
+                                  }.bind(this))
+                              }
+                          </select>
+                      </div>
 
-                    </div>
                   </div>
                   <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
                 </form>
