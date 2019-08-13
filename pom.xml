@@ -616,7 +616,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <excludePackageNames>com.testquack.beans:com.testquack.tracker.*</excludePackageNames>
+                    <sourceFileExcludes>*/xjc/*</sourceFileExcludes>
                     <failOnWarnings>false</failOnWarnings>
                 </configuration>
             </plugin>
