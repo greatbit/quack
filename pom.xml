@@ -616,7 +616,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <sourceFileExcludes>*/xjc/*</sourceFileExcludes>
+                    <sourceFileExcludes>
+                        <sourceFileExclude>*/xjc/*</sourceFileExclude>
+                    </sourceFileExcludes>
                     <failOnWarnings>false</failOnWarnings>
                 </configuration>
             </plugin>
