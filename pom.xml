@@ -10,7 +10,7 @@
 
     <groupId>com.testquack</groupId>
     <artifactId>quack</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
     <modules>
         <module>beans</module>
         <module>dal</module>
@@ -21,7 +21,7 @@
         <module>jira-tracker</module>
         <module>launcher</module>
         <module>request-launcher</module>
-        <module>liken-launcher</module>
+        <!-- <module>liken-launcher</module> -->
         <module>services</module>
         <module>api</module>
         <module>ui</module>
@@ -118,11 +118,11 @@
                 <artifactId>request-launcher</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
+           <!-- <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>liken-launcher</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency>-->
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>dal</artifactId>
@@ -586,7 +586,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-Dmaven.javadoc.skip=true</arguments>
+                   <!-- <arguments>-Dmaven.javadoc.skip=true</arguments>-->
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
