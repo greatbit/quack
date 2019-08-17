@@ -5,12 +5,12 @@ services:
     ports:
       - "80:80"
     links:
-      - mongod
+      - quack_mongod
     depends_on:
-      - mongod
+      - quack_mongod
 
-  mongod:
-    container_name: "mongod"
+  quack_mongod:
+    container_name: "quack_mongod"
     image: greatbit/quack-mongo-demo
     ports:
       - "27017:27017"
