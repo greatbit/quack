@@ -21,7 +21,7 @@
         <module>jira-tracker</module>
         <module>launcher</module>
         <module>request-launcher</module>
-        <!-- <module>liken-launcher</module> -->
+        <module>liken-launcher</module>
         <module>services</module>
         <module>api</module>
         <module>ui</module>
@@ -118,11 +118,11 @@
                 <artifactId>request-launcher</artifactId>
                 <version>${project.version}</version>
             </dependency>
-           <!-- <dependency>
+            <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>liken-launcher</artifactId>
                 <version>${project.version}</version>
-            </dependency>-->
+            </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>dal</artifactId>

@@ -1,6 +1,6 @@
 package com.testquack.launcher;
 
-import com.greatbit.liken.beans.Testcase;
+import com.testquack.liken.beans.Testcase;
 import com.testquack.beans.Launch;
 import com.testquack.beans.LaunchTestCase;
 import com.testquack.beans.Property;
@@ -35,8 +35,8 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
     @Override
     public Launch launch(Launch launch, String projectId, HttpServletRequest request) throws Exception {
         LikenLauncherConfig config = getPluginConfig(new LikenLauncherConfig(), launch.getLauncherConfig());
-        com.greatbit.liken.beans.Launch likenLaunch = convert(config, launch, projectId);
-        Response<com.greatbit.liken.beans.Launch> response = getClient(config, request).createLaunch(likenLaunch).execute();
+        com.testquack.liken.beans.Launch likenLaunch = convert(config, launch, projectId);
+        Response<com.testquack.liken.beans.Launch> response = getClient(config, request).createLaunch(likenLaunch).execute();
         if (response.code() != 200) {
             throw new LauncherException(format("Unable to launch Liken, got response code %s", response.code()));
         }
@@ -49,9 +49,9 @@ public class LikenLauncher extends BaseLauncher<LikenLauncherConfig> {
         return launch;
     }
 
-    private com.greatbit.liken.beans.Launch convert(LikenLauncherConfig config, Launch launch, String projectId) {
+    private com.testquack.liken.beans.Launch convert(LikenLauncherConfig config, Launch launch, String projectId) {
         //ToDo: add created by and a backlink to original launch
-        com.greatbit.liken.beans.Launch likenLaunch = new com.greatbit.liken.beans.Launch();
+        com.testquack.liken.beans.Launch likenLaunch = new com.testquack.liken.beans.Launch();
         likenLaunch.setParamsA(config.getParamsA());
         likenLaunch.setParamsB(config.getParamsB());
         likenLaunch.setPrefixA(config.getPrefixA());
