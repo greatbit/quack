@@ -25,10 +25,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>request-launcher</artifactId>
         </dependency>
-      <!--  <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>liken-launcher</artifactId>
-        </dependency> -->
+        </dependency>
 
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
