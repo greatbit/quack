@@ -135,7 +135,7 @@ class LaunchForm extends SubComponent {
                                 <select id="launcherUUID" className="form-control" onChange={(e) => this.handleLauncherChange(e, 0, "uuid")}>
                                     <option> </option>
                                     {
-                                        this.state.project.launcherConfigs.map(function(config){
+                                        (this.state.project.launcherConfigs || []).map(function(config){
                                             var selected = config.uuid == (this.state.launch.launcherConfig || {}).uuid;
                                             if (selected){
                                                 return (<option value={config.uuid} selected>{config.name}</option>)
