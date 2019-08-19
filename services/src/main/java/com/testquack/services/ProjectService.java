@@ -65,6 +65,9 @@ public class ProjectService extends BaseService<Project> {
             if (isEmpty(launcherConfig.getUuid())) {
                 launcherConfig.setUuid(UUID.randomUUID().toString());
             }
+            if (isEmpty(launcherConfig.getName())) {
+                launcherConfig.setName(launcherConfig.getLauncherId());
+            }
         });
     }
 }

@@ -67,7 +67,7 @@ class LauncherForm extends SubComponent {
         if (!config){
             return "";
         }
-        var descriptor = this.getDescriptor(config.launcherId) || {};
+        var descriptor = Utils.getLaunchDescriptor(this.state.launcherDescriptors, config.launcherId)
         return (
             <p className="card-text">
                 <form>
@@ -114,10 +114,6 @@ class LauncherForm extends SubComponent {
                 </form>
             </p>
         )
-    }
-
-    getDescriptor(launcherId){
-        return this.state.launcherDescriptors.find(descriptor => descriptor.launcherId == launcherId);
     }
 
     handleLauncherBooleanChange(event, index, propertyKey){

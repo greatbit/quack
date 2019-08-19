@@ -147,12 +147,23 @@ class ProjectSettings extends SubComponent {
     }
 
     handleLauncherChange(event, index, propertyKey){
+        var selectedConfig = this.state.project.launcherConfigs[index];
         if(propertyKey == 'launcherId'){
-            this.state.project.launcherConfigs[index].launcherId = event.target.value;
+            selectedConfig.launcherId = event.target.value;
         } else if (propertyKey == 'name'){
-            this.state.project.launcherConfigs[index].name = event.target.value;
+            selectedConfig.name = event.target.value;
         } else {
-            this.state.project.launcherConfigs[index].properties[propertyKey] = event.target.value;
+            selectedConfig.properties[propertyKey] = event.target.value;
+        }
+
+        //Do not leave name blank, set either descriptor name or descriptor id
+        if (!selectedConfig.name || selectedConfig.name == ""){
+            var descriptor = Utils.getLaunchDescriptor(this.state.launcherDescriptors, selectedConfig.launcherId)
+            if (descriptor.name && descriptor.name != ""){
+                selectedConfig.name = descriptor.name;
+            } else {
+                selectedConfig.name = selectedConfig.launcherId;
+            }
         }
         this.setState(this.state);
     }

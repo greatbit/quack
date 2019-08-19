@@ -244,3 +244,7 @@ export function timePassed(passedTime){
    }
    return passedTimeDisplayValue;
 }
+
+export function getLaunchDescriptor(descriptors, launcherId){
+    return (descriptors || []).find(descriptor => descriptor.launcherId == launcherId);
+}
