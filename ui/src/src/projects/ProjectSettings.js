@@ -157,7 +157,7 @@ class ProjectSettings extends SubComponent {
         }
 
         //Do not leave name blank, set either descriptor name or descriptor id
-        if (!selectedConfig.name || selectedConfig.name == ""){
+        if (selectedConfig.name == undefined){
             var descriptor = Utils.getLaunchDescriptor(this.state.launcherDescriptors, selectedConfig.launcherId)
             if (descriptor.name && descriptor.name != ""){
                 selectedConfig.name = descriptor.name;

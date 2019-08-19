@@ -67,7 +67,7 @@ class LauncherForm extends SubComponent {
         if (!config){
             return "";
         }
-        var descriptor = Utils.getLaunchDescriptor(this.state.launcherDescriptors, config.launcherId)
+        var descriptor = Utils.getLaunchDescriptor(this.state.launcherDescriptors, config.launcherId) || {}
         return (
             <p className="card-text">
                 <form>
