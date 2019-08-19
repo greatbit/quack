@@ -228,6 +228,9 @@ class TestCasesFilter extends Component {
                             <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
                             <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>Save</button>
                             <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>Launch</button>
+                             <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
+                                Add Test Case
+                             </button>
                         </div>
                     </div>
                     <div className="row filter-control-row">
