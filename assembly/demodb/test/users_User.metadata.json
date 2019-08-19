@@ -1,14 +1,1 @@
-{
-  "options": {},
-  "indexes": [
-    {
-      "v": 2,
-      "key": {
-        "_id": 1
-      },
-      "name": "_id_",
-      "ns": "test1.users_User"
-    }
-  ],
-  "uuid": "f326d9eee2684d5284a9d4efc86324c0"
-}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"test1.users_User"}],"uuid":"46442a1ced27463f914c5c73d7be0103"}
