@@ -1,1 +1,14 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"test1.quackui_Comment"}],"uuid":"31863449b88d4628b6677325e4726841"}
+{
+  "options": {},
+  "indexes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_",
+      "ns": "test1.quackui_Comment"
+    }
+  ],
+  "uuid": "2d2d7c880f7047afbc68bb310b5d2e29"
+}

@@ -1,1 +1,14 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"test1.projects"}],"uuid":"f4bdd40bd10d4077886d615fde96430b"}
+{
+  "options": {},
+  "indexes": [
+    {
+      "v": 2,
+      "key": {
+        "_id": 1
+      },
+      "name": "_id_",
+      "ns": "test1.projects"
+    }
+  ],
+  "uuid": "2e72864baea0450291fa1e7b7463217b"
+}
