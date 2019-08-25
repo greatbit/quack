@@ -11,7 +11,9 @@ import com.testquack.beans.TestCase;
 import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestcaseFilter;
 import com.testquack.beans.TrackerProject;
+import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.testquack.dal.CommonRepository;
@@ -25,6 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class TestCaseService extends BaseService<TestCase> {
@@ -105,14 +110,27 @@ public class TestCaseService extends BaseService<TestCase> {
     @Override
     protected void beforeCreate(Session session, String projectId, TestCase entity) {
         super.beforeCreate(session, projectId, entity);
-        Sequencer sequencer = sequencerService.increment(projectId);
-        entity.setId(Long.toString(sequencer.getIndex()));
+        if (!isEmpty(entity.getAlias())){
+            TestcaseFilter filter = (TestcaseFilter) new TestcaseFilter().withIncludedField("id").withField("alias", entity.getAlias());
+            TestCase existingEntity = findFiltered(session, projectId, filter).stream().findFirst().orElse(null);
+            if (existingEntity != null){
+                entity.setId(existingEntity.getId());
+            }
+        } else {
+            Sequencer sequencer = sequencerService.increment(projectId);
+            entity.setId(Long.toString(sequencer.getIndex()));
+        }
     }
 
     @Override
     protected void beforeSave(Session session, String projectId, TestCase entity) {
         super.beforeSave(session, projectId, entity);
         createMissingAttributes(session, projectId, entity);
+    }
+
+    public List<TestCase> importTestCases(Session user, String projectId, List<TestCase> testCases){
+        testCases.forEach(testCase -> save(user, projectId, testCase));
+        return testCases;
     }
 
     private TestCase createMissingAttributes(Session session, String projectId, TestCase testCase) {

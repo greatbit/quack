@@ -14,7 +14,18 @@ import java.util.concurrent.TimeUnit;
 
 public class HttpClientBuilder {
 
-    public static Retrofit.Builder builder(String endpoint, long timeout, HttpServletRequest request, Interceptor... interceptors) {
+    public static Retrofit.Builder builder(String endpoint, long timeout, HttpServletRequest request,
+                                           Interceptor... interceptors) {
+        return builder(endpoint, timeout, request, null, interceptors);
+    }
+
+    public static Retrofit.Builder builder(String endpoint, long timeout, String apiToken,
+                                           Interceptor... interceptors) {
+        return builder(endpoint, timeout, null, apiToken, interceptors);
+    }
+
+    public static Retrofit.Builder builder(String endpoint, long timeout, HttpServletRequest request,
+                                           String apiToken, Interceptor... interceptors) {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         okHttpClientBuilder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
         okHttpClientBuilder.readTimeout(timeout, TimeUnit.MILLISECONDS);
@@ -24,6 +35,7 @@ public class HttpClientBuilder {
         }
         okHttpClientBuilder.followSslRedirects(true);
         okHttpClientBuilder.addInterceptor(new CookiesInterceptor(request));
+        okHttpClientBuilder.addInterceptor(new TokenInterceptor(apiToken));
 
         ObjectMapper jacksonMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

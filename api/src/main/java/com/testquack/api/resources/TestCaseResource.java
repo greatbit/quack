@@ -166,4 +166,11 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
                                                   @QueryParam("project") String issueProjectId) throws Exception {
         return service.getIssuePriorities(request, getUserSession(), issueProjectId);
     }
+
+    @POST
+    @Path("/import")
+    public List<TestCase> importTestCases(@PathParam("projectId") String projectId,
+                                          @RequestBody List<TestCase> testCases) {
+        return service.importTestCases(getUserSession(), projectId, testCases);
+    }
 }
