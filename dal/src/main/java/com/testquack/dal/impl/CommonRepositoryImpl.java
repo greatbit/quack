@@ -8,6 +8,7 @@ import com.testquack.beans.Entity;
 import com.testquack.beans.Filter;
 import com.testquack.beans.Order;
 import com.testquack.dal.CommonRepository;
+import org.springframework.data.mongodb.core.query.Update;
 
 import java.util.*;
 
@@ -69,5 +70,12 @@ public abstract class CommonRepositoryImpl<E extends Entity> implements CommonRe
     @Override
     public boolean exists(String projectId, String id) {
         return mongoOperations.exists(new Query(Criteria.where("id").is(id)), getEntityClass(), getCollectionName(projectId));
+    }
+
+    @Override
+    public void delete(String projectId, Filter filter) {
+        Query query = DBUtils.getQuery(filter);
+        Update update = new Update().set("deleted", true);
+        mongoOperations.updateMulti(query, update, getCollectionName(projectId));
     }
 }

@@ -19,6 +19,7 @@
             <xs:extension base="Entity">
                 <xs:sequence>
                     <xs:element name="alias" type="xs:string"/>
+                    <xs:element name="importResource" type="xs:string"/>
                     <xs:element name="description" type="xs:string"/>
                     <xs:element name="descriptionToDisplay" type="xs:string"/>
                     <xs:element name="preconditions" type="xs:string"/>

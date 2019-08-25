@@ -20,4 +20,6 @@ public interface CommonRepository<E> {
     Collection<E> save(String projectId, Collection<E> entities);
 
     void delete(String projectId, String entityId);
+
+    void delete(String projectId, Filter filter);
 }

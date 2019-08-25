@@ -236,4 +236,9 @@ public abstract class BaseService<E extends Entity> {
         return getRepository().exists(projectId, entityId);
     }
 
+    public void delete(Session session, String projectId, Filter filter) {
+        if (userCanUpdateProject(session, projectId)) {
+            getRepository().delete(projectId, filter);
+        }
+    }
 }

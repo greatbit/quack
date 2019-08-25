@@ -90,5 +90,16 @@ public abstract class BaseCrudResource<E extends Entity> extends BaseResource<E>
         return getService().count(getUserSession(), projectId, initFilter(request));
     }
 
+    @DELETE
+    @Path("/")
+    @ApiOperation(value = "Delete entity", notes = "")
+    @ApiResponses(value = {
+            @ApiResponse(code = 403, message = "Access denied to the entity"),
+            @ApiResponse(code = 200, message = "Successful operation")
+    })
+    public Response delete(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) {
+        getService().delete(getUserSession(), projectId, initFilter(request));
+        return Response.ok().build();
+    }
 
 }

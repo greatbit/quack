@@ -11,9 +11,7 @@ import com.testquack.beans.TestCase;
 import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestcaseFilter;
 import com.testquack.beans.TrackerProject;
-import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.testquack.dal.CommonRepository;
@@ -28,7 +26,6 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -111,12 +108,20 @@ public class TestCaseService extends BaseService<TestCase> {
     protected void beforeCreate(Session session, String projectId, TestCase entity) {
         super.beforeCreate(session, projectId, entity);
         if (!isEmpty(entity.getAlias())){
-            TestcaseFilter filter = (TestcaseFilter) new TestcaseFilter().withIncludedField("id").withField("alias", entity.getAlias());
+            TestcaseFilter filter = (TestcaseFilter) new TestcaseFilter().
+                    withIncludedField("id").
+                    withIncludedField("alias").
+                    withIncludedField("deleted").
+                    withField("alias", entity.getAlias()).
+                    withField("deleted", true).
+                    withField("deleted", false);
             TestCase existingEntity = findFiltered(session, projectId, filter).stream().findFirst().orElse(null);
             if (existingEntity != null){
                 entity.setId(existingEntity.getId());
+                entity.setDeleted(false);
             }
-        } else {
+        }
+        if (isEmpty(entity.getId())) {
             Sequencer sequencer = sequencerService.increment(projectId);
             entity.setId(Long.toString(sequencer.getIndex()));
         }
