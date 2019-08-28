@@ -22,7 +22,7 @@ import java.util.List;
 public class TestCaseTree extends TestCaseTreeBase {
 
     private final static long serialVersionUID = 1L;
-    protected List<TestCase> testCases;
+    protected List<TestCasePreview> testCases;
     protected List<TestCaseTree> children;
 
     /**
@@ -37,15 +37,15 @@ public class TestCaseTree extends TestCaseTreeBase {
      * Fully-initialising value constructor
      * 
      */
-    public TestCaseTree(final List<TestCase> testCases, final List<TestCaseTree> children) {
+    public TestCaseTree(final List<TestCasePreview> testCases, final List<TestCaseTree> children) {
         this.testCases = testCases;
         this.children = children;
     }
 
 
-    public List<TestCase> getTestCases() {
+    public List<TestCasePreview> getTestCases() {
         if (testCases == null) {
-            testCases = new ArrayList<TestCase>();
+            testCases = new ArrayList<TestCasePreview>();
         }
         return this.testCases;
     }
@@ -59,9 +59,9 @@ public class TestCaseTree extends TestCaseTreeBase {
     }
 
 
-    public TestCaseTree withTestCases(TestCase... values) {
+    public TestCaseTree withTestCases(TestCasePreview... values) {
         if (values!= null) {
-            for (TestCase value: values) {
+            for (TestCasePreview value : values) {
                 getTestCases().add(value);
             }
         }
@@ -100,7 +100,7 @@ public class TestCaseTree extends TestCaseTreeBase {
      *     {@link TestCase }
      *     
      */
-    public void setTestCases(List<TestCase> testCases) {
+    public void setTestCases(List<TestCasePreview> testCases) {
         this.testCases = testCases;
     }
 

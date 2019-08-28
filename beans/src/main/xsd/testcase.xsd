@@ -12,7 +12,6 @@
     <xs:include schemaLocation="attributes.xsd"/>
 
     <xs:complexType name="TestCase"/>
-
     <xs:element name="testCaseBase" type="TestCaseBase"/>
     <xs:complexType name="TestCaseBase">
         <xs:complexContent>
@@ -122,6 +121,13 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:element name="testcasePreviewBase" type="TestcasePreviewBase" abstract="true"/>
+    <xs:complexType name="TestcasePreviewBase">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 
 
 </xs:schema>

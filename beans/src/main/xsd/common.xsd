@@ -8,17 +8,27 @@
            jaxb:version="2.1"
            elementFormDefault="qualified">
 
-    <xs:element name="entity" type="Entity" abstract="true"/>
-    <xs:complexType name="Entity">
+    <xs:element name="entityPreview" type="EntityPreview" abstract="true"/>
+    <xs:complexType name="EntityPreview">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="createdTime" type="xs:long"/>
-            <xs:element name="lastModifiedTime" type="xs:long"/>
             <xs:element name="deleted" type="xs:boolean"/>
-            <xs:element name="createdBy" type="xs:string"/>
-            <xs:element name="lastModifiedBy" type="xs:string"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="entity" type="Entity"/>
+    <xs:complexType name="Entity">
+        <xs:complexContent>
+            <xs:extension base="EntityPreview">
+                <xs:sequence>
+                    <xs:element name="createdTime" type="xs:long"/>
+                    <xs:element name="lastModifiedTime" type="xs:long"/>
+                    <xs:element name="createdBy" type="xs:string"/>
+                    <xs:element name="lastModifiedBy" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 
     <xs:complexType name="Property">

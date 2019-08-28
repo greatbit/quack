@@ -36,7 +36,9 @@ class TestCases extends SubComponent {
         testcaseToEdit: Object.assign({}, this.defaultTestcase, {attributes: {}, steps: []}),
         projectAttributes: [],
         selectedTestCase: {},
-        filter: {},
+        filter: {
+            includedFields: "id,name,attributes"
+        },
         loading: true
     };
 
@@ -167,6 +169,11 @@ class TestCases extends SubComponent {
                  tokens.push("attributes." + filter.id + "=" + value);
              })
          });
+
+         if ((filter.groups || []).length > 0){
+            filter.skip = 0;
+            filter.limit = 0;
+         }
          if(filter.skip){
             tokens.push("skip=" + filter.skip);
          }

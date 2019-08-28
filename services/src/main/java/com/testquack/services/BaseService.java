@@ -2,6 +2,7 @@ package com.testquack.services;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ILock;
+import com.testquack.beans.EntityPreview;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import com.testquack.services.errors.EntityValidationException;

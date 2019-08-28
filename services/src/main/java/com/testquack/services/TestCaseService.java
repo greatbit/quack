@@ -8,9 +8,11 @@ import com.testquack.beans.IssuePriority;
 import com.testquack.beans.IssueType;
 import com.testquack.beans.Sequencer;
 import com.testquack.beans.TestCase;
+import com.testquack.beans.TestCasePreview;
 import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestcaseFilter;
 import com.testquack.beans.TrackerProject;
+import com.testquack.dal.TestCasePreviewRepository;
 import com.testquack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,9 @@ public class TestCaseService extends BaseService<TestCase> {
     private TestCaseRepository repository;
 
     @Autowired
+    private TestCasePreviewRepository testCasePreviewRepository;
+
+    @Autowired
     private SequencerService sequencerService;
 
     @Autowired
@@ -55,8 +60,7 @@ public class TestCaseService extends BaseService<TestCase> {
 
     public TestCaseTree findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
         TestCaseTree head = new TestCaseTree();
-
-        List<TestCase> testCases = super.findFiltered(session, projectId, filter);
+        List<TestCasePreview> testCases = userCanReadProject(session, projectId) ? testCasePreviewRepository.find(projectId, filter) : Collections.emptyList();
         head.getTestCases().addAll(testCases);
 
         buildTree(head, new ArrayList<>(filter.getGroups()));
@@ -72,7 +76,7 @@ public class TestCaseService extends BaseService<TestCase> {
         String groupId = groups.get(0);
         List<String> nextGroups = groups.stream().skip(1).collect(Collectors.toList());
 
-        Map<String, List<TestCase>> casesByGroupValues = new HashMap<>();
+        Map<String, List<TestCasePreview>> casesByGroupValues = new HashMap<>();
         head.getTestCases().forEach(testCase -> {
             Set<String> attrValues = testCase.getAttributes().entrySet().stream().
                     filter(attribute -> groupId.equals(attribute.getKey())).
@@ -99,7 +103,7 @@ public class TestCaseService extends BaseService<TestCase> {
 
     }
 
-    private void addToMapOfList(Map<String, List<TestCase>> casesByGroupValues, String attrValue, TestCase testCase){
+    private void addToMapOfList(Map<String, List<TestCasePreview>> casesByGroupValues, String attrValue, TestCasePreview testCase) {
         casesByGroupValues.putIfAbsent(attrValue, new ArrayList<>());
         casesByGroupValues.get(attrValue).add(testCase);
     }
