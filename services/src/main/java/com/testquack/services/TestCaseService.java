@@ -113,15 +113,12 @@ public class TestCaseService extends BaseService<TestCase> {
         super.beforeCreate(session, projectId, entity);
         if (!isEmpty(entity.getAlias())){
             TestcaseFilter filter = (TestcaseFilter) new TestcaseFilter().
-                    withIncludedField("id").
-                    withIncludedField("alias").
-                    withIncludedField("deleted").
                     withField("alias", entity.getAlias()).
                     withField("deleted", true).
                     withField("deleted", false);
             TestCase existingEntity = findFiltered(session, projectId, filter).stream().findFirst().orElse(null);
             if (existingEntity != null){
-                entity.setId(existingEntity.getId());
+                entity.mergeFrom(entity, existingEntity);
                 entity.setDeleted(false);
             }
         }

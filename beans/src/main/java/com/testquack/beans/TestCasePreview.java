@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class TestCasePreview extends EntityPreview {
+public class TestCasePreview extends TestcasePreviewBase {
 
     private Map<String, Set<String>> attributes = new HashMap<>();
 

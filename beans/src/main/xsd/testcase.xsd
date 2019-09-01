@@ -19,6 +19,7 @@
                 <xs:sequence>
                     <xs:element name="alias" type="xs:string"/>
                     <xs:element name="importResource" type="xs:string"/>
+                    <xs:element name="importedName" type="xs:string"/>
                     <xs:element name="description" type="xs:string"/>
                     <xs:element name="descriptionToDisplay" type="xs:string"/>
                     <xs:element name="preconditions" type="xs:string"/>
@@ -123,11 +124,13 @@
 
     <xs:element name="testcasePreviewBase" type="TestcasePreviewBase" abstract="true"/>
     <xs:complexType name="TestcasePreviewBase">
-        <xs:sequence>
-            <xs:element name="id" type="xs:string"/>
-            <xs:element name="name" type="xs:string"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="EntityPreview">
+                <xs:sequence>
+                    <xs:element name="importedName" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
-
 
 </xs:schema>

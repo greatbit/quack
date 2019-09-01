@@ -26,7 +26,7 @@ export function getTreeNode(node, parentsToUpdate){
         resultNode.children = [];
         node.testCases.forEach(function(testCase){
             resultNode.children.push({
-                text: testCase.name,
+                text: testCase.name || testCase.importedName || "",
                 id: testCase.id,
                 uuid: testCase.uuid,
                 isLeaf: true,

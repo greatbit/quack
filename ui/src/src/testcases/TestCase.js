@@ -21,7 +21,7 @@ class TestCase extends SubComponent {
         this.state = {
              testcase: {
                  id: null,
-                 name: "",
+                 importedName: "",
                  description: "",
                  steps: [],
                  attributes: {},
@@ -191,9 +191,9 @@ class TestCase extends SubComponent {
         }
         if($("#" + fieldId + "-display").offsetParent !== null){
             if (index){
-                this.state.originalTestcase[fieldName][index] = JSON.parse(JSON.stringify(this.state.testcase[fieldName][index]));
+                this.state.originalTestcase[fieldName][index] = JSON.parse(JSON.stringify(this.state.testcase[fieldName][index] || ""));
             } else {
-                this.state.originalTestcase[fieldName] = JSON.parse(JSON.stringify(this.state.testcase[fieldName]));
+                this.state.originalTestcase[fieldName] = JSON.parse(JSON.stringify(this.state.testcase[fieldName] || ""));
             }
         }
         $("#" + fieldId + "-display").toggle();
@@ -404,7 +404,7 @@ class TestCase extends SubComponent {
                <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display">
-                        <h1>{this.state.testcase.name}
+                        <h1>{this.state.testcase.name || this.state.testcase.importedName || ""}
                             {!this.state.readonly &&
                                 <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                             }
@@ -415,7 +415,7 @@ class TestCase extends SubComponent {
                             <form>
                                 <div className="form-group row">
                                     <div className="col-8">
-                                        <input type="text" name="name" className="form-control" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name}/>
+                                        <input type="text" name="name" className="form-control" onChange={(e) => this.handleChange("name", e)} value={this.state.testcase.name || this.state.testcase.importedName}/>
                                     </div>
                                     <div className="col-4">
                                         <button type="button" className="btn btn-light" data-dismiss="modal" onClick={(e) => this.cancelEdit("name", e)}>Cancel</button>
