@@ -30,6 +30,7 @@
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="version" type="xs:string"/>
                     <xs:element name="attachments" type="Attachment" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="automated" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -128,6 +129,7 @@
             <xs:extension base="EntityPreview">
                 <xs:sequence>
                     <xs:element name="importedName" type="xs:string"/>
+                    <xs:element name="automated" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

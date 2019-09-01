@@ -37,7 +37,7 @@ class TestCases extends SubComponent {
         projectAttributes: [],
         selectedTestCase: {},
         filter: {
-            includedFields: "id,name,attributes,importedName"
+            includedFields: "id,name,attributes,importedName,automated"
         },
         loading: true
     };
