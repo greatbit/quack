@@ -13,6 +13,7 @@ import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import CreatableSelect from 'react-select/lib/Creatable'
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import { faPlug } from '@fortawesome/free-solid-svg-icons'
 
 
 class TestCase extends SubComponent {
@@ -387,6 +388,11 @@ class TestCase extends SubComponent {
                      }
                      </a>
                   </li>
+                  {this.state.testcase.metaData && Object.keys(this.state.testcase.metaData).length > 0 &&
+                  <li class="nav-item">
+                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="false">Metadata</a>
+                  </li>
+                  }
                   <li class="nav-item">
                     <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
                   </li>
@@ -405,9 +411,16 @@ class TestCase extends SubComponent {
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display">
                         <h1>{this.state.testcase.name || this.state.testcase.importedName || ""}
+                        <span className="name-icon">
+                            {this.state.testcase.automated &&
+                                <FontAwesomeIcon icon={faPlug}/>
+                            }
+                        </span>
+                        <span>
                             {!this.state.readonly &&
                                 <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                             }
+                        </span>
                         </h1>
                     </div>
                     {!this.state.readonly &&
@@ -706,6 +719,21 @@ class TestCase extends SubComponent {
 
                 <div class="tab-pane fade show" id="comments" role="tabpanel" aria-labelledby="comments-tab">
                     <Comments entityId={this.state.testcase.id} projectId={this.projectId} entityType="testcase" onCommentsNumberChanged={this.onCommentsCountChanged}/>
+                </div>
+
+                <div class="tab-pane fade show" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                    <dl>
+                    {Object.keys(this.state.testcase.metaData || {}).map(
+                        function(key){
+                            return (
+                                <span>
+                                <dt>{key}</dt>
+                                <dd>{this.state.testcase.metaData[key]}</dd>
+                                </span>
+                            )
+                        }.bind(this)
+                    )}
+                    </dl>
                 </div>
 
                 <div class="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">

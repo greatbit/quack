@@ -173,4 +173,32 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
                                           @RequestBody List<TestCase> testCases) {
         return service.importTestCases(getUserSession(), projectId, testCases);
     }
+
+
+    //////////////////
+    @GET
+    @Path("/loadtest/create")
+    public List<TestCase> load(@PathParam("projectId") String projectId, @QueryParam("limit") int limit) {
+        List<String> keys = Arrays.asList("5d6318b6136ab54701d7c8e3", "5d6318bb136ab54701d7c8e4", "5d6318bf136ab54701d7c8e5", "5d6318c5136ab54701d7c8e6");
+        List<String> values = Arrays.asList("Header", "Footer", "Body", "Top Bar", "Low Bar", "Banner");
+
+        for (int i = 0; i < limit; i++) {
+            TestCase testCase = new TestCase();
+            testCase.setName("Test Case " + i);
+
+            Set<String> tcKeys = new HashSet<>();
+            tcKeys.add(keys.get(ru.greatbit.utils.math.Random.next(0, keys.size() - 1)));
+            tcKeys.add(keys.get(ru.greatbit.utils.math.Random.next(0, keys.size() - 1)));
+
+            tcKeys.forEach(tcKey -> {
+                Set<String> tcValues = new HashSet<>();
+                tcValues.add(values.get(ru.greatbit.utils.math.Random.next(0, values.size() - 1)));
+                tcValues.add(values.get(ru.greatbit.utils.math.Random.next(0, values.size() - 1)));
+                testCase.getAttributes().put(tcKey, tcValues);
+            });
+            create(projectId, testCase);
+        }
+
+        return Collections.emptyList();
+    }
 }
