@@ -70,3 +70,8 @@ e.g., starting war using jetty-runner:
 ```
 java -Xbootclasspath/a:/etc/quack -jar /usr/quack/lib/jetty-runner.jar /usr/quack/quack.war
 ```
+
+Testcases Import
+==========
+[![Quack Import Maven Plugin](https://github.com/greatbit/import-maven-plugin)
+The plugin allows importing testcases to QuAck. All modifications made on testcases in QuAck manually will remain. However, tests from the same Maven project will be reconfigured on import - new will appear, removed will disappear.
