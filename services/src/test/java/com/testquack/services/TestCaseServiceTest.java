@@ -16,7 +16,7 @@ public class TestCaseServiceTest extends BaseTest{
 
     @Test
     public void adminCanSeeAllTestCasesTest(){
-        assertThat(testCaseService.findFiltered(adminSession, project1.getId(), new Filter()).size(), is(3));
+        assertThat(testCaseService.findFiltered(adminSession, project1.getId(), new Filter()).size(), is(7));
         assertThat(testCaseService.findFiltered(adminSession, project2.getId(), new Filter()).size(), is(3));
         assertThat(testCaseService.findFiltered(adminSession, project3.getId(), new Filter()).size(), is(3));
     }
@@ -30,7 +30,7 @@ public class TestCaseServiceTest extends BaseTest{
 
     @Test
     public void userCanSeeOnlyHisProjectsTestCasesTest(){
-        assertThat(testCaseService.findFiltered(userSession, project1.getId(), new Filter()).size(), is(3));
+        assertThat(testCaseService.findFiltered(userSession, project1.getId(), new Filter()).size(), is(7));
         assertThat(testCaseService.findFiltered(userSession, project2.getId(), new Filter()).size(), is(3));
         assertThat(testCaseService.findFiltered(userSession, project3.getId(), new Filter()).size(), is(0));
     }

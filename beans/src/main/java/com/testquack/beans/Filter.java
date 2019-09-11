@@ -2,6 +2,8 @@ package com.testquack.beans;
 
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 public class Filter extends BaseFilter{
 
     protected Map<String, Set<Object>> fields;
@@ -37,15 +39,15 @@ public class Filter extends BaseFilter{
         return includedFields;
     }
 
-    public Filter withField(String fieldName, Object fieldValue){
+    public Filter withField(String fieldName, Object... fieldValues) {
         getFields().putIfAbsent(fieldName, new HashSet<>());
-        getFields().get(fieldName).add(fieldValue);
+        getFields().get(fieldName).addAll(asList(fieldValues));
         return this;
     }
 
-    public Filter withNotField(String fieldName, Object fieldValue){
+    public Filter withNotField(String fieldName, Object... fieldValue) {
         getNotFields().putIfAbsent(fieldName, new HashSet<>());
-        getNotFields().get(fieldName).add(fieldValue);
+        getNotFields().get(fieldName).addAll(asList(fieldValue));
         return this;
     }
 
@@ -71,7 +73,7 @@ public class Filter extends BaseFilter{
 
     private void addValuesToMap(Map<String, Set<Object>> map, String key, String... values){
         Set<Object> mappedValues = map.getOrDefault(key, new HashSet<>());
-        mappedValues.addAll(Arrays.asList(values));
+        mappedValues.addAll(asList(values));
         map.put(key, mappedValues);
     }
 

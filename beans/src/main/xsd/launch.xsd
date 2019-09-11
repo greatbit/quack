@@ -45,6 +45,8 @@
                     <xs:element name="startTime" type="xs:long"/>
                     <xs:element name="finishTime" type="xs:long"/>
                     <xs:element name="duration" type="xs:long"/>
+                    <xs:element name="failureMessage" type="xs:string"/>
+                    <xs:element name="failureTrace" type="xs:string"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

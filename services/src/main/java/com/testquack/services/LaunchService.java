@@ -10,6 +10,7 @@ import com.testquack.beans.LaunchStats;
 import com.testquack.beans.LaunchStatus;
 import com.testquack.beans.LaunchTestCase;
 import com.testquack.beans.LaunchTestCaseTree;
+import com.testquack.beans.TestCase;
 import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestSuite;
 import com.testquack.beans.TestcaseFilter;
@@ -24,6 +25,7 @@ import com.testquack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,10 +121,12 @@ public class LaunchService extends BaseService<Launch> {
         if (isLaunchTescasesTreeEmpty(launch)) {
             fillLaunchTestCases(session, projectId, launch);
         }
+        fillById(session, projectId, launch);
+        fillByAliases(session, projectId, launch);
         launch.setStatus(RUNNABLE);
+        removeTestcasesWithNullId(launch.getTestCaseTree());
         super.beforeCreate(session, projectId, launch);
     }
-
 
     @Override
     protected void beforeSave(Session session, String projectId, Launch launch) {
@@ -302,5 +306,57 @@ public class LaunchService extends BaseService<Launch> {
 
     private boolean isFailedState(LaunchStatus launchStatus) {
         return !NON_FAILED_STATUSES.contains(launchStatus);
+    }
+
+    private void fillById(Session session, String projectId, Launch launch) {
+        Map<String, LaunchTestCase> testcasesToFill = new HashMap<>();
+        getTestcasesToFillById(launch.getTestCaseTree(), testcasesToFill);
+        fillByFeld(session, projectId, "id", testcasesToFill);
+    }
+
+    private void fillByAliases(Session session, String projectId, Launch launch) {
+        Map<String, LaunchTestCase> testcasesToFill = new HashMap<>();
+        getTestcasesToFillByAliases(launch.getTestCaseTree(), testcasesToFill);
+        fillByFeld(session, projectId, "alias", testcasesToFill);
+    }
+
+    private void fillByFeld(Session session, String projectId, String fieldName, Map<String, LaunchTestCase> testcasesToFill) {
+        TestcaseFilter filter = (TestcaseFilter) new TestcaseFilter().
+                withField(fieldName, testcasesToFill.keySet().toArray());
+        List<TestCase> originalTestCases = testCaseService.findFiltered(session, projectId, filter);
+        originalTestCases.forEach(originalTestCase -> fillOriginalTestcase(originalTestCase, testcasesToFill));
+    }
+
+    private void fillOriginalTestcase(TestCase originalTestCase, Map<String, LaunchTestCase> testcasesToFill) {
+        LaunchTestCase testcaseToUpdate = testcasesToFill.getOrDefault(
+                originalTestCase.getAlias(),
+                testcasesToFill.get(originalTestCase.getId()));
+        if (testcaseToUpdate == null) {
+            return;
+        }
+        originalTestCase.copyTo(testcaseToUpdate);
+    }
+
+    private void getTestcasesToFillByAliases(LaunchTestCaseTree tree, Map<String, LaunchTestCase> casesToUpdate) {
+        tree.getTestCases().stream().
+                filter(testcase -> testcase.getId() == null).
+                forEach(testcase -> casesToUpdate.put(testcase.getAlias(), testcase));
+        tree.getChildren().forEach(child -> getTestcasesToFillByAliases(child, casesToUpdate));
+    }
+
+    private void getTestcasesToFillById(LaunchTestCaseTree tree, Map<String, LaunchTestCase> casesToUpdate) {
+        tree.getTestCases().stream().
+                filter(testcase -> testcase.getId() != null).
+                forEach(testcase -> casesToUpdate.put(testcase.getId(), testcase));
+        tree.getChildren().forEach(child -> getTestcasesToFillByAliases(child, casesToUpdate));
+    }
+
+    private void removeTestcasesWithNullId(LaunchTestCaseTree tree) {
+        tree.setTestCases(
+                tree.getTestCases().stream().
+                        filter(testCase -> testCase.getId() != null).
+                        collect(Collectors.toList())
+        );
+        tree.getChildren().forEach(this::removeTestcasesWithNullId);
     }
 }

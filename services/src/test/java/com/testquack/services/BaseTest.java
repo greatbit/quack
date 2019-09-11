@@ -33,6 +33,9 @@ public abstract class BaseTest {
     protected TestCaseService testCaseService;
 
     @Autowired
+    protected LaunchService launchService;
+
+    @Autowired
     protected TestCaseRepository testCaseRepository;
 
     protected Project project1 = new Project().withName("Project 1").
@@ -43,6 +46,17 @@ public abstract class BaseTest {
 
     protected Project project3 = new Project().withName("Project 3").
             withId("pr3").withAllowedGroups("3", "4");
+
+    protected TestCase testCase1 = (TestCase) new TestCase().withName("testcase1").
+            withAlias("testcase1");
+
+    protected TestCase testCase2 = (TestCase) new TestCase().withName("testcase2").
+            withAlias("testcase2");
+
+    protected TestCase testCase3 = (TestCase) new TestCase().withName("testcase3").
+            withAlias("testcase3");
+
+    protected TestCase testCase4NoAlias = (TestCase) new TestCase().withName("testCase4NoAlias");
 
     protected List<Project> projects = Arrays.asList(project1, project2, project3);
 
@@ -65,9 +79,13 @@ public abstract class BaseTest {
         project3 = projectService.create(adminSession, null, project3);
 
         testCasesProject1.addAll(createTestCases(project1.getId()));
+        testCasesProject1.add(testCaseService.create(adminSession, project1.getId(), testCase1));
+        testCasesProject1.add(testCaseService.create(adminSession, project1.getId(), testCase2));
+        testCasesProject1.add(testCaseService.create(adminSession, project1.getId(), testCase3));
+        testCasesProject1.add(testCaseService.create(adminSession, project1.getId(), testCase4NoAlias));
+
         testCasesProject2.addAll(createTestCases(project2.getId()));
         testCasesProject3.addAll(createTestCases(project3.getId()));
-
     }
 
     private Collection<? extends TestCase> createTestCases(String projectId) {

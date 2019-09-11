@@ -132,7 +132,12 @@ export function getStatusImg(testCase){
 }
 
 export function getStatusHtml(testCase){
-    return '<img src="' + getStatusImg(testCase) + '" height="18" width="18"/>';
+    var plug = "";
+    console.log(testCase.id + " " + testCase.automated)
+    if (testCase.automated){
+        plug = "<FontAwesomeIcon icon={faPlug}/>";
+    }
+    return plug + '<img src="' + getStatusImg(testCase) + '" height="18" width="18"/>';
 }
 
 export function timeToDate(time) {
