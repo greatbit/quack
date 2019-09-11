@@ -125,7 +125,19 @@ public class LaunchService extends BaseService<Launch> {
         fillByAliases(session, projectId, launch);
         launch.setStatus(RUNNABLE);
         removeTestcasesWithNullId(launch.getTestCaseTree());
+        prepareLaunchTestCasesForCreate(launch.getTestCaseTree());
         super.beforeCreate(session, projectId, launch);
+    }
+
+    private void prepareLaunchTestCasesForCreate(LaunchTestCaseTree testCaseTree) {
+        testCaseTree.getTestCases().forEach(this::prepareLaunchTestCaseForCreate);
+        testCaseTree.getChildren().forEach(this::prepareLaunchTestCasesForCreate);
+    }
+
+    private void prepareLaunchTestCaseForCreate(LaunchTestCase launchTestCase) {
+        if (isEmpty(launchTestCase.getUuid())) {
+            launchTestCase.setUuid(UUID.randomUUID().toString());
+        }
     }
 
     @Override

@@ -225,7 +225,7 @@ class Launch extends SubComponent {
                       }
                       {(!this.state.selectedTestCase || !this.state.selectedTestCase.id) &&
                               <div>
-                               {this.state.launch.testSuite.id &&
+                               {(this.state.launch.testSuite || {}).id &&
                                 <div className="row launch-summary-block">
                                     <div className="col-2">Test Suite:</div>
                                     <div className="col-4">
