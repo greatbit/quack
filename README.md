@@ -38,18 +38,18 @@ The usage of the service is free of charge.
 
 How to run test server using docker
 ==========
-1. Just run from the root folder of the project
+1. Just run 
+```
+docker-compose up
+``` 
+
+from the root folder of the project or
 
 ```
 docker-compose -f docker-compose-demo.yml up
 ``` 
-This will run QuAck with embedded database containing an example project 
 
-
-Run the following comand if you have your own mongo resoving to standard port on localhost:
-```
-docker-compose up
-``` 
+for QuAck with demo data
 
 2. Navigate to ```localhost``` in your browser
 
@@ -74,3 +74,7 @@ java -Xbootclasspath/a:/etc/quack -jar /usr/quack/lib/jetty-runner.jar /usr/quac
 Testcases Import
 ==========
 [Quack Import Maven Plugin](https://github.com/greatbit/import-maven-plugin) allows importing testcases to QuAck. All modifications made on testcases in QuAck manually will remain. However, tests from the same Maven project will be reconfigured on import - new will appear, removed will disappear.
+
+Liken - AB-testing QuAck capable launcher
+==========
+[Liken](https://github.com/greatbit/liken) Liken is a web-based service that allows to perform A-B comparison regression testing for web-based UI. Fully compatible with QuAck.
