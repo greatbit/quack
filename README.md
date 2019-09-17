@@ -38,18 +38,18 @@ The usage of the service is free of charge.
 
 How to run test server using docker
 ==========
-1. Just run 
-```
-docker-compose up
-``` 
-
-from the root folder of the project or
+1. Just run from the root folder of the project
 
 ```
 docker-compose -f docker-compose-demo.yml up
 ``` 
+This will run QuAck with embedded database containing an example project 
 
-for QuAck with demo data
+
+Run the following comand if you have your own mongo resoving to standard port on localhost:
+```
+docker-compose up
+``` 
 
 2. Navigate to ```localhost``` in your browser
 
