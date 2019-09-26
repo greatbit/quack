@@ -5,8 +5,12 @@ services:
     ports:
       - "80:80"
     links:
-      - mongo
-  mongo:
+      - mongod
+    depends_on:
+      - mongod
+
+  mongod:
+    container_name: "mongod"
     image: mongo
     ports:
       - "27017:27017"
