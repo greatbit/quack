@@ -2,6 +2,8 @@ package com.testquack.services;
 
 import com.testquack.beans.Attachment;
 import com.testquack.beans.Attribute;
+import com.testquack.beans.Event;
+import com.testquack.beans.EventType;
 import com.testquack.beans.Filter;
 import com.testquack.beans.Issue;
 import com.testquack.beans.IssuePriority;
@@ -50,6 +52,9 @@ public class TestCaseService extends BaseService<TestCase> {
 
     @Autowired
     private Tracker tracker;
+
+    @Autowired
+    private EventService eventService;
 
     @Override
     protected CommonRepository<TestCase> getRepository() {
@@ -132,6 +137,21 @@ public class TestCaseService extends BaseService<TestCase> {
     protected void beforeSave(Session session, String projectId, TestCase entity) {
         super.beforeSave(session, projectId, entity);
         createMissingAttributes(session, projectId, entity);
+    }
+
+    @Override
+    protected void beforeUpdate(Session session, String projectId, TestCase existingEntity, TestCase entity) {
+        super.beforeUpdate(session, projectId, existingEntity, entity);
+        if (existingEntity != null) {
+            eventService.create(session, projectId,
+                    new Event().withEventType(EventType.UPDATED.toString()).
+                            withTime(System.currentTimeMillis()).
+                            withUser(session.getLogin()).
+                            withEntityId(existingEntity.getId()).
+                            withEntityType(TestCase.class.getSimpleName())
+            );
+        }
+
     }
 
     public List<TestCase> importTestCases(Session user, String projectId, List<TestCase> testCases){

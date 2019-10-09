@@ -152,7 +152,7 @@ public abstract class BaseService<E extends Entity> {
     protected void afterCreate(Session session, String projectId, E entity) {
     }
 
-    protected void beforeUpdate(Session session, String projectId, E entity) {
+    protected void beforeUpdate(Session session, String projectId, E existingEntity, E entity) {
     }
 
     protected void afterUpdate(Session session, String projectId, E entity) {
@@ -195,20 +195,20 @@ public abstract class BaseService<E extends Entity> {
         return update(session, projectId, entity, (savedEnt, newEnt) -> newEnt);
     }
 
-    protected E update(Session session, String projectId, E entity, UpdatableEntityConvertor convector){
+    protected E update(Session session, String projectId, E entity, UpdatableEntityConvertor converter) {
         if (!userCanUpdate(session, projectId, entity)){
             throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
         }
         ILock lock = hazelcastInstance.getLock(entity.getClass()+ entity.getId());
         try{
             lock.lock(lockTtl, TimeUnit.MINUTES);
-            beforeUpdate(session, projectId, entity);
-            E savedEntity = findOne(session, projectId, entity.getId());
-            if (savedEntity != null){
-                if (savedEntity.getLastModifiedTime() > entity.getLastModifiedTime()){
+            E existingEntity = findOne(session, projectId, entity.getId());
+            beforeUpdate(session, projectId, existingEntity, entity);
+            if (existingEntity != null) {
+                if (existingEntity.getLastModifiedTime() > entity.getLastModifiedTime()) {
                     throw new EntityValidationException("Entity has been changed previously. Changes will cause lost updates.");
                 }
-                entity = (E) convector.transform(savedEntity, entity);
+                entity = (E) converter.transform(existingEntity, entity);
             }
             entity = doSave(session, projectId, entity);
             afterUpdate(session, projectId, entity);

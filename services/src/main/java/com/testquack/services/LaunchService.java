@@ -1,6 +1,8 @@
 package com.testquack.services;
 
 import com.testquack.beans.Comment;
+import com.testquack.beans.Event;
+import com.testquack.beans.EventType;
 import com.testquack.beans.FailureDetails;
 import com.testquack.beans.Filter;
 import com.testquack.beans.Issue;
@@ -60,6 +62,9 @@ public class LaunchService extends BaseService<Launch> {
     private CommentService commentService;
 
     @Autowired
+    private EventService eventService;
+
+    @Autowired
     DBUtils dbUtils;
 
     private final String FAILURE_DETAILS_TYPE = "failureDetails";
@@ -87,7 +92,24 @@ public class LaunchService extends BaseService<Launch> {
         }
         updateStatus(session.getPerson().getId(), launchTestCase, status);
         update(session, projectId, launch);
+
+        //Emit audit on terminal status
+        if (isTerminalStatus(status)) {
+            eventService.create(session, projectId,
+                    new Event().withEventType(status.toString()).
+                            withTime(System.currentTimeMillis()).
+                            withUser(session.getLogin()).
+                            withEntityId(launchTestCase.getId()).
+                            withEntityType(TestCase.class.getSimpleName())
+            );
+        }
+
+
         return launchTestCase;
+    }
+
+    private boolean isTerminalStatus(LaunchStatus status) {
+        return status != RUNNABLE && status != RUNNING;
     }
 
     private boolean isFailureDetailsValid(FailureDetails failureDetails) {

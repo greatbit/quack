@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.testquack.com"
+           targetNamespace="urn:beans.testquack.com"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="event" type="Event"/>
+    <xs:complexType name="Event">
+        <xs:complexContent>
+            <xs:extension base="Entity">
+                <xs:sequence>
+                    <xs:element name="eventType" type="xs:string"/>
+                    <xs:element name="time" type="xs:long"/>
+                    <xs:element name="user" type="xs:string"/>
+                    <xs:element name="previousState" type="xs:string"/>
+                    <xs:element name="newState" type="xs:string"/>
+                    <xs:element name="diff" type="xs:string"/>
+                    <xs:element name="entityType" type="xs:string"/>
+                    <xs:element name="entityId" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="EventType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="created"/>
+            <xs:enumeration value="updated"/>
+            <xs:enumeration value="deleted"/>
+            <xs:enumeration value="archived"/>
+            <xs:enumeration value="restored"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
