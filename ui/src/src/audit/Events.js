@@ -7,16 +7,22 @@ import $ from 'jquery';
 import qs from 'qs';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import DatePicker from 'react-date-picker';
+import Select from 'react-select';
 
 class Events extends SubComponent {
 
     state = {
         events:[],
+        allEventTypes: ["PASSED", "FAILED", "BROKEN", "SKIPPED", "UPDATED"],
+        entityTypes: ["TestCase"],
         filter: {
             skip: 0,
             limit: 20,
             orderby: "id",
-            orderdir: "DESC"
+            orderdir: "DESC",
+            entityType: "",
+            eventType: ["PASSED", "FAILED", "BROKEN", "SKIPPED", "UPDATED"]
         },
         pager: {
             total: 0,
@@ -35,11 +41,19 @@ class Events extends SubComponent {
         this.updateUrl = this.updateUrl.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.handleFromDateFilterChange = this.handleFromDateFilterChange.bind(this);
+        this.handleToDateFilterChange = this.handleToDateFilterChange.bind(this);
+        this.handleTypesChanged = this.handleTypesChanged.bind(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
-        Utils.queryToFilter(this.props.location.search.substring(1));
+        this.state.filter = Object.assign(this.state.filter,
+            Utils.queryToFilter(this.props.location.search.substring(1))
+        );
+        if (this.state.filter.eventType && !Array.isArray(this.state.filter.eventType)){
+            this.state.filter.eventType = [this.state.filter.eventType];
+        }
         this.state.entityUrl = this.props.entityUrl;
         this.state.entityName = this.props.entityName;
         this.getEvents();
@@ -97,6 +111,29 @@ class Events extends SubComponent {
         this.setState(this.state);
     }
 
+    handleFromDateFilterChange(value, formattedValue){
+        if (value == null){
+            delete this.state.filter.from_createdTime;
+        } else {
+            this.state.filter.from_createdTime = value.getTime();
+        }
+        this.setState(this.state);
+    }
+
+    handleToDateFilterChange(value, formattedValue){
+        if (value == null){
+            delete this.state.filter.to_createdTime;
+        } else {
+            this.state.filter.to_createdTime = value.getTime();
+        }
+        this.setState(this.state);
+    }
+
+    handleTypesChanged(values){
+        this.state.filter.eventType = values.map(function(value){return value.value});
+        this.setState(this.state);
+    }
+
     onFilter(event){
         this.updateUrl();
         this.getEvents();
@@ -112,7 +149,54 @@ class Events extends SubComponent {
         return (
             <div className="row">
               <div className="col-sm-3 events-filter">
+                <form>
+                  <div class="form-group">
+                    <label for="created"><h5>Event Time</h5></label>
+                    <div class="input-group mb-2">
+                      <DatePicker id="from_createdTime" value={Utils.getDatepickerTime(this.state.filter.from_createdTime)}
+                                onChange={this.handleFromDateFilterChange} placeholder="Event after" />
+                      <DatePicker id="to_createdTime" value={Utils.getDatepickerTime(this.state.filter.to_createdTime)}
+                                onChange={this.handleToDateFilterChange}  placeholder="Event before"/>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="created"><h5>Event Type</h5></label>
+                      <div>
+                          <Select value={this.state.filter.eventType.map(function(val){return {value: val, label: val}})}
+                              isMulti
+                              onChange={this.handleTypesChanged}
+                              options={this.state.allEventTypes.map(function(val){return {value: val, label: val}})}
+                             />
+                      </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="created"><h5>Entity Type</h5></label>
+                      <div class="input-group mb-2">
+                          <select id="launcher-select" className="form-control" onChange={(e) => this.handleFilterChange("entityType", e)}>
+                              <option> </option>
+                              {
+                                  this.state.entityTypes.map(function(entityType){
+                                      var selected = this.state.filter.entityType == entityType;
+                                      if (selected){
+                                          return (<option value={entityType} selected>{entityType}</option>)
+                                      }
+                                      return (<option value={entityType} >{entityType}</option>)
+
+                                  }.bind(this))
+                              }
+                          </select>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="title"><h5>Entity Id</h5></label>
+                      <input type="text" class="form-control" id="entityId" name="entityId" aria-describedby="Event Entity Id" placeholder="Event Entity Id"
+                          value={this.state.filter.entityId || ""} onChange={(e) => this.handleFilterChange("entityId", e)} />
+                   </div>
+                  <button type="submit" class="btn btn-primary"  onClick={this.onFilter}>Filter</button>
+                </form>
               </div>
+
               <div className="col-sm-9">
                   <div className='sweet-loading'>
                          <FadeLoader
