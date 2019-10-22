@@ -741,7 +741,7 @@ class TestCase extends SubComponent {
                     <EventsWidget projectId={this.projectId}
                         filter = {{
                             skip: 0,
-                            limit: 20,
+                            limit: 10,
                             orderby: "id",
                             orderdir: "DESC",
                             entityType: "TestCase",
