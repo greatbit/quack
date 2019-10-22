@@ -207,7 +207,7 @@ class Events extends SubComponent {
                            loading={this.state.loading}
                          />
                    </div>
-                  <table class="table table-striped">
+                  <table class="table">
                       <thead>
                           <tr>
                             <th scope="col">Type</th>
@@ -219,7 +219,7 @@ class Events extends SubComponent {
                       {
                             this.state.events.map(function(event){
                                 return (
-                                       <tr>
+                                       <tr className={Utils.getStatusColorClass(event.eventType)}>
                                            <td>{event.eventType}</td>
                                            <td>{Utils.timeToDate(event.createdTime)}</td>
                                            <td>{event.user}</td>

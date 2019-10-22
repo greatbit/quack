@@ -36,7 +36,7 @@ class EventsWidget extends Component {
         if (nextProps.filter){
             this.state.filter = nextProps.filter;
         }
-        if (this.state.filter){
+        if (this.state.filter && this.state.projectId){
             this.getEvents();
         }
     }
@@ -53,7 +53,7 @@ class EventsWidget extends Component {
                            loading={this.state.loading}
                          />
                    </div>
-                  <table class="table table-striped">
+                  <table class="table">
                       <thead>
                           <tr>
                             <th scope="col">Type</th>
@@ -65,7 +65,7 @@ class EventsWidget extends Component {
                       {
                             this.state.events.map(function(event){
                                 return (
-                                       <tr>
+                                       <tr className={Utils.getStatusColorClass(event.eventType)}>
                                            <td>{event.eventType}</td>
                                            <td>{Utils.timeToDate(event.createdTime)}</td>
                                            <td>{event.user}</td>

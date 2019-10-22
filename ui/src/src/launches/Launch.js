@@ -66,6 +66,9 @@ class Launch extends SubComponent {
             .get("/api/" + this.state.projectId + "/launch/" + this.props.match.params.launchId)
             .then(response => {
                  this.state.launch = response.data;
+                 if (!this.state.launch.testSuite || !this.state.launch.testSuite.filter){
+                     this.state.launch.testSuite = {filter: {groups: []}};
+                 }
                  if (this.state.selectedTestCase.uuid){
                      this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
                  }
@@ -76,6 +79,7 @@ class Launch extends SubComponent {
                  }
                  this.checkUpdatedTestCases();
         }).catch(error => {
+            console.log(error);
             Utils.onErrorMessage("Couldn't get launch: ", error);
             this.state.loading = false;
             this.setState(this.state);

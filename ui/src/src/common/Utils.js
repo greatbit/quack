@@ -131,9 +131,29 @@ export function getStatusImg(testCase){
     return undefined;
 }
 
+export function getStatusColorClass(status){
+    switch (status) {
+      case 'FAILED':
+        return 'alert alert-danger';
+        break;
+      case 'BROKEN':
+        return 'alert alert-danger';
+        break;
+      case 'PASSED':
+        return 'alert alert-success';
+        break;
+      case 'SKIPPED':
+        return 'alert alert-warning';
+        break;
+      case 'RUNNING':
+        return 'alert alert-primary';
+        break;
+    }
+    return '';
+}
+
 export function getStatusHtml(testCase){
     var plug = "";
-    console.log(testCase.id + " " + testCase.automated)
     if (testCase.automated){
         plug = "<FontAwesomeIcon icon={faPlug}/>";
     }
