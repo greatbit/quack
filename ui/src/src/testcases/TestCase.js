@@ -3,6 +3,7 @@ import SubComponent from '../common/SubComponent'
 import Attachments from '../testcases/Attachments'
 import Issues from '../testcases/Issues'
 import Comments from '../comments/Comments'
+import EventsWidget from '../audit/EventsWidget'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
@@ -737,7 +738,17 @@ class TestCase extends SubComponent {
                 </div>
 
                 <div class="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">
-                    History - coming up soon
+                    <EventsWidget projectId={this.projectId}
+                        filter = {{
+                            skip: 0,
+                            limit: 20,
+                            orderby: "id",
+                            orderdir: "DESC",
+                            entityType: "TestCase",
+                            entityId: this.state.testcase.id,
+                            eventType: ["PASSED", "FAILED", "BROKEN", "SKIPPED", "UPDATED"]
+                        }}
+                    />
                 </div>
 
               </div>

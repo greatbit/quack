@@ -22,6 +22,7 @@ class Events extends SubComponent {
             orderby: "id",
             orderdir: "DESC",
             entityType: "",
+            entityId: '',
             eventType: ["PASSED", "FAILED", "BROKEN", "SKIPPED", "UPDATED"]
         },
         pager: {
@@ -211,7 +212,7 @@ class Events extends SubComponent {
                           <tr>
                             <th scope="col">Type</th>
                             <th scope="col">Date</th>
-                            <th></th>
+                            <th>User</th>
                           </tr>
                       </thead>
                       <tbody>
