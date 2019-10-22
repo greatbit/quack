@@ -137,13 +137,13 @@ export function getStatusColorClass(status){
         return 'alert alert-danger';
         break;
       case 'BROKEN':
-        return 'alert alert-danger';
+        return 'alert alert-warning';
         break;
       case 'PASSED':
         return 'alert alert-success';
         break;
       case 'SKIPPED':
-        return 'alert alert-warning';
+        return 'alert alert-secondary';
         break;
       case 'RUNNING':
         return 'alert alert-primary';
