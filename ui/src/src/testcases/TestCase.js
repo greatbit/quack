@@ -411,17 +411,20 @@ class TestCase extends SubComponent {
                <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display">
-                        <h1>{this.state.testcase.name || this.state.testcase.importedName || ""}
-                        <span className="name-icon">
-                            {this.state.testcase.automated &&
-                                <FontAwesomeIcon icon={faPlug}/>
-                            }
-                        </span>
-                        <span>
-                            {!this.state.readonly &&
-                                <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                            }
-                        </span>
+                        <h1>
+                            <Link to={"/" + this.projectId + "/testcase/" + this.state.testcase.id}>
+                                {this.state.testcase.name || this.state.testcase.importedName || ""}
+                            </Link>
+                            <span className="name-icon">
+                                {this.state.testcase.automated &&
+                                    <FontAwesomeIcon icon={faPlug}/>
+                                }
+                            </span>
+                            <span>
+                                {!this.state.readonly &&
+                                    <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                }
+                            </span>
                         </h1>
                     </div>
                     {!this.state.readonly &&
