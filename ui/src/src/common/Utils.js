@@ -131,9 +131,29 @@ export function getStatusImg(testCase){
     return undefined;
 }
 
+export function getStatusColorClass(status){
+    switch (status) {
+      case 'FAILED':
+        return 'alert alert-danger';
+        break;
+      case 'BROKEN':
+        return 'alert alert-danger';
+        break;
+      case 'PASSED':
+        return 'alert alert-success';
+        break;
+      case 'SKIPPED':
+        return 'alert alert-warning';
+        break;
+      case 'RUNNING':
+        return 'alert alert-primary';
+        break;
+    }
+    return '';
+}
+
 export function getStatusHtml(testCase){
     var plug = "";
-    console.log(testCase.id + " " + testCase.automated)
     if (testCase.automated){
         plug = "<FontAwesomeIcon icon={faPlug}/>";
     }
@@ -215,12 +235,22 @@ export function queryToFilter(locationSearch){
     if (params.like_name){
         filter.like_name = params.like_name;
     }
+    Object.keys(params).forEach((key) => {
+        filter[key] = params[key];
+    });
     return filter;
 }
 
 export function filterToQuery(filter){
-    return Object.keys(filter).
-                map((key) => {return key + "=" + filter[key]}).join("&");
+    var tokens = [];
+    Object.keys(filter).forEach((key) => {
+        if (Array.isArray(filter[key])){
+            filter[key].forEach((value) => tokens.push(key + "=" + value))
+        } else {
+            tokens.push(key + "=" + filter[key]);
+        }
+    });
+    return tokens.join("&");
 }
 
 export function timePassed(passedTime){

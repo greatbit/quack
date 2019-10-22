@@ -47,7 +47,9 @@ class Launches extends SubComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        Utils.queryToFilter(this.props.location.search.substring(1));
+        this.state.filter = Object.assign(this.state.filter,
+            Utils.queryToFilter(this.props.location.search.substring(1))
+        );
         this.getLaunches();
         this.getPager();
         this.getLauncherDescriptors();

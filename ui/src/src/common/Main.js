@@ -15,6 +15,7 @@ import TestCase from '../testcases/TestCase'
 import Auth from '../user/Auth'
 import Login from '../user/Login'
 import Profile from '../user/Profile'
+import Events from '../audit/Events'
 
 class Main extends Component {
 
@@ -72,7 +73,8 @@ class Main extends Component {
                       render={(props) => <Launch {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route path='/:project/attributes'
                       render={(props) => <Attributes {...props} onProjectChange={this.onProjectChange.bind(this)} /> }/>
-
+                  <Route exact path='/:project/audit'
+                      render={(props) => <Events {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                 </Switch>
             </main>
         );
