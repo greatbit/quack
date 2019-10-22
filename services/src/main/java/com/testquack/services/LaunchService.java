@@ -2,7 +2,6 @@ package com.testquack.services;
 
 import com.testquack.beans.Comment;
 import com.testquack.beans.Event;
-import com.testquack.beans.EventType;
 import com.testquack.beans.FailureDetails;
 import com.testquack.beans.Filter;
 import com.testquack.beans.Issue;
@@ -147,18 +146,21 @@ public class LaunchService extends BaseService<Launch> {
         fillByAliases(session, projectId, launch);
         launch.setStatus(RUNNABLE);
         removeTestcasesWithNullId(launch.getTestCaseTree());
-        prepareLaunchTestCasesForCreate(launch.getTestCaseTree());
+        prepareLaunchTestCasesForCreate(launch.getTestCaseTree(), launch);
         super.beforeCreate(session, projectId, launch);
     }
 
-    private void prepareLaunchTestCasesForCreate(LaunchTestCaseTree testCaseTree) {
-        testCaseTree.getTestCases().forEach(this::prepareLaunchTestCaseForCreate);
-        testCaseTree.getChildren().forEach(this::prepareLaunchTestCasesForCreate);
+    private void prepareLaunchTestCasesForCreate(LaunchTestCaseTree testCaseTree, Launch launch) {
+        testCaseTree.getTestCases().forEach(testcase -> prepareLaunchTestCaseForCreate(testcase, launch));
+        testCaseTree.getChildren().forEach(child -> prepareLaunchTestCasesForCreate(child, launch));
     }
 
-    private void prepareLaunchTestCaseForCreate(LaunchTestCase launchTestCase) {
+    private void prepareLaunchTestCaseForCreate(LaunchTestCase launchTestCase, Launch launch) {
         if (isEmpty(launchTestCase.getUuid())) {
             launchTestCase.setUuid(UUID.randomUUID().toString());
+        }
+        if (launch.isSkipBroken() && launchTestCase.isBroken()) {
+            launchTestCase.setLaunchStatus(SKIPPED);
         }
     }
 

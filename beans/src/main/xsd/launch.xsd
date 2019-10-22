@@ -28,6 +28,7 @@
                     <xs:element name="finishTime" type="xs:long"/>
                     <xs:element name="launcherConfig" type="LauncherConfigBase"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="skipBroken" type="xs:boolean" default="true"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
