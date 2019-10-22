@@ -382,7 +382,7 @@ class TestCase extends SubComponent {
                     </a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">
+                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments-tab-body" role="tab" aria-controls="comments-tab-body" aria-selected="false">
                      Comments
                      {this.state.commentsCount > 0 &&
                          <span class="badge badge-pill badge-secondary tab-badge">{this.state.commentsCount}</span>
@@ -718,7 +718,7 @@ class TestCase extends SubComponent {
                     <Issues testcase={this.state.testcase} projectId={this.projectId} entityType="testcase" onTestcaseUpdated={this.onTestcaseUpdated}/>
                 </div>
 
-                <div class="tab-pane fade show" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                <div class="tab-pane fade show" id="comments-tab-body" role="tabpanel" aria-labelledby="comments-tab-body">
                     <Comments entityId={this.state.testcase.id} projectId={this.projectId} entityType="testcase" onCommentsNumberChanged={this.onCommentsCountChanged}/>
                 </div>
 
