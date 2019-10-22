@@ -263,6 +263,9 @@ class Launch extends SubComponent {
                                   <div class="progress-bar bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}
                                   </div>
+                                  <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.SKIPPED, this.state.launch.launchStats.total)}>
+                                    {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.SKIPPED, this.state.launch.launchStats.total)}
+                                  </div>
                                 </div>
 
                                 <div className="restart-launch-control">
