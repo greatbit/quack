@@ -15,7 +15,7 @@ import CreatableSelect from 'react-select/lib/Creatable'
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import { faPlug } from '@fortawesome/free-solid-svg-icons'
-
+import { Checkbox } from 'semantic-ui-react'
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -28,7 +28,8 @@ class TestCase extends SubComponent {
                  steps: [],
                  attributes: {},
                  attachments: [],
-                 properties: []
+                 properties: [],
+                 broken: false
              },
              originalTestcase: {
                 steps: [],
@@ -68,6 +69,7 @@ class TestCase extends SubComponent {
          this.getAttributes = this.getAttributes.bind(this);
          this.cancelEditProperty = this.cancelEditProperty.bind(this);
          this.toggleEditProperty = this.toggleEditProperty.bind(this);
+         this.onBrokenToggle = this.onBrokenToggle.bind(this);
       }
 
     componentDidMount() {
@@ -90,7 +92,7 @@ class TestCase extends SubComponent {
         this.setState(this.state);
      }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps, nextState) {
       if (nextProps.testcase){
         this.state.testcase = nextProps.testcase;
         this.state.loading = false;
@@ -172,8 +174,9 @@ class TestCase extends SubComponent {
                 }
 
         }).catch(error => {Utils.onErrorMessage("Couldn't save testcase: ", error)});
-        event.preventDefault();
-
+        if (event){
+            event.preventDefault();
+        }
     }
 
     getAttributes(reRender){
@@ -357,10 +360,14 @@ class TestCase extends SubComponent {
         }).catch(error => {Utils.onErrorMessage("Couldn't remove testcase: ", error)});
     }
 
+    onBrokenToggle() {
+        this.state.testcase.broken = !this.state.testcase.broken;
+        this.handleSubmit(null, null, null, true);
+    }
+
     render() {
         return (
             <div>
-
             <ul class="nav nav-tabs" id="tcTabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
@@ -410,22 +417,27 @@ class TestCase extends SubComponent {
                  </div>
                <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
-                    <div id="name-display" className="inplace-display">
-                        <h1>
-                            <Link to={"/" + this.projectId + "/testcase/" + this.state.testcase.id}>
-                                {this.state.testcase.name || this.state.testcase.importedName || ""}
-                            </Link>
-                            <span className="name-icon">
-                                {this.state.testcase.automated &&
-                                    <FontAwesomeIcon icon={faPlug}/>
-                                }
-                            </span>
-                            <span>
-                                {!this.state.readonly &&
-                                    <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
-                                }
-                            </span>
-                        </h1>
+                    <div id="name-display" className="inplace-display row">
+                        <div className="col-10">
+                            <h1>
+                                <Link to={"/" + this.projectId + "/testcase/" + this.state.testcase.id}>
+                                    {this.state.testcase.name || this.state.testcase.importedName || ""}
+                                </Link>
+                                <span className="name-icon">
+                                    {this.state.testcase.automated &&
+                                        <FontAwesomeIcon icon={faPlug}/>
+                                    }
+                                </span>
+                                <span>
+                                    {!this.state.readonly &&
+                                        <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("name", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
+                                    }
+                                </span>
+                            </h1>
+                        </div>
+                         <div class="col-2">
+                            <Checkbox toggle onChange={this.onBrokenToggle} checked={!this.state.testcase.broken} label={{ children: this.state.testcase.broken? 'Off' : 'On' }} />
+                         </div>
                     </div>
                     {!this.state.readonly &&
                         <div id="name-form" className="inplace-form" style={{display: 'none'}}>

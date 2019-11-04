@@ -247,3 +247,7 @@ h5:hover .edit-icon {
 .events-filter {
     margin-top: 20px;
 }
+
+.broken-toggle {
+    font-size: 10px;
+}
