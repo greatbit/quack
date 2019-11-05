@@ -309,6 +309,14 @@ public class LaunchService extends BaseService<Launch> {
         return launch;
     }
 
+    public Map<String, Object> getTestcasesHeatMap(Session session, String projectId, Filter filter) throws Exception {
+        if (userCanReadProject(session, projectId)) {
+            return dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
+                    "testcaseHeatMap.js", "testcaseHeatReduce.js", filter, Object.class);
+        }
+        return emptyMap();
+    }
+
     private void cleanUpLaunchForRestart(Launch launch, boolean failedOnly) {
         launch.withId(null).withCreatedBy(null).withCreatedTime(0).withFinishTime(0).withLastModifiedBy(null).withLastModifiedTime(0).withStatus(RUNNABLE);
         launch.setLaunchStats(null);

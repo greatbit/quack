@@ -52,6 +52,13 @@ public class LaunchResource extends BaseCrudResource<Launch> {
         return service.getLaunchesStatistics(getUserSession(), projectId, initFilter(request));
     }
 
+    @GET
+    @Path("/heatmap")
+    public Map<String, Object> getLaunchTestcasesHeatMap(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) throws Exception {
+        return service.getTestcasesHeatMap(getUserSession(), projectId, initFilter(request));
+    }
+
+
     @Override
     public Launch create(String projectId, Launch launch) {
         if (launch.getLauncherConfig() != null) {
