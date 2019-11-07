@@ -2,7 +2,9 @@ function reduce(key, values) {
     "use strict";
 
     var reduceResult = values.reduce(function (result, testcase) {
-        Object.keys(result.statuses).forEach((key) => {result.statuses[key] = result.statuses[key] + testcase.statuses[key]});
+        Object.keys(result.statusCounters).forEach((key) =>
+            {result.statusCounters[key] = result.statusCounters[key] + testcase.statusCounters[key]});
+        result.total = result.total + testcase.total;
         return result;
     });
 

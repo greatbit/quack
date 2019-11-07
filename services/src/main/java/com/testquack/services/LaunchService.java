@@ -1,5 +1,6 @@
 package com.testquack.services;
 
+import com.google.common.collect.MinMaxPriorityQueue;
 import com.testquack.beans.Comment;
 import com.testquack.beans.Event;
 import com.testquack.beans.FailureDetails;
@@ -11,6 +12,7 @@ import com.testquack.beans.LaunchStats;
 import com.testquack.beans.LaunchStatus;
 import com.testquack.beans.LaunchTestCase;
 import com.testquack.beans.LaunchTestCaseTree;
+import com.testquack.beans.LaunchTestcaseStats;
 import com.testquack.beans.TestCase;
 import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestSuite;
@@ -26,17 +28,27 @@ import com.testquack.dal.LaunchRepository;
 import ru.greatbit.whoru.auth.Session;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.testquack.dal.impl.CommonRepositoryImpl.getCollectionName;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
 import static com.testquack.beans.LaunchStatus.*;
@@ -309,12 +321,24 @@ public class LaunchService extends BaseService<Launch> {
         return launch;
     }
 
-    public Map<String, Object> getTestcasesHeatMap(Session session, String projectId, Filter filter) throws Exception {
+    public Collection<LaunchTestcaseStats> getTestCasesHeatMap(Session session, String projectId, Filter filter, int statsTopLimit) throws Exception {
+        statsTopLimit = statsTopLimit == 0 ? 100 : statsTopLimit;
         if (userCanReadProject(session, projectId)) {
-            return dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
-                    "testcaseHeatMap.js", "testcaseHeatReduce.js", filter, Object.class);
+            Map<String, LaunchTestcaseStats> unsortedMap = dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
+                    "testcaseHeatMap.js", "testcaseHeatReduce.js", filter, LaunchTestcaseStats.class);
+
+            MinMaxPriorityQueue<LaunchTestcaseStats> topStats = MinMaxPriorityQueue.
+                    orderedBy(new LaunchTestcaseStatsComparator()).
+                    maximumSize(statsTopLimit).
+                    create();
+            topStats.addAll(unsortedMap.values());
+
+            List<LaunchTestcaseStats> sortedStats = new ArrayList<>(topStats.size());
+            sortedStats.addAll(topStats);
+            sortedStats.sort(new LaunchTestcaseStatsComparator());
+            return sortedStats;
         }
-        return emptyMap();
+        return emptyList();
     }
 
     private void cleanUpLaunchForRestart(Launch launch, boolean failedOnly) {

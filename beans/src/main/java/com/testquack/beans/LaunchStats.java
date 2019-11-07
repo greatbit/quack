@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class LaunchStats {
 
-    private int total;
+    protected int total;
 
     @XmlElement(required = true)
     private final Map<LaunchStatus, Integer> statusCounters;

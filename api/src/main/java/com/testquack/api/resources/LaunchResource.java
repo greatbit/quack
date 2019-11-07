@@ -5,11 +5,13 @@ import com.testquack.beans.Launch;
 import com.testquack.beans.LaunchStatistics;
 import com.testquack.beans.LaunchStatus;
 import com.testquack.beans.LaunchTestCase;
+import com.testquack.beans.LaunchTestcaseStats;
 import com.testquack.launcher.Launcher;
 import com.testquack.services.BaseService;
 import com.testquack.services.LaunchService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import retrofit2.http.Query;
 import ru.greatbit.plow.PluginsContainer;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
@@ -18,6 +20,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import java.util.Collection;
 import java.util.Map;
 
 @Authenticable
@@ -54,8 +57,10 @@ public class LaunchResource extends BaseCrudResource<Launch> {
 
     @GET
     @Path("/heatmap")
-    public Map<String, Object> getLaunchTestcasesHeatMap(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) throws Exception {
-        return service.getTestcasesHeatMap(getUserSession(), projectId, initFilter(request));
+    public Collection<LaunchTestcaseStats> getLaunchTestcasesHeatMap(@ApiParam(value = "Project Id", required = true)
+                                                                     @PathParam("projectId") String projectId,
+                                                                     @QueryParam("statsTopLimit") int statsTopLimit) throws Exception {
+        return service.getTestCasesHeatMap(getUserSession(), projectId, initFilter(request), statsTopLimit);
     }
 
 
