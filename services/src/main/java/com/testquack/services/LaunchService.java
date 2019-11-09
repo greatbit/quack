@@ -41,6 +41,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -333,6 +334,15 @@ public class LaunchService extends BaseService<Launch> {
                     create();
             topStats.addAll(unsortedMap.values());
 
+            Map<String, LaunchTestcaseStats> statsMap =
+                    topStats.stream().collect(toMap(LaunchTestcaseStats::getId, Function.identity()));
+
+            //Get current broken flag state
+            List<TestCase> actualTestcases = testCaseService.findFiltered(session, projectId,
+                    new TestcaseFilter().withIncludedField("id").withIncludedField("broken").withField("id", statsMap.keySet().toArray()));
+            actualTestcases.forEach(actualTestcase -> statsMap.get(actualTestcase.getId()).setBroken(actualTestcase.isBroken()));
+
+            //Sort stats by most broken
             List<LaunchTestcaseStats> sortedStats = new ArrayList<>(topStats.size());
             sortedStats.addAll(topStats);
             sortedStats.sort(new LaunchTestcaseStatsComparator());

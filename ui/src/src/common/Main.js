@@ -9,6 +9,7 @@ import ProjectSettings from '../projects/ProjectSettings'
 import Launches from '../launches/Launches'
 import Launch from '../launches/Launch'
 import LaunchesStatistics from '../launches/LaunchesStatistics'
+import LaunchTestcasesHeatmap from '../launches/LaunchTestcasesHeatmap'
 import Attributes from '../attributes/Attributes'
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCase from '../testcases/TestCase'
@@ -67,6 +68,8 @@ class Main extends Component {
                       render={(props) => <Launches {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route exact path='/:project/launches/statistics/'
                        render={(props) => <LaunchesStatistics {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+                  <Route exact path='/:project/launches/heatmap/'
+                       render={(props) => <LaunchTestcasesHeatmap {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route exact path='/:project/launch/:launchId'
                       render={(props) => <Launch {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route exact path='/:project/launch/:launchId/:testcaseUuid'

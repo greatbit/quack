@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
+import { FadeLoader } from 'react-spinners';
 import Highcharts from 'highcharts';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -13,7 +14,8 @@ class LaunchesStatistics extends SubComponent {
             all: {
                 launchTimes: {}
             }
-        }
+        },
+        loading: true
     };
 
     constructor(props) {
@@ -39,6 +41,7 @@ class LaunchesStatistics extends SubComponent {
                  this.state.stats = response.data;
                  this.setUpStatusPieSeries();
                  this.setUpUsersPieSeries();
+                 this.state.loading = false;
                  this.setState(this.state);
                  this.statusPieChartRender();
                  this.usersPieChartRender();
@@ -150,6 +153,14 @@ class LaunchesStatistics extends SubComponent {
     render() {
         return (
         <div>
+          <div className='sweet-loading'>
+             <FadeLoader
+               sizeUnit={"px"}
+               size={100}
+               color={'#135f38'}
+               loading={this.state.loading}
+             />
+          </div>
           <div className="row">
               <div className="col-6">
                 <table class="table">
