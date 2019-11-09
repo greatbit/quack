@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
 import axios from "axios";
 import * as Utils from '../common/Utils';
+import { Checkbox } from 'semantic-ui-react'
 
 class LaunchTestcasesHeatmap extends SubComponent {
 
@@ -17,6 +18,8 @@ class LaunchTestcasesHeatmap extends SubComponent {
         super(props);
         this.state.projectId = this.props.match.params.project;
         this.getHeatMap = this.getHeatMap.bind(this);
+        this.updateTestcase = this.updateTestcase.bind(this);
+        this.onBrokenToggle = this.onBrokenToggle.bind(this);
     }
 
     componentDidMount() {
@@ -57,6 +60,34 @@ class LaunchTestcasesHeatmap extends SubComponent {
         return Utils.getStatusColorClass("PASSED");
     }
 
+    onBrokenToggle(id, value, event){
+        var testcaseToUpdate;
+        axios
+          .get("/api/" +this.state.projectId + "/testcase/"+ id)
+          .then(response => {
+             testcaseToUpdate = response.data;
+             if (testcaseToUpdate){
+                testcaseToUpdate.broken = value;
+                this.updateTestcase(testcaseToUpdate);
+             }
+          })
+          .catch(error => {
+            Utils.onErrorMessage("Couldn't update testcase status: ", error);
+          });
+    }
+
+    updateTestcase(testcaseToUpdate){
+        axios.put('/api/' + this.state.projectId + '/testcase/', testcaseToUpdate)
+                .then(response => {
+                    var foundTestcaseStats = this.state.heatmap.find((testcaseStats) => testcaseStats.id == testcaseToUpdate.id);
+                    if (foundTestcaseStats){
+                        foundTestcaseStats.broken = response.data.broken;
+                    }
+                    this.setState(this.state);
+
+            }).catch(error => {Utils.onErrorMessage("Couldn't update testcase status: ", error)});
+    }
+
     render() {
         return (
         <div>
@@ -70,19 +101,21 @@ class LaunchTestcasesHeatmap extends SubComponent {
             </thead>
             <tbody>
             {
-                  this.state.heatmap.map(function(testcase){
-                      return (
-                             <tr>
-                                 <td>
-                                      <Link to={'/' + this.props.match.params.project + '/testcase/' + testcase.id}>
-                                          {testcase.name}
-                                      </Link>
-                                 </td>
-                                 <td className={this.getCellColorClass(testcase)}>{this.getPercentile(testcase)}%</td>
-                                 <td></td>
-                             </tr>
-                             );
-                  }.bind(this))
+              this.state.heatmap.map(function(testcase){
+                  return (
+                         <tr>
+                             <td>
+                                  <Link to={'/' + this.props.match.params.project + '/testcase/' + testcase.id}>
+                                      {testcase.name}
+                                  </Link>
+                             </td>
+                             <td className={this.getCellColorClass(testcase)}>{this.getPercentile(testcase)}%</td>
+                             <td>
+                                <Checkbox toggle onClick={(e) => this.onBrokenToggle(testcase.id, !testcase.broken, e)} checked={!testcase.broken} label={{ children: testcase.broken? 'Off' : 'On' }} />
+                             </td>
+                         </tr>
+                         );
+              }.bind(this))
             }
             </tbody>
           </table>
