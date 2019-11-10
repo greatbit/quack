@@ -95,7 +95,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
             <thead>
                 <tr>
                   <th scope="col">Title</th>
-                  <th scope="col">Failures</th>
+                  <th scope="col" className='center-text'>Failures</th>
                   <th scope="col">Active</th>
                 </tr>
             </thead>
@@ -109,7 +109,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
                                       {testcase.name}
                                   </Link>
                              </td>
-                             <td className={this.getCellColorClass(testcase)}>{this.getPercentile(testcase)}%</td>
+                             <td className={this.getCellColorClass(testcase) + ' center-text'}>{this.getPercentile(testcase)}%</td>
                              <td>
                                 <Checkbox toggle onClick={(e) => this.onBrokenToggle(testcase.id, !testcase.broken, e)} checked={!testcase.broken} label={{ children: testcase.broken? 'Off' : 'On' }} />
                              </td>
