@@ -131,6 +131,7 @@
                 <xs:sequence>
                     <xs:element name="importedName" type="xs:string"/>
                     <xs:element name="automated" type="xs:boolean"/>
+                    <xs:element name="broken" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

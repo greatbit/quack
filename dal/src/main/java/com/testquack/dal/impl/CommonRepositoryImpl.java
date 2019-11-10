@@ -22,7 +22,7 @@ public abstract class CommonRepositoryImpl<E extends EntityPreview> implements C
 
     @Override
     public List<E> find(String projectId, Filter filter) {
-        return mongoOperations.find(DBUtils.getQuery(filter),
+        return mongoOperations.find(DBUtils.getQuery(getEntityClass(), filter),
                 getEntityClass(),
                 getCollectionName(projectId));
 
@@ -30,7 +30,7 @@ public abstract class CommonRepositoryImpl<E extends EntityPreview> implements C
 
     @Override
     public long count(String projectId, Filter filter) {
-        return mongoOperations.count(DBUtils.getQuery(filter),
+        return mongoOperations.count(DBUtils.getQuery(getEntityClass(), filter),
                 getEntityClass(),
                 getCollectionName(projectId));
 
@@ -75,7 +75,7 @@ public abstract class CommonRepositoryImpl<E extends EntityPreview> implements C
 
     @Override
     public void delete(String projectId, Filter filter) {
-        Query query = DBUtils.getQuery(filter);
+        Query query = DBUtils.getQuery(getEntityClass(), filter);
         Update update = new Update().set("deleted", true);
         mongoOperations.updateMulti(query, update, getCollectionName(projectId));
     }

@@ -49,6 +49,7 @@ class TestCasesFilter extends Component {
         this.showSuiteModal = this.showSuiteModal.bind(this);
         this.suiteAttrChanged = this.suiteAttrChanged.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
+        this.getProjectAttributesSelect = this.getProjectAttributesSelect.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -158,6 +159,9 @@ class TestCasesFilter extends Component {
 
     getValuesByAttributeId(id){
         if(!id) return [];
+        if (id == "broken"){
+            return ["true", "false"];
+        }
         return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).values;
     }
 
@@ -209,6 +213,12 @@ class TestCasesFilter extends Component {
         this.setState(this.state);
     }
 
+    getProjectAttributesSelect(){
+        var projectAttributes = this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}});
+        projectAttributes.push({value: "broken", label: "Broken"});
+        return projectAttributes;
+    }
+
     render() {
         return (
             <div>
@@ -220,7 +230,7 @@ class TestCasesFilter extends Component {
                             <Select value={this.state.groupsToDisplay}
                                     isMulti
                                     onChange={this.changeGrouping}
-                                    options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
+                                    options={this.getProjectAttributesSelect()}
                                    />
                         </div>
                         <div className="col-3"></div>
@@ -242,7 +252,7 @@ class TestCasesFilter extends Component {
                                         <div className="row">
                                             <Select className="col-5 filter-attribute-id-select" value={{value: filter.id, label: filter.name}}
                                                     onChange={(e) => this.changeFilterAttributeId(i, e)}
-                                                    options={this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}})}
+                                                    options={this.getProjectAttributesSelect()}
                                                    />
                                             <Select className="col-6 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
                                                     isMulti

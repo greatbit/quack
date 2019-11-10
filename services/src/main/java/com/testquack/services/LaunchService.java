@@ -309,7 +309,7 @@ public class LaunchService extends BaseService<Launch> {
 
     public Map<String, LaunchStatistics> getLaunchesStatistics(Session session, String projectId, Filter filter) throws Exception {
         if (userCanReadProject(session, projectId)) {
-            return dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
+            return dbUtils.mapReduce(Launch.class, getCollectionName(projectId, Launch.class),
                     "launchStatsMap.js", "launchStatsReduce.js", filter, LaunchStatistics.class);
         }
         return emptyMap();
@@ -325,7 +325,7 @@ public class LaunchService extends BaseService<Launch> {
     public Collection<LaunchTestcaseStats> getTestCasesHeatMap(Session session, String projectId, Filter filter, int statsTopLimit) throws Exception {
         statsTopLimit = statsTopLimit == 0 ? 100 : statsTopLimit;
         if (userCanReadProject(session, projectId)) {
-            Map<String, LaunchTestcaseStats> unsortedMap = dbUtils.mapReduce(getCollectionName(projectId, Launch.class),
+            Map<String, LaunchTestcaseStats> unsortedMap = dbUtils.mapReduce(Launch.class, getCollectionName(projectId, Launch.class),
                     "testcaseHeatMap.js", "testcaseHeatReduce.js", filter, LaunchTestcaseStats.class);
 
             MinMaxPriorityQueue<LaunchTestcaseStats> topStats = MinMaxPriorityQueue.

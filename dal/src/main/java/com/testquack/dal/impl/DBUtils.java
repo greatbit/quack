@@ -1,9 +1,9 @@
 package com.testquack.dal.impl;
 
-import com.mongodb.DBObject;
 import com.testquack.beans.Filter;
 import com.testquack.beans.Order;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import ru.greatbit.utils.serialize.JsonSerializer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,18 +33,18 @@ public class DBUtils {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    public MapReduceResults<Document> mapReduce(String collectionName, String mapFileName, String reduceFileName, Filter filter)
+    public MapReduceResults<Document> mapReduce(Class entityClass, String collectionName, String mapFileName, String reduceFileName, Filter filter)
             throws IOException {
-        return mongoTemplate.mapReduce(getQuery(filter), collectionName,
+        return mongoTemplate.mapReduce(getQuery(entityClass, filter), collectionName,
                 IOUtils.toString(getClass().getResourceAsStream(MAPREDUCE_PATH + mapFileName), "UTF-8"),
                 IOUtils.toString(getClass().getResourceAsStream(MAPREDUCE_PATH + reduceFileName), "UTF-8"),
                 Document.class);
     }
 
-    public <T> Map<String, T> mapReduce(String collectionName, String mapFileName, String reduceFileName, Filter filter, Class<T> t)
+    public <T> Map<String, T> mapReduce(Class entityClass, String collectionName, String mapFileName, String reduceFileName, Filter filter, Class<T> t)
             throws Exception {
         Map<String, T> result = new HashMap<>();
-        for (Document document : mapReduce(collectionName, mapFileName, reduceFileName, filter)) {
+        for (Document document : mapReduce(entityClass, collectionName, mapFileName, reduceFileName, filter)) {
             if (document != null && document.get("_id") != null && document.get("value") != null) {
                 result.put(document.get("_id").toString(),
                         JsonSerializer.unmarshal(((Document) document.get("value")).toJson(), t));
@@ -51,12 +53,12 @@ public class DBUtils {
         return result;
     }
 
-    public static Query getQuery(Filter filter) {
+    public static Query getQuery(Class entityClass, Filter filter) {
         Criteria criteria = new Criteria();
 
         // Add AND fields criterias
         List<Criteria> fieldsCriteria = filter.getFields().entrySet().stream().
-                map(field -> getFieldCriteris(field.getKey(), field.getValue())).collect(Collectors.toList());
+                map(field -> getFieldCriteris(entityClass, field.getKey(), field.getValue())).collect(Collectors.toList());
         if (!fieldsCriteria.isEmpty()) {
             criteria.andOperator(fieldsCriteria.toArray(new Criteria[fieldsCriteria.size()]));
         }
@@ -91,7 +93,7 @@ public class DBUtils {
         return query;
     }
 
-    private static Criteria getFieldCriteris(String key, Set<Object> values) {
+    private static Criteria getFieldCriteris(Class entityClass, String key, Set<Object> values) {
         if (key.startsWith("like_")) {
             String effectiveKey = key.replace("like_", "");
             return new Criteria().orOperator((Criteria[]) values.stream().map(
@@ -110,7 +112,66 @@ public class DBUtils {
                     value -> new Criteria(effectiveKey).lte(Long.parseLong(value.toString()))
             ).collect(Collectors.toList()).toArray(new Criteria[values.size()]));
         }
-        return new Criteria(key).in(values);
+        return new Criteria(key).in(getFieldValue(entityClass, key, values));
+    }
+
+    private static Set<Object> getFieldValue(Class entityClass, String key, Set<Object> values) {
+        Class classToSearch = entityClass;
+        Field field = FieldUtils.getField(classToSearch, "key", true);
+        while (field == null && classToSearch.getSuperclass() != null) {
+            classToSearch = classToSearch.getSuperclass();
+            field = FieldUtils.getField(classToSearch, key, true);
+        }
+        if (field == null) {
+            return values;
+        }
+        if (field.getType() == String.class) {
+            return values;
+        }
+        if (field.getType() == Boolean.class || field.getType() == boolean.class) {
+            return values.stream().map(DBUtils::toBoolean).collect(Collectors.toSet());
+        }
+        if (field.getType() == Integer.class || field.getType() == int.class) {
+            return values.stream().map(DBUtils::toInteger).collect(Collectors.toSet());
+        }
+        if (field.getType() == Double.class || field.getType() == double.class) {
+            return values.stream().map(DBUtils::toDouble).collect(Collectors.toSet());
+        }
+        if (field.getType() == Float.class || field.getType() == float.class) {
+            return values.stream().map(DBUtils::toFloat).collect(Collectors.toSet());
+        }
+        return values;
+    }
+
+    private static float toFloat(Object value) {
+        if (value == null) {
+            return 0f;
+        }
+        return Float.parseFloat(value.toString());
+    }
+
+    private static double toDouble(Object value) {
+        if (value == null) {
+            return 0f;
+        }
+        return Double.parseDouble(value.toString());
+    }
+
+    private static int toInteger(Object value) {
+        if (value == null) {
+            return 0;
+        }
+        return Integer.parseInt(value.toString());
+    }
+
+    private static boolean toBoolean(Object value) {
+        if (value == null) {
+            return false;
+        }
+        if (value.toString().toLowerCase().equals("true")) {
+            return true;
+        }
+        return false;
     }
 
     private static Criteria[] getCriteriasArray(List<Criteria> criterias) {
