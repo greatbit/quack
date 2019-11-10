@@ -215,7 +215,6 @@ class TestCasesFilter extends Component {
 
     getProjectAttributesSelect(){
         var projectAttributes = this.state.projectAttributes.map(function(val){return {value: val.id, label: val.name}});
-        projectAttributes.push({value: "broken", label: "Broken"});
         return projectAttributes;
     }
 

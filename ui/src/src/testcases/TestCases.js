@@ -73,6 +73,12 @@ class TestCases extends SubComponent {
           .get("/api/" + this.props.match.params.project + "/attribute")
           .then(response => {
                this.state.projectAttributes = response.data;
+               this.state.projectAttributes.push({
+                    id: 'broken',
+                    name: 'Broken',
+                    values: ['True', 'False']
+               });
+               console.log(this.state.projectAttributes);
                this.setState(this.state);
                this.refreshTree();
           })
@@ -166,10 +172,10 @@ class TestCases extends SubComponent {
          var tokens = (filter.groups || []).map(function(group){return "groups=" + group});
          filter.filters.forEach(function(filter){
              filter.values.forEach(function(value){
-                 if (filter.id != "broken"){
-                    tokens.push("attributes." + filter.id + "=" + value);
-                 } else {
+                 if (filter.id == "broken"){
                     tokens.push(filter.id + "=" + value);
+                 } else {
+                    tokens.push("attributes." + filter.id + "=" + value);
                  }
              })
          });
@@ -207,6 +213,7 @@ class TestCases extends SubComponent {
         }.bind(this));
         if (this.state.selectedTestCase.id){
             var node = this.tree.getNodeById(this.state.selectedTestCase.id);
+            if (!node) return;
             this.tree.select(node);
             this.state.filter.groups.forEach(function(groupId){
                 var attributes = Utils.getTestCaseFromTree(this.state.selectedTestCase.id, this.state.testcasesTree, function(testCase, id){return testCase.id === id}).attributes || {};
