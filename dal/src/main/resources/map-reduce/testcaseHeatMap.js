@@ -12,7 +12,7 @@ function map() {
             }
             statusCounters[testCase.launchStatus]++;
             emit(testCase._id, {
-                name: testCase.name,
+                name: testCase.name || testCase.importedName || "",
                 total: 1,
                 id: testCase._id,
                 statusCounters: statusCounters

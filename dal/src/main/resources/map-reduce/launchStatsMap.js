@@ -12,7 +12,7 @@ function map() {
         head.children.forEach(child => traverseTree(child, results));
     }
 
-    if (!this.users) {
+    if (!this.users || this.users.length == 0) {
         this.users = {};
     }
     var currDate = Date.now();
@@ -42,8 +42,8 @@ function map() {
         users: this.users,
         startTime: this.startTime
     };
-    emit("all", objectTiEmit);
 
+    emit("all", objectTiEmit);
 }
 
 

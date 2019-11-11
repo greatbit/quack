@@ -127,6 +127,9 @@ public class TestCaseService extends BaseService<TestCase> {
                 entity.setDeleted(false);
             }
         }
+        if (isEmpty(entity.getName()) && !isEmpty(entity.getImportedName())) {
+            entity.setName(entity.getImportedName());
+        }
         if (isEmpty(entity.getId())) {
             Sequencer sequencer = sequencerService.increment(projectId);
             entity.setId(Long.toString(sequencer.getIndex()));

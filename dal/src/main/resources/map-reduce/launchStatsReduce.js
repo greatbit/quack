@@ -8,7 +8,7 @@ function reduce(key, values) {
     var currDate = Date.now();
     setTimeForNotFinishedLaunch(values[0]);
 
-    var reduceResult =  values.reduce(function (result, launch) {
+    var reduceResult = values.reduce(function (result, launch) {
         setTimeForNotFinishedLaunch(launch);
 
         result.continuousExec = result.continuousExec.concat(launch.continuousExec);
