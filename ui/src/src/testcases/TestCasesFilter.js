@@ -229,7 +229,7 @@ class TestCasesFilter extends Component {
                             <Select value={this.state.groupsToDisplay}
                                     isMulti
                                     onChange={this.changeGrouping}
-                                    options={this.getProjectAttributesSelect()}
+                                    options={this.getProjectAttributesSelect().filter((attr) => attr.value != 'broken' )}
                                    />
                         </div>
                         <div className="col-3"></div>

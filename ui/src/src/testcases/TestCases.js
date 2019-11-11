@@ -72,8 +72,8 @@ class TestCases extends SubComponent {
         axios
           .get("/api/" + this.props.match.params.project + "/attribute")
           .then(response => {
-               this.state.projectAttributes = response.data;
-               this.state.projectAttributes.push({
+               this.state.projectAttributes = response.data.sort((a, b) => (a.name || "").localeCompare(b.name));
+               this.state.projectAttributes.unshift({
                     id: 'broken',
                     name: 'Broken',
                     values: ['True', 'False']
@@ -172,7 +172,7 @@ class TestCases extends SubComponent {
          var tokens = (filter.groups || []).map(function(group){return "groups=" + group});
          filter.filters.forEach(function(filter){
              filter.values.forEach(function(value){
-                 if (filter.id == "broken"){
+                 if (filter.id == "broken" && value && value != ''){
                     tokens.push(filter.id + "=" + value);
                  } else {
                     tokens.push("attributes." + filter.id + "=" + value);
