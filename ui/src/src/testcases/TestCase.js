@@ -435,9 +435,11 @@ class TestCase extends SubComponent {
                                 </span>
                             </h1>
                         </div>
-                         <div class="col-2">
+                        {!this.state.readonly &&
+                        <div class="col-2">
                             <Checkbox toggle onChange={this.onBrokenToggle} checked={!this.state.testcase.broken} label={{ children: this.state.testcase.broken? 'Off' : 'On' }} />
-                         </div>
+                        </div>
+                        }
                     </div>
                     {!this.state.readonly &&
                         <div id="name-form" className="inplace-form" style={{display: 'none'}}>
