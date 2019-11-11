@@ -339,8 +339,12 @@ public class LaunchService extends BaseService<Launch> {
 
             //Get current broken flag state
             List<TestCase> actualTestcases = testCaseService.findFiltered(session, projectId,
-                    new TestcaseFilter().withIncludedField("id").withIncludedField("broken").withField("id", statsMap.keySet().toArray()));
-            actualTestcases.forEach(actualTestcase -> statsMap.get(actualTestcase.getId()).setBroken(actualTestcase.isBroken()));
+                    new TestcaseFilter().withIncludedField("id").withIncludedField("name").withIncludedField("broken").withField("id", statsMap.keySet().toArray()));
+            actualTestcases.forEach(actualTestcase -> {
+                LaunchTestcaseStats statsToUpdate = statsMap.get(actualTestcase.getId());
+                statsToUpdate.setBroken(actualTestcase.isBroken());
+                statsToUpdate.setName(actualTestcase.getName());
+            });
 
             //Sort stats by most broken
             List<LaunchTestcaseStats> sortedStats = new ArrayList<>(topStats.size());
