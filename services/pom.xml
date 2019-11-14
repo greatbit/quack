@@ -45,12 +45,6 @@
             <artifactId>hazelcast-spring</artifactId>
         </dependency>
 
-        <!-- Utils -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <!-- Plow -->
         <dependency>
             <groupId>ru.greatbit.plow</groupId>
