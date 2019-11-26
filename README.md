@@ -33,6 +33,9 @@ The usage of the service is free of charge.
 #### Project Dashboard
 ![Project](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/project-800.png)
 
+#### Testcases HeatMap
+![HeatMap](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/heatmap-800.png)
+
 #### Test Suites
 ![Test Suites](https://raw.githubusercontent.com/greatbit/greatbit.github.io/master/quack/img/suites-800.png)
 
