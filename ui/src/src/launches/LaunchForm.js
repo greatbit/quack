@@ -33,6 +33,7 @@ class LaunchForm extends SubComponent {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.changeEnvironments = this.changeEnvironments.bind(this);
         this.handleLauncherChange = this.handleLauncherChange.bind(this);
       }
 
@@ -105,6 +106,11 @@ class LaunchForm extends SubComponent {
         this.setState(this.state);
     }
 
+    changeEnvironments(values){
+        this.state.launch.environments = values.map(function(value){return value.value});
+        this.setState(this.state);
+    }
+
     launchModalDismiss(){
         $("#launch-modal").modal("hide");
     }
@@ -129,6 +135,21 @@ class LaunchForm extends SubComponent {
                                 <input type="text" className="form-control" name="name" value={this.state.launch.name || ""} onChange={this.handleChange} />
                             </div>
                         </div>
+
+                        <div className="form-group row">
+                            <label className="col-4 col-form-label">Environments</label>
+                            <div className="col-8">
+                                <CreatableSelect value={(this.state.launch.environments || []).map(function(val){return {value: val, label: val}})}
+                                            isMulti
+                                            isClearable
+                                            cacheOptions
+                                            onChange={this.changeEnvironments}
+                                            options={(this.state.project.environments || []).map(function(val){return {value: val, label: val}})}
+                                           />
+                            </div>
+                        </div>
+
+
                         <div className="form-group row">
                             <label className="col-4 col-form-label">Launcher</label>
                             <div className="col-8">

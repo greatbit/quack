@@ -84,4 +84,9 @@ public class Filter extends BaseFilter{
     public void addNotFields(String key, String... values){
         addValuesToMap(getNotFields(), key, values);
     }
+
+    @Override
+    public Object createNewInstance() {
+        return new Filter();
+    }
 }

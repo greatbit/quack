@@ -6,6 +6,8 @@ import com.testquack.beans.LaunchStatistics;
 import com.testquack.beans.LaunchStatus;
 import com.testquack.beans.LaunchTestCase;
 import com.testquack.beans.LaunchTestcaseStats;
+import com.testquack.beans.TestSuite;
+import com.testquack.beans.TestcaseFilter;
 import com.testquack.launcher.Launcher;
 import com.testquack.services.BaseService;
 import com.testquack.services.LaunchService;
@@ -78,7 +80,7 @@ public class LaunchResource extends BaseCrudResource<Launch> {
         }
         final String launchGroup = UUID.randomUUID().toString();
         List<Launch> launchesToCreate = launch.getEnvironments().stream().map(environment -> {
-            Launch launchToCreate = new Launch();
+            Launch launchToCreate = (Launch) new Launch().withTestSuite(new TestSuite().withFilter(new TestcaseFilter()));
             launch.copyTo(launchToCreate);
             launchToCreate.setLaunchGroup(launchGroup);
             launchToCreate.setEnvironment(environment);

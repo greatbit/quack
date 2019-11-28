@@ -19,6 +19,11 @@ public class TestcaseFilter extends Filter {
         this.sortField = filter.sortField;
     }
 
+    @Override
+    public Object createNewInstance() {
+        return new TestcaseFilter();
+    }
+
     public TestcaseFilter() {
         super();
     }
