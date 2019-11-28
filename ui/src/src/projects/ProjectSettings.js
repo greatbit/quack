@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
+import CreatableSelect from 'react-select/lib/Creatable'
 import LauncherForm from '../launches/LauncherForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
@@ -20,13 +21,15 @@ class ProjectSettings extends SubComponent {
                  name: "",
                  description: "",
                  allowedGroups: [],
-                 launcherConfigs: []
+                 launcherConfigs: [],
+                 environments: []
              },
              originalProject: {
                   id: null,
                   name: "",
                   description: "",
-                  allowedGroups: []
+                  allowedGroups: [],
+                  environments: []
               },
              groups: [],
              groupsToDisplay: [],
@@ -35,6 +38,7 @@ class ProjectSettings extends SubComponent {
          };
          this.state.projectId = this.props.match.params.project;
          this.changeGroups = this.changeGroups.bind(this);
+         this.changeEnvironments = this.changeEnvironments.bind(this);
          this.submit = this.submit.bind(this);
          this.refreshGroupsToDisplay = this.refreshGroupsToDisplay.bind(this);
          this.getGroups = this.getGroups.bind(this);
@@ -86,6 +90,11 @@ class ProjectSettings extends SubComponent {
     changeGroups(values){
         this.state.project.allowedGroups = values.map(function(value){return value.value});
         this.refreshGroupsToDisplay();
+        this.setState(this.state);
+    }
+
+    changeEnvironments(values){
+        this.state.project.environments = values.map(function(value){return value.value});
         this.setState(this.state);
     }
 
@@ -235,49 +244,67 @@ class ProjectSettings extends SubComponent {
                     </div>
                 </div>
 
-                <h3>Permissions</h3>
-                 <div className="row">
-                    <div className="col-1">Groups</div>
-                    <div className="col-6">
-                        <AsyncSelect value={this.state.groupsToDisplay}
-                                isMulti
-                                cacheOptions
-                                loadOptions={this.getGroups}
-                                onChange={this.changeGroups}
-                                options={this.mapGroupsToView(this.state.groups)}
-                               />
+                <div className="project-settings-section">
+                    <h3>Permissions</h3>
+                     <div className="row">
+                        <div className="col-1">Groups</div>
+                        <div className="col-6">
+                            <AsyncSelect value={this.state.groupsToDisplay}
+                                    isMulti
+                                    cacheOptions
+                                    loadOptions={this.getGroups}
+                                    onChange={this.changeGroups}
+                                    options={this.mapGroupsToView(this.state.groups)}
+                                   />
+                        </div>
                     </div>
                 </div>
 
-                <h3>Launchers</h3>
-                 <div className="row">
-                    {
-                        (this.state.project.launcherConfigs || []).map(function(config, i){
-                            return(
-                                <div className="card col-6">
-                                  <div className="card-header row">
-                                    <div className="col-11">
-                                        {config.name || ""}
+                <div className="project-settings-section">
+                    <h3>Launchers</h3>
+                    <div className="row">
+                        <div className="col-1">Environments</div>
+                        <div className="col-6">
+                            <CreatableSelect value={(this.state.project.environments || []).map(function(val){return {value: val, label: val}})}
+                                    isMulti
+                                    isClearable
+                                    cacheOptions
+                                    onChange={this.changeEnvironments}
+                                    options={[]}
+                                   />
+                        </div>
+                    </div>
+
+
+                     <div className="row project-settings-launchers">
+                        {
+                            (this.state.project.launcherConfigs || []).map(function(config, i){
+                                return(
+                                    <div className="card col-6">
+                                      <div className="card-header row">
+                                        <div className="col-11">
+                                            {config.name || ""}
+                                        </div>
+                                        <div className="col-1">
+                                            <span className='float-right clickable edit-icon-visible red'>
+                                                <FontAwesomeIcon icon={faMinusCircle} index={i} onClick={(e) => this.removeLauncherConfirmation(i)}/>
+                                            </span>
+                                        </div>
+                                      </div>
+                                      <div className="card-body">
+                                            <LauncherForm launcherDescriptors={this.state.launcherDescriptors} selectableType={true}
+                                                    launcherConfig={config} configIndex={i} handleLauncherChange={this.handleLauncherChange}/>
+                                      </div>
                                     </div>
-                                    <div className="col-1">
-                                        <span className='float-right clickable edit-icon-visible red'>
-                                            <FontAwesomeIcon icon={faMinusCircle} index={i} onClick={(e) => this.removeLauncherConfirmation(i)}/>
-                                        </span>
-                                    </div>
-                                  </div>
-                                  <div className="card-body">
-                                        <LauncherForm launcherDescriptors={this.state.launcherDescriptors} selectableType={true}
-                                                launcherConfig={config} configIndex={i} handleLauncherChange={this.handleLauncherChange}/>
-                                  </div>
-                                </div>
-                            )
-                        }.bind(this))
-                    }
-                </div>
-                <div className="row">
-                  <button type="button" className="btn btn-primary" onClick={this.addLauncher}>
-                     Add Launcher
-                  </button>
+                                )
+                            }.bind(this))
+                        }
+                    </div>
+                    <div className="row project-settings-launchers">
+                      <button type="button" className="btn btn-primary" onClick={this.addLauncher}>
+                         Add Launcher
+                      </button>
+                    </div>
                 </div>
 
                 <div className="project-settings-control row">

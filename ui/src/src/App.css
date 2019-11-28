@@ -255,3 +255,12 @@ h5:hover .edit-icon {
 .center-text {
     text-align: center;
 }
+
+.project-settings-section {
+    margin-bottom: 30px;
+}
+
+.project-settings-launchers{
+    margin-top: 15px;
+    margin-left: 1px;
+}

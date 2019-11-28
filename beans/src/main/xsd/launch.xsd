@@ -29,6 +29,9 @@
                     <xs:element name="launcherConfig" type="LauncherConfigBase"/>
                     <xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
                     <xs:element name="skipBroken" type="xs:boolean" default="true"/>
+                    <xs:element name="environment" type="xs:string"/>
+                    <xs:element name="environments" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="launchGroup" type="xs:string"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

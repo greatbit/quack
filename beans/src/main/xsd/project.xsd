@@ -18,7 +18,7 @@
                 <xs:sequence>
                     <xs:element name="description" type="xs:string"/>
                     <xs:element name="descriptionToDisplay" type="xs:string"/>
-                    <xs:element name="allowedGroups" type="xs:string" maxOccurs="unbounded"/>
+                    <xs:element name="allowedGroups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -34,6 +34,7 @@
                     <xs:element name="projectGroupId" type="xs:string"/>
                     <xs:element name="allowedGroups" type="xs:string" maxOccurs="unbounded"/>
                     <xs:element name="launcherConfigs" type="LauncherConfigBase" maxOccurs="unbounded"/>
+                    <xs:element name="environments" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

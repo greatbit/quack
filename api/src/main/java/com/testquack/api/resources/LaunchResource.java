@@ -11,7 +11,6 @@ import com.testquack.services.BaseService;
 import com.testquack.services.LaunchService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import retrofit2.http.Query;
 import ru.greatbit.plow.PluginsContainer;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
@@ -20,8 +19,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Authenticable
 @Path("/{projectId}/launch")
@@ -66,25 +73,46 @@ public class LaunchResource extends BaseCrudResource<Launch> {
 
     @Override
     public Launch create(String projectId, Launch launch) {
-        if (launch.getLauncherConfig() != null) {
-            Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
-            //Create launch to have an id in launcher
-            if (launcher.isToCreateLaunch()) {
-                launch = super.create(projectId, launch);
-            }
-            try {
-                launcher.launch(launch, projectId, request);
-                //Update launch with enriched data from launcher
-                if (launcher.isToCreateLaunch()) {
-                    launch = super.update(projectId, launch);
-                }
-                return launch;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            return super.create(projectId, launch);
+        if (launch.getEnvironments().isEmpty()) {
+            return create(projectId, Collections.singletonList(launch)).get(0);
         }
+        final String launchGroup = UUID.randomUUID().toString();
+        List<Launch> launchesToCreate = launch.getEnvironments().stream().map(environment -> {
+            Launch launchToCreate = new Launch();
+            launch.copyTo(launchToCreate);
+            launchToCreate.setLaunchGroup(launchGroup);
+            launchToCreate.setEnvironment(environment);
+            launchToCreate.setName(format("%s - [%s]", launch.getName(), environment));
+            return launchToCreate;
+        }).collect(Collectors.toList());
+        return create(projectId, launchesToCreate).get(0);
+    }
+
+    private List<Launch> create(String projectId, List<Launch> launches) {
+        List<Launch> createdLaunches = new ArrayList<>(launches.size());
+        launches.forEach(launch -> {
+            if (launch.getLauncherConfig() != null) {
+                Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
+                //Create launch to have an id in launcher
+                if (launcher.isToCreateLaunch()) {
+                    launch = super.create(projectId, launch);
+                }
+                try {
+                    launcher.launch(launch, projectId, request);
+                    //Update launch with enriched data from launcher
+                    if (launcher.isToCreateLaunch()) {
+                        launch = super.update(projectId, launch);
+                    }
+                    createdLaunches.add(launch);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                launch = super.create(projectId, launch);
+                createdLaunches.add(launch);
+            }
+        });
+        return createdLaunches;
     }
 
     @POST
