@@ -117,10 +117,14 @@ class LaunchForm extends SubComponent {
 
     render() {
         let modalBody;
-        if (this.state.launch.id && !this.state.restart){
+        if (this.state.launch.id && !this.state.restart && !this.state.launch.launchGroup){
             modalBody = <div className="modal-body" id="launch-created">
                             <Link onClick={this.launchModalDismiss} to={'/' + this.props.match.params.project + '/launch/' + this.state.launch.id} className='dropdown-item'>Go To Launch</Link>
                         </div>
+        } else if (this.state.launch.id && !this.state.restart && this.state.launch.launchGroup){
+           modalBody = <div className="modal-body" id="launch-created">
+                           <Link onClick={this.launchModalDismiss} to={'/' + this.props.match.params.project + '/launches?launchGroup=' + this.state.launch.launchGroup} className='dropdown-item'>Go To Launch Group</Link>
+                       </div>
         } else if (this.state.launch.triggeredByLauncher && !this.state.restart) {
             modalBody = <div className="modal-body" id="launch-created">
                                         Launch was triggered using {this.state.launch.launcherConfig.name}

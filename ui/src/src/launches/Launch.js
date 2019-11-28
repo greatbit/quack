@@ -229,6 +229,15 @@ class Launch extends SubComponent {
                       }
                       {(!this.state.selectedTestCase || !this.state.selectedTestCase.id) &&
                               <div>
+                              {this.state.launch.launchGroup &&
+                                  <div className="row launch-summary-block">
+                                      <div className="col-6">
+                                          <Link to={'/' + this.state.projectId + '/launches?launchGroup=' + this.state.launch.launchGroup} >
+                                              View Launch Group
+                                          </Link>
+                                      </div>
+                                  </div>
+                                  }
                                {(this.state.launch.testSuite || {}).id &&
                                 <div className="row launch-summary-block">
                                     <div className="col-2">Test Suite:</div>
