@@ -63,7 +63,7 @@ How to run on a standalone server
 1. Install NGINX and add [conf/quack.conf](https://github.com/greatbit/quack/blob/master/assembly/quack.conf)
 
 2. Run mongo, e.g.:
-   mongo docker run --name mongodb --restart always -p 27017:27017 -d mongo
+   docker run --name mongodb --restart always -p 27017:27017 -d mongo
 
 3. Place [conf/quack.properties](https://github.com/greatbit/quack/blob/master/assembly/quack.properties) somewhere in the system (e.g. /etc/quack)
 
@@ -73,6 +73,14 @@ e.g., starting war using jetty-runner:
 ```
 java -Xbootclasspath/a:/etc/quack -jar /usr/quack/lib/jetty-runner.jar /usr/quack/quack.war
 ```
+
+How to run in debug mode
+==========
+In IntellijIdea add Maven execution
+Working directory - path to quack/api
+Command line: jetty:run
+Runner -> VM Options: -Xbootclasspath/a:/PATH_TO_DIRECTORY_WITH_CUSTOM_CONFIG_FILE - if you don't want to use default config file from resources
+
 
 Testcases Import
 ==========

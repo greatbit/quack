@@ -283,3 +283,7 @@ export function timePassed(passedTime){
 export function getLaunchDescriptor(descriptors, launcherId){
     return (descriptors || []).find(descriptor => descriptor.launcherId == launcherId);
 }
+
+export function getProjectAttribute(projectAttributes, id){
+    return projectAttributes.find(function(attribute){return attribute.id === id}) || {}
+}

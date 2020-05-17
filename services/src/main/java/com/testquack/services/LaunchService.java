@@ -423,6 +423,8 @@ public class LaunchService extends BaseService<Launch> {
             return;
         }
         originalTestCase.copyTo(testcaseToUpdate);
+        testcaseToUpdate.getAttributes().putAll(originalTestCase.getAttributes());
+        testcaseToUpdate.getMetaData().putAll(originalTestCase.getMetaData());
     }
 
     private void getTestcasesToFillByAliases(LaunchTestCaseTree tree, Map<String, LaunchTestCase> casesToUpdate) {

@@ -33,6 +33,7 @@ class Launch extends SubComponent {
         selectedTestCase: {
             uuid: null
         },
+        attributesStatus: {},
         loading: true
     };
 
@@ -46,6 +47,7 @@ class Launch extends SubComponent {
         }
         this.state.projectId = this.props.match.params.project;
         this.showLaunchStats = this.showLaunchStats.bind(this);
+        this.buildAttributesStatusMap = this.buildAttributesStatusMap.bind(this);
     }
 
     componentDidMount() {
@@ -77,6 +79,10 @@ class Launch extends SubComponent {
                  if (buildTree){
                     this.buildTree();
                  }
+                 this.buildAttributesStatusMap(this.state.launch.testCaseTree);
+
+                 console.log(this.state.attributesStatus);
+
                  this.checkUpdatedTestCases();
         }).catch(error => {
             console.log(error);
@@ -117,6 +123,35 @@ class Launch extends SubComponent {
 
             }.bind(this))
         }
+    }
+
+    buildAttributesStatusMap(head){
+        head.testCases.forEach(testCase => {
+            Object.keys(testCase.attributes).forEach(attrKey => {
+                if (!this.state.attributesStatus[attrKey]){
+                    this.state.attributesStatus[attrKey] = {
+                        name: Utils.getProjectAttribute(this.state.projectAttributes, attrKey).name || "",
+                        values: {}
+                    };
+                }
+
+                testCase.attributes[attrKey].forEach(attrValue =>{
+                    if (!this.state.attributesStatus[attrKey].values[attrValue]){
+                        this.state.attributesStatus[attrKey].values[attrValue] = {
+                            PASSED: 0,
+                            FAILED: 0,
+                            BROKEN: 0,
+                            SKIPPED: 0,
+                            RUNNABLE: 0
+                        };
+                    }
+                    this.state.attributesStatus[attrKey].values[attrValue][testCase.launchStatus] = this.state.attributesStatus[attrKey].values[attrValue][testCase.launchStatus] + 1;
+                })
+
+            })
+
+        })
+        head.children.forEach(this.buildAttributesStatusMap);
     }
 
     onTestcaseStateChanged(testcase){

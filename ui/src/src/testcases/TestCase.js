@@ -209,16 +209,12 @@ class TestCase extends SubComponent {
 
     }
 
-    getAttribute(id){
-        return this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {}
-    }
-
     getAttributeName(id){
-        return this.getAttribute(id).name || ""
+        return Utils.getProjectAttribute(this.state.projectAttributes, id).name || ""
     }
 
     getAttributeValues(id){
-        return this.getAttribute(id).values || []
+        return Utils.getProjectAttribute(this.state.projectAttributes, id).values || []
     }
 
     editAttributeValues(key, values){
