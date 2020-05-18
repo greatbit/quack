@@ -287,3 +287,33 @@ export function getLaunchDescriptor(descriptors, launcherId){
 export function getProjectAttribute(projectAttributes, id){
     return projectAttributes.find(function(attribute){return attribute.id === id}) || {}
 }
+
+export function getChartSeriesConfig(){
+    return {
+        PASSED: {
+            name: "Passed",
+            color: "#28a745"
+        },
+        FAILED: {
+            name: "Failed",
+            color: "#dc3545"
+        },
+        BROKEN: {
+            name: "Broken",
+            color: "#ffc107"
+        },
+        SKIPPED: {
+           name: "Skipped",
+           color: "#6c757d"
+        },
+        RUNNABLE: {
+           name: "Runnable",
+           color: "#7cb5ec"
+        },
+        RUNNING: {
+             name: "Running",
+             color: "#007bff"
+        }
+    }
+
+}

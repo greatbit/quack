@@ -49,7 +49,6 @@ class TestCase extends SubComponent {
          this.cancelEdit = this.cancelEdit.bind(this);
          this.getAttributeName = this.getAttributeName.bind(this);
          this.getAttributeValues = this.getAttributeValues.bind(this);
-         this.getAttribute = this.getAttribute.bind(this);
          this.editAttributeValues = this.editAttributeValues.bind(this);
          this.cancelEditAttributeValues = this.cancelEditAttributeValues.bind(this);
          this.cancelEditAttributeKey = this.cancelEditAttributeKey.bind(this);

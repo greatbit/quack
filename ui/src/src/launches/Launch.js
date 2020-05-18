@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
 import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
+import LaunchAttributeStatsPieChart from '../launches/LaunchAttributeStatsPieChart';
 import LaunchForm from '../launches/LaunchForm'
 import { Link } from 'react-router-dom';
 import axios from "axios";
@@ -48,6 +49,7 @@ class Launch extends SubComponent {
         this.state.projectId = this.props.match.params.project;
         this.showLaunchStats = this.showLaunchStats.bind(this);
         this.buildAttributesStatusMap = this.buildAttributesStatusMap.bind(this);
+        this.addUnknownAttributesToAttributesStatusMap = this.addUnknownAttributesToAttributesStatusMap.bind(this);
     }
 
     componentDidMount() {
@@ -75,14 +77,12 @@ class Launch extends SubComponent {
                      this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
                  }
                  this.state.loading = false;
+                 this.buildAttributesStatusMap(this.state.launch.testCaseTree);
+                 this.addUnknownAttributesToAttributesStatusMap(this.state.launch.testCaseTree);
                  this.setState(this.state);
                  if (buildTree){
                     this.buildTree();
                  }
-                 this.buildAttributesStatusMap(this.state.launch.testCaseTree);
-
-                 console.log(this.state.attributesStatus);
-
                  this.checkUpdatedTestCases();
         }).catch(error => {
             console.log(error);
@@ -142,12 +142,36 @@ class Launch extends SubComponent {
                             FAILED: 0,
                             BROKEN: 0,
                             SKIPPED: 0,
-                            RUNNABLE: 0
+                            RUNNABLE: 0,
+                            RUNNING: 0
                         };
                     }
                     this.state.attributesStatus[attrKey].values[attrValue][testCase.launchStatus] = this.state.attributesStatus[attrKey].values[attrValue][testCase.launchStatus] + 1;
                 })
 
+            })
+
+        })
+        head.children.forEach(this.buildAttributesStatusMap);
+    }
+
+    addUnknownAttributesToAttributesStatusMap(head){
+        head.testCases.forEach(testCase => {
+
+            Object.keys(this.state.attributesStatus).forEach(attrKey => {
+                if (!testCase.attributes[attrKey]){
+                    if (!this.state.attributesStatus[attrKey].values["Unknown"]){
+                        this.state.attributesStatus[attrKey].values["Unknown"] = {
+                            PASSED: 0,
+                            FAILED: 0,
+                            BROKEN: 0,
+                            SKIPPED: 0,
+                            RUNNABLE: 0,
+                            RUNNING: 0
+                        }
+                    }
+                    this.state.attributesStatus[attrKey].values["Unknown"][testCase.launchStatus] = this.state.attributesStatus[attrKey].values["Unknown"][testCase.launchStatus] + 1;
+                }
             })
 
         })
@@ -349,6 +373,16 @@ class Launch extends SubComponent {
                                         </dl>
                                     </div>
                                 }
+
+
+                                <div>
+                                    {Object.keys(this.state.attributesStatus).map(attrKey =>{
+                                        return(<LaunchAttributeStatsPieChart attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
+                                    })
+
+                                    }
+                                </div>
+
                               </div>
                         }
                   </div>
