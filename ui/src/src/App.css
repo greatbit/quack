@@ -260,7 +260,15 @@ h5:hover .edit-icon {
     margin-bottom: 30px;
 }
 
-.project-settings-launchers{
+.project-settings-launchers {
     margin-top: 15px;
     margin-left: 1px;
+}
+
+.launch-attr-stats {
+    margin-top: 50px;
+}
+
+.launch-attr-stats-chart {
+    margin-top: 30px;
 }

@@ -27,12 +27,6 @@ class LaunchAttributeStatsPieChart extends SubComponent {
         this.state.attrKey = props.attrKey;
         this.setUpStatusSeries();
         this.setState(this.state);
-//
-//        console.log(this.state);
-//
-//
-
-
     }
 
     componentDidMount() {
@@ -47,15 +41,15 @@ class LaunchAttributeStatsPieChart extends SubComponent {
               renderTo: this.getChartContainerId()
             },
             title: {
-              verticalAlign: 'middle',
-              floating: true,
               text: this.state.data.name,
-              style: {
-                fontSize: '10px',
-              }
             },
             xAxis: {
                 categories: Object.keys(this.state.data.values)
+            },
+            yAxis: {
+                title: {
+                    text: "Testcases"
+                }
             },
             plotOptions: {
                 column: {
@@ -95,7 +89,7 @@ class LaunchAttributeStatsPieChart extends SubComponent {
 
     render() {
         return (
-          <div id={this.getChartContainerId()}>
+          <div id={this.getChartContainerId()} className="launch-attr-stats-chart">
               Chart here
           </div>
         );

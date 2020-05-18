@@ -375,7 +375,7 @@ class Launch extends SubComponent {
                                 }
 
 
-                                <div>
+                                <div className="launch-attr-stats">
                                     {Object.keys(this.state.attributesStatus).map(attrKey =>{
                                         return(<LaunchAttributeStatsPieChart attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
                                     })
