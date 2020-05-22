@@ -77,6 +77,7 @@ class Launch extends SubComponent {
                      this.state.selectedTestCase = Utils.getTestCaseFromTree(this.state.selectedTestCase.uuid, this.state.launch.testCaseTree, function(testCase, id){return testCase.uuid === id} );
                  }
                  this.state.loading = false;
+                 this.state.attributesStatus = {};
                  this.buildAttributesStatusMap(this.state.launch.testCaseTree);
                  this.addUnknownAttributesToAttributesStatusMap(this.state.launch.testCaseTree);
                  this.setState(this.state);
