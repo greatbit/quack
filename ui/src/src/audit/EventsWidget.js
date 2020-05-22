@@ -76,7 +76,7 @@ class EventsWidget extends Component {
                       </tbody>
                   </table>
                   <div>
-                    <a href={ "/" + this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter || {})} target="_blank">All Event</a>
+                    <a href={ "/" + this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter || {})} target="_blank">All Events</a>
                   </div>
               </div>
             </div>

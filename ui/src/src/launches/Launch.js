@@ -232,7 +232,7 @@ class Launch extends SubComponent {
     }
 
     showLaunchStats(event){
-        this.state.selectedTestCase.id = null;
+        this.state.selectedTestCase.uuid = null;
         this.setState(this.state);
     }
 
@@ -269,7 +269,7 @@ class Launch extends SubComponent {
                       <div id="tree"></div>
                   </div>
                   <div id="testCase" className="testcase-side col-7">
-                     {this.state.selectedTestCase && this.state.selectedTestCase.id &&
+                     {this.state.selectedTestCase && this.state.selectedTestCase.uuid &&
                           <TestCase
                             testcase={this.state.selectedTestCase}
                             projectAttributes={this.state.projectAttributes}
@@ -278,7 +278,7 @@ class Launch extends SubComponent {
                             projectId={this.state.projectId}
                           />
                       }
-                      {this.state.selectedTestCase && this.state.selectedTestCase.id &&
+                      {this.state.selectedTestCase && this.state.selectedTestCase.uuid &&
                             <LaunchTestcaseControls
                                 testcase={this.state.selectedTestCase}
                                 launchId={this.state.launch.id}
@@ -286,7 +286,7 @@ class Launch extends SubComponent {
                                 callback={this.onTestcaseStateChanged}
                             />
                       }
-                      {(!this.state.selectedTestCase || !this.state.selectedTestCase.id) &&
+                      {(!this.state.selectedTestCase || !this.state.selectedTestCase.uuid) &&
                               <div>
                               {this.state.launch.launchGroup &&
                                   <div className="row launch-summary-block">
