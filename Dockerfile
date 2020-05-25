@@ -21,6 +21,7 @@ COPY ui/src/build/ /usr/quack/ui
 # Install NGINX
 RUN apt-get update
 RUN apt-get -y install nginx
+RUN rm /etc/nginx/sites-enabled/default
 
 COPY assembly/quack.conf /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/quack.conf /etc/nginx/sites-enabled/quack.conf

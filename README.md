@@ -58,6 +58,18 @@ for QuAck with demo data
 
 3. Use following credentials: "root:rootpass" for admin and "somelogin:somepass" for a regular user
 
+How to run in Docker
+==========
+1. Run mongo, e.g.:
+   docker run --name mongodb --restart always -p 27017:27017 -d mongo
+
+2. Place [conf/quack.properties](https://github.com/greatbit/quack/blob/master/assembly/quack.properties) somewhere in the system (e.g. /etc/quack)
+
+3 docker run -p PORT_ON_YOUR_HOST:80 -v PATH_TO_DIRECTORY_WITH_PROPERTIES:/etc/quack greatbit/quack
+
+e.g.:
+docker run -p 80:80 -v /etc/quack:/etc/quack --network host -it -d greatbit/quack
+
 How to run on a standalone server
 ==========
 1. Install NGINX and add [conf/quack.conf](https://github.com/greatbit/quack/blob/master/assembly/quack.conf)
