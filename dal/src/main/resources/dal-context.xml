@@ -27,7 +27,7 @@
 
     <mongo:repositories base-package="com.testquack.dal" repository-impl-postfix="CustomImpl"/>
 
-    <mongo:mongo-client id="mongo" replica-set="${mongo.replicaSet}">
+    <mongo:mongo-client id="mongo" replica-set="${mongo.replicaSet}" credentials="${mongo.username}:${mongo.password}@${mongo.dbname}">
         <mongo:client-options
                 connections-per-host="40"
                 threads-allowed-to-block-for-connection-multiplier="1000"
