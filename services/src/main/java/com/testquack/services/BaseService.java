@@ -94,7 +94,9 @@ public abstract class BaseService<E extends Entity> {
                     format("User %s can't delete entity %s", session.getPerson().getId(), id)
             );
         }
-        getRepository().delete(projectId, id);
+        E entity = findOne(session, projectId, id);
+        entity.setDeleted(true);
+        getRepository().save(projectId, entity);
         afterDelete(session, projectId, id);
     }
 
@@ -239,7 +241,10 @@ public abstract class BaseService<E extends Entity> {
 
     public void delete(Session session, String projectId, Filter filter) {
         if (userCanUpdateProject(session, projectId)) {
-            getRepository().delete(projectId, filter);
+            findFiltered(session, projectId, filter).forEach(entity -> {
+                entity.setDeleted(true);
+                getRepository().save(projectId, entity);
+            });
         }
     }
 }

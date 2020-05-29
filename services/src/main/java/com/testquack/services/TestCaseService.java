@@ -30,7 +30,9 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.springframework.util.StringUtils.isEmpty;
+import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
 @Service
 public class TestCaseService extends BaseService<TestCase> {
@@ -158,8 +160,35 @@ public class TestCaseService extends BaseService<TestCase> {
     }
 
     public List<TestCase> importTestCases(Session user, String projectId, List<TestCase> testCases){
-        testCases.forEach(testCase -> save(user, projectId, testCase));
+        testCases.forEach(testCase -> importTestCase(user, projectId, testCase));
         return testCases;
+    }
+
+    private void importTestCase(Session user, String projectId, TestCase testCase) {
+        TestCase existingTestcase = null;
+        try {
+            if (!isEmpty(testCase.getId())){
+                existingTestcase = findOne(user, projectId, testCase.getId());
+            }
+        } catch (EntityNotFoundException e){
+            logger.info(format("Unable to find testcase to import by id [%s]. Will try by alias [%s]",
+                    testCase.getId(), emptyIfNull(testCase.getAlias())));
+        }
+
+        if (existingTestcase == null && !isEmpty(testCase.getAlias())){
+            Filter filter = (Filter) new Filter().withField("alias", testCase.getAlias()).withLimit(1);
+            existingTestcase = findFiltered(user, projectId, filter).stream().findFirst().orElse(null);
+        }
+
+        if (existingTestcase == null){
+            existingTestcase = testCase;
+        } else {
+            existingTestcase.mergeFrom(existingTestcase, testCase);
+            existingTestcase.getAttributes().putAll(testCase.getAttributes());
+            existingTestcase.getMetaData().putAll(testCase.getMetaData());
+        }
+        existingTestcase.setDeleted(false);
+        save(user, projectId, existingTestcase);
     }
 
     private TestCase createMissingAttributes(Session session, String projectId, TestCase testCase) {
