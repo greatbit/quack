@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
 import LaunchTestcaseControls from '../launches/LaunchTestcaseControls';
-import LaunchAttributeStatsPieChart from '../launches/LaunchAttributeStatsPieChart';
+import LaunchAttributeStatsChart from '../launches/LaunchAttributeStatsChart';
 import LaunchForm from '../launches/LaunchForm'
 import { Link } from 'react-router-dom';
 import axios from "axios";
@@ -378,7 +378,7 @@ class Launch extends SubComponent {
 
                                 <div className="launch-attr-stats">
                                     {Object.keys(this.state.attributesStatus).map(attrKey =>{
-                                        return(<LaunchAttributeStatsPieChart attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
+                                        return(<LaunchAttributeStatsChart attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
                                     })
 
                                     }

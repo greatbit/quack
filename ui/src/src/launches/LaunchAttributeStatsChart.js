@@ -8,7 +8,7 @@ import * as Utils from '../common/Utils';
 import $ from 'jquery';
 
 
-class LaunchAttributeStatsPieChart extends SubComponent {
+class LaunchAttributeStatsChart extends SubComponent {
 
     state = {
         data: {
@@ -22,6 +22,8 @@ class LaunchAttributeStatsPieChart extends SubComponent {
         this.getChartContainerId = this.getChartContainerId.bind(this);
         this.setUpStatusSeries = this.setUpStatusSeries.bind(this);
         this.statusChartRender = this.statusChartRender.bind(this);
+
+        this.seriesConfig = Utils.getChartSeriesConfig();
 
         this.state.data = props.stats;
         this.state.attrKey = props.attrKey;
@@ -55,7 +57,11 @@ class LaunchAttributeStatsPieChart extends SubComponent {
                 column: {
                     stacking: 'normal',
                     dataLabels: {
-                        enabled: true
+                        enabled: true,
+                        formatter:function(){
+                            if(this.y > 0)
+                                return this.y;
+                        }
                     }
                 }
             },
@@ -64,23 +70,20 @@ class LaunchAttributeStatsPieChart extends SubComponent {
     }
 
     setUpStatusSeries(){
-        var seriesConfig = Utils.getChartSeriesConfig();
-        this.state.statusSeries = Object.keys(seriesConfig).map(statusKey => {
+        this.state.statusSeries = Object.keys(this.seriesConfig).map(statusKey => {
             return {
                 name: statusKey,
+                color: this.seriesConfig[statusKey].color,
                 data: Object.keys(this.state.data.values)
-                        .filter(attrValue => this.state.data.values[attrValue][statusKey] > 0)
                         .map(attrValue => {
                     return {
-                             name: seriesConfig[statusKey].name,
-                             y: this.state.data.values[attrValue][statusKey],
-                             color: seriesConfig[statusKey].color
+                             name: this.seriesConfig[statusKey].name,
+                             y: this.state.data.values[attrValue][statusKey]
                            }
                 })
             }
 
         })
-
     }
 
     getChartContainerId(){
@@ -99,4 +102,4 @@ class LaunchAttributeStatsPieChart extends SubComponent {
 
 }
 
-export default withRouter(LaunchAttributeStatsPieChart);
+export default withRouter(LaunchAttributeStatsChart);
