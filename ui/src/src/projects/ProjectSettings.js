@@ -20,7 +20,8 @@ class ProjectSettings extends SubComponent {
                  id: null,
                  name: "",
                  description: "",
-                 allowedGroups: [],
+                 readWriteGroups: [],
+                 readWriteUsers: [],
                  launcherConfigs: [],
                  environments: []
              },
@@ -28,21 +29,27 @@ class ProjectSettings extends SubComponent {
                   id: null,
                   name: "",
                   description: "",
-                  allowedGroups: [],
+                  readWriteGroups: [],
+                  readWriteUsers: [],
                   environments: []
               },
              groups: [],
+             users: [],
              groupsToDisplay: [],
              launcherDescriptors: [],
              launcherIndexToRemove: null
          };
          this.state.projectId = this.props.match.params.project;
          this.changeGroups = this.changeGroups.bind(this);
+         this.changeUsers = this.changeUsers.bind(this);
          this.changeEnvironments = this.changeEnvironments.bind(this);
          this.submit = this.submit.bind(this);
          this.refreshGroupsToDisplay = this.refreshGroupsToDisplay.bind(this);
+         this.refreshUsersToDisplay = this.refreshUsersToDisplay.bind(this);
          this.getGroups = this.getGroups.bind(this);
          this.mapGroupsToView = this.mapGroupsToView.bind(this);
+         this.getUsers = this.getUsers.bind(this);
+         this.mapUsersToView = this.mapUsersToView.bind(this);
          this.toggleEdit = this.toggleEdit.bind(this);
          this.handleChange = this.handleChange.bind(this);
          this.removeProject = this.removeProject.bind(this);
@@ -61,6 +68,7 @@ class ProjectSettings extends SubComponent {
             this.state.project = response.data;
             this.state.originalProject = this.state.project;
             this.refreshGroupsToDisplay();
+            this.refreshUsersToDisplay();
             this.setState(this.state);
           }).catch(error => {Utils.onErrorMessage("Couldn't get project: ", error)});
 
@@ -87,9 +95,30 @@ class ProjectSettings extends SubComponent {
            .catch(error => console.log(error));
      }
 
+     getUsers(literal, callback){
+         var url = "/api/user/users/suggest";
+         if (literal){
+             url = url + "?literal=" + literal;
+         }
+         axios
+            .get(url)
+            .then(response => {
+              this.state.users = response.data;
+              this.refreshUsersToDisplay();
+             callback(this.mapUsersToView(this.state.users));
+            })
+            .catch(error => console.log(error));
+    }
+
     changeGroups(values){
-        this.state.project.allowedGroups = values.map(function(value){return value.value});
+        this.state.project.readWriteGroups = values.map(function(value){return value.value});
         this.refreshGroupsToDisplay();
+        this.setState(this.state);
+    }
+
+    changeUsers(values){
+        this.state.project.readWriteUsers = values.map(function(value){return value.value});
+        this.refreshUsersToDisplay();
         this.setState(this.state);
     }
 
@@ -130,11 +159,19 @@ class ProjectSettings extends SubComponent {
     }
 
     refreshGroupsToDisplay(){
-        this.state.groupsToDisplay = this.mapGroupsToView(this.state.project.allowedGroups);
+        this.state.groupsToDisplay = this.mapGroupsToView(this.state.project.readWriteGroups || []);
+    }
+
+    refreshUsersToDisplay(){
+        this.state.usersToDisplay = this.mapUsersToView(this.state.project.readWriteUsers || []);
     }
 
     mapGroupsToView(groups){
         return groups.map(function(val){return {value: val, label: val}});
+    }
+
+    mapUsersToView(users){
+        return users.map(function(val){return {value: val, label: val}});
     }
 
     toggleEdit(fieldName, event){
@@ -214,7 +251,7 @@ class ProjectSettings extends SubComponent {
     render() {
         return (
             <div>
-                <div id="name">
+                <div id="name" className="project-header">
                     <div id="name-display" className="inplace-display">
                         {this.state.project.deleted &&
                             <h1>
@@ -246,34 +283,53 @@ class ProjectSettings extends SubComponent {
 
                 <div className="project-settings-section">
                     <h3>Permissions</h3>
-                     <div className="row">
-                        <div className="col-1">Groups</div>
-                        <div className="col-6">
-                            <AsyncSelect value={this.state.groupsToDisplay}
-                                    isMulti
-                                    cacheOptions
-                                    loadOptions={this.getGroups}
-                                    onChange={this.changeGroups}
-                                    options={this.mapGroupsToView(this.state.groups)}
-                                   />
+
+                     <form>
+
+                         <div className="row form-group">
+                            <label className="col-1 col-form-label">Groups</label>
+                            <div className="col-6">
+                                <AsyncSelect value={this.state.groupsToDisplay}
+                                        isMulti
+                                        cacheOptions
+                                        loadOptions={this.getGroups}
+                                        onChange={this.changeGroups}
+                                        options={this.mapGroupsToView(this.state.groups)}
+                                       />
+                            </div>
                         </div>
-                    </div>
+
+                        <div className="row form-group">
+                            <label className="col-1 col-form-label">Users</label>
+                            <div className="col-6">
+                                <AsyncSelect value={this.state.usersToDisplay}
+                                        isMulti
+                                        cacheOptions
+                                        loadOptions={this.getUsers}
+                                        onChange={this.changeUsers}
+                                        options={this.mapUsersToView(this.state.users)}
+                                       />
+                            </div>
+                        </div>
+                     </form>
                 </div>
 
                 <div className="project-settings-section">
                     <h3>Launchers</h3>
-                    <div className="row">
-                        <div className="col-1">Environments</div>
-                        <div className="col-6">
-                            <CreatableSelect value={(this.state.project.environments || []).map(function(val){return {value: val, label: val}})}
-                                    isMulti
-                                    isClearable
-                                    cacheOptions
-                                    onChange={this.changeEnvironments}
-                                    options={[]}
-                                   />
+                    <form>
+                        <div className="row form-group">
+                            <label className="col-1 col-form-label">Environments</label>
+                            <div className="col-6">
+                                <CreatableSelect value={(this.state.project.environments || []).map(function(val){return {value: val, label: val}})}
+                                        isMulti
+                                        isClearable
+                                        cacheOptions
+                                        onChange={this.changeEnvironments}
+                                        options={[]}
+                                       />
+                            </div>
                         </div>
-                    </div>
+                    </form>
 
 
                      <div className="row project-settings-launchers">

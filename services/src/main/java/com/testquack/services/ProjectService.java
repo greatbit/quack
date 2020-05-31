@@ -53,8 +53,8 @@ public class ProjectService extends BaseService<Project> {
     public List<Project> findFiltered(Session session, String projectId, Filter filter) {
         return getRepository().find(projectId, filter).stream().filter(
                 project -> session.isIsAdmin() || 
-                        project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains
-                        )
+                        project.getReadWriteGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
+                        project.getReadWriteUsers().stream().anyMatch(session.getPerson().getId()::equals)
         ).collect(toList());
     }
 

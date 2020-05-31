@@ -121,7 +121,8 @@ public abstract class BaseService<E extends Entity> {
         if (project.isDeleted()) {
             throw new EntityNotFoundException(format("Project %s does not exist", projectId));
         }
-        return project.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains);
+        return project.getReadWriteGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
+                project.getReadWriteUsers().stream().anyMatch(session.getPerson().getId()::equals);
 
     }
     protected boolean userCanSave(Session session, String projectId, E entity){
