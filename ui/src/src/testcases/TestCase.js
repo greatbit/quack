@@ -507,10 +507,10 @@ class TestCase extends SubComponent {
                         (this.state.testcase.steps || []).map(function(step, i){
                             if(!step || (!step.action && !step.expectation)){
                               return (
-                                <div className="row">
-                                    <div id={"steps-" + i + "-form"} index={i} className="inplace-form card col-md-12">
+                                <div className="row step">
+                                    <div id={"steps-" + i + "-form"} index={i} className="inplace-form card">
+                                          <div class="card-header"><h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6></div>
                                           <div className="card-body">
-                                            <h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6>
                                             <p className="card-text">
                                               <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
                                             </p>
