@@ -664,28 +664,27 @@ class TestCase extends SubComponent {
                       {
                         Object.keys(this.state.testcase.properties || {}).map(function(property, i){
                             return(
-                                <div className="attribute-block">
+                                <div className="attribute-block card">
                                     {this.state.propertiesInEdit.has(i) &&
-                                    <form id={"properties-" + i + "-form"} className="inplace-edit col-12">
-                                        <div className="form-group row">
-                                            <label className="col-sm-2 col-form-label">Key</label>
-                                            <div className="col-10">
-                                                <input type="text" name="key" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "key")} value={this.state.testcase.properties[i].key}/>
+                                    <form id={"properties-" + i + "-form"} className="inplace-edit">
+                                        <div className="form-group card-header">
+                                            <input type="text" placeholder="Key" name="key" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "key")} value={this.state.testcase.properties[i].key}/>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="form-group">
+                                                <input type="text" name="value" placeholder="value" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "value")} value={this.state.testcase.properties[i].value}/>
+                                            </div>
+                                            <div className="form-group">
+                                                <button type="button" className="btn btn-success" onClick={(e) => this.handleSubmit("properties", e, i, true)}>Save</button>
+                                                <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditProperty(i, e)}>Cancel</button>
                                             </div>
                                         </div>
-                                        <div className="form-group row">
-                                            <label className="col-sm-2 col-form-label">Value</label>
-                                            <div className="col-10">
-                                                <input type="text" name="key" className="form-control" onChange={(e) => this.handleChange("properties", e, i, "value")} value={this.state.testcase.properties[i].value}/>
-                                            </div>
-                                        </div>
-                                        <button type="button" className="btn btn-success" onClick={(e) => this.handleSubmit("properties", e, i, true)}>Save</button>
-                                        <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditProperty(i, e)}>Cancel</button>
+
                                     </form>
                                     }
                                     {!this.state.propertiesInEdit.has(i) &&
-                                    <div id={"properties-" + i + "-display"} className="inplace-display col-12" style={{ display: (this.state.propertiesInEdit.has(i) ? 'none' : 'block') }}>
-                                        <div>
+                                    <div id={"properties-" + i + "-display"} className="inplace-display card" style={{ display: (this.state.propertiesInEdit.has(i) ? 'none' : 'block') }}>
+                                        <div className="card-header">
                                             <b>{this.state.testcase.properties[i].key}
                                                 {!this.state.readonly &&
                                                     <span className="edit edit-icon clickable" onClick={(e) => this.toggleEditProperty(e, i)}>
@@ -699,7 +698,7 @@ class TestCase extends SubComponent {
                                                 }
                                             </b>
                                         </div>
-                                       <div>{this.state.testcase.properties[i].value}</div>
+                                       <div className="card-body">{this.state.testcase.properties[i].value}</div>
                                     </div>
                                     }
                                 </div>
