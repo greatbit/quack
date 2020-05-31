@@ -101,6 +101,8 @@ class TestCase extends SubComponent {
       }
       if (nextProps.projectAttributes){
         this.state.projectAttributes = nextProps.projectAttributes;
+      } else {
+        this.getAttributes();
       }
       if (nextProps.launchId){
           this.state.launchId = nextProps.launchId;
