@@ -282,3 +282,8 @@ a.project-title-settings-link:link, a.project-title-settings-link:visited {
     color: black !important;
     font-size: 24px;
 }
+
+.launch-title {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}

@@ -247,7 +247,7 @@ class Launch extends SubComponent {
     render() {
         return (
           <div>
-              <div>
+              <div className = "launch-title">
                 <h3>
                     <Link to={'/' + this.state.projectId + '/launch/' + this.state.launch.id} onClick={this.showLaunchStats}>
                         {this.state.launch.name}
