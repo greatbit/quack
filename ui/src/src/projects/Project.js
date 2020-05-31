@@ -53,14 +53,16 @@ class Project extends SubComponent {
     render() {
         return (
             <div>
-                <h1>
-                    {this.state.project.name}
-                    <span className='float-right'>
-                        <Link to={'/projects/' + this.state.project.id + '/settings'}>
-                            <FontAwesomeIcon icon={faCogs}/>
-                        </Link>
-                    </span>
-                </h1>
+                <div className="project-header">
+                    <h1>
+                        {this.state.project.name}
+                        <span className='float-right'>
+                            <Link to={'/projects/' + this.state.project.id + '/settings'} className='project-title-settings-link'>
+                                <FontAwesomeIcon icon={faCogs}/>
+                            </Link>
+                        </span>
+                    </h1>
+                </div>
                 <div className="row">
                     <div className="col-sm-6">
                         <div className="card project-card">

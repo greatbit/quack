@@ -200,14 +200,14 @@ public class TestCaseService extends BaseService<TestCase> {
 
         Set<String> attributeKeys = attributes.stream().map(Attribute::getId).collect(Collectors.toSet());
         Map<String, Set<String>> newAttributes = new HashMap<>();
-        testCase.getAttributes().entrySet().forEach(attribute -> {
-            if (!attributeKeys.contains(attribute.getKey())) {
+        testCase.getAttributes().forEach((key, value) -> {
+            if (!attributeKeys.contains(key)) {
                 Attribute newAttribute = attributeService.create(session, projectId,
-                        new Attribute().withValues(attribute.getValue()).withName(attribute.getKey())
+                        new Attribute().withValues(value).withName(key)
                 );
-                newAttributes.put(newAttribute.getId(), attribute.getValue());
+                newAttributes.put(newAttribute.getId(), value);
             } else {
-                newAttributes.put(attribute.getKey(), attribute.getValue());
+                newAttributes.put(key, value);
             }
         });
         testCase.getAttributes().clear();

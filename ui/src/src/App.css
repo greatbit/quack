@@ -272,3 +272,13 @@ h5:hover .edit-icon {
 .launch-attr-stats-chart {
     margin-top: 30px;
 }
+
+.project-header {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+a.project-title-settings-link:link, a.project-title-settings-link:visited {
+    color: black !important;
+    font-size: 24px;
+}
