@@ -507,9 +507,9 @@ class TestCase extends SubComponent {
                         (this.state.testcase.steps || []).map(function(step, i){
                             if(!step || (!step.action && !step.expectation)){
                               return (
-                                <div className="row step">
+                                <div className="step">
                                     <div id={"steps-" + i + "-form"} index={i} className="inplace-form card">
-                                          <div class="card-header"><h6 className="card-subtitle mb-2 text-muted">{i + 1}. Step</h6></div>
+                                          <div class="card-header">{i + 1}. Step</div>
                                           <div className="card-body">
                                             <p className="card-text">
                                               <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
@@ -585,10 +585,10 @@ class TestCase extends SubComponent {
                           var attributeValues = this.state.testcase.attributes[attributeId] || [];
                           if(attributeId && attributeId != "null"){
                             return (
-                              <div className="row form-group attribute-block">
-                                  <div id={"attributes-" + attributeId + "-display"} className="inplace-display col-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
-                                    <div index={attributeId}>
-                                      <div>
+                              <div className="form-group attribute-block">
+                                  <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
+                                    <div index={attributeId} className="card">
+                                      <div class="card-header">
                                         <b>{this.getAttributeName(attributeId)}
                                         {!this.state.readonly &&
                                             <span className="edit edit-icon clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
@@ -601,25 +601,28 @@ class TestCase extends SubComponent {
                                         </b>
                                       </div>
                                       {
-                                          <div>{attributeValues.join(", ")}</div>
+                                          <div class="card-body">{attributeValues.join(", ")}</div>
                                       }
 
                                     </div>
                                   </div>
                                   {!this.state.readonly &&
-                                      <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-12" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
+                                      <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
                                         <form>
-                                          <div index={attributeId}>
-                                            {this.getAttributeName(attributeId)}
-                                            <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
-                                              isMulti
-                                              isClearable
-                                              onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                              options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
-                                             />
-                                          </div>
-                                          <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
-                                          <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
+                                          <div index={attributeId} className="card">
+                                            <div class="card-header"><b>{this.getAttributeName(attributeId)}</b></div>
+                                            <div className="card-body">
+                                                <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
+                                                  isMulti
+                                                  isClearable
+                                                  onChange={(e) => this.editAttributeValues(attributeId, e)}
+                                                  options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                                 />
+                                                <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
+                                                <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>
+                                              </div>
+
+                                            </div>
                                         </form>
                                       </div>
                                   }
@@ -627,17 +630,18 @@ class TestCase extends SubComponent {
                             )
                             } else {
                               return (
-                                <div className="row form-group attribute-block">
-                                    <div id={"attributes-" + attributeId + "-form"} className="inplace-form col-sm-12">
-                                        <div index={attributeId}>
-                                            <div>
+                                <div className="form-group attribute-block">
+                                    <div id={"attributes-" + attributeId + "-form"} className="inplace-form">
+                                        <div index={attributeId} className="card">
+                                            <div className="card-header">
                                                 <CreatableSelect
                                                     onChange={(e) => this.editAttributeKey(attributeId, e, true)}
                                                     options={this.getAttributeKeysToAdd()}
                                                 />
+                                                <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
                                             </div>
                                         </div>
-                                        <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditAttributeKey(e, attributeId)}>Cancel</button>
+
                                     </div>
                                 </div>
                             )}
