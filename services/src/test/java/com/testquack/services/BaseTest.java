@@ -69,10 +69,10 @@ public abstract class BaseTest {
     protected List<TestCase> testCasesProject3 = new ArrayList<>();
 
     protected Session adminSession = (Session) new Session().withId(UUID.randomUUID().toString()).
-            withIsAdmin(true).withPerson(new Person().withId("admin"));
+            withIsAdmin(true).withPerson(new Person().withId("admin").withLogin("admin"));
 
     protected Session userSession = (Session) new Session().withId(UUID.randomUUID().toString()).
-            withIsAdmin(false).withPerson(new Person().withGroups("2", "7").withId("pers1"));
+            withIsAdmin(false).withPerson(new Person().withGroups("2", "7").withId("pers1").withLogin("pers1"));
 
     @Before
     public void setUp(){
