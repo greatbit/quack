@@ -171,7 +171,14 @@ class ProjectSettings extends SubComponent {
     }
 
     mapUsersToView(users){
-        return users.map(function(val){return {value: val, label: val}});
+        return users.map(function(val){
+            var tokens = val.split(":");
+            if (tokens.length == 1){
+                return {value: val, label: val}
+            }
+            return {value: tokens[0], label: tokens[1]}
+
+        });
     }
 
     toggleEdit(fieldName, event){

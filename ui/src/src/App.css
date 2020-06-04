@@ -289,5 +289,12 @@ a.project-title-settings-link:link, a.project-title-settings-link:visited {
 }
 
 .step {
- margin-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.create-user-form{
+    width: 100%;
+    max-width: 700px;
+    padding: 15px;
+    margin: auto;
 }

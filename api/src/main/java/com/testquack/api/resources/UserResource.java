@@ -36,8 +36,26 @@ public class UserResource extends BaseResource<User> {
     @GET
     @Path("/{login}")
     public User getUser(@PathParam("login") String login) {
-        return service.findOne(getSession(), null, login);
+        return service.findOne(new Filter().withField("login", login));
     }
+
+    @DELETE
+    @Path("/{login}")
+    public Response delete(@PathParam("login") String login) {
+        service.delete(getSession(), null, getUser(login).getId());
+        return Response.ok().build();
+    }
+
+    @POST
+    public User createUser(User user){
+        return service.save(getSession(), null, user);
+    }
+
+    @PUT
+    public User updateUser(User user){
+        return service.save(getSession(), null, user);
+    }
+
 
     @GET
     @Path("/session")
@@ -57,6 +75,13 @@ public class UserResource extends BaseResource<User> {
     public RedirectResponse getLoginRedirect(){
         return authProvider.redirectNotAuthTo(request);
     }
+
+    @GET
+    @Path("/create-redirect")
+    public RedirectResponse getCreateRedirect(){
+        return authProvider.redirectCreateUserTo(request);
+    }
+
 
     @DELETE
     @Path("/logout")
