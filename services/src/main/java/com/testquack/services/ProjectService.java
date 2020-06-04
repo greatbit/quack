@@ -54,7 +54,7 @@ public class ProjectService extends BaseService<Project> {
         return getRepository().find(projectId, filter).stream().filter(
                 project -> session.isIsAdmin() || 
                         project.getReadWriteGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
-                        project.getReadWriteUsers().stream().anyMatch(session.getPerson().getId()::equals)
+                        project.getReadWriteUsers().stream().anyMatch(session.getPerson().getLogin()::equals)
         ).collect(toList());
     }
 

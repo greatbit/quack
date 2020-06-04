@@ -121,6 +121,11 @@ class Header extends Component {
             profileContext = (
             <span>
                 <a className="dropdown-item" href={"/user/profile/" + this.state.session.login}>Profile</a>
+
+                {Utils.isUserOwnerOrAdmin() &&
+                    <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
+                }
+
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" href="#" onClick={this.logOut}>Log out</a>
             </span>

@@ -16,6 +16,7 @@
             <xs:extension base="Entity">
                 <xs:sequence>
                     <xs:element name="login" type="xs:string"/>
+                    <xs:element name="password" type="xs:string"/>
                     <xs:element name="firstName" type="xs:string"/>
                     <xs:element name="lastName" type="xs:string"/>
                     <xs:element name="middleName" type="xs:string"/>

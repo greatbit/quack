@@ -16,6 +16,8 @@ import TestCase from '../testcases/TestCase'
 import Auth from '../user/Auth'
 import Login from '../user/Login'
 import Profile from '../user/Profile'
+import CreateUserRedirect from '../user/CreateUserRedirect'
+import CreateUser from '../user/CreateUser'
 import Events from '../audit/Events'
 
 class Main extends Component {
@@ -47,6 +49,8 @@ class Main extends Component {
                   <Route exact path='/projects/new' component={ProjectForm}/>
 
                   <Route exact path='/auth' component={Auth}/>
+                  <Route exact path='/user/create-redirect' component={CreateUserRedirect}/>
+                  <Route exact path='/user/create' component={CreateUser}/>
                   <Route exact path='/user/profile/:profileId' component={Profile}/>
                   <Route path='/login'
                       render={(props) => <Login {...props}  onProjectChange={this.onProjectChange.bind(this)}
