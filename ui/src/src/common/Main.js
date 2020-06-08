@@ -16,7 +16,9 @@ import TestCase from '../testcases/TestCase'
 import Auth from '../user/Auth'
 import Login from '../user/Login'
 import Profile from '../user/Profile'
+import Users from '../user/Users'
 import CreateUserRedirect from '../user/CreateUserRedirect'
+import AllUsersRedirect from '../user/AllUsersRedirect'
 import CreateUser from '../user/CreateUser'
 import Events from '../audit/Events'
 
@@ -50,12 +52,15 @@ class Main extends Component {
 
                   <Route exact path='/auth' component={Auth}/>
                   <Route exact path='/user/create-redirect' component={CreateUserRedirect}/>
+                  <Route exact path='/user/all-users-redirect' component={AllUsersRedirect}/>
                   <Route exact path='/user/create' component={CreateUser}/>
+                  <Route exact path='/user/'
+                      render={(props) => <Users {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+
                   <Route exact path='/user/profile/:profileId' component={Profile}/>
                   <Route path='/login'
                       render={(props) => <Login {...props}  onProjectChange={this.onProjectChange.bind(this)}
                       onSessionChange={this.onSessionChange.bind(this)} /> }/>
-
                   <Route path='/:project/testcases/new'
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route exact path='/projects/:project'

@@ -123,7 +123,10 @@ class Header extends Component {
                 <a className="dropdown-item" href={"/user/profile/" + this.state.session.login}>Profile</a>
 
                 {Utils.isUserOwnerOrAdmin() &&
-                    <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
+                    <div>
+                        <a className="dropdown-item" href={"/user/all-users-redirect"}>View User</a>
+                        <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
+                    </div>
                 }
 
                 <div className="dropdown-divider"></div>

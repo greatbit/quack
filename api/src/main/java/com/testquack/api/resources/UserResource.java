@@ -1,9 +1,14 @@
 package com.testquack.api.resources;
 
+import com.testquack.api.utils.FilterUtils;
 import com.testquack.beans.Filter;
 import com.testquack.beans.User;
 import com.testquack.services.BaseService;
 import com.testquack.services.UserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.whoru.auth.AuthProvider;
 import ru.greatbit.whoru.auth.RedirectResponse;
@@ -12,6 +17,7 @@ import ru.greatbit.whoru.auth.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.util.Collection;
 import java.util.Set;
 
 @Path("/user")
@@ -25,7 +31,7 @@ public class UserResource extends BaseResource<User> {
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        return new Filter();
+        return FilterUtils.initFilter(request);
     }
 
     @Override
@@ -47,15 +53,32 @@ public class UserResource extends BaseResource<User> {
     }
 
     @POST
+    @Path("/")
     public User createUser(User user){
         return service.save(getSession(), null, user);
     }
 
     @PUT
+    @Path("/")
     public User updateUser(User user){
         return service.save(getSession(), null, user);
     }
 
+    @GET
+    @Path("/")
+    public Collection<User> findFiltered() {
+        return getService().findFiltered(getSession(), null, initFilter(request));
+    }
+
+    @GET
+    @Path("/count")
+    @ApiOperation(value = "Count", notes = "")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation", response = long.class)
+    })
+    public long count(){
+        return getService().count(getSession(), null, initFilter(request));
+    }
 
     @GET
     @Path("/session")
@@ -78,8 +101,14 @@ public class UserResource extends BaseResource<User> {
 
     @GET
     @Path("/create-redirect")
-    public RedirectResponse getCreateRedirect(){
+    public RedirectResponse getCreateUserRedirect(){
         return authProvider.redirectCreateUserTo(request);
+    }
+
+    @GET
+    @Path("/all-redirect")
+    public RedirectResponse getAllUsersRedirect(){
+        return authProvider.redirectViewAllUsersTo(request);
     }
 
 
