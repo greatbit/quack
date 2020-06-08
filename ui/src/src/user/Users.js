@@ -90,7 +90,7 @@ class Users extends SubComponent {
                 <table class="table table-striped">
                     <thead>
                       <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">User</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -99,7 +99,7 @@ class Users extends SubComponent {
                                 <tr>
                                     <td>
                                         <Link to={'/user/profile/' + user.login}>
-                                            {user.firstName} {user.lastName}
+                                            {user.firstName} {user.lastName} <span className="text-muted">@{user.login}</span>
                                         </Link>
                                    </td>
                                 </tr>
