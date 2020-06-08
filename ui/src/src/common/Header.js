@@ -124,7 +124,8 @@ class Header extends Component {
 
                 {Utils.isUserOwnerOrAdmin() &&
                     <div>
-                        <a className="dropdown-item" href={"/user/all-users-redirect"}>View User</a>
+                        <div className="dropdown-divider"></div>
+                        <a className="dropdown-item" href={"/user/all-users-redirect"}>All Users</a>
                         <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
                     </div>
                 }
