@@ -36,4 +36,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:element name="changePasswordRequest" type="ChangePasswordRequest"/>
+    <xs:complexType name="ChangePasswordRequest">
+        <xs:sequence>
+            <xs:element name="login" type="xs:string"/>
+            <xs:element name="newPassword" type="xs:string"/>
+            <xs:element name="oldPassword" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
 </xs:schema>

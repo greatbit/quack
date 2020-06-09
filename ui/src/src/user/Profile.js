@@ -41,7 +41,7 @@ class Profile extends SubComponent {
                     <div className="col-12">Edit Profile Details</div>
                 </div>
                 <div className="row">
-                    <div className="col-12">Reset Password</div>
+                    <div className="col-12"><Link to="/user/change-password-redirect">Change Password</Link></div>
                 </div>
 
                 {Utils.isUserOwnerOrAdmin() &&

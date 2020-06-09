@@ -1,6 +1,7 @@
 package com.testquack.api.resources;
 
 import com.testquack.api.utils.FilterUtils;
+import com.testquack.beans.ChangePasswordRequest;
 import com.testquack.beans.Filter;
 import com.testquack.beans.User;
 import com.testquack.services.BaseService;
@@ -109,6 +110,19 @@ public class UserResource extends BaseResource<User> {
     @Path("/all-redirect")
     public RedirectResponse getAllUsersRedirect(){
         return authProvider.redirectViewAllUsersTo(request);
+    }
+
+    @POST
+    @Path("/change-password")
+    public Response changePassword(ChangePasswordRequest changePasswordRequest){
+        authProvider.changePassword(getSession(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/change-password-redirect")
+    public RedirectResponse changePasswordRedirect(){
+        return authProvider.redirectChangePasswordTo(request);
     }
 
 
