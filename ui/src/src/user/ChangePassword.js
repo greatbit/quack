@@ -22,8 +22,17 @@ class ChangePassword extends SubComponent {
         this.setState(this.state);
     }
 
+
+    isPasswordValid(password){
+        return password && password.length > 4;
+    }
+
     handleSubmit(event) {
-        axios.post('/api/user/changepass', this.state.password)
+        if (!this.isPasswordValid(this.state.password)){
+           Utils.onErrorMessage("Password is invalid");
+           return;
+        }
+        axios.post('/api/user/change-password', {newPassword: this.state.password})
         .then(response => {
             Utils.onSuccessMessage("Password successfully updated");
             window.location = "/";

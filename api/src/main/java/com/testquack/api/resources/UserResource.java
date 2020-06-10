@@ -115,7 +115,8 @@ public class UserResource extends BaseResource<User> {
     @POST
     @Path("/change-password")
     public Response changePassword(ChangePasswordRequest changePasswordRequest){
-        authProvider.changePassword(getSession(), changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        String login = changePasswordRequest.getLogin() == null ? getSession().getPerson().getLogin() : changePasswordRequest.getLogin();
+        service.changePassword(getSession(), login, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         return Response.ok().build();
     }
 

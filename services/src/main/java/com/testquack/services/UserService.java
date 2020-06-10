@@ -1,6 +1,7 @@
 package com.testquack.services;
 
 import com.testquack.beans.Filter;
+import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,11 @@ public class UserService extends BaseService<User> {
 
     @Override
     protected boolean userCanSave(Session session, String projectId, User entity) {
-        return session.isIsAdmin() || entity.getId().equals(session.getPerson().getId());
+        return userCanSave(session, entity.getId());
+    }
+
+    protected boolean userCanSave(Session session, String login) {
+        return session.isIsAdmin() || login.equals(session.getPerson().getLogin());
     }
 
     @Override
@@ -48,7 +53,7 @@ public class UserService extends BaseService<User> {
 
     @Override
     protected boolean userCanDelete(Session session, String projectId, String id) {
-        return session.isIsAdmin() || id.equals(session.getPerson().getId());
+        return userCanSave(session, id);
     }
 
     @Override
@@ -58,8 +63,10 @@ public class UserService extends BaseService<User> {
 
     @Override
     protected boolean userCanUpdate(Session session, String projectId, User entity) {
-        return session.isIsAdmin() || entity.getId().equals(session.getPerson().getId());
+        return userCanSave(session, entity.getId());
     }
+
+
 
     @Override
     public User findOne(Session session, String projectId, String id) {
@@ -81,11 +88,21 @@ public class UserService extends BaseService<User> {
         return !isEmpty(ent.getLogin());
     }
 
-    public String encryptPassword(String password, String salt) {
+    public static String encryptPassword(String password, String salt) {
         try {
             return StringUtils.getMd5String(password + salt);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void changePassword(Session session, String login, String oldPassword, String newPassword) {
+        if (userCanSave(session, login)){
+            User user = findOne(new Filter().withField("login", login));
+            user.setPassword(encryptPassword(newPassword, user.getLogin()));
+            save(session, null, user);
+        } else {
+            throw new EntityAccessDeniedException(format("User %s doesn't have permissions to modify %s account", session.getPerson().getLogin(), login));
         }
     }
 
