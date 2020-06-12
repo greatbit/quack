@@ -23,6 +23,11 @@ class Header extends Component {
                 this.state.session = response.data;
                 this.setState(this.state);
                 this.onSessionChange(this.state.session);
+                if (this.state.session.person.defaultPassword &&
+                            window.location.pathname != "/user/change-password-redirect" &&
+                            window.location.pathname != "/user/changepass"){
+                    this.props.history.push("/user/change-password-redirect");
+                }
             }
           })
           .catch(
@@ -32,8 +37,6 @@ class Header extends Component {
                 if (resourceLocation !== "login"){
                     this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
                 }
-
-
             });
         axios
           .get("/api/project?includedFields=name,description,id,allowedGroups")
@@ -120,10 +123,14 @@ class Header extends Component {
         if (this.state.session.id){
             profileContext = (
             <span>
-                <a className="dropdown-item" href={"/user/profile/" + this.state.session.login}>Profile</a>
+                <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>Profile</a>
 
                 {Utils.isUserOwnerOrAdmin() &&
-                    <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
+                    <div>
+                        <div className="dropdown-divider"></div>
+                        <a className="dropdown-item" href={"/user/all-users-redirect"}>All Users</a>
+                        <a className="dropdown-item" href={"/user/create-redirect"}>Create User</a>
+                    </div>
                 }
 
                 <div className="dropdown-divider"></div>

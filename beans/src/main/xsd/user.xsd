@@ -22,6 +22,7 @@
                     <xs:element name="middleName" type="xs:string"/>
                     <xs:element name="token" type="xs:string"/>
                     <xs:element name="groups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="passwordChangeRequired" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
@@ -35,5 +36,14 @@
             <xs:enumeration value="GUEST"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:element name="changePasswordRequest" type="ChangePasswordRequest"/>
+    <xs:complexType name="ChangePasswordRequest">
+        <xs:sequence>
+            <xs:element name="login" type="xs:string"/>
+            <xs:element name="newPassword" type="xs:string"/>
+            <xs:element name="oldPassword" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 
 </xs:schema>

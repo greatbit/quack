@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import axios from "axios";
 
-class CreateUserRedirect extends Component {
+class Redirect extends Component {
+
+    constructor(props) {
+        super(props);
+        this.requestUrl = this.props.requestUrl;
+    }
+
     render() {
         return (
           <div>
@@ -13,7 +19,7 @@ class CreateUserRedirect extends Component {
 
     componentDidMount() {
         axios
-          .get("/api/user/create-redirect")
+          .get(this.requestUrl)
           .then(response => {
             window.location = response.data.url;
           })
@@ -22,4 +28,4 @@ class CreateUserRedirect extends Component {
 
 }
 
-export default withRouter(CreateUserRedirect);
+export default withRouter(Redirect);

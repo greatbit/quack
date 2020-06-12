@@ -73,6 +73,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
                 withLastName(user.getLastName()).
                 withLogin(user.getLogin()).
                 withActive(true).
+                withDefaultPassword(user.isPasswordChangeRequired()).
                 withPassword(user.getPassword());
     }
 }

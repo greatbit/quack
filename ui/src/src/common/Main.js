@@ -16,9 +16,11 @@ import TestCase from '../testcases/TestCase'
 import Auth from '../user/Auth'
 import Login from '../user/Login'
 import Profile from '../user/Profile'
-import CreateUserRedirect from '../user/CreateUserRedirect'
+import ChangePassword from '../user/ChangePassword'
+import Users from '../user/Users'
 import CreateUser from '../user/CreateUser'
 import Events from '../audit/Events'
+import Redirect from '../common/Redirect'
 
 class Main extends Component {
 
@@ -49,13 +51,26 @@ class Main extends Component {
                   <Route exact path='/projects/new' component={ProjectForm}/>
 
                   <Route exact path='/auth' component={Auth}/>
-                  <Route exact path='/user/create-redirect' component={CreateUserRedirect}/>
+
+                  <Route exact path='/user/create-redirect'
+                        render={(props) => <Redirect {...props} requestUrl={"/api/user/create-redirect"} />}/>
+                  <Route exact path='/user/all-users-redirect'
+                        render={(props) => <Redirect {...props} requestUrl={"/api/user/all-redirect"} />}/>
+                  <Route exact path='/user/change-password-redirect'
+                         render={(props) => <Redirect {...props} requestUrl={"/api/user/change-password-redirect"} />}/>
+
+
+
                   <Route exact path='/user/create' component={CreateUser}/>
+                  <Route exact path='/user/'
+                      render={(props) => <Users {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
+
                   <Route exact path='/user/profile/:profileId' component={Profile}/>
+                  <Route exact path='/user/changepass' component={ChangePassword}/>
+
                   <Route path='/login'
                       render={(props) => <Login {...props}  onProjectChange={this.onProjectChange.bind(this)}
                       onSessionChange={this.onSessionChange.bind(this)} /> }/>
-
                   <Route path='/:project/testcases/new'
                       render={(props) => <TestCaseForm {...props}  onProjectChange={this.onProjectChange.bind(this)} /> }/>
                   <Route exact path='/projects/:project'
