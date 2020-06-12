@@ -27,6 +27,8 @@ public class UserService extends BaseService<User> {
     @Autowired
     private UserRepository repository;
 
+
+
     @Override
     protected CommonRepository<User> getRepository() {
         return repository;
@@ -67,7 +69,6 @@ public class UserService extends BaseService<User> {
     }
 
 
-
     @Override
     public User findOne(Session session, String projectId, String id) {
         return cleanUserSesitiveData(super.findOne(session, projectId, id));
@@ -81,6 +82,7 @@ public class UserService extends BaseService<User> {
         }
         user.setId(user.getLogin());
         user.setPassword(encryptPassword(user.getPassword(), user.getLogin()));
+        user.setPasswordChangeRequired(true);
     }
 
     @Override
@@ -100,6 +102,7 @@ public class UserService extends BaseService<User> {
         if (userCanSave(session, login)){
             User user = findOne(new Filter().withField("login", login));
             user.setPassword(encryptPassword(newPassword, user.getLogin()));
+            user.setPasswordChangeRequired(false);
             save(session, null, user);
         } else {
             throw new EntityAccessDeniedException(format("User %s doesn't have permissions to modify %s account", session.getPerson().getLogin(), login));

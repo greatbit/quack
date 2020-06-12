@@ -30,6 +30,7 @@ class ChangePassword extends SubComponent {
     handleSubmit(event) {
         if (!this.isPasswordValid(this.state.password)){
            Utils.onErrorMessage("Password is invalid");
+           event.preventDefault();
            return;
         }
         axios.post('/api/user/change-password', {newPassword: this.state.password})

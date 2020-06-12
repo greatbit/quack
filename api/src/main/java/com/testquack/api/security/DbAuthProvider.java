@@ -6,7 +6,6 @@ import com.testquack.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.greatbit.whoru.auth.Person;
-import ru.greatbit.whoru.auth.Session;
 import ru.greatbit.whoru.auth.error.UnauthorizedException;
 import ru.greatbit.whoru.auth.providers.BaseDbAuthProvider;
 
@@ -74,6 +73,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
                 withLastName(user.getLastName()).
                 withLogin(user.getLogin()).
                 withActive(true).
+                withDefaultPassword(user.isPasswordChangeRequired()).
                 withPassword(user.getPassword());
     }
 }

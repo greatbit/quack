@@ -22,6 +22,7 @@
                     <xs:element name="middleName" type="xs:string"/>
                     <xs:element name="token" type="xs:string"/>
                     <xs:element name="groups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="passwordChangeRequired" type="xs:boolean"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

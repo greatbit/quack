@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.whoru.auth.AuthProvider;
 import ru.greatbit.whoru.auth.RedirectResponse;
 import ru.greatbit.whoru.auth.Session;
+import ru.greatbit.whoru.auth.SessionProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -26,6 +27,9 @@ public class UserResource extends BaseResource<User> {
 
     @Autowired
     AuthProvider authProvider;
+
+    @Autowired
+    SessionProvider sessionProvider;
 
     @Autowired
     private UserService service;
@@ -115,8 +119,11 @@ public class UserResource extends BaseResource<User> {
     @POST
     @Path("/change-password")
     public Response changePassword(ChangePasswordRequest changePasswordRequest){
+        Session session = getSession();
         String login = changePasswordRequest.getLogin() == null ? getSession().getPerson().getLogin() : changePasswordRequest.getLogin();
-        service.changePassword(getSession(), login, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        service.changePassword(session, login, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+        session.getPerson().setDefaultPassword(false);
+        sessionProvider.replaceSession(session);
         return Response.ok().build();
     }
 
