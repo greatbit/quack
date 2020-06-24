@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
+import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import { Link } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
 import Highcharts from 'highcharts';
@@ -182,6 +183,12 @@ class LaunchesStatisticsOverview extends SubComponent {
           <div className="row">
             <div className="col-6" id="pie-by-statuses"/>
             <div className="col-6" id="pie-by-users"/>
+          </div>
+          <div className="row">
+            <div className="col-6">
+                <LaunchesTrendWidget projectId={this.state.projectId}
+                    filter={Utils.queryToFilter(this.props.location.search.substring(1))}/>
+            </div>
           </div>
         </div>
         );

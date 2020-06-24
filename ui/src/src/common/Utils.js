@@ -174,6 +174,15 @@ export function timeToDate(time) {
         " " + date.getHours() + ":" + currMinutes;
 }
 
+export function timeToDateNoTime(time) {
+    if (!time || time == 0){
+        return 'No data'
+    }
+    var date = new Date(parseInt(time));
+    var monthNames = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+}
+
 export function longToDateTimeFormatted(uts, format) {
     return Moment(uts).format(format);
 }
