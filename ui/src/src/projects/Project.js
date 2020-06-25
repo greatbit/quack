@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SubComponent from '../common/SubComponent'
 import TestSuitesWidget from '../testsuites/TestSuitesWidget'
 import LaunchesWidget from '../launches/LaunchesWidget'
+import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
@@ -86,6 +87,21 @@ class Project extends SubComponent {
                           <div className="card-body">
                             <LaunchesWidget limit={5} projectId={this.state.project.id}/>
                           </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="card project-card">
+                            <div className="card-header">
+                                <span>
+                                    <Link to={'/' + this.state.project.id + '/launches'}>Last 20 Launches</Link>
+                                </span>
+                            </div>
+                            <div className="card-body">
+                                <LaunchesTrendWidget projectId={this.state.project.id}
+                                            filter={Utils.queryToFilter(this.props.location.search.substring(1))}/>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -115,7 +115,8 @@ class LaunchesTrendWidget extends SubComponent {
             'PASSED': {name: 'Passed', color: '#28a745', data: []},
             'FAILED': {name: 'Failed', color: '#dc3545', data: []},
             'BROKEN': {name: 'Broken', color: '#ffc107', data: []},
-            'SKIPPED': {name: 'Skipped', color: '#6c757d', data: []}
+            'SKIPPED': {name: 'Skipped', color: '#6c757d', data: []},
+            'TOTAL': {name: 'Total', color: '#007bff', data: []}
         };
 
         this.state.launches.forEach(launch => {
@@ -123,8 +124,8 @@ class LaunchesTrendWidget extends SubComponent {
                 if (totalStats[key]){
                     totalStats[key].data.push(launch.launchStats.statusCounters[key]);
                 }
-
             })
+            totalStats['TOTAL'].data.push(launch.launchStats.total);
         })
 
         return Object.keys(totalStats).map(key => totalStats[key]);
