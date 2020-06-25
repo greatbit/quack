@@ -179,8 +179,8 @@ export function timeToDateNoTime(time) {
         return 'No data'
     }
     var date = new Date(parseInt(time));
-    var monthNames = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-    return date.getDate() + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+    var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    return date.getDate() + " " + monthNames[date.getMonth()];
 }
 
 export function longToDateTimeFormatted(uts, format) {
