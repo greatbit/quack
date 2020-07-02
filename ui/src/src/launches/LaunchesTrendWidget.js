@@ -50,7 +50,7 @@ class LaunchesTrendWidget extends SubComponent {
         axios
             .get("/api/" + this.state.projectId + "/launch?" + Utils.filterToQuery(this.state.filter))
             .then(response => {
-                 this.state.launches = response.data;
+                 this.state.launches = response.data.reverse();
                  this.state.loading = false;
                  this.renderChart();
                  this.setState(this.state);

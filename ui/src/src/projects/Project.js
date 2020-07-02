@@ -99,8 +99,7 @@ class Project extends SubComponent {
                                 </span>
                             </div>
                             <div className="card-body">
-                                <LaunchesTrendWidget projectId={this.state.project.id}
-                                            filter={Utils.queryToFilter(this.props.location.search.substring(1))}/>
+                                <LaunchesTrendWidget projectId={this.state.project.id} />
                             </div>
                         </div>
                     </div>
