@@ -15,7 +15,7 @@ class LaunchesTrendWidget extends SubComponent {
             skip: 0,
             limit: 20,
             orderby: "id",
-            orderdir: "ASC",
+            orderdir: "DESC",
             includedFields: "launchStats,createdTime"
         },
         loading: true
