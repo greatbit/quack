@@ -10,7 +10,7 @@ It allows to store testcases and test suites and execute them.
 
 This web-based service is much different from other test management tools available on the market.
 
-The main feature is that you don't have to stick to a specific test tree any more. You can rebuild the tree of testcases on the fly - it will be beased on testases attributes.
+The main feature is that you don't have to stick to a specific test tree any more. You can rebuild the tree of testcases on the fly - it will be beased on testcases attributes.
 
 The service is built with integration patterns in mind. Pluggable architecuture allows to implement custom authentication providers, integrations with tracking and test executing systems.
 
