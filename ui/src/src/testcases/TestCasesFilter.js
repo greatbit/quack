@@ -232,8 +232,8 @@ class TestCasesFilter extends Component {
                                     options={this.getProjectAttributesSelect().filter((attr) => attr.value != 'broken' )}
                                    />
                         </div>
-                        <div className="col-3"></div>
-                        <div className="col-3 btn-group" role="group" >
+                        <div className="col-2"></div>
+                        <div className="col-4 btn-group" role="group" >
                             <button type="button" className="btn btn-primary" onClick={this.handleFilter}>Filter</button>
                             <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>Save</button>
                             <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>Launch</button>
