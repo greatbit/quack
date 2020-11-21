@@ -26,6 +26,7 @@
         <module>api</module>
         <module>ui</module>
         <module>assembly</module>
+        <module>smith-launcher</module>
 
     </modules>
 
@@ -121,6 +122,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>liken-launcher</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>smith-launcher</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
