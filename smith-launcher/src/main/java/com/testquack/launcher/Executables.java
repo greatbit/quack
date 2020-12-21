@@ -7,12 +7,15 @@ public class Executables {
 
     private String launchId;
 
+    private String projectId;
+
     private List<Executable> executables = new LinkedList<>();
 
     public Executables() { }
 
-    public Executables(String launchId, List<Executable> executables) {
+    public Executables(String launchId, String projectId, List<Executable> executables) {
         this.launchId = launchId;
+        this.projectId = projectId;
         this.executables = executables;
     }
 
@@ -30,5 +33,13 @@ public class Executables {
 
     public void setLaunchId(String launchId) {
         this.launchId = launchId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }

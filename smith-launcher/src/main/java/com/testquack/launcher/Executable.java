@@ -7,12 +7,18 @@ public class Executable {
 
     private String testcaseUuid;
 
+    private String projectId;
+
+    private String launchId;
+
     private Map<String, String> metadata = new HashMap<>();
 
     public Executable() { }
 
-    public Executable(String testcaseUuid, Map<String, String> metadata) {
+    public Executable(String testcaseUuid, String projectId, String launchId, Map<String, String> metadata) {
         this.testcaseUuid = testcaseUuid;
+        this.projectId = projectId;
+        this.launchId = launchId;
         this.metadata = metadata;
     }
 
@@ -30,5 +36,21 @@ public class Executable {
 
     public void setTestcaseUuid(String testcaseUuid) {
         this.testcaseUuid = testcaseUuid;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getLaunchId() {
+        return launchId;
+    }
+
+    public void setLaunchId(String launchId) {
+        this.launchId = launchId;
     }
 }

@@ -20,6 +20,11 @@
             <artifactId>launcher</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>smith-launcher</artifactId>
+        </dependency>
+
         <!-- Jersey + Spring -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -184,7 +189,6 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
@@ -198,7 +202,6 @@
                         -XX:MaxPermSize=512m
                     </jvmArgs>
                     <goal>run-forked</goal>
-                    <useTestClasspath>false</useTestClasspath>
                 </configuration>
                 <dependencies>
                     <dependency>

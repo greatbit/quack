@@ -30,11 +30,6 @@
             <artifactId>liken-launcher</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>smith-launcher</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>ru.greatbit.whoru</groupId>
             <artifactId>auth</artifactId>
         </dependency>

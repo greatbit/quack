@@ -1,6 +1,7 @@
 package com.testquack.services;
 
 import com.google.common.collect.MinMaxPriorityQueue;
+import com.hazelcast.core.ILock;
 import com.testquack.beans.Comment;
 import com.testquack.beans.Event;
 import com.testquack.beans.FailureDetails;
@@ -41,6 +42,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -92,32 +94,37 @@ public class LaunchService extends BaseService<Launch> {
                                                      Session session, String projectId,
                                                      String launchId, String testCaseUUID,
                                                      LaunchStatus status, FailureDetails failureDetails) throws Exception {
-        Launch launch = findOne(session, projectId, launchId);
-        LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
-        if (launchTestCase == null){
-            throw new EntityNotFoundException(
-                    format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
-            );
-        }
-        if (isFailedStatus(status) && failureDetails != null && isFailureDetailsValid(failureDetails)) {
-            addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
-        }
-        updateStatus(session.getPerson().getId(), launchTestCase, status);
-        update(session, projectId, launch);
+        ILock lock = hazelcastInstance.getLock(Launch.class + launchId + "updateLaunchTestCaseStatus");
+        try{
+            lock.lock(lockTtl, TimeUnit.MINUTES);
+            Launch launch = findOne(session, projectId, launchId);
+            LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
+            if (launchTestCase == null){
+                throw new EntityNotFoundException(
+                        format("Launch Test Case with UUID %s not found in Launch with id %s", testCaseUUID, launchId)
+                );
+            }
+            if (isFailedStatus(status) && failureDetails != null && isFailureDetailsValid(failureDetails)) {
+                addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
+            }
+            updateStatus(session.getPerson().getId(), launchTestCase, status);
+            update(session, projectId, launch);
 
-        //Emit audit on terminal status
-        if (isTerminalStatus(status)) {
-            eventService.create(session, projectId,
-                    new Event().withEventType(status.toString()).
-                            withTime(System.currentTimeMillis()).
-                            withUser(session.getLogin()).
-                            withEntityId(launchTestCase.getId()).
-                            withEntityType(TestCase.class.getSimpleName())
-            );
+            //Emit audit on terminal status
+            if (isTerminalStatus(status)) {
+                eventService.create(session, projectId,
+                        new Event().withEventType(status.toString()).
+                                withTime(System.currentTimeMillis()).
+                                withUser(session.getLogin()).
+                                withEntityId(launchTestCase.getId()).
+                                withEntityType(TestCase.class.getSimpleName())
+                );
+            }
+            return launchTestCase;
+        } finally {
+            lock.unlock();
         }
 
-
-        return launchTestCase;
     }
 
     private boolean isTerminalStatus(LaunchStatus status) {

@@ -29,11 +29,10 @@ public abstract class BaseService<E extends Entity> {
     protected final Logger logger = Logger.getLogger(getClass().getName());
 
     @Value("${entity.lock.ttl.min}")
-    private long lockTtl;
-
+    protected long lockTtl;
 
     @Autowired
-    private HazelcastInstance hazelcastInstance;
+    protected HazelcastInstance hazelcastInstance;
 
     @Autowired
     protected ProjectService projectService;
@@ -202,7 +201,7 @@ public abstract class BaseService<E extends Entity> {
         if (!userCanUpdate(session, projectId, entity)){
             throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
         }
-        ILock lock = hazelcastInstance.getLock(entity.getClass()+ entity.getId());
+        ILock lock = hazelcastInstance.getLock(entity.getClass() + entity.getId());
         try{
             lock.lock(lockTtl, TimeUnit.MINUTES);
             E existingEntity = findOne(session, projectId, entity.getId());

@@ -70,10 +70,11 @@
         <httpclient.version>4.5.2</httpclient.version>
         <jackson.version>2.8.5</jackson.version>
         <jetty.port>9999</jetty.port>
-        <jetty.version>9.3.4.RC0</jetty.version>
+        <jetty.version>9.4.35.v20201120</jetty.version>
         <sl4j.version>1.7.22</sl4j.version>
         <hazelcast.version>3.8</hazelcast.version>
-        <camel.version>2.18.3</camel.version>
+        <camel.version>3.6.0</camel.version>
+        <camel.aws.version>2.25.2</camel.aws.version>
         <swagger.version>1.5.10</swagger.version>
         <jaxb.version>1.11.1</jaxb.version>
         <whoru.version>1.4</whoru.version>
@@ -478,11 +479,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-aws</artifactId>
-                <version>${camel.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.camel</groupId>
                 <artifactId>camel-spring</artifactId>
                 <version>${camel.version}</version>
             </dependency>
@@ -491,7 +487,16 @@
                 <artifactId>camel-jsonpath</artifactId>
                 <version>${camel.version}</version>
             </dependency>
-
+            <!--<dependency>-->
+                <!--<groupId>org.apache.camel</groupId>-->
+                <!--<artifactId>camel-aws</artifactId>-->
+                <!--<version>${camel.version}</version>-->
+            <!--</dependency>-->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-aws-sqs</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
