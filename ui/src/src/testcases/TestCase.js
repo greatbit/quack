@@ -369,6 +369,14 @@ class TestCase extends SubComponent {
                 <li class="nav-item">
                     <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
                   </li>
+
+                  {this.state.testcase.failureDetails && Object.keys(this.state.testcase.failureDetails).length > 0 &&
+                    <li class="nav-item">
+                      <a class="nav-link" id="failure-tab" data-toggle="tab" href="#failure" role="tab" aria-controls="failure" aria-selected="false">Failure</a>
+                    </li>
+                   }
+
+
                   <li class="nav-item">
                     <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">
                         Attachments
@@ -716,15 +724,17 @@ class TestCase extends SubComponent {
                             </div>
                        }
                     </div>
+                </div>
 
-                  {this.state.launchId &&
-                      <div className="testcase-section">
-                          <h5>Failure details</h5>
-                          <Comments entityId={this.state.testcase.uuid} projectId={this.projectId}
-                                  entityType="failureDetails" hideForm={true} forceFetch={true}/>
-                      </div>
-                  }
-
+                <div class="tab-pane fade show" id="failure" role="tabpanel" aria-labelledby="failure-tab">
+                    {this.state.testcase.failureDetails && Object.keys(this.state.testcase.failureDetails).length > 0 &&
+                            <div className="testcase-section">
+                                <h5>Failure details</h5>
+                                <div>
+                                    {this.state.testcase.failureDetails.text}
+                                </div>
+                            </div>
+                     }
                 </div>
 
                 <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">

@@ -105,6 +105,7 @@ public class LaunchService extends BaseService<Launch> {
                 );
             }
             if (isFailedStatus(status) && failureDetails != null && isFailureDetailsValid(failureDetails)) {
+                launchTestCase.setFailureDetails(failureDetails);
                 addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
             }
             updateStatus(session.getPerson().getId(), launchTestCase, status);
@@ -144,8 +145,6 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private void addFailureDetails(HttpServletRequest request, Session session, String projectId, LaunchTestCase launchTestCase, FailureDetails failureDetails) throws Exception {
-        Comment comment = new Comment().withEntityId(launchTestCase.getUuid()).withEntityType(FAILURE_DETAILS_TYPE).withText(failureDetails.getText());
-        commentService.save(session, projectId, comment);
         if (failureDetails.getLinkedIssue() != null) {
             Issue issue = failureDetails.getLinkedIssue();
             if (isEmpty(issue.getId())) {
