@@ -298,3 +298,7 @@ a.project-title-settings-link:link, a.project-title-settings-link:visited {
     padding: 15px;
     margin: auto;
 }
+
+.launch-form-spinner{
+    margin-left: 220px;
+}

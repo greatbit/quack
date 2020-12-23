@@ -729,7 +729,7 @@ class TestCase extends SubComponent {
                 <div class="tab-pane fade show" id="failure" role="tabpanel" aria-labelledby="failure-tab">
                     {this.state.testcase.failureDetails && Object.keys(this.state.testcase.failureDetails).length > 0 &&
                             <div className="testcase-section">
-                                <h5>Failure details</h5>
+                                <h5>Failure Details</h5>
                                 <div>
                                     {this.state.testcase.failureDetails.text}
                                 </div>

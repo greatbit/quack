@@ -7,6 +7,7 @@ import CreatableSelect from 'react-select/lib/Creatable';
 import LauncherForm from '../launches/LauncherForm';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
+import { FadeLoader } from 'react-spinners';
 
 
 class LaunchForm extends SubComponent {
@@ -28,7 +29,8 @@ class LaunchForm extends SubComponent {
               },
              launcherDescriptors: [],
              restart: props.restart || false,
-             failedOnly: props.failedOnly || false
+             failedOnly: props.failedOnly || false,
+             loading: false
          };
 
         this.handleChange = this.handleChange.bind(this);
@@ -43,6 +45,8 @@ class LaunchForm extends SubComponent {
       }
 
       handleSubmit(event) {
+        this.state.loading = true;
+        this.setState(this.state);
         this.state.launch.testSuite.filter.filters = (this.state.launch.testSuite.filter.filters || []).
             filter(function(filter){return filter.id !== undefined && filter.id !== null});
         this.state.launch.testSuite.filter.filters.forEach(function(filter){
@@ -62,8 +66,13 @@ class LaunchForm extends SubComponent {
                 this.state.launch.triggeredByLauncher = true;
             }
             this.state.restart = false;
+            this.state.loading = false;
             this.setState(this.state);
-        }).catch(error => {Utils.onErrorMessage("Couldn't save launch: ", error)});
+        }).catch(error => {
+            this.state.loading = false;
+            this.setState(this.state);
+            Utils.onErrorMessage("Couldn't save launch: ", error);
+        });
         event.preventDefault();
       }
 
@@ -193,14 +202,32 @@ class LaunchForm extends SubComponent {
                     </button>
                   </div>
 
-                  <div>{modalBody}</div>
+                  {this.state.loading &&
+                      <div className='sweet-loading launch-form-spinner'>
+                             <FadeLoader
+                               sizeUnit={"px"}
+                               size={100}
+                               color={'#135f38'}
+                               loading={this.state.loading}
+                             />
+                       </div>
+                  }
 
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                    {(!this.state.launch.id || this.state.restart) &&
-                    <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create Launch</button>
-                    }
-                  </div>
+                  {!this.state.loading &&
+                    <div>
+                      <div>
+                        {modalBody}
+                      </div>
+
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        {(!this.state.launch.id || this.state.restart) &&
+                        <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Create Launch</button>
+                        }
+                      </div>
+                    </div>
+                  }
+
                 </div>
              </div>
         );
