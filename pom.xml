@@ -79,6 +79,7 @@
         <jaxb.version>1.11.1</jaxb.version>
         <whoru.version>1.4</whoru.version>
         <plow.version>1.4</plow.version>
+        <aws.cli.version>1.11.702</aws.cli.version>
     </properties>
 
 

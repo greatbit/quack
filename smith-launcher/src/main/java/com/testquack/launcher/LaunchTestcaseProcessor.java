@@ -13,9 +13,14 @@ import ru.greatbit.whoru.auth.Session;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service("launchTestcaseProcessor")
 public class LaunchTestcaseProcessor implements Processor {
+
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     @Autowired
     LaunchService launchService = new LaunchService();
@@ -30,7 +35,15 @@ public class LaunchTestcaseProcessor implements Processor {
             launchService.updateLaunchTestCaseStatus(null, adminSession, testCaseResult.getProjectId(),
                     testCaseResult.getLaunchId(), testCaseResult.getTestcaseUuid(),
                     testCaseResult.isPassed() ? LaunchStatus.PASSED : LaunchStatus.FAILED,
-                    new FailureDetails().withText(testCaseResult.getMessage()));
+                    testCaseResult.isPassed() ? null : new FailureDetails().withText(getMessageLog(testCaseResult)));
         }
+    }
+
+    private String getMessageLog(TestCaseResult testCaseResult) {
+        StringBuilder messageBuilder = new StringBuilder();
+        if (!isEmpty(testCaseResult.getMessage())){
+            messageBuilder.append(testCaseResult.getMessage());
+        }
+        return messageBuilder.toString();
     }
 }
