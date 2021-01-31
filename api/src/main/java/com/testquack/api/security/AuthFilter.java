@@ -68,8 +68,8 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
             if (!userRepository.exists(null, session.getPerson().getLogin())) {
                 userRepository.save(null,
                         new User().withCreatedTime(System.currentTimeMillis()).
-                                withId(session.getPerson().getId()).
-                                withLogin(session.getPerson().getId()).
+                                withId(session.getPerson().getLogin()).
+                                withLogin(session.getPerson().getLogin()).
                                 withToken(session.getPerson().getToken()).
                                 withLastModifiedTime(System.currentTimeMillis()).
                                 withFirstName(session.getPerson().getFirstName()).
