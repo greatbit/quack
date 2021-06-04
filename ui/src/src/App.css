@@ -318,3 +318,7 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .launch-form-spinner{
     margin-left: 220px;
 }
+
+.inplace-display{
+    white-space: pre-wrap;
+}
