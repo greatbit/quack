@@ -37,6 +37,7 @@
 .tree-side{
     height: 100%;
     overflow-y: scroll;
+    z-index: 0;
 }
 
 .testcase-side{
@@ -155,6 +156,10 @@ h5:hover .edit-icon {
 }
 
 .project-card {
+    margin-bottom: 20px;
+}
+
+.organization-card {
     margin-bottom: 20px;
 }
 
@@ -278,7 +283,18 @@ h5:hover .edit-icon {
     margin-bottom: 20px;
 }
 
+.organization-header {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+
 a.project-title-settings-link:link, a.project-title-settings-link:visited {
+    color: black !important;
+    font-size: 24px;
+}
+
+a.organization-title-settings-link:link, a.organization-title-settings-link:visited {
     color: black !important;
     font-size: 24px;
 }
