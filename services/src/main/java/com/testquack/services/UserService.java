@@ -27,8 +27,6 @@ public class UserService extends BaseService<User> {
     @Autowired
     private UserRepository repository;
 
-
-
     @Override
     protected CommonRepository<User> getRepository() {
         return repository;

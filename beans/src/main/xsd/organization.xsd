@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:beans.testquack.com"
+           targetNamespace="urn:beans.testquack.com"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jaxb:extensionBindingPrefixes="inheritance"
+           jaxb:version="2.1"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="organization" type="Organization"/>
+    <xs:complexType name="Organization">
+        <xs:complexContent>
+            <xs:extension base="Entity">
+                <xs:sequence>
+                    <xs:element name="description" type="xs:string"/>
+                    <xs:element name="admins" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="allowedGroups" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="allowedUsers" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="externalId" type="xs:string"/>
+                    <xs:element name="externalSystemId" type="xs:string"/>
+                    <xs:element name="externalName" type="xs:string"/>
+                    <xs:element name="licenseCapacity" type="xs:int"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+
+</xs:schema>
