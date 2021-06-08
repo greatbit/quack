@@ -48,8 +48,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/greatbit/quack</url>
-        <connection>scm:git:https://github.com/greatbit/quack.git</connection>
+        <url>scm:git:git@github.com:greatbit/quack.git</url>
+        <connection>scm:git:git@github.com:greatbit/quack</connection>
+        <developerConnection>scm:git:git@github.com:greatbit/quack.git</developerConnection>
     </scm>
 
     <licenses>
