@@ -1,5 +1,5 @@
 cd ../
-docker build -t quack .
+docker build -t greatbit/quack .
 
 1. Run mongo
 docker run --name mongodb --restart always -p 27017:27017 -d mongo
