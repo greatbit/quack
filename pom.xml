@@ -10,7 +10,7 @@
 
     <groupId>com.testquack</groupId>
     <artifactId>quack</artifactId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
     <modules>
         <module>beans</module>
         <module>dal</module>
