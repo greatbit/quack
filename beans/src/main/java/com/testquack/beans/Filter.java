@@ -6,58 +6,62 @@ import static java.util.Arrays.asList;
 
 public class Filter extends BaseFilter{
 
-    protected Map<String, Set<Object>> fields;
-    protected Map<String, Set<Object>> notFields;
-    protected Set<String> excludedFields;
-    protected Set<String> includedFields;
+    protected Map<String, Set<Object>> fields = new HashMap<>();
+    protected Map<String, Set<Object>> notFields = new HashMap<>();
+    protected Set<String> excludedFields = new HashSet<>();
+    protected Set<String> includedFields = new HashSet<>();
 
     public Map<String, Set<Object>> getFields() {
-        if (fields == null){
-            fields = new HashMap<>();
-        }
+        return fields;
+    }
+
+    public Map<String, Set<Object>> getFieldsForQuery() {
         return fields;
     }
 
     public Map<String, Set<Object>> getNotFields() {
-        if (notFields == null){
-            notFields = new HashMap<>();
-        }
+        return notFields;
+    }
+
+    public Map<String, Set<Object>> getNotFieldsForQuery() {
         return notFields;
     }
 
     public Set<String> getExcludedFields() {
-        if (excludedFields == null){
-            excludedFields = new HashSet<>();
-        }
+        return excludedFields;
+    }
+
+    public Set<String> getExcludedFieldsForQuery() {
         return excludedFields;
     }
 
     public Set<String> getIncludedFields() {
-        if (includedFields == null){
-            includedFields = new HashSet<>();
-        }
+        return includedFields;
+    }
+
+    public Set<String> getIncludedFieldsForQuery() {
         return includedFields;
     }
 
     public Filter withField(String fieldName, Object... fieldValues) {
-        getFields().putIfAbsent(fieldName, new HashSet<>());
-        getFields().get(fieldName).addAll(asList(fieldValues));
+        fields.putIfAbsent(fieldName, new HashSet<>());
+        fields.get(fieldName).addAll(asList(fieldValues));
         return this;
     }
 
     public Filter withNotField(String fieldName, Object... fieldValue) {
-        getNotFields().putIfAbsent(fieldName, new HashSet<>());
-        getNotFields().get(fieldName).addAll(asList(fieldValue));
+        notFields.putIfAbsent(fieldName, new HashSet<>());
+        notFields.get(fieldName).addAll(asList(fieldValue));
         return this;
     }
 
     public Filter withIncludedField(String fieldName){
-        getIncludedFields().add(fieldName);
+        includedFields.add(fieldName);
         return this;
     }
 
     public Filter withExcludedField(String fieldName){
-        getExcludedFields().add(fieldName);
+        excludedFields.add(fieldName);
         return this;
     }
 
@@ -78,11 +82,15 @@ public class Filter extends BaseFilter{
     }
 
     public void addFields(String key, String... values){
-        addValuesToMap(getFields(), key, values);
+        addValuesToMap(fields, key, values);
+    }
+
+    public void addFields(String key, List<String> values){
+        addValuesToMap(fields, key, values.toArray(new String[values.size()]));
     }
 
     public void addNotFields(String key, String... values){
-        addValuesToMap(getNotFields(), key, values);
+        addValuesToMap(notFields, key, values);
     }
 
     @Override

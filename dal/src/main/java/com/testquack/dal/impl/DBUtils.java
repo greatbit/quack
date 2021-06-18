@@ -57,7 +57,7 @@ public class DBUtils {
         Criteria criteria = new Criteria();
 
         // Add AND fields criterias
-        List<Criteria> fieldsCriteria = filter.getFields().entrySet().stream().
+        List<Criteria> fieldsCriteria = filter.getFieldsForQuery().entrySet().stream().
                 map(field -> getFieldCriteris(entityClass, field.getKey(), field.getValue())).collect(Collectors.toList());
         if (!fieldsCriteria.isEmpty()) {
             criteria.andOperator(fieldsCriteria.toArray(new Criteria[fieldsCriteria.size()]));
@@ -65,7 +65,7 @@ public class DBUtils {
 
 
         // Add NOT fields criterias
-        List<Criteria> notFieldsCriteria = filter.getNotFields().entrySet().stream().
+        List<Criteria> notFieldsCriteria = filter.getNotFieldsForQuery().entrySet().stream().
                 map(field -> new Criteria(field.getKey()).in(field.getValue())).collect(Collectors.toList());
         if (!notFieldsCriteria.isEmpty()) {
             criteria.norOperator(notFieldsCriteria.toArray(new Criteria[notFieldsCriteria.size()]));
@@ -75,11 +75,11 @@ public class DBUtils {
         Query query = Query.query(criteria).skip(filter.getSkip()).limit(filter.getLimit());
 
         // Add included and excluded fields
-        if (!filter.getIncludedFields().isEmpty()) {
-            filter.getIncludedFields().forEach(field -> query.fields().include(field));
+        if (!filter.getIncludedFieldsForQuery().isEmpty()) {
+            filter.getIncludedFieldsForQuery().forEach(field -> query.fields().include(field));
         }
-        if (!filter.getExcludedFields().isEmpty()) {
-            filter.getExcludedFields().forEach(field -> query.fields().exclude(field));
+        if (!filter.getExcludedFieldsForQuery().isEmpty()) {
+            filter.getExcludedFieldsForQuery().forEach(field -> query.fields().exclude(field));
         }
 
         // Add ordering

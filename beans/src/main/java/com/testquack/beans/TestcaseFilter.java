@@ -1,8 +1,11 @@
 package com.testquack.beans;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TestcaseFilter extends Filter {
@@ -45,5 +48,18 @@ public class TestcaseFilter extends Filter {
 
     public void setFilters(List<Attribute> filters) {
         this.filters = filters;
+    }
+
+    @Override
+    public Map<String, Set<Object>> getFieldsForQuery() {
+        Map<String, Set<Object>> fieldsFilterCopy = new HashMap<>(fields);
+        filters.forEach(attributeFilter -> {
+            String filterKey = "attributes." + attributeFilter.id;
+            if (!fieldsFilterCopy.containsKey(filterKey)){
+                fieldsFilterCopy.put(filterKey, new HashSet<>());
+            }
+            fieldsFilterCopy.get(filterKey).addAll(attributeFilter.values);
+        });
+        return fieldsFilterCopy;
     }
 }

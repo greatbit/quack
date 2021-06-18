@@ -93,7 +93,7 @@ public class LaunchResource extends BaseCrudResource<Launch> {
     private List<Launch> create(String projectId, List<Launch> launches) {
         List<Launch> createdLaunches = new ArrayList<>(launches.size());
         launches.forEach(launch -> {
-            if (launch.getLauncherConfig() != null) {
+            if (launch.getLauncherConfig() != null && launch.getLauncherConfig().getLauncherId() != null) {
                 Launcher launcher = pluginsContainer.getPlugin(Launcher.class, launch.getLauncherConfig().getLauncherId());
                 //Create launch to have an id in launcher
                 if (launcher.isToCreateLaunch()) {

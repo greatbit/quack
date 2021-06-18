@@ -185,7 +185,7 @@ class TestCasesFilter extends Component {
 
     saveSuite(event){
         var suiteToSave = JSON.parse(JSON.stringify(this.state.testSuite));
-        (suiteToSave.filter.filters || []).forEach(function(filter){
+        (suiteToSave.filter.filters || []).filter(function(filter){return filter.id}).forEach(function(filter){
             delete filter.title;
         })
         axios.post('/api/' + this.props.match.params.project + '/testsuite/', suiteToSave)
