@@ -211,7 +211,7 @@ class Issues extends SubComponent {
 
     getIssueUrl(issue){
         return (
-            <tr>
+            <tr key={issue.id}>
                 <td>
                     {issue.isClosed &&
                         <s><a href={issue.url || ""} target='_blank'>{issue.id} - {issue.name}</a></s>
@@ -243,7 +243,7 @@ class Issues extends SubComponent {
         return (
             <div>
                 <div id="issues" className="issues-list">
-                    <table class="table table-striped">
+                    <table className="table table-striped">
                       <tbody>
                         {(
                             (this.state.testcase.issues || []).map(this.getIssueUrl)
@@ -257,19 +257,19 @@ class Issues extends SubComponent {
                         Add Issue
                     </button>
                 </div>
-                <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="issue-modal">
+                <div className="modal fade bd-example-modal-lg" tabIndex="-1" role="dialog" id="issue-modal">
                     <div className="modal-dialog modal-lg" role="document">
 
                         <div className="modal-content">
                             <div className="modal-header">
-                                <ul class="nav nav-tabs" id="issueTabs" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="create-issue-tab" data-toggle="tab" href="#create-issue" role="tab" aria-controls="Create Issue" aria-selected="true">
+                                <ul className="nav nav-tabs" id="issueTabs" role="tablist">
+                                    <li className="nav-item">
+                                        <a className="nav-link active" id="create-issue-tab" data-toggle="tab" href="#create-issue" role="tab" aria-controls="Create Issue" aria-selected="true">
                                             <h5 className="modal-title">Create Issue</h5>
                                         </a>
                                       </li>
-                                      <li class="nav-item">
-                                        <a class="nav-link" id="link-issue-tab" data-toggle="tab" href="#link-issue" role="tab" aria-controls="Link Issue" aria-selected="false">
+                                      <li className="nav-item">
+                                        <a className="nav-link" id="link-issue-tab" data-toggle="tab" href="#link-issue" role="tab" aria-controls="Link Issue" aria-selected="false">
                                             <h5 className="modal-title">Link Issue</h5>
                                         </a>
                                       </li>
@@ -280,7 +280,7 @@ class Issues extends SubComponent {
                             </div>
 
                             <div className="tab-content" id="issuesTabContent">
-                                <div class="tab-pane fade show active" id="create-issue" role="tabpanel" aria-labelledby="create-issue-tab">
+                                <div className="tab-pane fade show active" id="create-issue" role="tabpanel" aria-labelledby="create-issue-tab">
                                     <div className="modal-body">
                                         <form>
 
@@ -337,7 +337,7 @@ class Issues extends SubComponent {
                                 </div>
 
 
-                                <div class="tab-pane fade" id="link-issue" role="tabpanel" aria-labelledby="link-issue-tab">
+                                <div className="tab-pane fade" id="link-issue" role="tabpanel" aria-labelledby="link-issue-tab">
                                     <div className="modal-body">
                                         <form>
                                             <div className="form-group row">

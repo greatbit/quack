@@ -78,7 +78,6 @@ class TestCases extends SubComponent {
                     name: 'Broken',
                     values: ['True', 'False']
                });
-               console.log(this.state.projectAttributes);
                this.setState(this.state);
                this.refreshTree();
           })
