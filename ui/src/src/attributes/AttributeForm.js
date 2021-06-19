@@ -115,7 +115,7 @@ class AttributeForm extends Component {
 
                       {this.state.attribute.values.map((value, i) => {
                          return(
-                             <div className='form-group row'>
+                             <div key={i} className='form-group row'>
                                  <label className='col-sm-2 col-form-label'>
                                      Value
                                  </label>
