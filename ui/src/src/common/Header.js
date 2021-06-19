@@ -102,7 +102,7 @@ class Header extends Component {
                   <Link className="dropdown-item " to="/projects">All</Link>
                   {this.state.projects.map(function(project){
                       return (
-                           <Link to={'/projects/' + project.id} className='dropdown-item'>{project.name}</Link>
+                           <Link to={'/projects/' + project.id} key={project.id} className='dropdown-item'>{project.name}</Link>
                       )
                   })}
                   {Utils.isUserOwnerOrAdmin() &&
