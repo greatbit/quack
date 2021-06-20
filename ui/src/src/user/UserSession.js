@@ -1,8 +1,8 @@
 
 
-this.session = {};
+const session = {};
 
 
 export function getSession(){
-    return this.session;
+    return session;
 }

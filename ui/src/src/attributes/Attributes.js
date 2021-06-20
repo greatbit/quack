@@ -24,7 +24,7 @@ class Attributes extends SubComponent {
     }
 
     onAttributeAdded(attribute){
-        var attributeToUpdate = this.state.attributes.find(function(attr){attr.id === attribute.id});
+        var attributeToUpdate = this.state.attributes.find(function(attr){ return attr.id === attribute.id});
         if (!attributeToUpdate){
             this.state.attributes.push(attribute);
         } else {
