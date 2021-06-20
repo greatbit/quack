@@ -30,8 +30,6 @@ class LaunchAttributeStatsChart extends SubComponent {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-        this.setState(this.state);
         this.setUpStatusSeries();
         this.statusChartRender();
     }
