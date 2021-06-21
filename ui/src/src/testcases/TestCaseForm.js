@@ -140,7 +140,7 @@ class TestCaseForm extends SubComponent {
                               var attributeValues = this.state.testcase.attributes[attributeId] || [];
                               if(attributeId !== "null"){
                                return (
-                                  <div index={attributeId} className="form-group row">
+                                  <div key={i} index={attributeId} className="form-group row">
                                     <label className="col-sm-3 col-form-label">
                                         {this.getAttributeName(attributeId)}
                                     </label>
@@ -162,7 +162,7 @@ class TestCaseForm extends SubComponent {
                                );
                               } else {
                                 return (
-                                  <div index={attributeId} className="form-group row">
+                                  <div key={i} index={attributeId} className="form-group row">
                                     <label className="col-sm-3 col-form-label">Attribute</label>
                                     <div className="col-sm-8">
                                         <CreatableSelect

@@ -53,7 +53,7 @@ class EventsWidget extends Component {
                            loading={this.state.loading}
                          />
                    </div>
-                  <table class="table">
+                  <table className="table">
                       <thead>
                           <tr>
                             <th scope="col">Type</th>
@@ -63,9 +63,9 @@ class EventsWidget extends Component {
                       </thead>
                       <tbody>
                       {
-                            this.state.events.map(function(event){
+                            this.state.events.map(function(event, i){
                                 return (
-                                       <tr className={Utils.getStatusColorClass(event.eventType)}>
+                                       <tr key={i} className={Utils.getStatusColorClass(event.eventType)}>
                                            <td>{event.eventType}</td>
                                            <td>{Utils.timeToDate(event.createdTime)}</td>
                                            <td>{event.user}</td>

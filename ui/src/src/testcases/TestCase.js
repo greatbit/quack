@@ -16,6 +16,7 @@ import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import { faPlug } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from 'semantic-ui-react'
+import { ConfirmButton } from '../common/uicomponents/ConfirmButton'
 
 class TestCase extends SubComponent {
     constructor(props) {
@@ -365,49 +366,49 @@ class TestCase extends SubComponent {
     render() {
         return (
             <div>
-            <ul class="nav nav-tabs" id="tcTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
+            <ul className="nav nav-tabs" id="tcTabs" role="tablist">
+                <li className="nav-item">
+                    <a className="nav-link active" id="main-tab" data-toggle="tab" href="#main" role="tab" aria-controls="home" aria-selected="true">Main</a>
                   </li>
 
                   {this.state.testcase.failureDetails && Object.keys(this.state.testcase.failureDetails).length > 0 &&
-                    <li class="nav-item">
-                      <a class="nav-link" id="failure-tab" data-toggle="tab" href="#failure" role="tab" aria-controls="failure" aria-selected="false">Failure</a>
+                    <li className="nav-item">
+                      <a className="nav-link" id="failure-tab" data-toggle="tab" href="#failure" role="tab" aria-controls="failure" aria-selected="false">Failure</a>
                     </li>
                    }
 
 
-                  <li class="nav-item">
-                    <a class="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">
+                  <li className="nav-item">
+                    <a className="nav-link" id="attachments-tab" data-toggle="tab" href="#attachments" role="tab" aria-controls="attachments" aria-selected="false">
                         Attachments
                         {this.state.testcase.attachments && this.state.testcase.attachments.length > 0 &&
-                            <span class="badge badge-pill badge-secondary tab-badge">{this.state.testcase.attachments.length}</span>
+                            <span className="badge badge-pill badge-secondary tab-badge">{this.state.testcase.attachments.length}</span>
                         }
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">
+                  <li className="nav-item">
+                    <a className="nav-link" id="issues-tab" data-toggle="tab" href="#issues" role="tab" aria-controls="issues" aria-selected="false">
                         Issues
                         {this.state.testcase.issues && this.state.testcase.issues.length > 0 &&
-                            <span class="badge badge-pill badge-secondary tab-badge">{this.state.testcase.issues.length}</span>
+                            <span className="badge badge-pill badge-secondary tab-badge">{this.state.testcase.issues.length}</span>
                         }
                     </a>
                   </li>
-                  <li class="nav-item">
-                     <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments-tab-body" role="tab" aria-controls="comments-tab-body" aria-selected="false">
+                  <li className="nav-item">
+                     <a className="nav-link" id="comments-tab" data-toggle="tab" href="#comments-tab-body" role="tab" aria-controls="comments-tab-body" aria-selected="false">
                      Comments
                      {this.state.commentsCount > 0 &&
-                         <span class="badge badge-pill badge-secondary tab-badge">{this.state.commentsCount}</span>
+                         <span className="badge badge-pill badge-secondary tab-badge">{this.state.commentsCount}</span>
                      }
                      </a>
                   </li>
                   {this.state.testcase.metaData && Object.keys(this.state.testcase.metaData).length > 0 &&
-                  <li class="nav-item">
-                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="false">Metadata</a>
+                  <li className="nav-item">
+                    <a className="nav-link" id="history-tab" data-toggle="tab" href="#metadata" role="tab" aria-controls="metadata" aria-selected="false">Metadata</a>
                   </li>
                   }
-                  <li class="nav-item">
-                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+                  <li className="nav-item">
+                    <a className="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
                   </li>
             </ul>
 
@@ -420,7 +421,7 @@ class TestCase extends SubComponent {
                          loading={this.state.loading}
                        />
                  </div>
-               <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+               <div className="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
                   <div id="name" className="testcase-section">
                     <div id="name-display" className="inplace-display row">
                         <div className="col-10">
@@ -441,7 +442,7 @@ class TestCase extends SubComponent {
                             </h1>
                         </div>
                         {!this.state.readonly &&
-                        <div class="col-2">
+                        <div className="col-2">
                             <Checkbox toggle onChange={this.onBrokenToggle} checked={!this.state.testcase.broken} label={{ children: this.state.testcase.broken? 'Off' : 'On' }} />
                         </div>
                         }
@@ -517,9 +518,9 @@ class TestCase extends SubComponent {
                         (this.state.testcase.steps || []).map(function(step, i){
                             if(!step || (!step.action && !step.expectation)){
                               return (
-                                <div className="step">
+                                <div className="step" key={i}>
                                     <div id={"steps-" + i + "-form"} index={i} className="inplace-form card">
-                                          <div class="card-header">{i + 1}. Step</div>
+                                          <div className="card-header">{i + 1}. Step</div>
                                           <div className="card-body">
                                             <p className="card-text">
                                               <textarea rows="5" cols="60" name="step.action" onChange={(e) => this.handleStepActionChange(i, e, false)} value={this.state.testcase.steps[i].action}/>
@@ -536,7 +537,7 @@ class TestCase extends SubComponent {
                               )
                               } else {
                                 return (
-                                  <div className="row">
+                                  <div className="row" key={i}>
                                       <div id={"steps-" + i + "-display"} className="inplace-display col-sm-12">
                                           <div index={i} className="row">
                                               <div className="card col-md-12">
@@ -550,7 +551,11 @@ class TestCase extends SubComponent {
                                                   }
 
                                                   {!this.state.readonly &&
-                                                    <a href="#" className="card-link red float-right" onClick={(e) => this.removeStep(e, i)}>Remove</a>
+                                                  <ConfirmButton onSubmit={this.removeStep}
+                                                                 buttonClass={"card-link red float-right"}
+                                                                 id={i}
+                                                                 modalText={"Are you sure you want to remove Test Step?"}
+                                                                 buttonText={"Remove"}/>
                                                   }
                                                 </div>
                                               </div>
@@ -595,10 +600,10 @@ class TestCase extends SubComponent {
                           var attributeValues = this.state.testcase.attributes[attributeId] || [];
                           if(attributeId && attributeId != "null"){
                             return (
-                              <div className="form-group attribute-block">
+                              <div key={i} className="form-group attribute-block">
                                   <div id={"attributes-" + attributeId + "-display"} className="inplace-display" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'none' : 'block') }}>
                                     <div index={attributeId} className="card">
-                                      <div class="card-header">
+                                      <div className="card-header">
                                         <b>{this.getAttributeName(attributeId)}
                                         {!this.state.readonly &&
                                             <span className="edit edit-icon clickable" onClick={(e) => {this.toggleEditAttribute(attributeId)}}><FontAwesomeIcon icon={faPencilAlt}/></span>
@@ -611,7 +616,7 @@ class TestCase extends SubComponent {
                                         </b>
                                       </div>
                                       {
-                                          <div class="card-body">{attributeValues.join(", ")}</div>
+                                          <div className="card-body">{attributeValues.join(", ")}</div>
                                       }
 
                                     </div>
@@ -620,7 +625,7 @@ class TestCase extends SubComponent {
                                       <div id={"attributes-" + attributeId + "-form"} className="inplace-form" style={{ display: (this.state.attributesInEdit.has(attributeId) ? 'block' : 'none') }}>
                                         <form>
                                           <div index={attributeId} className="card">
-                                            <div class="card-header"><b>{this.getAttributeName(attributeId)}</b></div>
+                                            <div className="card-header"><b>{this.getAttributeName(attributeId)}</b></div>
                                             <div className="card-body">
                                                 <CreatableSelect value={(attributeValues || []).map(function(val){return {value: val, label: val}})}
                                                   isMulti
@@ -674,7 +679,7 @@ class TestCase extends SubComponent {
                       {
                         Object.keys(this.state.testcase.properties || {}).map(function(property, i){
                             return(
-                                <div className="attribute-block card">
+                                <div key={i} className="attribute-block card">
                                     {this.state.propertiesInEdit.has(i) &&
                                     <form id={"properties-" + i + "-form"} className="inplace-edit">
                                         <div className="form-group card-header">
@@ -726,7 +731,7 @@ class TestCase extends SubComponent {
                     </div>
                 </div>
 
-                <div class="tab-pane fade show" id="failure" role="tabpanel" aria-labelledby="failure-tab">
+                <div className="tab-pane fade show" id="failure" role="tabpanel" aria-labelledby="failure-tab">
                     {this.state.testcase.failureDetails && Object.keys(this.state.testcase.failureDetails).length > 0 &&
                             <div className="testcase-section">
                                 <h5>Failure Details</h5>
@@ -737,19 +742,19 @@ class TestCase extends SubComponent {
                      }
                 </div>
 
-                <div class="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
+                <div className="tab-pane fade show" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
                     <Attachments testcase={this.state.testcase} projectId={this.projectId} onTestcaseUpdated={this.onTestcaseUpdated}/>
                 </div>
 
-                <div class="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
+                <div className="tab-pane fade show" id="issues" role="tabpanel" aria-labelledby="issues-tab">
                     <Issues testcase={this.state.testcase} projectId={this.projectId} entityType="testcase" onTestcaseUpdated={this.onTestcaseUpdated}/>
                 </div>
 
-                <div class="tab-pane fade show" id="comments-tab-body" role="tabpanel" aria-labelledby="comments-tab-body">
+                <div className="tab-pane fade show" id="comments-tab-body" role="tabpanel" aria-labelledby="comments-tab-body">
                     <Comments entityId={this.state.testcase.id} projectId={this.projectId} entityType="testcase" onCommentsNumberChanged={this.onCommentsCountChanged}/>
                 </div>
 
-                <div class="tab-pane fade show" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                <div className="tab-pane fade show" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
                     <dl>
                     {Object.keys(this.state.testcase.metaData || {}).map(
                         function(key){
@@ -764,7 +769,7 @@ class TestCase extends SubComponent {
                     </dl>
                 </div>
 
-                <div class="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">
+                <div className="tab-pane fade show" id="history" role="tabpanel" aria-labelledby="history-tab">
                     <EventsWidget projectId={this.projectId}
                         filter = {{
                             skip: 0,
@@ -781,25 +786,12 @@ class TestCase extends SubComponent {
               </div>
 
               {!this.state.readonly &&
-                <button type="button" className="btn btn-danger float-right" data-toggle="modal" data-target="#remove-testcase-confirmation">Remove Testcase</button>
+                <ConfirmButton onSubmit={this.removeTestcase}
+                               buttonClass={"btn btn-danger float-right"}
+                               id={"testcase-removal"}
+                               modalText={"Are you sure you want to remove Test Case?"}
+                               buttonText={"Remove Testcase"}/>
               }
-              <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testcase-confirmation">
-                  <div className="modal-dialog" role="document">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <h5 className="modal-title">Remove Test Case</h5>
-                          <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div className="modal-body">Are you sure you want to remove Test Case?</div>
-                        <div className="modal-footer">
-                          <button type="button" className="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Close</button>
-                          <button type="button" className="btn btn-danger" data-dismiss="modal" onClick={this.removeTestcase}>Remove Test Case</button>
-                        </div>
-                      </div>
-                   </div>
-               </div>
             </div>
         );
 
