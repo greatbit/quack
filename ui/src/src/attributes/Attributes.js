@@ -82,7 +82,7 @@ class Attributes extends SubComponent {
             {
                 this.state.attributes.map(function(attribute, i){
                     return (
-                        <div className="alert" role="alert">
+                        <div key={i} className="alert" role="alert">
                           <h5 className="alert-heading">
                             <b>{attribute.name}</b>
                             <span className="edit clickable edit-icon" index={i} onClick={(e) => this.editAttribute(i, e)}>
@@ -91,7 +91,7 @@ class Attributes extends SubComponent {
                           </h5>
                           <p>{attribute.description}</p>
                           <hr/>
-                          <p class="mb-0">{attribute.values.join(", ")}</p>
+                          <p className="mb-0">{attribute.values.join(", ")}</p>
                         </div>
 
                     );
@@ -102,7 +102,7 @@ class Attributes extends SubComponent {
             <div className="attributes-controls">
                 <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editAttribute">Add</button>
             </div>
-            <div className="modal fade" id="editAttribute" tabindex="-1" role="dialog" aria-labelledby="editAttributeLabel" aria-hidden="true">
+            <div className="modal fade" id="editAttribute" tabIndex="-1" role="dialog" aria-labelledby="editAttributeLabel" aria-hidden="true">
                 <AttributeForm project={this.props.match.params.project}
                                 attribute={this.state.attributeToEdit}
                                 onAttributeRemoved={this.onAttributeRemoved}
