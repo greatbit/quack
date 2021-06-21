@@ -59,9 +59,9 @@ class Launch extends SubComponent {
             .then(response => {
                  this.state.projectAttributes = response.data;
                  this.setState(this.state);
+                 this.getLaunch(true);
             })
             .catch(error => console.log(error));
-        this.getLaunch(true);
         this.interval = setInterval(this.getLaunch, 30000);
     }
 
@@ -320,19 +320,19 @@ class Launch extends SubComponent {
                                     </div>
                                 </div>
                                 <div className="progress launch-summary-block">
-                                  <div class="progress-bar progress-bar-striped" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}>
+                                  <div className="progress-bar progress-bar-striped" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.RUNNING, this.state.launch.launchStats.total)}
                                   </div>
-                                  <div class="progress-bar bg-success" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.PASSED, this.state.launch.launchStats.total)}>
+                                  <div className="progress-bar bg-success" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.PASSED, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.PASSED, this.state.launch.launchStats.total)}
                                   </div>
-                                  <div class="progress-bar bg-danger" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.FAILED, this.state.launch.launchStats.total)}>
+                                  <div className="progress-bar bg-danger" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.FAILED, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.FAILED, this.state.launch.launchStats.total)}
                                   </div>
-                                  <div class="progress-bar bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}>
+                                  <div className="progress-bar bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.BROKEN, this.state.launch.launchStats.total)}
                                   </div>
-                                  <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.SKIPPED, this.state.launch.launchStats.total)}>
+                                  <div className="progress-bar progress-bar-striped bg-warning" role="progressbar" style={Utils.getProgressBarStyle(this.state.launch.launchStats.statusCounters.SKIPPED, this.state.launch.launchStats.total)}>
                                     {Utils.getProgressBarNumber(this.state.launch.launchStats.statusCounters.SKIPPED, this.state.launch.launchStats.total)}
                                   </div>
                                 </div>
@@ -378,7 +378,7 @@ class Launch extends SubComponent {
 
                                 <div className="launch-attr-stats">
                                     {Object.keys(this.state.attributesStatus).map(attrKey =>{
-                                        return(<LaunchAttributeStatsChart attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
+                                        return(<LaunchAttributeStatsChart key={attrKey} attrKey={attrKey} stats={this.state.attributesStatus[attrKey]} />)
                                     })
 
                                     }
