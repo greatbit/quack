@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TestcaseFilter extends Filter {
 
@@ -50,6 +51,11 @@ public class TestcaseFilter extends Filter {
         this.filters = filters;
     }
 
+    public TestcaseFilter withFilters(List<Attribute> filters){
+        this.filters = filters;
+        return this;
+    }
+
     @Override
     public Map<String, Set<Object>> getFieldsForQuery() {
         Map<String, Set<Object>> fieldsFilterCopy = new HashMap<>(fields);
@@ -58,7 +64,9 @@ public class TestcaseFilter extends Filter {
             if (!fieldsFilterCopy.containsKey(filterKey)){
                 fieldsFilterCopy.put(filterKey, new HashSet<>());
             }
-            fieldsFilterCopy.get(filterKey).addAll(attributeFilter.values);
+            fieldsFilterCopy.get(filterKey).addAll(
+                    attributeFilter.getAttrValues().stream().map(AttributeValue::getValue).collect(Collectors.toSet())
+            );
         });
         return fieldsFilterCopy;
     }

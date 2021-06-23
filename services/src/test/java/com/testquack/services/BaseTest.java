@@ -36,6 +36,9 @@ public abstract class BaseTest {
     protected LaunchService launchService;
 
     @Autowired
+    protected AttributeService attributeService;
+
+    @Autowired
     protected TestCaseRepository testCaseRepository;
 
     protected Project project1 = new Project().withName("Project 1").
