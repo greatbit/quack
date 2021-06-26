@@ -40,7 +40,7 @@ public class AttributeService extends BaseService<Attribute> {
 
     @Override
     protected void beforeSave(Session session, String projectId, Attribute entity) {
-        super.beforeSave(session, projectId, convertStringValiedToObjects(entity));
+        super.beforeSave(session, projectId, convertStringValuedToObjects(entity));
 
         // Only unique attribute values should retain
         Set<String> existingValues = new HashSet<>();
@@ -62,7 +62,7 @@ public class AttributeService extends BaseService<Attribute> {
 
     @Override
     protected Attribute beforeReturn(Session session, String projectId, Attribute entity) {
-        return convertStringValiedToObjects(entity);
+        return convertStringValuedToObjects(entity);
     }
 
     @Override
@@ -71,32 +71,59 @@ public class AttributeService extends BaseService<Attribute> {
         Map<String, AttributeValue> newValues = entity.getAttrValues().stream()
                 .collect(toMap(AttributeValue::getUuid, Function.identity()));
 
+        // Map of values - Old -> New
         Map<String, String> changedValues = new HashMap<>();
         previousEntity.getAttrValues().stream()
                 .filter(attributeValue -> newValues.containsKey(attributeValue.getUuid()))
                 .filter(attributeValue -> !newValues.get(attributeValue.getUuid()).getValue().equals(attributeValue.getValue()))
                 .forEach(attributeValue -> changedValues.put(attributeValue.getValue(), newValues.get(attributeValue.getUuid()).getValue()));
 
+        // String Value -> to AttributeValue
+        Map<String, AttributeValue> removedValues = previousEntity.getAttrValues().stream()
+                .filter(oldValues -> !newValues.containsKey(oldValues.getUuid()))
+                .collect(toMap(AttributeValue::getValue, Function.identity()));
+
+        Set<AttributeValue> valuesAffectedInTestCases = changedValues.keySet().stream()
+                .map(value -> new AttributeValue().withValue(value))
+                .collect(Collectors.toSet());
+        valuesAffectedInTestCases.addAll(removedValues.values());
+
+
         TestcaseFilter testcaseFilter = new TestcaseFilter().withFilters(
                 Collections.singletonList(
                         new Attribute()
                                 .withId(entity.getId())
-                                .withAttrValues(
-                                        changedValues.keySet().stream()
-                                                .map(value -> new AttributeValue().withValue(value)).
-                                                collect(Collectors.toSet())
-                                )
+                                .withAttrValues(valuesAffectedInTestCases)
                 )
         );
+
 
         List<TestCase> affectedTestcases = testCaseService.findFiltered(session, projectId, testcaseFilter);
         affectedTestcases.forEach(testCase -> {
             Set<String> newTestcaseAttributeValues = testCase.getAttributes().get(entity.getId()).stream()
-                    .map(value -> changedValues.containsKey(value) ? changedValues.get(value) : value)
+                    .map(value -> changedValues.getOrDefault(value, value))
+                    .filter(value -> !removedValues.containsKey(value))
                     .collect(Collectors.toSet());
             testCase.getAttributes().put(entity.getId(), newTestcaseAttributeValues);
         });
         testCaseService.save(session, projectId, affectedTestcases);
+    }
+
+
+    @Override
+    public void delete(Session session, String projectId, String id) {
+        Attribute attributeToDelete = findOne(session, projectId, id);
+        TestcaseFilter testcaseFilter = new TestcaseFilter().withFilters(
+                Collections.singletonList(
+                        new Attribute()
+                                .withId(id)
+                                .withAttrValues(attributeToDelete.getAttrValues())
+                )
+        );
+        List<TestCase> affectedTestcases = testCaseService.findFiltered(session, projectId, testcaseFilter);
+        affectedTestcases.forEach(testCase -> testCase.getAttributes().remove(id));
+        testCaseService.save(session, projectId, affectedTestcases);
+        super.delete(session, projectId, id);
     }
 
     /**
@@ -107,7 +134,7 @@ public class AttributeService extends BaseService<Attribute> {
      * @param attribute
      * @return
      */
-    private Attribute convertStringValiedToObjects(Attribute attribute){
+    private Attribute convertStringValuedToObjects(Attribute attribute){
         Set<String> objectValues = attribute.getAttrValues().stream()
                 .map(AttributeValue::getValue).collect(Collectors.toSet());
 

@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 
@@ -147,6 +148,109 @@ public class AttributeServiceTest extends BaseTest {
                 assertThat(storedTestCase.getAttributes().get(attributeId),
                         containsInAnyOrder(expectedValues.toArray()))
         );
+    }
+
+    @Test
+    public void attributeDeleted() {
+        Attribute attributeOne = new Attribute();
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("a1").withUuid("1"));
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("b2").withUuid("2"));
+        attributeOne = attributeService.save(adminSession, project1.getId(), attributeOne);
+
+        Attribute attributeTwo = new Attribute();
+        attributeTwo.getAttrValues().add(new AttributeValue().withValue("c3").withUuid("1"));
+        attributeTwo.getAttrValues().add(new AttributeValue().withValue("d4").withUuid("2"));
+        attributeTwo = attributeService.save(adminSession, project1.getId(), attributeTwo);
+
+        TestCase attrsTestCase1 = new TestCase();
+
+        Set<String> attrValuesForAttr1 = new HashSet<>();
+        attrValuesForAttr1.add("a1");
+        attrValuesForAttr1.add("b2");
+        attrsTestCase1.getAttributes().put(attributeOne.getId(), attrValuesForAttr1);
+
+        Set<String> attrValuesForAttr2 = new HashSet<>();
+        attrValuesForAttr2.add("c3");
+        attrsTestCase1.getAttributes().put(attributeTwo.getId(), attrValuesForAttr2);
+
+        TestCase attrsTestCase2 = (TestCase) attrsTestCase1.copyTo(new TestCase());
+        attrsTestCase2.getAttributes().put(attributeOne.getId(), attrValuesForAttr1);
+        attrsTestCase2.getAttributes().put(attributeTwo.getId(), attrValuesForAttr2);
+
+        //Create 2 testcases
+        attrsTestCase1 = testCaseService.create(adminSession, project1.getId(), attrsTestCase1);
+        attrsTestCase2 = testCaseService.create(adminSession, project1.getId(), attrsTestCase2);
+
+        //Update attribute
+        attributeService.delete(adminSession, project1.getId(), attributeOne.getId());
+
+        TestcaseFilter filter = new TestcaseFilter();
+        filter.addFields("id", attrsTestCase1.getId(), attrsTestCase2.getId());
+        List<TestCase> testCases = testCaseService.findFiltered(adminSession, project1.getId(), filter);
+
+        final String attributeOneId = attributeOne.getId();
+        testCases.forEach(storedTestCase ->
+                assertNull(storedTestCase.getAttributes().get(attributeOneId))
+        );
+
+        final String attributeTwoId = attributeTwo.getId();
+        testCases.forEach(storedTestCase ->
+                assertThat(storedTestCase.getAttributes().get(attributeTwoId), containsInAnyOrder("c3"))
+        );
+    }
+
+    @Test
+    public void attributeValueAddedTest(){
+        Attribute attributeOne = new Attribute();
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("a1").withUuid("1"));
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("b2").withUuid("2"));
+        attributeOne = attributeService.save(adminSession, project1.getId(), attributeOne);
+
+        TestCase attrsTestCase1 = new TestCase();
+
+        Set<String> attrValuesForAttr1 = new HashSet<>();
+        attrValuesForAttr1.add("a1");
+        attrValuesForAttr1.add("b2");
+        attrsTestCase1.getAttributes().put(attributeOne.getId(), attrValuesForAttr1);
+        attrsTestCase1 = testCaseService.create(adminSession, project1.getId(), attrsTestCase1);
+
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("c3").withUuid("3"));
+        attributeService.save(adminSession, project1.getId(), attributeOne);
+
+        TestcaseFilter filter = new TestcaseFilter();
+        filter.addFields("id", attrsTestCase1.getId());
+        attrsTestCase1 = testCaseService.findOne(adminSession, project1.getId(), attrsTestCase1.getId());
+
+        assertThat(attrsTestCase1.getAttributes().get(attributeOne.getId()).size(), is(2));
+        assertThat(attrsTestCase1.getAttributes().get(attributeOne.getId()), containsInAnyOrder("a1", "b2"));
+
+    }
+
+    @Test
+    public void attributeValueDeletedTest(){
+        Attribute attributeOne = new Attribute();
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("a1").withUuid("1"));
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("b2").withUuid("2"));
+        attributeOne = attributeService.save(adminSession, project1.getId(), attributeOne);
+
+        TestCase attrsTestCase1 = new TestCase();
+
+        Set<String> attrValuesForAttr1 = new HashSet<>();
+        attrValuesForAttr1.add("a1");
+        attrValuesForAttr1.add("b2");
+        attrsTestCase1.getAttributes().put(attributeOne.getId(), attrValuesForAttr1);
+        attrsTestCase1 = testCaseService.create(adminSession, project1.getId(), attrsTestCase1);
+
+        attributeOne.getAttrValues().clear();
+        attributeOne.getAttrValues().add(new AttributeValue().withValue("a1").withUuid("1"));
+        attributeService.save(adminSession, project1.getId(), attributeOne);
+
+        TestcaseFilter filter = new TestcaseFilter();
+        filter.addFields("id", attrsTestCase1.getId());
+        attrsTestCase1 = testCaseService.findOne(adminSession, project1.getId(), attrsTestCase1.getId());
+
+        assertThat(attrsTestCase1.getAttributes().get(attributeOne.getId()).size(), is(1));
+        assertThat(attrsTestCase1.getAttributes().get(attributeOne.getId()), containsInAnyOrder("a1"));
     }
 
 }
