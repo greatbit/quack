@@ -17,7 +17,7 @@ class TestCasesFilter extends Component {
 
         this.defaultFilters = [{
               title: "Select an attribute",
-              values: []
+              attrValues: []
         }]
 
         this.state = {
@@ -109,7 +109,7 @@ class TestCasesFilter extends Component {
                 Object.keys(map).forEach(function(key) {
                     this.state.testSuite.filter.filters.push({
                         id: key,
-                        values: map[key],
+                        attrValues: map[key].map((val) => ({value: val})),
                         title: this.getAttributeName(key)
 
                     });
@@ -128,26 +128,26 @@ class TestCasesFilter extends Component {
 
     }
 
-    changeFilterAttributeId(index, value){
+    changeFilterAttributeId(index, formValue){
         var oldId = this.state.testSuite.filter.filters[index].id;
-        this.state.testSuite.filter.filters[index].id = value.value;
-        this.state.testSuite.filter.filters[index].name = value.label;
-        if (oldId !== value.value){
-            this.state.testSuite.filter.filters[index].values = [];
+        this.state.testSuite.filter.filters[index].id = formValue.value;
+        this.state.testSuite.filter.filters[index].name = formValue.label;
+        if (oldId !== formValue.value){
+            this.state.testSuite.filter.filters[index].attrValues = [];
         }
         if (!oldId){
             this.state.testSuite.filter.filters.push({
                 id: null,
                 title: "Select an attribute",
-                values: []
+                attrValues: []
             })
         }
 
         this.setState(this.state);
     }
 
-    changeFilterAttributeValues(index, values){
-        this.state.testSuite.filter.filters[index].values = values.map(function(value){return value.value});
+    changeFilterAttributeValues(index, formValues){
+        this.state.testSuite.filter.filters[index].attrValues = formValues.map(function(formSingleVal){return {value: formSingleVal.value}});
         this.setState(this.state);
     }
 
@@ -160,9 +160,9 @@ class TestCasesFilter extends Component {
     getValuesByAttributeId(id){
         if(!id) return [];
         if (id == "broken"){
-            return ["true", "false"];
+            return [{value: "true"}, {value: "false"}];
         }
-        return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).values;
+        return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {attrValues: []}).attrValues;
     }
 
     handleFilter(){
@@ -170,7 +170,7 @@ class TestCasesFilter extends Component {
     }
 
     getAttributeName(id){
-        return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {values: []}).name;
+        return (this.state.projectAttributes.find(function(attribute){return attribute.id === id}) || {attrValues: []}).name;
     }
 
     createLaunchModal(){
@@ -253,10 +253,10 @@ class TestCasesFilter extends Component {
                                                     onChange={(e) => this.changeFilterAttributeId(i, e)}
                                                     options={this.getProjectAttributesSelect()}
                                                    />
-                                            <Select className="col-6 filter-attribute-val-select" value={filter.values.map(function(value){return {value: value, label: value}})}
+                                            <Select className="col-6 filter-attribute-val-select" value={filter.attrValues.map(function(attrValue){return {value: attrValue.value, label: attrValue.value}})}
                                                     isMulti
                                                     onChange={(e) => this.changeFilterAttributeValues(i, e)}
-                                                    options={this.getValuesByAttributeId(filter.id).map(function(val){return {value: val, label: val}})}
+                                                    options={this.getValuesByAttributeId(filter.id).map(function(attrValue){return {value: attrValue.value, label: attrValue.value}})}
                                                    />
                                             {filter.id &&
                                                 <span className='col-1 remove-filter-icon clickable red' index={i} onClick={(e) => this.removeFilter(i, e)}>

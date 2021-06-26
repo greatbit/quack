@@ -65,7 +65,9 @@ public class TestcaseFilter extends Filter {
                 fieldsFilterCopy.put(filterKey, new HashSet<>());
             }
             fieldsFilterCopy.get(filterKey).addAll(
-                    attributeFilter.getAttrValues().stream().map(AttributeValue::getValue).collect(Collectors.toSet())
+                    attributeFilter.getAttrValues().stream()
+                            .map(AttributeValue::getValue)
+                            .collect(Collectors.toSet())
             );
         });
         return fieldsFilterCopy;

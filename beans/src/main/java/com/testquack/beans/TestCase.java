@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.stream.Collectors.toList;
+
 public class TestCase extends TestCaseBase {
 
     private Map<String, Set<String>> attributes = new HashMap<>();
@@ -21,7 +23,7 @@ public class TestCase extends TestCaseBase {
 
     public void addAttributeValue(Attribute attribute){
         Set<String> values = attributes.getOrDefault(attribute.getId(), new HashSet<>());
-        values.addAll(attribute.getValues());
+        values.addAll(attribute.getAttrValues().stream().map(AttributeValue::getValue).collect(toList()));
         attributes.put(attribute.getId(), values);
     }
 }

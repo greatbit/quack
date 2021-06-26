@@ -77,7 +77,7 @@ class TestCaseForm extends SubComponent {
     }
 
     getAttributeValues(id){
-        return this.getAttribute(id).values || []
+        return this.getAttribute(id).attrValues || []
     }
 
     editAttributeValues(key, values){
@@ -149,7 +149,7 @@ class TestCaseForm extends SubComponent {
                                             isMulti
                                             isClearable
                                             onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                            options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                            options={this.getAttributeValues(attributeId).map(function(attrValue){return {value: attrValue.value, label: attrValue.value}})}
                                            />
                                        </div>
                                        <div className="col-sm-1">
