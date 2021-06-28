@@ -15,7 +15,7 @@ class Attributes extends SubComponent {
              attributeToEdit: {
                  id: null,
                  name: "",
-                 values: []
+                 attrValues: []
              },
              loading: true
          }
@@ -33,7 +33,7 @@ class Attributes extends SubComponent {
         this.state.attributeToEdit = {
             id: null,
             name: "",
-            values: []
+            attrValues: []
         }
         $("#editAttribute").modal('hide');
         const newState = Object.assign({}, this.state);
@@ -91,7 +91,7 @@ class Attributes extends SubComponent {
                           </h5>
                           <p>{attribute.description}</p>
                           <hr/>
-                          <p className="mb-0">{attribute.values.join(", ")}</p>
+                          <p className="mb-0">{attribute.attrValues.map((val) => val.value).join(", ")}</p>
                         </div>
 
                     );

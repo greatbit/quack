@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -47,7 +48,10 @@ public abstract class BaseService<E extends Entity> {
     }
 
     public List<E> findFiltered(Session session, String projectId, Filter filter){
-        return userCanReadProject(session, projectId) ? getRepository().find(projectId, filter) : Collections.emptyList();
+        return userCanReadProject(session, projectId) ?
+                getRepository().find(projectId, filter).stream()
+                        .map(entity -> beforeReturn(session, projectId, entity)).collect(Collectors.toList()) :
+                Collections.emptyList();
     }
 
     public E findOne(Session session, String projectId, String id){
@@ -157,7 +161,7 @@ public abstract class BaseService<E extends Entity> {
     protected void beforeUpdate(Session session, String projectId, E existingEntity, E entity) {
     }
 
-    protected void afterUpdate(Session session, String projectId, E entity) {
+    protected void afterUpdate(Session session, String projectId, E previousEntity, E entity) {
     }
 
     protected void beforeSave(Session session, String projectId, E entity) {
@@ -213,7 +217,7 @@ public abstract class BaseService<E extends Entity> {
                 entity = (E) converter.transform(existingEntity, entity);
             }
             entity = doSave(session, projectId, entity);
-            afterUpdate(session, projectId, entity);
+            afterUpdate(session, projectId, existingEntity, entity);
             return entity;
         } finally {
             lock.unlock();

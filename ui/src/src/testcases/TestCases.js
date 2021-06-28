@@ -170,11 +170,11 @@ class TestCases extends SubComponent {
      getFilterApiRequestParams(filter){
          var tokens = (filter.groups || []).map(function(group){return "groups=" + group});
          filter.filters.forEach(function(filter){
-             filter.values.forEach(function(value){
-                 if (filter.id == "broken" && value && value != ''){
-                    tokens.push(filter.id + "=" + value);
+             filter.attrValues.forEach(function(attrValue){
+                 if (filter.id == "broken" && attrValue.value && attrValue.value != ''){
+                    tokens.push(filter.id + "=" + attrValue.value);
                  } else {
-                    tokens.push("attributes." + filter.id + "=" + value);
+                    tokens.push("attributes." + filter.id + "=" + attrValue.value);
                  }
              })
          });
@@ -243,8 +243,8 @@ class TestCases extends SubComponent {
         var activeFilters = filter.filters.filter(function(filter){return filter.id}) || [];
         var attributesPairs = [];
         activeFilters.forEach(function(filter){
-            var tokens = filter.values.map(function(value){
-                return "attribute=" + filter.id + ":" + value
+            var tokens = filter.attrValues.map(function(attrValue){
+                return "attribute=" + filter.id + ":" + attrValue.value
             })
             attributesPairs = attributesPairs.concat(tokens);
         })

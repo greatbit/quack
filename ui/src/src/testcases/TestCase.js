@@ -216,7 +216,7 @@ class TestCase extends SubComponent {
     }
 
     getAttributeValues(id){
-        return Utils.getProjectAttribute(this.state.projectAttributes, id).values || []
+        return Utils.getProjectAttribute(this.state.projectAttributes, id).attrValues || []
     }
 
     editAttributeValues(key, values){
@@ -631,7 +631,7 @@ class TestCase extends SubComponent {
                                                   isMulti
                                                   isClearable
                                                   onChange={(e) => this.editAttributeValues(attributeId, e)}
-                                                  options={this.getAttributeValues(attributeId).map(function(val){return {value: val, label: val}})}
+                                                  options={this.getAttributeValues(attributeId).map(function(attrValue){return {value: attrValue.value, label: attrValue.value}})}
                                                  />
                                                 <button type="button" className="btn btn-light" onClick={(e) => this.cancelEditAttributeValues(e, attributeId)}>Cancel</button>
                                                 <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("attributes", e, attributeId, true)}>Save</button>

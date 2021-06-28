@@ -33,12 +33,12 @@ class AttributeForm extends Component {
       }
 
       handleValueChange(i, event) {
-        this.state.attribute.values[i] = event.target.value;
+        this.state.attribute.attrValues[i].value = event.target.value;
         this.setState(this.state);
        }
 
       removeValue(i, event){
-        this.state.attribute.values.splice(i, 1);
+        this.state.attribute.attrValues.splice(i, 1);
         this.setState(this.state);
       }
 
@@ -49,7 +49,7 @@ class AttributeForm extends Component {
             this.state.attribute = {
                 id: null,
                 name: "",
-                values: []
+                attrValues: []
             }
             this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't save attributes: ", error)});;
@@ -64,7 +64,7 @@ class AttributeForm extends Component {
             this.state.attribute = {
                 id: null,
                 name: "",
-                values: []
+                attrValues: []
             }
             this.setState(this.state);
         }).catch(error => {Utils.onErrorMessage("Couldn't remove attribute: ", error)});;
@@ -72,7 +72,7 @@ class AttributeForm extends Component {
       }
 
       addValue(event){
-        this.state.attribute.values.push("");
+        this.state.attribute.attrValues.push({value: ""});
         this.setState(this.state);
       }
 
@@ -113,18 +113,18 @@ class AttributeForm extends Component {
                           </div>
                       </div>
 
-                      {this.state.attribute.values.map((value, i) => {
+                      {this.state.attribute.attrValues.map((value, i) => {
                          return(
                              <div key={i} className='form-group row'>
                                  <label className='col-sm-2 col-form-label'>
                                      Value
                                  </label>
                                  <div className='col-sm-8'>
-                                    <input type="text" name="value" index={i} value={value} className='col-sm-12'
+                                    <input type="text" name="value" index={i} value={value.value} className='col-sm-12'
                                                 onChange={(e) => this.handleValueChange(i, e)} />
                                  </div>
                                  <div className='col-sm-1'>
-                                    <span className='edit-icon clickable red' index={i} onClick={(e) => this.removeValue(i, e)}>
+                                    <span className='clickable red' index={i} onClick={(e) => this.removeValue(i, e)}>
                                         <FontAwesomeIcon icon={faMinusCircle}/>
                                      </span>
                                  </div>

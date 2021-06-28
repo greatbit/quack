@@ -16,9 +16,17 @@
             <xs:extension base="Entity">
                 <xs:sequence>
                     <xs:element name="values" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
+                    <xs:element name="attrValues" type="AttributeValue" maxOccurs="unbounded" minOccurs="0"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="AttributeValue">
+        <xs:sequence>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="uuid" type="xs:string"/>
+        </xs:sequence>
     </xs:complexType>
 
 </xs:schema>
