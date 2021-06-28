@@ -124,7 +124,7 @@ class AttributeForm extends Component {
                                                 onChange={(e) => this.handleValueChange(i, e)} />
                                  </div>
                                  <div className='col-sm-1'>
-                                    <span className='edit-icon clickable red' index={i} onClick={(e) => this.removeValue(i, e)}>
+                                    <span className='clickable red' index={i} onClick={(e) => this.removeValue(i, e)}>
                                         <FontAwesomeIcon icon={faMinusCircle}/>
                                      </span>
                                  </div>
