@@ -87,4 +87,9 @@ or api only
 docker build -t greatbit/quack-api -f Dockerfile-api .
 
 
+Run API only with built-in Mongo and CORS enabled
+docker-compose -f docker-compose-api.yml up
+curl 'http://localhost:8080/api/user/login?login=somelogin&password=somepass'  -X 'POST'   -H 'Origin: http://quack123.com'  -H 'Referer: http://quack123.com/login'
+
+
 
