@@ -12,7 +12,8 @@ mvn clean install
 
 Run api in IntellijIdea
 1. Run mongo locally
-```mongod```
+If you want to store mongo data in a non-default folder - specify ```--datapath``` parameter
+```sudo mongod --dbpath ~/mongo/data```
 2. Add a Run/Debug configuration of a Maven type
 Command line: ```jetty:run```
 Working Directoyr: ```PATH_TO_THE_IDEA_PROJECTS_FOLDER/quack/api```
@@ -72,8 +73,18 @@ server {
 8. Specify domain selected in p7 in your quack.properties as ```auth.domain```
 9. Run api configured in p2 in Idea
 10. Go to quack/ui/src and run 
+```npm install```
 ```npm start```
 11. Open quack.com in browser and login with admin credentials specified in your quack.properties
 Default values are: 
 ```root:rootpass```
+
+
+Build docker
+From the root
+docker build -t greatbit/quack .
+or api only
+docker build -t greatbit/quack-api -f Dockerfile-api .
+
+
 
