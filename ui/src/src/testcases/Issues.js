@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import Select from 'react-select';
@@ -214,10 +215,10 @@ class Issues extends SubComponent {
             <tr key={issue.id}>
                 <td>
                     {issue.isClosed &&
-                        <s><a href={issue.url || ""} target='_blank'>{issue.id} - {issue.name}</a></s>
+                        <s><a href={issue.url || ""} target='_blank' rel="noreferrer">{issue.id} - {issue.name}</a></s>
                     }
                     {!issue.isClosed &&
-                        <a href={issue.url || ""} target='_blank'>{issue.id} - {issue.name}</a>
+                        <a href={issue.url || ""} target='_blank' rel="noreferrer">{issue.id} - {issue.name}</a>
                     }
                 </td>
                 <td>

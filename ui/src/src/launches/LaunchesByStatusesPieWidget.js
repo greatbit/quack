@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
-import $ from 'jquery';
 import { FadeLoader } from 'react-spinners';
 import Highcharts from 'highcharts';
 

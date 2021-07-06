@@ -1,6 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable eqeqeq */
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import * as Utils from '../common/Utils';
 
 class Pager extends Component {
@@ -71,7 +72,6 @@ class Pager extends Component {
 
 
     render() {
-        var pages = this.getPageObjects();
         return (
             <div>
                 <nav>

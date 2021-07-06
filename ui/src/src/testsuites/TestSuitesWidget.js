@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import qs from 'qs';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -25,6 +24,7 @@ class TestSuitesWidget extends SubComponent {
 
      componentWillReceiveProps(nextProps) {
         var nextProjectId = nextProps.projectId;
+        // eslint-disable-next-line eqeqeq
         if(nextProjectId && this.state.projectId != nextProjectId){
             this.state.projectId = nextProjectId;
             this.getTestSuites();

@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import TestCaseForm from '../testcases/TestCaseForm'
 import TestCasesFilter from '../testcases/TestCasesFilter'
 import TestCase from '../testcases/TestCase'
@@ -264,7 +265,6 @@ class TestCases extends SubComponent {
     }
 
     render() {
-        var that = this;
 
         return (
             <div>

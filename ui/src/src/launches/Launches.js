@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
-import $ from 'jquery';
 import { FadeLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlug } from '@fortawesome/free-solid-svg-icons'

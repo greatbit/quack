@@ -1,6 +1,5 @@
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import axios from "axios";
@@ -71,12 +70,12 @@ class EventsWidget extends Component {
                                            <td>{event.user}</td>
                                        </tr>
                                        );
-                            }.bind(this))
+                            })
                       }
                       </tbody>
                   </table>
                   <div>
-                    <a href={ "/" + this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter || {})} target="_blank">All Events</a>
+                    <a href={ "/" + this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter || {})} target="_blank" rel="noreferrer">All Events</a>
                   </div>
               </div>
             </div>

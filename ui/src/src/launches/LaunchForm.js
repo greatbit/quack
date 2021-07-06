@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
@@ -47,8 +48,8 @@ class LaunchForm extends SubComponent {
       handleSubmit(event) {
         this.state.loading = true;
         this.setState(this.state);
-        this.state.launch.testSuite.filter.filters = (this.state.launch.testSuite.filter.filters || []).
-            filter(function(filter){return filter.id !== undefined && filter.id !== null});
+        this.state.launch.testSuite.filter.filters = (this.state.launch.testSuite.filter.filters || [])
+            .filter(function(filter){return filter.id !== undefined && filter.id !== null});
         this.state.launch.testSuite.filter.filters.forEach(function(filter){
             delete filter.title;
         })

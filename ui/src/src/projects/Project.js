@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import TestSuitesWidget from '../testsuites/TestSuitesWidget'
 import LaunchesWidget from '../launches/LaunchesWidget'
 import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';
@@ -34,6 +33,7 @@ class Project extends SubComponent {
 
      componentWillReceiveProps(nextProps) {
         var nextProjectId = nextProps.match.params.project;
+        // eslint-disable-next-line eqeqeq
         if(nextProjectId && this.state.project.id != nextProjectId){
             this.state.project.id = nextProjectId;
             this.onProjectChange(this.state.project.id);

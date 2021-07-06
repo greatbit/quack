@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import TestCase from '../testcases/TestCase'
@@ -346,7 +347,7 @@ class Launch extends SubComponent {
                                     <div className="launcher-details">
                                         <h5>External Launch:
                                             { this.state.launch.launcherConfig.externalLaunchUrl &&
-                                                <a className="external-launch-link" target="_blank" href={this.state.launch.launcherConfig.externalLaunchUrl}>
+                                                <a className="external-launch-link" target="_blank" href={this.state.launch.launcherConfig.externalLaunchUrl} rel="noreferrer">
                                                     {this.state.launch.launcherConfig.name}
                                                 </a>
                                             }

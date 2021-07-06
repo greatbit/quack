@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import qs from 'qs';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import * as Utils from '../common/Utils';
@@ -69,6 +68,7 @@ class TestSuites extends SubComponent {
     removeTestSuite(event){
         axios.delete("/api/"  + this.props.match.params.project + "/testsuite/" + this.testSuiteToRemove)
             .then(response => {
+                // eslint-disable-next-line eqeqeq
                 this.state.testSuites = this.state.testSuites.filter(testSuite => testSuite.id != this.testSuiteToRemove);
                 this.state.testSuitesToDisplay = this.state.testSuites;
                 this.testSuiteToRemove = null;

@@ -1,12 +1,8 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import axios from "axios";
-import qs from 'qs';
-import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 
 class LauncherForm extends SubComponent {
     state = {
@@ -86,7 +82,7 @@ class LauncherForm extends SubComponent {
                                                 }
                                                 return (<option value={descriptor.launcherId}>{descriptor.name}</option>)
 
-                                            }.bind(this))
+                                            })
                                         }
                                     </select>
                                 </div>
@@ -184,7 +180,7 @@ class LauncherForm extends SubComponent {
                         }
                         return (<option value={defaultValue}>{defaultValue}</option>)
 
-                    }.bind(this))
+                    })
                 }
             </select>
         )

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import $ from 'jquery';
@@ -21,6 +20,7 @@ class Attachments extends SubComponent {
                  attachments: []
              },
              projectId: props.projectId,
+             // eslint-disable-next-line no-dupe-keys
              testcase: props.testcase
          };
          this.getAttachmentUrl = this.getAttachmentUrl.bind(this);
@@ -82,7 +82,7 @@ class Attachments extends SubComponent {
                 <div className="col-sm-11">
                     <a href={'/api/' + this.state.projectId +
                         '/testcase/attachment/' + this.state.testcase.id + '/' +
-                        attachment.id} target='_blank'>{attachment.title}</a>
+                        attachment.id} target='_blank' rel="noreferrer">{attachment.title}</a>
                 </div>
                 <div className="col-sm-1">
                     <span className="clickable edit-icon-visible red" onClick={(e) => this.removeAttachmentConfirmation(attachment.id, e)}>

@@ -1,7 +1,7 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import SubComponent from '../common/SubComponent'
 import LaunchForm from '../launches/LaunchForm'
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import Select from 'react-select';

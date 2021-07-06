@@ -21,6 +21,7 @@ class Projects extends Component {
           .get("/api/project")
           .then(response => {
             const projects = response.data;
+            // eslint-disable-next-line react/no-direct-mutation-state
             this.state.loading = false;
             const newState = Object.assign({}, this.state, {
               projects: projects
@@ -28,6 +29,7 @@ class Projects extends Component {
             this.setState(newState);
           }).catch(error => {
             Utils.onErrorMessage("Couldn't get projects: ", error);
+            // eslint-disable-next-line react/no-direct-mutation-state
             this.state.loading = false;
             this.setState(this.state);
           });

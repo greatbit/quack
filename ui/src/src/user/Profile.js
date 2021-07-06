@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
