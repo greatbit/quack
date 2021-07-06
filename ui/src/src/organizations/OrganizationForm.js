@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import * as Utils from '../common/Utils';
@@ -28,6 +27,7 @@ class OrganizationForm extends Component {
       handleChange(event) {
         var organizationUpd = this.state.organization;
         organizationUpd[event.target.name] = event.target.value;
+        // eslint-disable-next-line eqeqeq
         if (event.target.name == "name"){
             organizationUpd.id = this.normalizeId(event.target.value);
         }

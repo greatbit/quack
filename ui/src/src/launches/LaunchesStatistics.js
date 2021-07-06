@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import LaunchesStatisticsOverview from '../launches/LaunchesStatisticsOverview'
 import LaunchTestcasesHeatmap from '../launches/LaunchTestcasesHeatmap'
-import { Link } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
-import Highcharts from 'highcharts';
-import axios from "axios";
-import * as Utils from '../common/Utils';
 
 class LaunchesStatistics extends SubComponent {
 

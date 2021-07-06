@@ -1,6 +1,5 @@
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import * as Utils from '../common/Utils';

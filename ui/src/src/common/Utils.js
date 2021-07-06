@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import Moment from 'moment/min/moment.min.js';
 import * as UserSession  from '../user/UserSession';
 import $ from 'jquery';
@@ -61,9 +62,9 @@ export function getTestCaseFromTree(id, head, matcher){
             return foundTestCase;
         }
     } else {
-        return (head.children || []).
-                map(function(child){return getTestCaseFromTree(id, child, matcher)}.bind(this)).
-                find(function(child){return child !== undefined})
+        return (head.children || [])
+                .map(function(child){return getTestCaseFromTree(id, child, matcher)})
+                .find(function(child){return child !== undefined})
     }
     return undefined;
 }
@@ -75,11 +76,10 @@ export function getNodeFromDataSource(id, head){
     if (head.uuid == id){
         return head;
     } else {
-        return (head.children || []).
-                map(function(child){return getNodeFromDataSource(id, child)}.bind(this)).
-                find(function(child){return child !== undefined})
+        return (head.children || [])
+                .map(function(child){return getNodeFromDataSource(id, child)})
+                .find(function(child){return child !== undefined})
     }
-    return undefined;
 }
 
 
@@ -109,22 +109,18 @@ export function getNodeStatusHtml(node){
 
 export function getStatusImg(testCase){
     if (testCase && testCase.launchStatus){
+        // eslint-disable-next-line default-case
         switch (testCase.launchStatus) {
           case 'FAILED':
             return '/images/fail.png';
-            break;
           case 'BROKEN':
             return '/images/broken.png';
-            break;
           case 'PASSED':
             return '/images/passed.png';
-            break;
           case 'SKIPPED':
             return '/images/skipped.png';
-            break;
           case 'RUNNING':
             return '/images/running.png';
-            break;
         }
         return '/images/1px.png';
     }
@@ -132,22 +128,18 @@ export function getStatusImg(testCase){
 }
 
 export function getStatusColorClass(status){
+    // eslint-disable-next-line default-case
     switch (status) {
       case 'FAILED':
         return 'alert alert-danger';
-        break;
       case 'BROKEN':
         return 'alert alert-warning';
-        break;
       case 'PASSED':
         return 'alert alert-success';
-        break;
       case 'SKIPPED':
         return 'alert alert-secondary';
-        break;
       case 'RUNNING':
         return 'alert alert-primary';
-        break;
     }
     return '';
 }
@@ -166,7 +158,7 @@ export function timeToDate(time) {
     }
     var date = new Date(parseInt(time));
     var currMinutes = date.getMinutes();
-    var monthNames = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     if (currMinutes < 10) {
         currMinutes = "0" + currMinutes;
     }
@@ -179,7 +171,7 @@ export function timeToDateNoTime(time) {
         return 'No data'
     }
     var date = new Date(parseInt(time));
-    var monthNames = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    var monthNames =["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return date.getDate() + " " + monthNames[date.getMonth()];
 }
 

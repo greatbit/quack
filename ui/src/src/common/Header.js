@@ -1,3 +1,8 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/role-supports-aria-props */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable eqeqeq */
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -15,7 +20,6 @@ class Header extends Component {
     }
 
     componentDidMount() {
-        var that = this;
         axios
           .get("/api/user/session")
           .then(response => {
@@ -31,7 +35,7 @@ class Header extends Component {
             }
           })
           .catch(
-            error => {
+            () => {
                 var url = window.location.pathname;
                 var resourceLocation = url.substring(url.lastIndexOf('/') + 1);
                 if (resourceLocation !== "login"){
@@ -82,7 +86,7 @@ class Header extends Component {
     logOut(){
         axios
           .delete("/api/user/logout")
-          .then(response => {
+          .then(() => {
             const newState = Object.assign({}, this.emptyState);
             this.setState(newState);
             this.onSessionChange(this.state.session);

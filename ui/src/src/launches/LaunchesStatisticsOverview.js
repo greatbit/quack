@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router';
 import SubComponent from '../common/SubComponent'
 import LaunchesTrendWidget from '../launches/LaunchesTrendWidget'
 import LaunchesByStatusesPieWidget from '../launches/LaunchesByStatusesPieWidget'
 import LaunchesByUsersPieWidget from '../launches/LaunchesByUsersPieWidget'
-import { Link } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
-import Highcharts from 'highcharts';
 import axios from "axios";
 import * as Utils from '../common/Utils';
 

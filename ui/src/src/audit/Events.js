@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import Pager from '../pager/Pager';
-import { Link } from 'react-router-dom';
 import axios from "axios";
-import $ from 'jquery';
-import qs from 'qs';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 import DatePicker from 'react-date-picker';
@@ -225,7 +223,7 @@ class Events extends SubComponent {
                                            <td>{event.user}</td>
                                        </tr>
                                        );
-                            }.bind(this))
+                            })
                       }
                       </tbody>
                   </table>

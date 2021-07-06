@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import { Link } from 'react-router-dom';
 import axios from "axios";
-import qs from 'qs';
-import Pager from '../pager/Pager';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
 
@@ -30,6 +28,7 @@ class LaunchesWidget extends SubComponent {
 
     componentWillReceiveProps(nextProps) {
         var nextProjectId = nextProps.projectId;
+        // eslint-disable-next-line eqeqeq
         if(nextProjectId && this.state.projectId != nextProjectId){
             this.state.projectId = nextProjectId;
             this.getLaunches();

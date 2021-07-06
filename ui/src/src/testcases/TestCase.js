@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import Attachments from '../testcases/Attachments'
 import Issues from '../testcases/Issues'
@@ -341,9 +343,9 @@ class TestCase extends SubComponent {
     }
 
     getAttributeKeysToAdd(){
-        return (this.state.projectAttributes || []).
-            filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id)).
-            map(attribute => ({value: attribute.id, label: attribute.name}));
+        return (this.state.projectAttributes || [])
+            .filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id))
+            .map(attribute => ({value: attribute.id, label: attribute.name}));
     }
 
     onCommentsCountChanged(count){

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable eqeqeq */
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import axios from "axios";
 import AsyncSelect from 'react-select/lib/Async';
@@ -7,7 +8,6 @@ import LauncherForm from '../launches/LauncherForm';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
-import { withRouter } from 'react-router';
 import $ from 'jquery';
 import * as Utils from '../common/Utils';
 

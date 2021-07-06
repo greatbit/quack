@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import * as Utils from '../common/Utils';
@@ -26,6 +25,7 @@ class ProjectForm extends Component {
       handleChange(event) {
         var projectUpd = this.state.project;
         projectUpd[event.target.name] = event.target.value;
+        // eslint-disable-next-line eqeqeq
         if (event.target.name == "name"){
             projectUpd.id = this.normalizeId(event.target.value);
         }

@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import { withRouter } from 'react-router';
 import CreatableSelect from 'react-select/lib/Creatable';
@@ -105,9 +104,9 @@ class TestCaseForm extends SubComponent {
      }
 
      getAttributeKeysToAdd(){
-         return (this.state.projectAttributes || []).
-             filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id)).
-             map(attribute => ({value: attribute.id, label: attribute.name}));
+         return (this.state.projectAttributes || [])
+             .filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id))
+             .map(attribute => ({value: attribute.id, label: attribute.name}));
      }
 
 

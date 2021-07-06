@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
 import axios from "axios";
 import $ from 'jquery';
@@ -80,19 +82,16 @@ class LaunchTestcaseControls extends Component {
     }
 
     getStatusAlertClass(){
+        // eslint-disable-next-line default-case
         switch (this.state.testcase.launchStatus) {
           case 'FAILED':
             return 'alert alert-danger';
-            break;
           case 'BROKEN':
             return 'alert alert-warning';
-            break;
           case 'PASSED':
             return 'alert alert-success';
-            break;
           case 'SKIPPED':
             return 'alert alert-secondary';
-            break;
         }
         return 'alert';
     }

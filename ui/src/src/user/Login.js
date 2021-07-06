@@ -21,6 +21,7 @@ class Login extends Component {
     }
 
     handleChange(event) {
+        // eslint-disable-next-line react/no-direct-mutation-state
         this.state[event.target.name] = event.target.value;
         this.setState(this.state);
     }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SubComponent from '../common/SubComponent'
 import AttributeForm from '../attributes/AttributeForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

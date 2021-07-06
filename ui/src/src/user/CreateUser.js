@@ -21,6 +21,7 @@ class CreateUser extends Component {
 
 
     handleChange(event) {
+        // eslint-disable-next-line react/no-direct-mutation-state
         this.state.user[event.target.name] = event.target.value;
         this.setState(this.state);
     }
