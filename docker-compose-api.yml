@@ -4,6 +4,7 @@ services:
     image: greatbit/quack-api
     ports:
       - "8080:8080"
+      - "81:81"
     links:
       - mongod
     depends_on:
