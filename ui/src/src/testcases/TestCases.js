@@ -59,7 +59,6 @@ class TestCases extends SubComponent {
         this.loadMoreTestCases = this.loadMoreTestCases.bind(this);
         this.showLoadMore = this.showLoadMore.bind(this);
         this.updateCount = this.updateCount.bind(this);
-        this.toggleTestcasesSelectCheckboxes = this.toggleTestcasesSelectCheckboxes.bind(this);
         this.processElementChecked = this.processElementChecked.bind(this);
     }
 
@@ -291,12 +290,6 @@ class TestCases extends SubComponent {
         return ((this.state.filter || {}).skip || 0) + this.testCasesFetchLimit <= this.state.count;
     }
 
-    toggleTestcasesSelectCheckboxes(){
-        this.state.showCasesSelectCheckboxes = !this.state.showCasesSelectCheckboxes;
-        this.setState(this.state);
-        this.refreshTree();
-    }
-
     render() {
 
         return (
@@ -315,7 +308,6 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
-              <div className='clickable'  onClick={this.toggleTestcasesSelectCheckboxes}><FontAwesomeIcon icon={faList}/></div>
               <div className="row">
                 <div className='sweet-loading'>
                         <FadeLoader

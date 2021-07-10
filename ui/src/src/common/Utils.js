@@ -14,6 +14,7 @@ export function parseTree(testcasesTree, uncheckedList){
 }
 
 export function getTreeNode(node, parentsToUpdate, uncheckedList){
+    uncheckedList = uncheckedList || [];
     var resultNode = {text: node.title, isLeaf: false, id: node.id, uuid: node.uuid};
     resultNode.TOTAL = 0;
     resultNode.PASSED = 0;
