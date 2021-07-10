@@ -10,6 +10,8 @@ import $ from 'jquery';
 import qs from 'qs';
 import * as Utils from '../common/Utils';
 import { FadeLoader } from 'react-spinners';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faList } from '@fortawesome/free-solid-svg-icons'
 
 var jQuery = require('jquery');
 window.jQuery = jQuery;
@@ -38,9 +40,11 @@ class TestCases extends SubComponent {
         projectAttributes: [],
         selectedTestCase: {},
         filter: {
-            includedFields: "id,name,attributes,importedName,automated"
+            includedFields: "id,name,attributes,importedName,automated",
+            notFields:{id: []}
         },
-        loading: true
+        loading: true,
+        showCasesSelectCheckboxes: false
     };
 
     constructor(props) {
@@ -55,6 +59,8 @@ class TestCases extends SubComponent {
         this.loadMoreTestCases = this.loadMoreTestCases.bind(this);
         this.showLoadMore = this.showLoadMore.bind(this);
         this.updateCount = this.updateCount.bind(this);
+        this.toggleTestcasesSelectCheckboxes = this.toggleTestcasesSelectCheckboxes.bind(this);
+        this.processElementChecked = this.processElementChecked.bind(this);
     }
 
     componentDidMount() {
@@ -114,6 +120,9 @@ class TestCases extends SubComponent {
         filter.includedFields.push('name');
         filter.includedFields.push('id');
         filter.includedFields.push('attributes');
+
+        filter.notFields = filter.notFields || {};
+        filter.notFields.id = filter.notFields.id || [];
 
         this.state.filter = filter;
         this.state.loading = true;
@@ -206,11 +215,19 @@ class TestCases extends SubComponent {
         this.tree = $("#tree").tree({
             primaryKey: 'id',
             uiLibrary: 'bootstrap4',
-            dataSource: Utils.parseTree(this.state.testcasesTree)
+//            checkboxes: this.state.showCasesSelectCheckboxes,
+            checkboxes: true,
+            checkedField: 'checked',
+            dataSource: Utils.parseTree(this.state.testcasesTree, true)
         });
         this.tree.on('select', function (e, node, id) {
             this.onTestcaseSelected(id);
         }.bind(this));
+        this.tree.on('checkboxChange', function (e, $node, record, state) {
+            if (state === 'indeterminate') return;
+            this.processElementChecked(record, state === 'checked');
+            this.setState(this.state);
+         }.bind(this));
         if (this.state.selectedTestCase.id){
             var node = this.tree.getNodeById(this.state.selectedTestCase.id);
             if (!node) return;
@@ -226,6 +243,17 @@ class TestCases extends SubComponent {
             }.bind(this))
         }
 
+     }
+
+     processElementChecked(element, isChecked){
+        if (element.isLeaf){
+            if (isChecked){
+                this.state.filter.notFields.id = this.state.filter.notFields.id.filter(e => e !== element.id);
+            } else if(!this.state.filter.notFields.id.includes(element.id)){
+                this.state.filter.notFields.id.push(element.id);
+            }
+        }
+        (element.children || []).forEach((e) => this.processElementChecked(e, isChecked));
      }
 
      getQueryParams(filter){
@@ -264,6 +292,12 @@ class TestCases extends SubComponent {
         return ((this.state.filter || {}).skip || 0) + this.testCasesFetchLimit <= this.state.count;
     }
 
+    toggleTestcasesSelectCheckboxes(){
+        this.state.showCasesSelectCheckboxes = !this.state.showCasesSelectCheckboxes;
+        this.setState(this.state);
+        this.refreshTree();
+    }
+
     render() {
 
         return (
@@ -282,6 +316,7 @@ class TestCases extends SubComponent {
                               onTestCaseAdded={this.onTestCaseAdded}/>
                   </div>
               </div>
+              <div className='clickable'  onClick={this.toggleTestcasesSelectCheckboxes}><FontAwesomeIcon icon={faList}/></div>
               <div className="row">
                 <div className='sweet-loading'>
                         <FadeLoader
