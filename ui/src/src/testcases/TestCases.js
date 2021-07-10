@@ -215,10 +215,9 @@ class TestCases extends SubComponent {
         this.tree = $("#tree").tree({
             primaryKey: 'id',
             uiLibrary: 'bootstrap4',
-//            checkboxes: this.state.showCasesSelectCheckboxes,
             checkboxes: true,
             checkedField: 'checked',
-            dataSource: Utils.parseTree(this.state.testcasesTree, true)
+            dataSource: Utils.parseTree(this.state.testcasesTree, this.state.filter.notFields.id)
         });
         this.tree.on('select', function (e, node, id) {
             this.onTestcaseSelected(id);
