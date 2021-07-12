@@ -5739,7 +5739,7 @@ get-value@^2.0.3, get-value@^2.0.6:
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
 
-gijgo@^1.9.10:
+gijgo@^1.9.13:
   version "1.9.13"
   resolved "https://registry.yarnpkg.com/gijgo/-/gijgo-1.9.13.tgz#22c6186252369de3a618e1e6369a923849128b6e"
   integrity sha512-VxUzueysKaSRpjNM6jiMdoTJuUEWiPJNir5PCVKat6uA1R6vH7crKyFnR/Ey1k2r0i1yvYeJ3QKsPFkTB7aZxg==
