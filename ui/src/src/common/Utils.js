@@ -9,11 +9,12 @@ export function intDiv(val, by){
     return (val - val % by) / by;
 }
 
-export function parseTree(testcasesTree){
-    return getTreeNode(testcasesTree, []).children || [];
+export function parseTree(testcasesTree, uncheckedList){
+    return getTreeNode(testcasesTree, [], uncheckedList).children || [];
 }
 
-export function getTreeNode(node, parentsToUpdate){
+export function getTreeNode(node, parentsToUpdate, uncheckedList){
+    uncheckedList = uncheckedList || [];
     var resultNode = {text: node.title, isLeaf: false, id: node.id, uuid: node.uuid};
     resultNode.TOTAL = 0;
     resultNode.PASSED = 0;
@@ -31,6 +32,7 @@ export function getTreeNode(node, parentsToUpdate){
                 id: testCase.id,
                 uuid: testCase.uuid,
                 isLeaf: true,
+                checked: !uncheckedList.includes(testCase.id),
                 statusHtml: getStatusHtml(testCase)
             });
             parentsToUpdate.forEach(function(parent){
@@ -44,7 +46,7 @@ export function getTreeNode(node, parentsToUpdate){
         })
     }
     if (node.children && node.children.length > 0){
-        resultNode.children = node.children.map(function(child){return getTreeNode(child, parentsToUpdate.slice(0))});
+        resultNode.children = node.children.map(function(child){return getTreeNode(child, parentsToUpdate.slice(0), uncheckedList)});
     }
     return resultNode;
 }
