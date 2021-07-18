@@ -19,10 +19,20 @@ import { FadeLoader } from 'react-spinners';
 import { faPlug } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from 'semantic-ui-react'
 import { ConfirmButton } from '../common/uicomponents/ConfirmButton'
+import { Editor } from '@tinymce/tinymce-react';
 
 class TestCase extends SubComponent {
     constructor(props) {
         super(props);
+        this.tinymcePlugins = [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code table fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ];
+        this.tinymceToolbar = 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | table | help';
         this.state = {
              testcase: {
                  id: null,
@@ -139,7 +149,7 @@ class TestCase extends SubComponent {
           });
     }
 
-    handleChange(fieldName, event, index, arrObjectKey){
+    handleChange(fieldName, event, index, arrObjectKey, skipStateRefresh){
         if (index != undefined){
             if (arrObjectKey){
                 this.state.testcase[fieldName][index][arrObjectKey] = event.target.value;
@@ -149,8 +159,10 @@ class TestCase extends SubComponent {
         } else {
             this.state.testcase[fieldName] = event.target.value;
         }
+        if (!skipStateRefresh){
+            this.setState(this.state);
+        }
 
-        this.setState(this.state);
     }
 
     cancelEdit(fieldName, event, index){
@@ -473,18 +485,25 @@ class TestCase extends SubComponent {
                             <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("description", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                         }
                     </h5>
-                    <div id="description-display" className="inplace-display">
-                        {this.state.testcase.description}
-                    </div>
+                    <div id="description-display" className="inplace-display" dangerouslySetInnerHTML={{ __html: this.state.testcase.description }}></div>
                     {!this.state.readonly &&
                         <div id="description-form" className="inplace-form" style={{display: 'none'}}>
-                            <form>
-                                <textarea rows="7" name="description" className="form-control" onChange={(e) => this.handleChange("description", e)} value={this.state.testcase.description}></textarea>
-                                <div className="testcase-inplace-buttons-down">
-                                    <button type="button" className="btn btn-light" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
-                                    <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
-                                </div>
-                            </form>
+                            <Editor
+                                 initialValue={this.state.testcase.description}
+                                 init={{
+                                   height: 500,
+                                   menubar: false,
+                                   plugins: this.tinymcePlugins,
+                                   toolbar: this.tinymceToolbar
+                                 }}
+                                 onEditorChange={(val) => this.handleChange("description", {target:{value:val}}, null, null, true)}
+                               />
+                               <form>
+                                   <div className="testcase-inplace-buttons-down">
+                                       <button type="button" className="btn btn-light" data-dismiss="modal" onClick={(e) => this.cancelEdit("description", e)}>Cancel</button>
+                                       <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("description", e)}>Save</button>
+                                   </div>
+                               </form>
                         </div>
                     }
                   </div>
@@ -496,13 +515,21 @@ class TestCase extends SubComponent {
                             <span className="edit edit-icon clickable" onClick={(e) => this.toggleEdit("preconditions", e)}><FontAwesomeIcon icon={faPencilAlt}/></span>
                           }
                       </h5>
-                      <div id="preconditions-display" className="inplace-display">
-                          {this.state.testcase.preconditions}
+                      <div id="preconditions-display" className="inplace-display" dangerouslySetInnerHTML={{ __html: this.state.testcase.preconditions }}>
                       </div>
                       {!this.state.readonly &&
                           <div id="preconditions-form" className="inplace-form" style={{display: 'none'}}>
+                              <Editor
+                                   initialValue={this.state.testcase.preconditions}
+                                   init={{
+                                     height: 500,
+                                     menubar: false,
+                                     plugins: this.tinymcePlugins,
+                                     toolbar: this.tinymceToolbar
+                                   }}
+                                   onEditorChange={(val) => this.handleChange("preconditions", {target:{value:val}}, null, null, true)}
+                                 />
                               <form>
-                                  <textarea rows="7" className="form-control" name="preconditions" onChange={(e) => this.handleChange("preconditions", e)} value={this.state.testcase.preconditions}></textarea>
                                   <div className="testcase-inplace-buttons-down">
                                       <button type="button" className="btn btn-light" onClick={(e) => this.cancelEdit("preconditions", e)}>Cancel</button>
                                       <button type="button" className="btn btn-primary" onClick={(e) => this.handleSubmit("preconditions", e)}>Save</button>

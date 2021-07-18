@@ -6,6 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.2",
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/react-fontawesome": "^0.1.2",
+    "@tinymce/tinymce-react": "^3.12.6",
     "axios": "^0.21.1",
     "bootstrap": "^4.1.2",
     "bootstrap-fileinput": "^4.5.2",

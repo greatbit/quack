@@ -322,3 +322,7 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .inplace-display{
     white-space: pre-wrap;
 }
+
+.tox-notifications-container {
+    display: none !important;
+}
