@@ -6,8 +6,9 @@ import $ from 'jquery';
 import axios from "axios";
 import * as Utils from '../common/Utils';
 require('popper.js/dist/umd/popper.min.js');
-require('bootstrap-fileinput/js/fileinput.min.js');
 require('bootstrap-fileinput/css/fileinput.min.css');
+require('bootstrap-fileinput/js/fileinput.min.js');
+require('bootstrap-icons/font/bootstrap-icons.css');
 
 class Attachments extends SubComponent {
     constructor(props) {
