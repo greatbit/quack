@@ -3030,15 +3030,21 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-fileinput@^4.5.2:
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-4.5.3.tgz#99168083105503728cd4adddca70db850ac38b8c"
-  integrity sha512-l1SiH/vJmv9+kpjZQaod3aTGYhi/Q1ZypUqUIsOX8g0/LzGAPGzNBjWZngLmdkcEX8SWJd2VUbO85ijyLWI10A==
+bootstrap-fileinput@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-5.2.2.tgz#076e23c456258138d41d11c26e90866807453c40"
+  integrity sha512-hrFvpxkO06oyoBo6sdLnAZGsGZMrLbBNx17A4e+VtoBSTphOaupiX68r9yo3N0LmnpEi7J7O3ESAJm1m/37KOA==
   dependencies:
-    bootstrap ">= 3.0.0"
+    bootstrap ">= 3.4.1"
     jquery ">= 1.9.0"
+    opencollective-postinstall "^2.0.2"
 
-"bootstrap@>= 3.0.0":
+bootstrap-icons@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-icons/-/bootstrap-icons-1.5.0.tgz#2cb19da148aa9105cb3174de2963564982d3dc55"
+  integrity sha512-44feMc7DE1Ccpsas/1wioN8ewFJNquvi5FewA06wLnqct7CwMdGDVy41ieHaacogzDqLfG8nADIvMNp9e4bfbA==
+
+"bootstrap@>= 3.4.1":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.0.2.tgz#aff23d5e0e03c31255ad437530ee6556e78e728e"
   integrity sha512-1Ge963tyEQWJJ+8qtXFU6wgmAVj9gweEjibUdbmcCEYsn38tVwRk8107rk2vzt6cfQcRr3SlZ8aQBqaD8aqf+Q==
@@ -8264,6 +8270,11 @@ open@^7.0.2:
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
+
+opencollective-postinstall@^2.0.2:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
+  integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
 
 opn@^5.5.0:
   version "5.5.0"
