@@ -92,4 +92,5 @@ docker-compose -f docker-compose-api.yml up
 curl 'http://localhost:8080/api/user/login?login=somelogin&password=somepass'  -X 'POST'   -H 'Origin: http://quack123.com'  -H 'Referer: http://quack123.com/login'
 
 
-
+Start Mongo locally with specific path to DB
+sudo mongod --dbpath ~/mongo/data
