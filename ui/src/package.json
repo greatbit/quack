@@ -34,6 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:dev": "BASE_API_URL=http://localhost:81/api/ yarn start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
