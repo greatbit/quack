@@ -39,9 +39,10 @@ class Attachments extends SubComponent {
       }
       this.setState(this.state);
       if (this.state.projectId && this.state.testcase.id && this.state.testcase.id != null){
+          const uploadUrl = getApiBaseUrl(this.state.projectId + '/testcase/' + this.state.testcase.id + '/attachment');
           $("#file-data").fileinput({
               previewFileType:'any',
-              uploadUrl: getApiBaseUrl() + this.state.projectId + '/testcase/' + this.state.testcase.id + '/attachment'
+              uploadUrl
           });
           $("#file-data").on('fileuploaded', function(event, file, previewId, index) {
               this.onTestcaseUpdated();

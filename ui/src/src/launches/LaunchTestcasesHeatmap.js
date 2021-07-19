@@ -30,7 +30,8 @@ class LaunchTestcasesHeatmap extends SubComponent {
     }
 
     getHeatMap(){
-        Backend.get(this.state.projectId + "/launch/heatmap" + this.props.location.search``)
+        console.info(this.props);
+        Backend.get(this.state.projectId + "/launch/heatmap" + this.props.location.search)
             .then(response => {
                  this.state.heatmap = response.data;
                  this.state.loading = false;
