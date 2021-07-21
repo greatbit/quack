@@ -91,16 +91,20 @@
     "endOfLine": "lf"
   },
   "devDependencies": {
+    "@craco/craco": "^6.2.0",
     "@storybook/addon-actions": "^6.3.4",
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/addon-links": "^6.3.4",
+    "@storybook/addon-postcss": "^2.0.0",
     "@storybook/node-logger": "^6.3.4",
-    "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.4",
+    "autoprefixer": "^9",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "postcss": "^7",
     "prettier": "^2.3.2",
     "storybook": "^6.3.4",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "typescript": "^4.3.3"
   }
 }
