@@ -1,8 +1,5 @@
-
-
 const session = {};
 
-
-export function getSession(){
-    return session;
+export function getSession() {
+  return session;
 }
