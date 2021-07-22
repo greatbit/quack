@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
-import axios from "axios";
+
+import backend from "../services/backend";
 
 class Redirect extends Component {
   constructor(props) {
@@ -13,10 +14,10 @@ class Redirect extends Component {
   }
 
   componentDidMount() {
-    axios
+    backend
       .get(this.requestUrl)
       .then(response => {
-        window.location = response.data.url;
+        window.location = response.url;
       })
       .catch(error => console.log(error));
   }

@@ -33,7 +33,7 @@ class LaunchesStatisticsOverview extends SubComponent {
   getStats() {
     Backend.get(this.state.projectId + "/launch/statistics" + this.props.location.search)
       .then(response => {
-        this.state.stats = response.data;
+        this.state.stats = response;
         this.state.loading = false;
         this.setState(this.state);
       })

@@ -11,9 +11,9 @@ class Auth extends Component {
     var params = qs.parse(this.props.location.search.substring(1));
     Backend.get("user/login-redirect")
       .then(response => {
-        var url = response.data.url || "/login";
+        var url = response.url || "/login";
         var retpath = params.retpath || "";
-        var retpathParamName = response.data.retpathParamName || "retpath";
+        var retpathParamName = response.retpathParamName || "retpath";
         if (
           retpath.startsWith(window.location.origin + "/auth") ||
           retpath.startsWith(window.location.origin + "/login")

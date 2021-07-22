@@ -35,7 +35,7 @@ class ProjectForm extends Component {
   handleSubmit(event) {
     Backend.post("project", this.state.project)
       .then(response => {
-        this.props.history.push("/projects/" + response.data.id);
+        this.props.history.push("/projects/" + response.id);
       })
       .catch(error => {
         Utils.onErrorMessage("Couldn't save project: ", error);
@@ -48,7 +48,7 @@ class ProjectForm extends Component {
       Backend.get("project/" + this.props.id)
         .then(response => {
           const newState = Object.assign({}, this.state, {
-            project: response.data,
+            project: response,
           });
           this.setState(newState);
         })

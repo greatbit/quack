@@ -42,7 +42,7 @@ class Project extends SubComponent {
   getProject() {
     Backend.get("project/" + this.state.project.id)
       .then(response => {
-        this.state.project = response.data;
+        this.state.project = response;
         this.setState(this.state);
       })
       .catch(error => {

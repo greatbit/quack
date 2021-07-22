@@ -23,7 +23,7 @@ class Profile extends SubComponent {
   getUser() {
     Backend.get("user/" + this.state.profile.id)
       .then(response => {
-        this.state.profile = response.data;
+        this.state.profile = response;
         this.setState(this.state);
       })
       .catch(error => {

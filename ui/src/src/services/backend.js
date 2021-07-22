@@ -1,14 +1,18 @@
-import axios from "axios";
+export const getApiBaseUrl = url => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
 
-axios.defaults.withCredentials = "include";
+const getOptions = options => ({
+  ...options,
+  credentials: "include",
+});
 
-export const getApiBaseUrl = url => (process.env.BASE_API_URL || "/api/") + url;
+const fetchInternal = (url, method, options) =>
+  fetch(getApiBaseUrl(url), { ...getOptions(options), method }).then(response => response.json());
 
 const backend = {
-  get: (url, options) => axios.get(getApiBaseUrl(url), options),
-  post: (url, options) => axios.post(getApiBaseUrl(url), options),
-  delete: (url, options) => axios.delete(getApiBaseUrl(url), options),
-  put: (url, options) => axios.put(getApiBaseUrl(url), options),
+  get: (url, options) => fetchInternal(url, "GET", options),
+  post: (url, options) => fetchInternal(url, "POST", options),
+  delete: (url, options) => fetchInternal(url, "DELETE", options),
+  put: (url, options) => fetchInternal(url, "PUT", options),
 };
 
 export default backend;

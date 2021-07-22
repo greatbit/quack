@@ -64,7 +64,7 @@ class LaunchForm extends SubComponent {
     }
     Backend.post(url, this.state.launch)
       .then(response => {
-        this.state.launch = response.data;
+        this.state.launch = response;
         if (!this.state.launch.id) {
           this.state.launch.triggeredByLauncher = true;
         }
@@ -97,7 +97,7 @@ class LaunchForm extends SubComponent {
 
     Backend.get("project/" + this.props.match.params.project)
       .then(response => {
-        this.state.project = response.data;
+        this.state.project = response;
         this.setState(this.state);
       })
       .catch(error => {
@@ -106,7 +106,7 @@ class LaunchForm extends SubComponent {
 
     Backend.get("launcher/descriptors")
       .then(response => {
-        this.state.launcherDescriptors = response.data;
+        this.state.launcherDescriptors = response;
         this.setState(this.state);
       })
       .catch(error => {

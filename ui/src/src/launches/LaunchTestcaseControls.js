@@ -39,7 +39,7 @@ class LaunchTestcaseControls extends Component {
       this.state.failureDetails,
     )
       .then(response => {
-        this.state.testcase = response.data;
+        this.state.testcase = response;
         this.state.failureDetails = Object.assign({}, this.defaultFailureDetails);
         this.setState(this.state);
         this.callback(this.state.testcase);

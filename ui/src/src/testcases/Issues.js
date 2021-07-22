@@ -62,7 +62,7 @@ class Issues extends SubComponent {
       this.state.projectId = nextProps.projectId;
       Backend.get(this.state.projectId + "/testcase/issue/projects")
         .then(response => {
-          this.state.suggestedTrackerProjects = response.data;
+          this.state.suggestedTrackerProjects = response;
           this.setState(this.state);
           this.refreshIssues();
         })
@@ -137,7 +137,7 @@ class Issues extends SubComponent {
     (this.state.testcase.issues || []).forEach(
       function (issue, index) {
         Backend.get(this.state.projectId + "/testcase/issue/" + issue.id).then(response => {
-          this.state.testcase.issues[index] = response.data;
+          this.state.testcase.issues[index] = response;
           this.setState(this.state);
         });
       }.bind(this),
@@ -157,7 +157,7 @@ class Issues extends SubComponent {
   suggestIssues(value, callback) {
     var existingIssuesIds = (this.state.testcase.issues || []).map(issue => issue.id);
     Backend.get(this.state.projectId + "/testcase/issue/suggest?text=" + value).then(response => {
-      this.state.suggestedIssues = (response.data || []).filter(issue => !existingIssuesIds.includes(issue.id));
+      this.state.suggestedIssues = (response || []).filter(issue => !existingIssuesIds.includes(issue.id));
       this.setState(this.state);
       callback(this.mapIssuesToView(this.state.suggestedIssues));
     });
@@ -165,7 +165,7 @@ class Issues extends SubComponent {
 
   suggestProjects(value, callback) {
     Backend.get(this.state.projectId + "/testcase/issue/projects/suggest?text=" + value).then(response => {
-      this.state.suggestedTrackerProjects = response.data;
+      this.state.suggestedTrackerProjects = response;
       this.setState(this.state);
       callback(this.mapTrackerProjectsToView(this.state.suggestedTrackerProjects));
     });
@@ -182,14 +182,14 @@ class Issues extends SubComponent {
 
     Backend.get(this.state.projectId + "/testcase/issue/types?project=" + this.state.issue.trackerProject.id).then(
       response => {
-        this.state.issueTypes = response.data;
+        this.state.issueTypes = response;
         this.setState(this.state);
       },
     );
 
     Backend.get(this.state.projectId + "/testcase/issue/priorities?project=" + this.state.issue.trackerProject.id).then(
       response => {
-        this.state.issuePriorities = response.data;
+        this.state.issuePriorities = response;
         this.setState(this.state);
       },
     );

@@ -46,7 +46,7 @@ class LaunchesTrendWidget extends SubComponent {
     }
     Backend.get(this.state.projectId + "/launch?" + Utils.filterToQuery(this.state.filter))
       .then(response => {
-        this.state.launches = response.data.reverse();
+        this.state.launches = response.reverse();
         this.state.loading = false;
         this.renderChart();
         this.setState(this.state);

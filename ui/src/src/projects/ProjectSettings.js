@@ -62,7 +62,7 @@ class ProjectSettings extends SubComponent {
     super.componentDidMount();
     Backend.get("project/" + this.state.projectId)
       .then(response => {
-        this.state.project = response.data;
+        this.state.project = response;
         this.state.originalProject = this.state.project;
         this.refreshGroupsToDisplay();
         this.refreshUsersToDisplay();
@@ -74,7 +74,7 @@ class ProjectSettings extends SubComponent {
 
     Backend.get("launcher/descriptors")
       .then(response => {
-        this.state.launcherDescriptors = response.data;
+        this.state.launcherDescriptors = response;
         this.setState(this.state);
       })
       .catch(error => {
@@ -89,7 +89,7 @@ class ProjectSettings extends SubComponent {
     }
     Backend.get(url)
       .then(response => {
-        this.state.groups = response.data;
+        this.state.groups = response;
         this.refreshGroupsToDisplay();
         callback(this.mapGroupsToView(this.state.groups));
       })
@@ -103,7 +103,7 @@ class ProjectSettings extends SubComponent {
     }
     Backend.get(url)
       .then(response => {
-        this.state.users = response.data;
+        this.state.users = response;
         this.refreshUsersToDisplay();
         callback(this.mapUsersToView(this.state.users));
       })
@@ -136,7 +136,7 @@ class ProjectSettings extends SubComponent {
   submit(event, name) {
     Backend.put("project", this.state.project)
       .then(response => {
-        this.state.project = response.data;
+        this.state.project = response;
         this.state.originalProject = this.state.project;
         if (name) {
           this.toggleEdit(name);

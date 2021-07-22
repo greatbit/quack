@@ -40,7 +40,7 @@ class TestCaseForm extends SubComponent {
   handleSubmit(event) {
     Backend.post(this.props.match.params.project + "/testcase/", this.state.testcase)
       .then(response => {
-        this.onTestCaseAdded(response.data);
+        this.onTestCaseAdded(response);
       })
       .catch(error => {
         Utils.onErrorMessage("Couldn't create testcase: ", error);
@@ -103,7 +103,7 @@ class TestCaseForm extends SubComponent {
     if (this.props.id) {
       Backend.get(this.props.match.params.project + "/testcase/" + this.props.id)
         .then(response => {
-          this.state.testcase = response.data;
+          this.state.testcase = response;
         })
         .catch(error => console.log(error));
     }
