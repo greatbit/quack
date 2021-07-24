@@ -326,3 +326,7 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .tox-notifications-container {
     display: none !important;
 }
+
+.rounded {
+    border-radius: .8rem!important;
+}
