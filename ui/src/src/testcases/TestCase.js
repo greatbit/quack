@@ -571,108 +571,116 @@ class TestCase extends SubComponent {
               )}
             </div>
 
-            <div id="description" className="testcase-section">
-              <h5>
-                Description
+            <div id="description" className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  Description
+                  {!this.state.readonly && (
+                    <span className="edit edit-icon clickable" onClick={e => this.toggleEdit("description", e)}>
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </span>
+                  )}
+                </h5>
+              </div>
+              <div className="card-body">
+                <div
+                  id="description-display"
+                  className="inplace-display"
+                  dangerouslySetInnerHTML={{ __html: this.state.testcase.description }}
+                ></div>
                 {!this.state.readonly && (
-                  <span className="edit edit-icon clickable" onClick={e => this.toggleEdit("description", e)}>
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </span>
+                  <div id="description-form" className="inplace-form" style={{ display: "none" }}>
+                    <Editor
+                      initialValue={this.state.testcase.description}
+                      init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: this.tinymcePlugins,
+                        toolbar: this.tinymceToolbar,
+                      }}
+                      onEditorChange={val =>
+                        this.handleChange("description", { target: { value: val } }, null, null, true)
+                      }
+                    />
+                    <form>
+                      <div className="testcase-inplace-buttons-down">
+                        <button
+                          type="button"
+                          className="btn btn-light"
+                          data-dismiss="modal"
+                          onClick={e => this.cancelEdit("description", e)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={e => this.handleSubmit("description", e)}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 )}
-              </h5>
-              <div
-                id="description-display"
-                className="inplace-display"
-                dangerouslySetInnerHTML={{ __html: this.state.testcase.description }}
-              ></div>
-              {!this.state.readonly && (
-                <div id="description-form" className="inplace-form" style={{ display: "none" }}>
-                  <Editor
-                    initialValue={this.state.testcase.description}
-                    init={{
-                      height: 500,
-                      menubar: false,
-                      plugins: this.tinymcePlugins,
-                      toolbar: this.tinymceToolbar,
-                    }}
-                    onEditorChange={val =>
-                      this.handleChange("description", { target: { value: val } }, null, null, true)
-                    }
-                  />
-                  <form>
-                    <div className="testcase-inplace-buttons-down">
-                      <button
-                        type="button"
-                        className="btn btn-light"
-                        data-dismiss="modal"
-                        onClick={e => this.cancelEdit("description", e)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={e => this.handleSubmit("description", e)}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+              </div>
             </div>
 
-            <div id="preconditions" className="testcase-section">
-              <h5>
-                Preconditions
+            <div id="preconditions" className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  Preconditions
+                  {!this.state.readonly && (
+                    <span className="edit edit-icon clickable" onClick={e => this.toggleEdit("preconditions", e)}>
+                      <FontAwesomeIcon icon={faPencilAlt} />
+                    </span>
+                  )}
+                </h5>
+              </div>
+              <div className="card-body">
+                <div
+                  id="preconditions-display"
+                  className="inplace-display"
+                  dangerouslySetInnerHTML={{ __html: this.state.testcase.preconditions }}
+                ></div>
                 {!this.state.readonly && (
-                  <span className="edit edit-icon clickable" onClick={e => this.toggleEdit("preconditions", e)}>
-                    <FontAwesomeIcon icon={faPencilAlt} />
-                  </span>
+                  <div id="preconditions-form" className="inplace-form" style={{ display: "none" }}>
+                    <Editor
+                      initialValue={this.state.testcase.preconditions}
+                      init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: this.tinymcePlugins,
+                        toolbar: this.tinymceToolbar,
+                      }}
+                      onEditorChange={val =>
+                        this.handleChange("preconditions", { target: { value: val } }, null, null, true)
+                      }
+                    />
+                    <form>
+                      <div className="testcase-inplace-buttons-down">
+                        <button
+                          type="button"
+                          className="btn btn-light"
+                          onClick={e => this.cancelEdit("preconditions", e)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={e => this.handleSubmit("preconditions", e)}
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 )}
-              </h5>
-              <div
-                id="preconditions-display"
-                className="inplace-display"
-                dangerouslySetInnerHTML={{ __html: this.state.testcase.preconditions }}
-              ></div>
-              {!this.state.readonly && (
-                <div id="preconditions-form" className="inplace-form" style={{ display: "none" }}>
-                  <Editor
-                    initialValue={this.state.testcase.preconditions}
-                    init={{
-                      height: 500,
-                      menubar: false,
-                      plugins: this.tinymcePlugins,
-                      toolbar: this.tinymceToolbar,
-                    }}
-                    onEditorChange={val =>
-                      this.handleChange("preconditions", { target: { value: val } }, null, null, true)
-                    }
-                  />
-                  <form>
-                    <div className="testcase-inplace-buttons-down">
-                      <button
-                        type="button"
-                        className="btn btn-light"
-                        onClick={e => this.cancelEdit("preconditions", e)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={e => this.handleSubmit("preconditions", e)}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
+              </div>
             </div>
 
-            <div id="steps" className="testcase-section">
+            <div id="steps" className="mb-4">
               <h5>Steps</h5>
               {(this.state.testcase.steps || []).map(
                 function (step, i) {
@@ -723,7 +731,7 @@ class TestCase extends SubComponent {
                     );
                   } else {
                     return (
-                      <div className="row" key={i}>
+                      <div className key={i}>
                         <div id={"steps-" + i + "-display"} className="inplace-display col-sm-12">
                           <div index={i} className="row">
                             <div className="card col-md-12">
@@ -821,7 +829,7 @@ class TestCase extends SubComponent {
                 }.bind(this),
               )}
               {!this.state.readonly && (
-                <div className="row">
+                <div className>
                   <button type="button" className="btn btn-primary" onClick={this.addStep}>
                     Add Step
                   </button>
@@ -829,7 +837,7 @@ class TestCase extends SubComponent {
               )}
             </div>
 
-            <div id="attributes" className="testcase-section">
+            <div id="attributes" className="mb-4">
               <h5>Attributes</h5>
               {Object.keys(this.state.testcase.attributes || {}).map(
                 function (attributeId, i) {
@@ -940,7 +948,7 @@ class TestCase extends SubComponent {
                 }.bind(this),
               )}
               {!this.state.readonly && (
-                <div className="row">
+                <div className>
                   <button type="button" className="btn btn-primary" onClick={e => this.addAttribute(e)}>
                     Add Attribute
                   </button>
@@ -948,7 +956,7 @@ class TestCase extends SubComponent {
               )}
             </div>
 
-            <div id="properties" className="testcase-section">
+            <div id="properties" className="mb-4">
               <h5>Properties</h5>
               {Object.keys(this.state.testcase.properties || {}).map(
                 function (property, i) {
@@ -1025,7 +1033,7 @@ class TestCase extends SubComponent {
                 }.bind(this),
               )}
               {!this.state.readonly && (
-                <div className="row">
+                <div className>
                   <button type="button" className="btn btn-primary" onClick={e => this.addProperty(e)}>
                     Add Property
                   </button>
