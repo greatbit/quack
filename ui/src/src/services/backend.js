@@ -5,7 +5,13 @@ const getOptions = options => ({
   credentials: "include",
 });
 
-const fetchInternal = (url, method, options) => fetch(getApiBaseUrl(url), { ...getOptions(options), method });
+const fetchInternal = (url, method, options) =>
+  fetch(getApiBaseUrl(url), { ...getOptions(options), method }).then(response => {
+    if (!response.ok) {
+      throw new Error(response.text);
+    }
+    return response;
+  });
 const fetchJSON = (url, method, options) => fetchInternal(url, method, options).then(response => response.json());
 const getMutationOptions = body => ({
   body: JSON.stringify(body),
