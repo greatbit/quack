@@ -37,10 +37,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "yarn eslint .",
-    "lint:fix": "yarn eslint --fix .",
+    "lint": "yarn eslint . --cache --cache-strategy content",
+    "lint:fix": "yarn eslint --fix --cache --cache-strategy content .",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "clean": "rm .eslintcache",
+    "postinstall": "yarn clean"
   },
   "browserslist": {
     "production": [
@@ -55,6 +57,7 @@
     ]
   },
   "eslintConfig": {
+    
     "extends": [
       "react-app",
       "prettier"
@@ -63,7 +66,9 @@
       "prettier"
     ],
     "rules": {
-      "prettier/prettier": "warn"
+      "prettier/prettier": "warn",
+      "no-unused-vars": "warn",
+      "no-useless-return": "warn"
     },
     "ignorePatterns": [
       "node_modules/**/*.*",
