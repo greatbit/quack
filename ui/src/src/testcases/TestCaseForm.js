@@ -48,7 +48,7 @@ class TestCaseForm extends SubComponent {
     event.preventDefault();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.testcase) {
       this.state.testcase = nextProps.testcase;
     }
@@ -97,7 +97,7 @@ class TestCaseForm extends SubComponent {
     this.setState(this.state);
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     super.componentDidMount();
     this.state.projectAttributes = this.props.projectAttributes || [];
     if (this.props.id) {

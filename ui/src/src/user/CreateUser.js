@@ -36,33 +36,45 @@ class CreateUser extends Component {
         <h1>Create User</h1>
         <div className="create-user-form">
           <form>
-            <div class="form-row">
-              <div class="form-group col-md-6">
+            <div className="form-row">
+              <div className="form-group col-md-6">
                 <label for="login">Login</label>
-                <input type="email" class="form-control" name="login" id="login" onChange={this.handleChange} />
+                <input type="email" className="form-control" name="login" id="login" onChange={this.handleChange} />
               </div>
-              <div class="form-group col-md-6">
+              <div className="form-group col-md-6">
                 <label for="password">Password</label>
                 <input
                   type="password"
-                  class="form-control"
+                  className="form-control"
                   name="password"
                   id="password"
                   onChange={this.handleChange}
                 />
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
+            <div className="form-row">
+              <div className="form-group col-md-6">
                 <label for="firstName">First Name</label>
-                <input type="text" class="form-control" name="firstName" id="firstName" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  className="form-control"
+                  name="firstName"
+                  id="firstName"
+                  onChange={this.handleChange}
+                />
               </div>
-              <div class="form-group col-md-6">
+              <div className="form-group col-md-6">
                 <label for="lastName">Last Name</label>
-                <input type="text" class="form-control" name="lastName" id="lastName" onChange={this.handleChange} />
+                <input
+                  type="text"
+                  className="form-control"
+                  name="lastName"
+                  id="lastName"
+                  onChange={this.handleChange}
+                />
               </div>
             </div>
-            <button onClick={this.handleSubmit} class="btn btn-primary">
+            <button onClick={this.handleSubmit} className="btn btn-primary">
               Create
             </button>
           </form>

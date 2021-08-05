@@ -151,11 +151,11 @@ class Events extends SubComponent {
       <div className="row">
         <div className="col-sm-3 events-filter">
           <form>
-            <div class="form-group">
+            <div className="form-group">
               <label for="created">
                 <h5>Event Time</h5>
               </label>
-              <div class="input-group mb-2">
+              <div className="input-group mb-2">
                 <DatePicker
                   id="from_createdTime"
                   value={Utils.getDatepickerTime(this.state.filter.from_createdTime)}
@@ -170,7 +170,7 @@ class Events extends SubComponent {
                 />
               </div>
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="created">
                 <h5>Event Type</h5>
               </label>
@@ -188,11 +188,11 @@ class Events extends SubComponent {
               </div>
             </div>
 
-            <div class="form-group">
+            <div className="form-group">
               <label for="created">
                 <h5>Entity Type</h5>
               </label>
-              <div class="input-group mb-2">
+              <div className="input-group mb-2">
                 <select
                   id="launcher-select"
                   className="form-control"
@@ -215,13 +215,13 @@ class Events extends SubComponent {
                 </select>
               </div>
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="title">
                 <h5>Entity Id</h5>
               </label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 id="entityId"
                 name="entityId"
                 aria-describedby="Event Entity Id"
@@ -230,7 +230,7 @@ class Events extends SubComponent {
                 onChange={e => this.handleFilterChange("entityId", e)}
               />
             </div>
-            <button type="submit" class="btn btn-primary" onClick={this.onFilter}>
+            <button type="submit" className="btn btn-primary" onClick={this.onFilter}>
               Filter
             </button>
           </form>
@@ -240,7 +240,7 @@ class Events extends SubComponent {
           <div className="sweet-loading">
             <FadeLoader sizeUnit={"px"} size={100} color={"#135f38"} loading={this.state.loading} />
           </div>
-          <table class="table">
+          <table className="table">
             <thead>
               <tr>
                 <th scope="col">Type</th>

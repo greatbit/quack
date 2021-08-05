@@ -55,7 +55,7 @@ class LaunchTestcaseControls extends Component {
 
   renderRunnable() {
     return (
-      <button type="button" class="btn btn-success" onClick={e => this.handleStatusSubmit("RUNNING", e)}>
+      <button type="button" className="btn btn-success" onClick={e => this.handleStatusSubmit("RUNNING", e)}>
         Start
       </button>
     );
@@ -64,19 +64,19 @@ class LaunchTestcaseControls extends Component {
   renderRunning() {
     return (
       <div>
-        <button type="button" class="btn btn-success" onClick={e => this.handleStatusSubmit("PASSED", e)}>
+        <button type="button" className="btn btn-success" onClick={e => this.handleStatusSubmit("PASSED", e)}>
           Pass
         </button>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#fail-dialog">
+        <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#fail-dialog">
           Fail
         </button>
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#broken-dialog">
+        <button type="button" className="btn btn-warning" data-toggle="modal" data-target="#broken-dialog">
           Broken
         </button>
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#skipped-dialog">
+        <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#skipped-dialog">
           Skip
         </button>
-        <button type="button" class="btn btn-warning" onClick={e => this.handleStatusSubmit("RUNNABLE", e)}>
+        <button type="button" className="btn btn-warning" onClick={e => this.handleStatusSubmit("RUNNABLE", e)}>
           X
         </button>
       </div>
@@ -86,10 +86,10 @@ class LaunchTestcaseControls extends Component {
   renderFinished() {
     return (
       <div>
-        <button class={this.getStatusAlertClass()} role="alert">
+        <button className={this.getStatusAlertClass()} role="alert">
           {this.state.testcase.launchStatus}
         </button>
-        <button type="button" class="btn" onClick={e => this.handleStatusSubmit("RUNNABLE", e)}>
+        <button type="button" className="btn" onClick={e => this.handleStatusSubmit("RUNNABLE", e)}>
           X
         </button>
       </div>
@@ -159,7 +159,7 @@ class LaunchTestcaseControls extends Component {
                 </button>
                 <button
                   type="button"
-                  class="btn btn-danger"
+                  className="btn btn-danger"
                   onClick={e => this.handleStatusSubmit("FAILED", e, "fail-dialog")}
                 >
                   Fail
@@ -195,7 +195,7 @@ class LaunchTestcaseControls extends Component {
                 </button>
                 <button
                   type="button"
-                  class="btn btn-warning"
+                  className="btn btn-warning"
                   onClick={e => this.handleStatusSubmit("BROKEN", e, "broken-dialog")}
                 >
                   Mark as Broken
@@ -231,7 +231,7 @@ class LaunchTestcaseControls extends Component {
                 </button>
                 <button
                   type="button"
-                  class="btn btn-secondary"
+                  className="btn btn-secondary"
                   onClick={e => this.handleStatusSubmit("SKIPPED", e, "skipped-dialog")}
                 >
                   Skip

@@ -80,7 +80,7 @@ class LaunchForm extends SubComponent {
     event.preventDefault();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.state.restart = nextProps.restart || false;
     this.state.failedOnly = nextProps.failedOnly || false;
     if (nextProps.testSuite) {
@@ -92,7 +92,7 @@ class LaunchForm extends SubComponent {
     this.setState(this.state);
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     super.componentDidMount();
 
     Backend.get("project/" + this.props.match.params.project)

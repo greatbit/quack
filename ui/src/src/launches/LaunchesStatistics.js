@@ -15,10 +15,10 @@ class LaunchesStatistics extends SubComponent {
   render() {
     return (
       <div>
-        <ul class="nav nav-tabs" id="tcTabs" role="tablist">
-          <li class="nav-item">
+        <ul className="nav nav-tabs" id="tcTabs" role="tablist">
+          <li className="nav-item">
             <a
-              class="nav-link active"
+              className="nav-link active"
               id="overview-tab"
               data-toggle="tab"
               href="#overview"
@@ -29,9 +29,9 @@ class LaunchesStatistics extends SubComponent {
               Overview
             </a>
           </li>
-          <li class="nav-item">
+          <li className="nav-item">
             <a
-              class="nav-link"
+              className="nav-link"
               id="heatmap-tab"
               data-toggle="tab"
               href="#heatmap"
@@ -45,11 +45,11 @@ class LaunchesStatistics extends SubComponent {
         </ul>
 
         <div className="tab-content" id="tcTabContent">
-          <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+          <div className="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
             <LaunchesStatisticsOverview />
           </div>
 
-          <div class="tab-pane fade show" id="heatmap" role="tabpanel" aria-labelledby="heatmap-tab">
+          <div className="tab-pane fade show" id="heatmap" role="tabpanel" aria-labelledby="heatmap-tab">
             <LaunchTestcasesHeatmap />
           </div>
         </div>

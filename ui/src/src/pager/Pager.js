@@ -77,14 +77,19 @@ class Pager extends Component {
     return (
       <div>
         <nav>
-          <ul class="pagination">
+          <ul className="pagination">
             {this.state.pageObjects.map(
               function (page) {
                 var disabledClass = page.enabled ? "" : "disabled";
                 var styleClass = "page-item " + disabledClass;
                 return (
-                  <li class={styleClass}>
-                    <a class="page-link" href="#" index={page.index} onClick={e => this.onPageChanged(page.index, e)}>
+                  <li className={styleClass}>
+                    <a
+                      className="page-link"
+                      href="#"
+                      index={page.index}
+                      onClick={e => this.onPageChanged(page.index, e)}
+                    >
                       {page.title}
                     </a>
                   </li>

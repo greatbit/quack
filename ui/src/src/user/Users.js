@@ -86,7 +86,7 @@ class Users extends SubComponent {
     return (
       <div>
         <div>
-          <table class="table table-striped">
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th scope="col">User</th>

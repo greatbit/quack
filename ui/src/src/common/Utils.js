@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import Moment from "moment/min/moment.min.js";
+import Moment from "moment";
 import * as UserSession from "../user/UserSession";
 import $ from "jquery";
 import qs from "qs";

@@ -18,7 +18,7 @@ class Header extends Component {
     this.logOut = this.logOut.bind(this);
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     Backend.get("user/session")
       .then(response => {
         if (this.state.session.id !== response.id) {
@@ -49,7 +49,7 @@ class Header extends Component {
       .catch(() => {});
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.session && this.state.session != nextProps.session.id) {
       this.state.session = nextProps.session;
       this.setState(this.state);

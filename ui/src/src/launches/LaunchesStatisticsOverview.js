@@ -52,7 +52,7 @@ class LaunchesStatisticsOverview extends SubComponent {
         </div>
         <div className="row">
           <div className="col-6">
-            <table class="table">
+            <table className="table">
               <tbody>
                 <tr>
                   <td>Total Launches: {this.state.stats.all.launchCount || 0}</td>

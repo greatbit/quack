@@ -23,13 +23,13 @@ class Project extends SubComponent {
     this.onProjectChange = props.onProjectChange;
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     super.componentDidMount();
     this.state.project.id = this.props.match.params.project;
     this.getProject();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     var nextProjectId = nextProps.match.params.project;
     // eslint-disable-next-line eqeqeq
     if (nextProjectId && this.state.project.id != nextProjectId) {

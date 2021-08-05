@@ -54,7 +54,7 @@ class TestCasesFilter extends Component {
     this.getProjectAttributesSelect = this.getProjectAttributesSelect.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.projectAttributes) {
       this.state.projectAttributes = nextProps.projectAttributes;
       this.state.testSuite.filter.filters.forEach(
@@ -72,7 +72,7 @@ class TestCasesFilter extends Component {
     this.setState(this.state);
   }
 
-  componentDidMount() {
+  UNSAFE_componentDidMount() {
     var params = qs.parse(this.props.location.search.substring(1));
 
     if (params.testSuite) {

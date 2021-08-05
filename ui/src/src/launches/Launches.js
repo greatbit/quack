@@ -151,29 +151,29 @@ class Launches extends SubComponent {
 
   getProgressBar(launch) {
     return (
-      <div class="progress">
+      <div className="progress">
         <div
-          class="progress-bar progress-bar-striped"
+          className="progress-bar progress-bar-striped"
           role="progressbar"
           style={Utils.getProgressBarStyle(launch.launchStats.statusCounters.RUNNING, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-success"
+          className="progress-bar bg-success"
           role="progressbar"
           style={Utils.getProgressBarStyle(launch.launchStats.statusCounters.PASSED, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-danger"
+          className="progress-bar bg-danger"
           role="progressbar"
           style={Utils.getProgressBarStyle(launch.launchStats.statusCounters.FAILED, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-warning"
+          className="progress-bar bg-warning"
           role="progressbar"
           style={Utils.getProgressBarStyle(launch.launchStats.statusCounters.BROKEN, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar progress-bar-striped bg-warning"
+          className="progress-bar progress-bar-striped bg-warning"
           role="progressbar"
           style={Utils.getProgressBarStyle(launch.launchStats.statusCounters.SKIPPED, launch.launchStats.total)}
         ></div>
@@ -186,7 +186,7 @@ class Launches extends SubComponent {
       <div className="row">
         <div className="col-sm-3 launch-filter">
           <form>
-            <div class="form-group">
+            <div className="form-group">
               <span className="float-right">
                 <Link
                   to={
@@ -204,7 +204,7 @@ class Launches extends SubComponent {
               </label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 id="name"
                 name="name"
                 aria-describedby="Launch title"
@@ -212,15 +212,15 @@ class Launches extends SubComponent {
                 value={this.state.filter.like_name || ""}
                 onChange={e => this.handleFilterChange("like_name", e)}
               />
-              <small id="titleHelp" class="form-text text-muted">
+              <small id="titleHelp" className="form-text text-muted">
                 Find by partly matching Launch title
               </small>
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="created">
                 <h5>Created Time</h5>
               </label>
-              <div class="input-group mb-2">
+              <div className="input-group mb-2">
                 <DatePicker
                   id="from_createdTime"
                   value={Utils.getDatepickerTime(this.state.filter.from_createdTime)}
@@ -235,11 +235,11 @@ class Launches extends SubComponent {
                 />
               </div>
             </div>
-            <div class="form-group">
+            <div className="form-group">
               <label for="created">
                 <h5>Launcher</h5>
               </label>
-              <div class="input-group mb-2">
+              <div className="input-group mb-2">
                 <select
                   id="launcher-select"
                   className="form-control"
@@ -251,18 +251,22 @@ class Launches extends SubComponent {
                       var selected = this.state.filter["launcherConfig.launcherId"] == descriptor.launcherId;
                       if (selected) {
                         return (
-                          <option value={descriptor.launcherId} selected>
+                          <option value={descriptor.launcherId} selected key={descriptor.launcherId}>
                             {descriptor.name}
                           </option>
                         );
                       }
-                      return <option value={descriptor.launcherId}>{descriptor.name}</option>;
+                      return (
+                        <option value={descriptor.launcherId} key={descriptor.launcherId}>
+                          {descriptor.name}
+                        </option>
+                      );
                     }.bind(this),
                   )}
                 </select>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary" onClick={this.onFilter}>
+            <button type="submit" className="btn btn-primary" onClick={this.onFilter}>
               Filter
             </button>
           </form>
@@ -271,7 +275,7 @@ class Launches extends SubComponent {
           <div className="sweet-loading">
             <FadeLoader sizeUnit={"px"} size={100} color={"#135f38"} loading={this.state.loading} />
           </div>
-          <table class="table table-striped">
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th scope="col">Title</th>
