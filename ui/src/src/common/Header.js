@@ -41,10 +41,12 @@ class Header extends Component {
           this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
         }
       });
-    Backend.get("project?includedFields=name,description,id,allowedGroups").then(response => {
-      this.state.projects = response;
-      this.setState(this.state);
-    });
+    Backend.get("project?includedFields=name,description,id,allowedGroups")
+      .then(response => {
+        this.state.projects = response;
+        this.setState(this.state);
+      })
+      .catch(() => {});
   }
 
   componentWillReceiveProps(nextProps) {

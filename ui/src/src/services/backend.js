@@ -1,14 +1,18 @@
+import qs from "qs";
 export const getApiBaseUrl = url => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
-
 const getOptions = options => ({
   ...options,
   credentials: "include",
 });
 
 const fetchInternal = (url, method, options) =>
-  fetch(getApiBaseUrl(url), { ...getOptions(options), method }).then(response => {
+  fetch(getApiBaseUrl(url), { ...getOptions(options), method }).then(async response => {
     if (!response.ok) {
-      throw new Error(response.text);
+      if (response.status === 401 && window.location.pathname !== "/login") {
+        window.location.href = "/login?" + qs.stringify({ retpath: window.location.pathname });
+      } else {
+        throw new Error(await response.text());
+      }
     }
     return response;
   });
