@@ -41,7 +41,7 @@
     "lint:fix": "yarn eslint --fix --cache --cache-strategy content .",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "clean": "rm .eslintcache",
+    "clean": "rm -f .eslintcache",
     "postinstall": "yarn clean"
   },
   "browserslist": {
