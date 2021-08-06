@@ -14,7 +14,7 @@ class Organizations extends Component {
   componentDidMount() {
     Backend.get("organization")
       .then(response => {
-        const organizations = response.data;
+        const organizations = response;
         // eslint-disable-next-line react/no-direct-mutation-state
         this.state.loading = false;
         const newState = Object.assign({}, this.state, {

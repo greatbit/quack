@@ -21,8 +21,8 @@ class Header extends Component {
   componentDidMount() {
     Backend.get("user/session")
       .then(response => {
-        if (this.state.session.id !== response.data.id) {
-          this.state.session = response.data;
+        if (this.state.session.id !== response.id) {
+          this.state.session = response;
           this.setState(this.state);
           this.onSessionChange(this.state.session);
           if (
@@ -41,10 +41,12 @@ class Header extends Component {
           this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
         }
       });
-    Backend.get("project?includedFields=name,description,id,allowedGroups").then(response => {
-      this.state.projects = response.data;
-      this.setState(this.state);
-    });
+    Backend.get("project?includedFields=name,description,id,allowedGroups")
+      .then(response => {
+        this.state.projects = response;
+        this.setState(this.state);
+      })
+      .catch(() => {});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -72,8 +74,8 @@ class Header extends Component {
 
   getProject() {
     Backend.get("project/" + this.state.projectId).then(response => {
-      this.state.projectName = response.data.name;
-      this.state.projectId = response.data.id;
+      this.state.projectName = response.name;
+      this.state.projectId = response.id;
       this.setState(this.state);
     });
   }

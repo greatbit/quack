@@ -56,7 +56,7 @@ class Launch extends SubComponent {
     super.componentDidMount();
     Backend.get(this.state.projectId + "/attribute")
       .then(response => {
-        this.state.projectAttributes = response.data;
+        this.state.projectAttributes = response;
         this.setState(this.state);
         this.getLaunch(true);
       })
@@ -67,7 +67,7 @@ class Launch extends SubComponent {
   getLaunch(buildTree) {
     Backend.get(this.state.projectId + "/launch/" + this.props.match.params.launchId)
       .then(response => {
-        this.state.launch = response.data;
+        this.state.launch = response;
         if (!this.state.launch.testSuite || !this.state.launch.testSuite.filter) {
           this.state.launch.testSuite = { filter: { groups: [] } };
         }

@@ -41,7 +41,7 @@ class Organization extends SubComponent {
   getOrganization() {
     Backend.get("organization/" + this.state.organization.id)
       .then(response => {
-        this.state.organization = response.data;
+        this.state.organization = response;
         this.setState(this.state);
       })
       .catch(error => {

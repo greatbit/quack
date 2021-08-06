@@ -78,7 +78,7 @@ class TestCasesFilter extends Component {
     if (params.testSuite) {
       Backend.get(this.props.match.params.project + "/testsuite/" + params.testSuite)
         .then(response => {
-          this.state.testSuite = response.data;
+          this.state.testSuite = response;
           this.state.testSuiteNameToDisplay = this.state.testSuite.name;
           this.state.groupsToDisplay = this.state.testSuite.filter.groups.map(
             function (attrId) {
@@ -215,7 +215,7 @@ class TestCasesFilter extends Component {
     });
     Backend.post(this.props.match.params.project + "/testsuite/", suiteToSave)
       .then(response => {
-        this.state.testSuite = response.data;
+        this.state.testSuite = response;
         this.state.testSuiteNameToDisplay = this.state.testSuite.name;
         this.setState(this.state);
         $("#suite-modal").modal("toggle");

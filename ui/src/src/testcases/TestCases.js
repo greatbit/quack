@@ -74,7 +74,7 @@ class TestCases extends SubComponent {
     }
     Backend.get(this.props.match.params.project + "/attribute")
       .then(response => {
-        this.state.projectAttributes = response.data.sort((a, b) => (a.name || "").localeCompare(b.name));
+        this.state.projectAttributes = response.sort((a, b) => (a.name || "").localeCompare(b.name));
         this.state.projectAttributes.unshift({
           id: "broken",
           name: "Broken",
@@ -132,7 +132,7 @@ class TestCases extends SubComponent {
     this.setState(this.state);
     Backend.get(this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
       .then(response => {
-        this.state.testcasesTree = response.data;
+        this.state.testcasesTree = response;
         this.state.loading = false;
         this.setState(this.state);
         this.refreshTree();
@@ -156,7 +156,7 @@ class TestCases extends SubComponent {
       this.props.match.params.project + "/testcase/count?" + this.getFilterApiRequestParams(this.state.filter),
     )
       .then(response => {
-        this.state.count = response.data;
+        this.state.count = response;
         this.setState(this.state);
       })
       .catch(error => {
@@ -168,8 +168,8 @@ class TestCases extends SubComponent {
     this.state.filter.skip = (this.state.filter.skip || 0) + this.testCasesFetchLimit;
     Backend.get(this.props.match.params.project + "/testcase?" + this.getFilterApiRequestParams(this.state.filter))
       .then(response => {
-        if (response.data) {
-          this.state.testcasesTree.testCases = this.state.testcasesTree.testCases.concat(response.data);
+        if (response) {
+          this.state.testcasesTree.testCases = this.state.testcasesTree.testCases.concat(response);
           this.setState(this.state);
           this.refreshTree();
         } else {

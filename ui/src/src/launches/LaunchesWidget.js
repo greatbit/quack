@@ -39,7 +39,7 @@ class LaunchesWidget extends SubComponent {
       this.state.projectId + "/launch?includedFields=name,id,launchStats&orderby=id&orderdir=DESC&limit=" + this.limit,
     )
       .then(response => {
-        this.state.launches = response.data;
+        this.state.launches = response;
         this.state.loading = false;
         this.setState(this.state);
       })

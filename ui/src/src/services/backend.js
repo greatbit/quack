@@ -1,14 +1,32 @@
-import axios from "axios";
+import qs from "qs";
+export const getApiBaseUrl = url => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
+const getOptions = options => ({
+  ...options,
+  credentials: "include",
+});
 
-axios.defaults.withCredentials = "include";
-
-export const getApiBaseUrl = url => (process.env.BASE_API_URL || "/api/") + url;
+const fetchInternal = (url, method, options) =>
+  fetch(getApiBaseUrl(url), { ...getOptions(options), method }).then(async response => {
+    if (!response.ok) {
+      if (response.status === 401 && window.location.pathname !== "/login") {
+        window.location.href = "/login?" + qs.stringify({ retpath: window.location.pathname });
+      } else {
+        throw new Error(await response.text());
+      }
+    }
+    return response;
+  });
+const fetchJSON = (url, method, options) => fetchInternal(url, method, options).then(response => response.json());
+const getMutationOptions = body => ({
+  body: JSON.stringify(body),
+  headers: { "content-type": "application/json" },
+});
 
 const backend = {
-  get: (url, options) => axios.get(getApiBaseUrl(url), options),
-  post: (url, options) => axios.post(getApiBaseUrl(url), options),
-  delete: (url, options) => axios.delete(getApiBaseUrl(url), options),
-  put: (url, options) => axios.put(getApiBaseUrl(url), options),
+  get: (url, options) => fetchJSON(url, "GET", options),
+  post: (url, body) => fetchJSON(url, "POST", getMutationOptions(body)),
+  delete: url => fetchInternal(url, "DELETE"),
+  put: (url, body) => fetchJSON(url, "PUT", getMutationOptions(body)),
 };
 
 export default backend;

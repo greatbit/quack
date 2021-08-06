@@ -37,7 +37,7 @@ class OrganizationForm extends Component {
   handleSubmit(event) {
     Backend.post("organization", this.state.organization)
       .then(response => {
-        this.props.history.push("/organizations/" + response.data.id);
+        this.props.history.push("/organizations/" + response.id);
       })
       .catch(error => {
         Utils.onErrorMessage("Couldn't save organization: ", error);
@@ -50,7 +50,7 @@ class OrganizationForm extends Component {
       Backend.get("organization/" + this.props.id)
         .then(response => {
           const newState = Object.assign({}, this.state, {
-            organization: response.data,
+            organization: response,
           });
           this.setState(newState);
         })

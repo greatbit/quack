@@ -32,7 +32,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
     console.info(this.props);
     Backend.get(this.state.projectId + "/launch/heatmap" + this.props.location.search)
       .then(response => {
-        this.state.heatmap = response.data;
+        this.state.heatmap = response;
         this.state.loading = false;
         this.setState(this.state);
       })
@@ -65,7 +65,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
     var testcaseToUpdate;
     Backend.get(this.state.projectId + "/testcase/" + id)
       .then(response => {
-        testcaseToUpdate = response.data;
+        testcaseToUpdate = response;
         if (testcaseToUpdate) {
           testcaseToUpdate.broken = value;
           this.updateTestcase(testcaseToUpdate);
@@ -81,7 +81,7 @@ class LaunchTestcasesHeatmap extends SubComponent {
       .then(response => {
         var foundTestcaseStats = this.state.heatmap.find(testcaseStats => testcaseStats.id == testcaseToUpdate.id);
         if (foundTestcaseStats) {
-          foundTestcaseStats.broken = response.data.broken;
+          foundTestcaseStats.broken = response.broken;
         }
         this.setState(this.state);
       })

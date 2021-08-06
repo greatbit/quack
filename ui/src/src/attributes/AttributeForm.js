@@ -42,7 +42,7 @@ class AttributeForm extends Component {
   handleSubmit(event) {
     Backend.post(this.props.project + "/attribute", this.state.attribute)
       .then(response => {
-        this.props.onAttributeAdded(response.data);
+        this.props.onAttributeAdded(response);
         this.state.attribute = {
           id: null,
           name: "",
@@ -83,7 +83,7 @@ class AttributeForm extends Component {
       Backend.get(this.props.project + "/project")
         .then(response => {
           const newState = Object.assign({}, this.state, {
-            project: response.data,
+            project: response,
           });
           this.setState(newState);
         })

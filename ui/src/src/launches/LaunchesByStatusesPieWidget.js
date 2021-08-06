@@ -46,7 +46,7 @@ class LaunchesByStatusesPieWidget extends SubComponent {
     }
     Backend.get(this.state.projectId + "/launch/statistics?" + Utils.filterToQuery(this.state.filter))
       .then(response => {
-        this.state.stats = response.data;
+        this.state.stats = response;
         this.setUpStatusPieSeries();
         this.state.loading = false;
         this.setState(this.state);

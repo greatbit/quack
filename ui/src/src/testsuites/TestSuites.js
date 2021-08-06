@@ -34,7 +34,7 @@ class TestSuites extends SubComponent {
   getTestSuites() {
     Backend.get(this.props.match.params.project + "/testsuite")
       .then(response => {
-        this.state.testSuites = response.data;
+        this.state.testSuites = response;
         this.state.testSuitesToDisplay = this.state.testSuites.slice();
         this.state.loading = false;
         this.setState(this.state);
@@ -96,7 +96,7 @@ class TestSuites extends SubComponent {
           {this.state.testSuitesToDisplay.map(
             function (testSuite) {
               return (
-                <div className="col-sm-6">
+                <div className="col-sm-6" key={testSuite.id}>
                   <div className="card testsuite-card col-sm-10">
                     <div className="card-body">
                       <div className="row">

@@ -135,7 +135,7 @@ class TestCase extends SubComponent {
   getTestCase(projectId, testcaseId) {
     Backend.get(projectId + "/testcase/" + testcaseId)
       .then(response => {
-        this.state.testcase = response.data;
+        this.state.testcase = response;
         this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
         this.state.attributesInEdit.clear();
         this.state.propertiesInEdit.clear();
@@ -178,7 +178,7 @@ class TestCase extends SubComponent {
   handleSubmit(fieldName, event, index, ignoreToggleEdit) {
     Backend.put(this.projectId + "/testcase/", this.state.testcase)
       .then(response => {
-        this.state.testcase = response.data;
+        this.state.testcase = response;
         this.state.originalTestcase = JSON.parse(JSON.stringify(this.state.testcase));
         this.state.attributesInEdit.clear();
         this.state.propertiesInEdit.clear();
@@ -199,7 +199,7 @@ class TestCase extends SubComponent {
   getAttributes(reRender) {
     Backend.get(this.projectId + "/attribute")
       .then(response => {
-        this.state.projectAttributes = response.data;
+        this.state.projectAttributes = response;
         this.setState(this.state);
       })
       .catch(error => {

@@ -15,7 +15,7 @@ class Projects extends Component {
   componentDidMount() {
     Backend.get("project")
       .then(response => {
-        const projects = response.data;
+        const projects = response;
         // eslint-disable-next-line react/no-direct-mutation-state
         this.state.loading = false;
         const newState = Object.assign({}, this.state, {

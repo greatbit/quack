@@ -59,7 +59,7 @@ class Events extends SubComponent {
   getEvents() {
     Backend.get(this.props.match.params.project + "/audit?" + Utils.filterToQuery(this.state.filter))
       .then(response => {
-        this.state.events = response.data;
+        this.state.events = response;
         this.state.loading = false;
         this.setState(this.state);
       })
@@ -82,10 +82,10 @@ class Events extends SubComponent {
     var countFilter = Object.assign({ skip: 0, limit: 0 }, this.state.filter);
     Backend.get(this.props.match.params.project + "/audit/count?" + Utils.filterToQuery(countFilter))
       .then(response => {
-        this.state.pager.total = response.data;
+        this.state.pager.total = response;
         this.state.pager.current = this.state.filter.skip / this.state.filter.limit;
         this.state.pager.visiblePage = Math.min(
-          response.data / this.state.pager.itemsOnPage + 1,
+          response / this.state.pager.itemsOnPage + 1,
           this.state.pager.maxVisiblePage,
         );
         this.setState(this.state);

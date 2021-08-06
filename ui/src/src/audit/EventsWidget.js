@@ -17,7 +17,7 @@ class EventsWidget extends Component {
   getEvents() {
     Backend.get(this.state.projectId + "/audit?" + Utils.filterToQuery(this.state.filter))
       .then(response => {
-        this.state.events = response.data;
+        this.state.events = response;
         this.state.loading = false;
         this.setState(this.state);
       })

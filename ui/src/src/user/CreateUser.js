@@ -25,7 +25,7 @@ class CreateUser extends Component {
 
   handleSubmit(event) {
     Backend.post("user", this.state.user).then(response => {
-      window.location = decodeURI("/user/profile/" + response.data.login);
+      window.location = decodeURI("/user/profile/" + response.login);
     });
     event.preventDefault();
   }

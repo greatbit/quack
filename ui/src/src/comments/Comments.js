@@ -83,7 +83,7 @@ class Comments extends SubComponent {
         "&orderby=createdTime&orderdir=DESC",
     )
       .then(response => {
-        this.state.comments = response.data;
+        this.state.comments = response;
         if (this.onCommentsNumberChanged) {
           this.onCommentsNumberChanged(this.state.comments.length);
         }
@@ -136,7 +136,7 @@ class Comments extends SubComponent {
   handleSubmit(event) {
     Backend.put(this.projectId + "/comment/", this.state.commentToEdit)
       .then(response => {
-        this.state.comments.unshift(response.data);
+        this.state.comments.unshift(response);
         this.refreshCommentToEdit();
         if (this.onCommentsNumberChanged) {
           this.onCommentsNumberChanged(this.state.comments.length);
@@ -158,7 +158,7 @@ class Comments extends SubComponent {
   handleUpdateSubmit(index, event) {
     Backend.post(this.projectId + "/comment/", this.state.comments[index])
       .then(response => {
-        this.state.comments[index] = response.data;
+        this.state.comments[index] = response;
         this.setState(this.state);
         this.cancelEdit(index, event);
       })

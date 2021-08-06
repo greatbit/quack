@@ -60,7 +60,7 @@ class Attributes extends SubComponent {
       .then(response => {
         this.state.loading = false;
         const newState = Object.assign({}, this.state, {
-          attributes: response.data,
+          attributes: response,
         });
         this.setState(newState);
       })

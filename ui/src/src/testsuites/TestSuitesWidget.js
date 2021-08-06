@@ -39,7 +39,7 @@ class TestSuitesWidget extends SubComponent {
   getTestSuites() {
     Backend.get(this.state.projectId + "/testsuite")
       .then(response => {
-        this.state.testSuites = response.data;
+        this.state.testSuites = response;
         this.state.testSuitesToDisplay = this.state.testSuites.slice(0, this.limit);
         this.state.loading = false;
         this.setState(this.state);
@@ -77,7 +77,9 @@ class TestSuitesWidget extends SubComponent {
             function (testSuite) {
               return (
                 <div>
-                  <Link to={"/" + this.state.projectId + "/testcases?testSuite=" + testSuite.id}>{testSuite.name}</Link>
+                  <Link key={testSuite.id} to={"/" + this.state.projectId + "/testcases?testSuite=" + testSuite.id}>
+                    {testSuite.name}
+                  </Link>
                 </div>
               );
             }.bind(this),
