@@ -15,7 +15,7 @@ export default {
 
 export const Default = args => {
   return (
-    <div className="bg-neutral-fade4 flex p-3">
+    <div className="bg-neutral-fade6 rounded-md flex p-3">
       <SelectedValues {...args} />
     </div>
   );
