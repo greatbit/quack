@@ -28,12 +28,13 @@ const mapOldAttributeToNew = attribute => ({
     ? attribute.attrValues
     : attribute.values.map(value => ({ id: value.toLowerCase(), name: value })),
 });
+
 const mapNewFilterToOld = attributes => filter => ({
   id: filter.attribute,
   name: getAttributeName(attributes, filter.attribute),
   attrValues: filter.values.map(value => ({ value })),
-  title: "Select an attribute",
 });
+
 const mapNewFiltersToOld = (attributes, filters) => filters.map(mapNewFilterToOld(attributes));
 const mapAttributesToNewFormat = attributes => attributes.map(mapOldAttributeToNew);
 class TestCasesFilter extends Component {
@@ -42,14 +43,12 @@ class TestCasesFilter extends Component {
 
     this.defaultFilters = [
       {
-        title: "Select an attribute",
         attrValues: [],
       },
     ];
 
     this.state = {
       groupsToDisplay: [],
-      projectAttributes: [],
       createdLaunch: {
         name: "",
         testSuite: { filter: {} },
@@ -66,26 +65,21 @@ class TestCasesFilter extends Component {
     };
 
     this.changeGrouping = this.changeGrouping.bind(this);
-    this.getValuesByAttributeId = this.getValuesByAttributeId.bind(this);
-    this.changeFilterAttributeId = this.changeFilterAttributeId.bind(this);
-    this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
-    this.handleFilter = this.handleFilter.bind(this);
 
-    this.createLaunchModal = this.createLaunchModal.bind(this);
+    this.handleFilterButtonClick = this.handleFilterButtonClick.bind(this);
+
+    this.handleLaunchClick = this.handleLaunchClick.bind(this);
     this.saveSuite = this.saveSuite.bind(this);
-    this.showSuiteModal = this.showSuiteModal.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
     this.suiteAttrChanged = this.suiteAttrChanged.bind(this);
-    this.removeFilter = this.removeFilter.bind(this);
     this.getProjectAttributesSelect = this.getProjectAttributesSelect.bind(this);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.projectAttributes) {
-      this.state.projectAttributes = nextProps.projectAttributes;
-
       this.state.groupsToDisplay.forEach(
         function (groupToDisplay) {
-          groupToDisplay.label = getAttributeName(this.state.projectAttributes, groupToDisplay.value);
+          groupToDisplay.label = getAttributeName(this.props.projectAttributes, groupToDisplay.value);
         }.bind(this),
       );
     }
@@ -102,7 +96,7 @@ class TestCasesFilter extends Component {
           this.state.testSuiteNameToDisplay = this.state.testSuite.name;
           this.state.groupsToDisplay = this.state.testSuite.filter.groups.map(
             function (attrId) {
-              return { value: attrId, label: getAttributeName(this.state.projectAttributes, attrId) };
+              return { value: attrId, label: getAttributeName(this.props.projectAttributes, attrId) };
             }.bind(this),
           );
           this.setState(this.state);
@@ -119,7 +113,7 @@ class TestCasesFilter extends Component {
         this.state.testSuite.filter.groups = params.groups;
         this.state.groupsToDisplay = params.groups.map(
           function (attrId) {
-            return { value: attrId, label: getAttributeName(this.state.projectAttributes, attrId) };
+            return { value: attrId, label: getAttributeName(this.props.projectAttributes, attrId) };
           }.bind(this),
         );
       }
@@ -142,7 +136,7 @@ class TestCasesFilter extends Component {
             this.state.testSuite.filter.filters.push({
               id: key,
               attrValues: map[key].map(val => ({ value: val })),
-              title: getAttributeName(this.state.projectAttributes, key),
+              title: getAttributeName(this.props.projectAttributes, key),
             });
           }.bind(this),
         );
@@ -158,31 +152,6 @@ class TestCasesFilter extends Component {
     }
   }
 
-  changeFilterAttributeId(index, formValue) {
-    var oldId = this.state.testSuite.filter.filters[index].id;
-    this.state.testSuite.filter.filters[index].id = formValue.value;
-    this.state.testSuite.filter.filters[index].name = formValue.label;
-    if (oldId !== formValue.value) {
-      this.state.testSuite.filter.filters[index].attrValues = [];
-    }
-    if (!oldId) {
-      this.state.testSuite.filter.filters.push({
-        id: null,
-        title: "Select an attribute",
-        attrValues: [],
-      });
-    }
-
-    this.setState(this.state);
-  }
-
-  changeFilterAttributeValues(index, formValues) {
-    this.state.testSuite.filter.filters[index].attrValues = formValues.map(function (formSingleVal) {
-      return { value: formSingleVal.value };
-    });
-    this.setState(this.state);
-  }
-
   changeGrouping(values) {
     this.state.testSuite.filter.groups = values.map(function (value) {
       return value.value;
@@ -191,6 +160,7 @@ class TestCasesFilter extends Component {
     this.setState(this.state);
   }
 
+<<<<<<< HEAD
   getValuesByAttributeId(id) {
     if (!id) return [];
     if (id == "broken") {
@@ -205,10 +175,14 @@ class TestCasesFilter extends Component {
 
   handleFilter() {
     this.state.testSuite.filter.skip = 0;
+=======
+  handleFilterButtonClick() {
+    console.info(this.state.testSuite.filter);
+>>>>>>> dff7d9d (Fixed broken "Filter" button)
     this.props.onFilter(this.state.testSuite.filter);
   }
 
-  createLaunchModal() {
+  handleLaunchClick() {
     this.state.createdLaunch = {
       name: "",
       testSuite: { filter: {} },
@@ -242,7 +216,7 @@ class TestCasesFilter extends Component {
     event.preventDefault();
   }
 
-  showSuiteModal() {
+  handleSaveClick() {
     $("#suite-modal").modal("toggle");
   }
 
@@ -251,13 +225,8 @@ class TestCasesFilter extends Component {
     this.setState(this.state);
   }
 
-  removeFilter(i, event) {
-    this.state.testSuite.filter.filters.splice(i, 1);
-    this.setState(this.state);
-  }
-
   getProjectAttributesSelect() {
-    var projectAttributes = this.state.projectAttributes.map(function (val) {
+    var projectAttributes = this.props.projectAttributes.map(function (val) {
       return { value: val.id, label: val.name };
     });
     return projectAttributes;
@@ -268,13 +237,13 @@ class TestCasesFilter extends Component {
       ...this.state,
       testSuite: {
         ...this.state.testSuite,
-        filter: { ...this.state.filter, filters: mapNewFiltersToOld(this.state.projectAttributes, value) },
+        filter: { ...this.state.testSuite.filter, filters: mapNewFiltersToOld(this.props.projectAttributes, value) },
       },
     });
   };
   render() {
     const newFilters = this.state.testSuite.filter.filters.map(mapOldFilterToNew);
-    const newFormatAttributes = mapAttributesToNewFormat(this.state.projectAttributes);
+    const newFormatAttributes = mapAttributesToNewFormat(this.props.projectAttributes);
     return (
       <div>
         <h2>{this.state.testSuiteNameToDisplay}</h2>
@@ -291,13 +260,13 @@ class TestCasesFilter extends Component {
             </div>
             <div className="col-2"></div>
             <div className="col-4 btn-group" role="group">
-              <button type="button" className="btn btn-primary" onClick={this.handleFilter}>
+              <button type="button" className="btn btn-primary" onClick={this.handleFilterButtonClick}>
                 Filter
               </button>
-              <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>
+              <button type="button" className="btn btn-warning" onClick={this.handleSaveClick}>
                 Save
               </button>
-              <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>
+              <button type="button" className="btn btn-success" onClick={this.handleLaunchClick}>
                 Launch
               </button>
               <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
