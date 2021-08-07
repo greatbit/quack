@@ -3,17 +3,25 @@ import SelectorIcon from "@heroicons/react/solid/SelectorIcon";
 import XCircleIcon from "@heroicons/react/solid/XCircleIcon";
 import { Listbox, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 
 const CustomListbox = ({ label, value, onChange, children, className }) => (
   <Listbox value={value} onChange={onChange} as="div" className={clsx(className, "relative", "flex")}>
-    <Listbox.Button className={clsx("flex h-10 items-center gap-2", className)}>
+    <Listbox.Button className={clsx("flex h-10 items-center gap-2 pl-1 focus-within:outline-focus", className)}>
       <span className="flex-grow">{label}</span>
       <SelectorIcon className="w-4 h-4 text-neutral-fade2 hover:text-neutral-fade1 transition-colors duration-200" />
     </Listbox.Button>
-    <Listbox.Options className="absolute w-max min-w-max bg-white shadow-lg rounded-md overflow-hidden">
-      {children}
-    </Listbox.Options>
+    <Transition
+      enter="transition duration-100 ease-out"
+      enterFrom="transform scale-95 opacity-0"
+      enterTo="transform scale-100 opacity-100"
+      leave="transition duration-75 ease-out"
+      leaveFrom="transform scale-100 opacity-100"
+      leaveTo="transform scale-95 opacity-0"
+      className="absolute w-full min-w-max bg-white shadow-lg rounded-md overflow-hidden"
+    >
+      <Listbox.Options className="focus:outline-none focus-within:outline-none">{children}</Listbox.Options>
+    </Transition>
   </Listbox>
 );
 
@@ -88,7 +96,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
   };
 
   return (
-    <div className="inline-flex items-center gap-3 flex-nowrap rounded-md bg-neutral-fade6 text-neutral-fade1 text-base pl-3">
+    <div className="inline-flex items-center gap-2 flex-nowrap rounded-md bg-neutral-fade6 text-neutral-fade1 text-base pl-2">
       <CustomListbox
         className="flex-grow flex-shrink-0"
         value={value?.attribute}
@@ -99,7 +107,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
           <Option key={attribute.id} value={attribute.id} label={attribute.name} />
         ))}
       </CustomListbox>
-      <span className="font-semibold">{selectedValues.length > 1 ? "IN" : "="}</span>
+      <span className="font-semibold">{selectedValues.length > 1 ? "in" : "="}</span>
       <CustomListbox
         className="flex-grow flex-shrink-0"
         value={selectedValues}
@@ -126,7 +134,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
         ))}
       </CustomListbox>
       <button
-        className="pr-2 text-neutral-fade2 hover:text-neutral-fade1 transition-colors duration-200"
+        className="mr-2 text-neutral-fade2 hover:text-neutral-fade1 transition-colors duration-200 focus:outline-focus"
         onClick={onRemoveClick}
       >
         <XCircleIcon className="w-4 h-4" />
