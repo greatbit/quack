@@ -21,7 +21,9 @@ const CustomListbox = ({ label, value, onChange, children, className }) => (
       leaveTo="transform scale-95 opacity-0"
       className="absolute z-10 w-full min-w-max bg-white shadow-lg rounded-md overflow-hidden"
     >
-      <Listbox.Options className="focus:outline-none focus-within:outline-none">{children}</Listbox.Options>
+      {children && (
+        <Listbox.Options className="focus:outline-none focus-within:outline-none">{children}</Listbox.Options>
+      )}
     </Transition>
   </Listbox>
 );
@@ -103,14 +105,15 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
           )
         }
       >
-        {(selectedAttribute?.values ?? []).map(attributeValue => (
-          <Option
-            key={attributeValue.id}
-            value={attributeValue.id}
-            label={attributeValue.name}
-            forceSelected={selectedValues.includes(attributeValue.id)}
-          />
-        ))}
+        {selectedAttribute?.values.length &&
+          selectedAttribute?.values.map(attributeValue => (
+            <Option
+              key={attributeValue.id}
+              value={attributeValue.id}
+              label={attributeValue.name}
+              forceSelected={selectedValues.includes(attributeValue.id)}
+            />
+          ))}
       </CustomListbox>
       <button
         className="mr-2 text-neutral-fade2 hover:text-neutral-fade1 transition-colors duration-200 focus:outline-focus"

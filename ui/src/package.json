@@ -36,9 +36,9 @@
     "semantic-ui-react": "^0.88.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "craco start",
     "start:dev": "BASE_API_URL=http://localhost:81/api/ yarn start",
-    "build": "react-scripts build",
+    "build": "craco build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "yarn eslint . --cache --cache-strategy content",

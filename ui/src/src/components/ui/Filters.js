@@ -2,7 +2,7 @@ import Filter from "./Filter";
 import PlusCircleIcon from "@heroicons/react/solid/PlusCircleIcon";
 
 const Filters = ({ attributes, value, onChange }) => {
-  const handleFilterChange = index => newValue => onChange(value.map((filter, i) => (i === index ? newValue : value)));
+  const handleFilterChange = index => newValue => onChange(value.map((filter, i) => (i === index ? newValue : filter)));
   const handleRemoveFilterClick = index => () =>
     onChange(value.map((filter, i) => (i === index ? undefined : filter)).filter(Boolean));
   const handleAddFilterClick = () => onChange([...value, { attribute: undefined, values: [] }]);

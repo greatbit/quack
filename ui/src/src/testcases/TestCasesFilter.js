@@ -5,12 +5,37 @@ import LaunchForm from "../launches/LaunchForm";
 import { withRouter } from "react-router";
 import Select from "react-select";
 import qs from "qs";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import $ from "jquery";
 import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
+import Filters from "../components/ui/Filters";
+const mapOldFilterToNew = filter => ({
+  values: filter.attrValues.map(({ value }) => value),
+  attribute: filter.id,
+});
 
+const getAttributeName = (attributes, id) =>
+  (
+    attributes.find(function (attribute) {
+      return attribute.id === id;
+    }) || { attrValues: [] }
+  ).name;
+
+const mapOldAttributeToNew = attribute => ({
+  id: attribute.id,
+  name: attribute.name,
+  values: attribute.attrValues?.length
+    ? attribute.attrValues
+    : attribute.values.map(value => ({ id: value.toLowerCase(), name: value })),
+});
+const mapNewFilterToOld = attributes => filter => ({
+  id: filter.attribute,
+  name: getAttributeName(attributes, filter.attribute),
+  attrValues: filter.values.map(value => ({ value })),
+  title: "Select an attribute",
+});
+const mapNewFiltersToOld = (attributes, filters) => filters.map(mapNewFilterToOld(attributes));
+const mapAttributesToNewFormat = attributes => attributes.map(mapOldAttributeToNew);
 class TestCasesFilter extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +70,7 @@ class TestCasesFilter extends Component {
     this.changeFilterAttributeId = this.changeFilterAttributeId.bind(this);
     this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
-    this.getAttributeName = this.getAttributeName.bind(this);
+
     this.createLaunchModal = this.createLaunchModal.bind(this);
     this.saveSuite = this.saveSuite.bind(this);
     this.showSuiteModal = this.showSuiteModal.bind(this);
@@ -54,18 +79,13 @@ class TestCasesFilter extends Component {
     this.getProjectAttributesSelect = this.getProjectAttributesSelect.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.projectAttributes) {
       this.state.projectAttributes = nextProps.projectAttributes;
-      this.state.testSuite.filter.filters.forEach(
-        function (filter) {
-          filter.name = this.getAttributeName(filter.id);
-        }.bind(this),
-      );
 
       this.state.groupsToDisplay.forEach(
         function (groupToDisplay) {
-          groupToDisplay.label = this.getAttributeName(groupToDisplay.value);
+          groupToDisplay.label = getAttributeName(this.state.projectAttributes, groupToDisplay.value);
         }.bind(this),
       );
     }
@@ -82,7 +102,7 @@ class TestCasesFilter extends Component {
           this.state.testSuiteNameToDisplay = this.state.testSuite.name;
           this.state.groupsToDisplay = this.state.testSuite.filter.groups.map(
             function (attrId) {
-              return { value: attrId, label: this.getAttributeName(attrId) };
+              return { value: attrId, label: getAttributeName(this.state.projectAttributes, attrId) };
             }.bind(this),
           );
           this.setState(this.state);
@@ -99,7 +119,7 @@ class TestCasesFilter extends Component {
         this.state.testSuite.filter.groups = params.groups;
         this.state.groupsToDisplay = params.groups.map(
           function (attrId) {
-            return { value: attrId, label: this.getAttributeName(attrId) };
+            return { value: attrId, label: getAttributeName(this.state.projectAttributes, attrId) };
           }.bind(this),
         );
       }
@@ -122,7 +142,7 @@ class TestCasesFilter extends Component {
             this.state.testSuite.filter.filters.push({
               id: key,
               attrValues: map[key].map(val => ({ value: val })),
-              title: this.getAttributeName(key),
+              title: getAttributeName(this.state.projectAttributes, key),
             });
           }.bind(this),
         );
@@ -188,14 +208,6 @@ class TestCasesFilter extends Component {
     this.props.onFilter(this.state.testSuite.filter);
   }
 
-  getAttributeName(id) {
-    return (
-      this.state.projectAttributes.find(function (attribute) {
-        return attribute.id === id;
-      }) || { attrValues: [] }
-    ).name;
-  }
-
   createLaunchModal() {
     this.state.createdLaunch = {
       name: "",
@@ -251,13 +263,24 @@ class TestCasesFilter extends Component {
     return projectAttributes;
   }
 
+  handleFilterChange = value => {
+    this.setState({
+      ...this.state,
+      testSuite: {
+        ...this.state.testSuite,
+        filter: { ...this.state.filter, filters: mapNewFiltersToOld(this.state.projectAttributes, value) },
+      },
+    });
+  };
   render() {
+    const newFilters = this.state.testSuite.filter.filters.map(mapOldFilterToNew);
+    const newFormatAttributes = mapAttributesToNewFormat(this.state.projectAttributes);
     return (
       <div>
         <h2>{this.state.testSuiteNameToDisplay}</h2>
         <div>
-          <div className="row filter-control-row">
-            <div className="col-1">Grouping</div>
+          <div className="row filter-control-row flex items-center">
+            <div className="col-1 text-neutral font-semibold text-left">Grouping</div>
             <div className="col-5 grouping-control">
               <Select
                 value={this.state.groupsToDisplay}
@@ -282,44 +305,9 @@ class TestCasesFilter extends Component {
               </button>
             </div>
           </div>
-          <div className="row filter-control-row">
-            <div className="col-1">Filter</div>
-            {this.state.testSuite.filter.filters.map(
-              function (filter, i) {
-                return (
-                  <div className="col-5" key={i}>
-                    <div className="row">
-                      <Select
-                        className="col-5 filter-attribute-id-select"
-                        value={{ value: filter.id, label: filter.name }}
-                        onChange={e => this.changeFilterAttributeId(i, e)}
-                        options={this.getProjectAttributesSelect()}
-                      />
-                      <Select
-                        className="col-6 filter-attribute-val-select"
-                        value={filter.attrValues.map(function (attrValue) {
-                          return { value: attrValue.value, label: attrValue.value };
-                        })}
-                        isMulti
-                        onChange={e => this.changeFilterAttributeValues(i, e)}
-                        options={this.getValuesByAttributeId(filter.id).map(function (attrValue) {
-                          return { value: attrValue.value, label: attrValue.value };
-                        })}
-                      />
-                      {filter.id && (
-                        <span
-                          className="col-1 remove-filter-icon clickable red"
-                          index={i}
-                          onClick={e => this.removeFilter(i, e)}
-                        >
-                          <FontAwesomeIcon icon={faMinusCircle} />
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              }.bind(this),
-            )}
+          <div className="flex items-center mb-3">
+            <div className="col-1 pl-0 text-left font-semibold text-neutral">Filter</div>
+            <Filters attributes={newFormatAttributes} value={newFilters} onChange={this.handleFilterChange} />
           </div>
         </div>
         <div
