@@ -3,7 +3,8 @@ import SelectorIcon from "@heroicons/react/solid/SelectorIcon";
 import XCircleIcon from "@heroicons/react/solid/XCircleIcon";
 import { Listbox, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import { useMemo, Fragment } from "react";
+import { useMemo } from "react";
+import SelectedValues from "./SelectedValues";
 
 const CustomListbox = ({ label, value, onChange, children, className }) => (
   <Listbox value={value} onChange={onChange} as="div" className={clsx(className, "relative", "flex")}>
@@ -18,7 +19,7 @@ const CustomListbox = ({ label, value, onChange, children, className }) => (
       leave="transition duration-75 ease-out"
       leaveFrom="transform scale-100 opacity-100"
       leaveTo="transform scale-95 opacity-0"
-      className="absolute w-full min-w-max bg-white shadow-lg rounded-md overflow-hidden"
+      className="absolute z-10 w-full min-w-max bg-white shadow-lg rounded-md overflow-hidden"
     >
       <Listbox.Options className="focus:outline-none focus-within:outline-none">{children}</Listbox.Options>
     </Transition>
@@ -45,28 +46,6 @@ const Option = ({ value, label, forceSelected }) => (
       </div>
     )}
   </Listbox.Option>
-);
-
-const SelectedValue = ({ value, label, onRemoveClick }) => (
-  <span className="bg-neutral-fade1 rounded-md h-5 text-white text-sm flex items-center gap-2 pl-2 pr-1">
-    <span>{label}</span>
-    <button onClick={e => onRemoveClick(e, value)}>
-      <XCircleIcon className="w-3 h-3" />
-    </button>
-  </span>
-);
-
-export const SelectedValues = ({ values, allValues, onRemoveClick }) => (
-  <div className="flex gap-2">
-    {values.map(value => (
-      <SelectedValue
-        key={value}
-        value={value}
-        label={allValues.find(val => val.id === value).name}
-        onRemoveClick={onRemoveClick}
-      />
-    ))}
-  </div>
 );
 
 const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
