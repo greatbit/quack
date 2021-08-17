@@ -4,8 +4,16 @@
 
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&display=swap');
+
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 15px;
 }
+
+html {
+  font-size: 15px;
+}
+

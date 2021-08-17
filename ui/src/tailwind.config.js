@@ -1,17 +1,15 @@
+const color = require("color");
+
 module.exports = {
+  important: ".tailwind",
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
     colors: {
-      text: {
-        DEFAULT: "#2E384D",
-        fade1: "#69707F",
-        fade2: "#8798AD",
-        fade3: "#B0BAC9",
-      },
       white: "#FFF",
       primary: {
         DEFAULT: "#2E5BFF",
+        hover: color("#2E5BFF").darken(0.05).hex(),
       },
       neutral: {
         DEFAULT: "#2E384D",
@@ -28,6 +26,9 @@ module.exports = {
       teal: "#00C1D4",
       purple: "#8C54FF",
     },
+    fontFamily: {
+      sans: ["Noto Sans", "sans-serif"],
+    },
     fontSize: {
       base: "15px",
       sm: "12px",
@@ -35,9 +36,17 @@ module.exports = {
       xl: "34px",
       xxl: "48px",
     },
+
     extend: {
       outline: {
         focus: "3px solid #BFC5D2",
+      },
+      minHeight: {
+        10: "40px",
+      },
+      spacing: {
+        3: "1rem !important",
+        5: "1.25rem !important",
       },
     },
   },

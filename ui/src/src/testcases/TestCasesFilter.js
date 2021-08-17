@@ -1,19 +1,16 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable react/no-direct-mutation-state */
-import React, { Component } from "react";
 import LaunchForm from "../launches/LaunchForm";
-import { withRouter } from "react-router";
-import Select from "react-select";
-import qs from "qs";
-import $ from "jquery";
-import * as Utils from "../common/Utils";
-import Backend from "../services/backend";
 import Filters from "../components/ui/Filters";
+import Listbox from "../components/ui/ListBox";
+import SelectedValues from "../components/ui/SelectedValues";
+import { useRef, useState } from "react";
+import SuiteDialog from "../components/suite/Dialog";
+
 const mapOldFilterToNew = filter => ({
   values: filter.attrValues.map(({ value }) => value),
   attribute: filter.id,
 });
 
+<<<<<<< HEAD
 const getAttributeName = (attributes, id) =>
   (
     attributes.find(function (attribute) {
@@ -183,165 +180,112 @@ class TestCasesFilter extends Component {
   }
 
   handleLaunchClick() {
+=======
+const TestCasesFilter = ({
+  suite,
+  projectAttributes,
+  groups,
+  filters,
+  onChangeGroups,
+  onChangeFilters,
+  onSubmitSuiteDialog,
+}) => {
+  const [showSuiteDialog, setShowSuiteDialog] = useState(false);
+  const handleLaunchClick = () => {
+>>>>>>> 2fb342d (TestCases / TestCaseFilters refactoring)
     this.state.createdLaunch = {
       name: "",
       testSuite: { filter: {} },
       properties: [],
     };
     this.setState(this.state);
-    $("#launch-modal").modal("toggle");
-  }
-
-  saveSuite(event) {
-    var suiteToSave = JSON.parse(JSON.stringify(this.state.testSuite));
-    suiteToSave.filter.filters = (suiteToSave.filter.filters || []).filter(function (filter) {
-      return filter.id;
-    });
-    suiteToSave.filter.filters.forEach(function (filter) {
-      delete filter.title;
-    });
-    Backend.post(this.props.match.params.project + "/testsuite/", suiteToSave)
-      .then(response => {
-        this.state.testSuite = response;
-        this.state.testSuiteNameToDisplay = this.state.testSuite.name;
-        this.setState(this.state);
-        $("#suite-modal").modal("toggle");
-        this.props.history.push(
-          "/" + this.props.match.params.project + "/testcases?testSuite=" + this.state.testSuite.id,
-        );
-      })
-      .catch(error => {
-        Utils.onErrorMessage("Couldn't save testsuite: ", error);
-      });
-    event.preventDefault();
-  }
-
-  handleSaveClick() {
-    $("#suite-modal").modal("toggle");
-  }
-
-  suiteAttrChanged(event) {
-    this.state.testSuite[event.target.name] = event.target.value;
-    this.setState(this.state);
-  }
-
-  getProjectAttributesSelect() {
-    var projectAttributes = this.props.projectAttributes.map(function (val) {
-      return { value: val.id, label: val.name };
-    });
-    return projectAttributes;
-  }
-
-  handleFilterChange = value => {
-    this.setState({
-      ...this.state,
-      testSuite: {
-        ...this.state.testSuite,
-        filter: { ...this.state.testSuite.filter, filters: mapNewFiltersToOld(this.props.projectAttributes, value) },
-      },
-    });
   };
-  render() {
-    const newFilters = this.state.testSuite.filter.filters.map(mapOldFilterToNew);
-    const newFormatAttributes = mapAttributesToNewFormat(this.props.projectAttributes);
-    return (
+
+  const handleSaveClick = () => {
+    setShowSuiteDialog(true);
+  };
+
+  const handleRemoveGroupClick = (e, value) => {
+    e.stopPropagation();
+    onChangeGroups(groups.filter(group => group !== value));
+  };
+
+  const handleChangeGroups = value => {
+    onChangeGroups(groups.includes(value) ? groups.filter(item => item !== value) : [...groups, value]);
+  };
+
+  // const groupIdsToDisplay = this.state.testSuite.filter.groups;
+  const projectAttributesToGroupBy = projectAttributes.filter(attribute => attribute.id !== "broken");
+  return (
+    <>
+      <h2 className="text-xl text-neutral">{suite?.name}</h2>
       <div>
-        <h2>{this.state.testSuiteNameToDisplay}</h2>
-        <div>
-          <div className="row filter-control-row flex items-center">
-            <div className="col-1 text-neutral font-semibold text-left">Grouping</div>
-            <div className="col-5 grouping-control">
-              <Select
-                value={this.state.groupsToDisplay}
-                isMulti
-                onChange={this.changeGrouping}
-                options={this.getProjectAttributesSelect().filter(attr => attr.value != "broken")}
-              />
-            </div>
-            <div className="col-2"></div>
-            <div className="col-4 btn-group" role="group">
-              <button type="button" className="btn btn-primary" onClick={this.handleFilterButtonClick}>
-                Filter
-              </button>
-              <button type="button" className="btn btn-warning" onClick={this.handleSaveClick}>
-                Save
-              </button>
-              <button type="button" className="btn btn-success" onClick={this.handleLaunchClick}>
-                Launch
-              </button>
-              <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
-                Add Test Case
-              </button>
-            </div>
+        <div className="row filter-control-row md:flex items-center">
+          <div className="col-1 text-neutral font-semibold text-left">Grouping</div>
+          <div className="col-5 grouping-control">
+            {projectAttributes.length > 0 && (
+              <Listbox
+                value={groups}
+                onChange={handleChangeGroups}
+                label={
+                  groups.length ? (
+                    <SelectedValues
+                      onRemoveClick={handleRemoveGroupClick}
+                      values={groups}
+                      allValues={projectAttributes}
+                    />
+                  ) : (
+                    <Listbox.Placeholder>Select grouping</Listbox.Placeholder>
+                  )
+                }
+              >
+                {projectAttributesToGroupBy.map(attribute => (
+                  <Listbox.Option key={attribute.id} value={attribute.id} forceSelected={groups.includes(attribute.id)}>
+                    {attribute.name}
+                  </Listbox.Option>
+                ))}
+              </Listbox>
+            )}
           </div>
-          <div className="flex items-center mb-3">
-            <div className="col-1 pl-0 text-left font-semibold text-neutral">Filter</div>
-            <Filters attributes={newFormatAttributes} value={newFilters} onChange={this.handleFilterChange} />
+          <div className="col-2"></div>
+          <div className="col-4 btn-group" role="group">
+            <button type="button" className="btn btn-warning" onClick={handleSaveClick}>
+              Save
+            </button>
+            <button type="button" className="btn btn-success" onClick={handleLaunchClick}>
+              Launch
+            </button>
+            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
+              Add Test Case
+            </button>
           </div>
         </div>
-        <div
-          className="modal fade"
-          id="launch-modal"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="launchLabel"
-          aria-hidden="true"
-        >
-          <LaunchForm launch={this.state.createdLaunch} testSuite={this.state.testSuite} />
-        </div>
-
-        <div
-          className="modal fade"
-          id="suite-modal"
-          tabIndex="-1"
-          role="dialog"
-          aria-labelledby="suiteLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="editAttributeLabel">
-                  Test Suite
-                </h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-
-              <div>
-                <div className="modal-body" id="suite-save-form">
-                  <form>
-                    <div className="form-group row">
-                      <label className="col-sm-3 col-form-label">Name</label>
-                      <div className="col-sm-9">
-                        <input
-                          type="text"
-                          name="name"
-                          className="form-control"
-                          onChange={this.suiteAttrChanged}
-                          defaultValue={this.state.testSuiteNameToDisplay}
-                        />
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary" onClick={this.saveSuite}>
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
+        <div className="md:flex mb-3">
+          <div className="col-1 pl-0 flex-shrink-0 pt-2 text-left font-semibold text-neutral">Filter</div>
+          {projectAttributes?.length && (
+            <Filters attributes={projectAttributes} value={filters} onChange={onChangeFilters} />
+          )}
         </div>
       </div>
-    );
-  }
-}
+      <div
+        className="modal fade"
+        id="launch-modal"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="launchLabel"
+        aria-hidden="true"
+      >
+        <LaunchForm launch={null} testSuite={null} />
+      </div>
 
-export default withRouter(TestCasesFilter);
+      <SuiteDialog
+        initialValues={{ name: "" }}
+        open={showSuiteDialog}
+        onSubmit={onSubmitSuiteDialog}
+        onCancel={() => setShowSuiteDialog(false)}
+      />
+    </>
+  );
+};
+
+export default TestCasesFilter;

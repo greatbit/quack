@@ -5,7 +5,7 @@
 /* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withRouter } from "react-router";
+import { useHistory } from "react-router";
 import * as UserSession from "../user/UserSession";
 import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
@@ -218,4 +218,8 @@ class Header extends Component {
   }
 }
 
-export default withRouter(Header);
+// eslint-disable-next-line import/no-anonymous-default-export
+export default props => {
+  const history = useHistory();
+  return <Header {...props} history={history} />;
+};
