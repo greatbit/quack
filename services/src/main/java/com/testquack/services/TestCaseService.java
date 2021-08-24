@@ -299,4 +299,28 @@ public class TestCaseService extends BaseService<TestCase> {
     public List<IssuePriority> getIssuePriorities(HttpServletRequest request, Session userSession, String issueProjectId) throws Exception {
         return tracker.getIssuePriorities(request, userSession, issueProjectId);
     }
+
+    public TestCase cloneTestCase(Session userSession, String projectId, String testcaseId){
+        TestCase originalTestCase = findOne(userSession, projectId, testcaseId);
+
+        TestCase testCaseToCreate = cleanTestCaseForDuplication(originalTestCase);
+        testCaseToCreate.setName("Clone of " + originalTestCase.getName());
+        return create(userSession, projectId, testCaseToCreate);
+
+    }
+
+    private TestCase cleanTestCaseForDuplication(TestCase originalTestCase){
+        TestCase copyTestCase = (TestCase) originalTestCase.copyTo(new TestCase());
+        long now = System.currentTimeMillis();
+        copyTestCase.setId(null);
+        copyTestCase.getAttachments().clear();
+        copyTestCase.setCreatedBy(null);
+        copyTestCase.setCreatedTime(now);
+
+        copyTestCase.getIssues().clear();
+        copyTestCase.setLastModifiedBy(null);
+        copyTestCase.setLastModifiedTime(now);
+        copyTestCase.getAttributes().putAll(originalTestCase.getAttributes());
+        return copyTestCase;
+    }
 }

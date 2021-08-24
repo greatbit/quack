@@ -12,6 +12,7 @@ import $ from "jquery";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import CreatableSelect from "react-select/lib/Creatable";
 import * as Utils from "../common/Utils";
 import { FadeLoader } from "react-spinners";
@@ -83,6 +84,7 @@ class TestCase extends SubComponent {
     this.cancelEditProperty = this.cancelEditProperty.bind(this);
     this.toggleEditProperty = this.toggleEditProperty.bind(this);
     this.onBrokenToggle = this.onBrokenToggle.bind(this);
+    this.cloneTestCase = this.cloneTestCase.bind(this);
   }
 
   componentDidMount() {
@@ -147,6 +149,18 @@ class TestCase extends SubComponent {
         this.state.loading = false;
         this.setState(this.state);
       });
+  }
+
+  cloneTestCase(){
+      Backend.post(this.projectId  + "/testcase/" + this.state.testcase.id + "/clone")
+            .then(response => {
+              window.location.href = window.location.href.replace('testcase=' + this.state.testcase.id, 'testcase=' + response.id)
+            })
+            .catch(error => {
+              Utils.onErrorMessage("Couldn't clone testcase: ", error);
+              this.state.loading = false;
+              this.setState(this.state);
+            });
   }
 
   handleChange(fieldName, event, index, arrObjectKey, skipStateRefresh) {
@@ -511,7 +525,7 @@ class TestCase extends SubComponent {
           <div className="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
             <div id="name" className="testcase-section">
               <div id="name-display" className="inplace-display row">
-                <div className="col-10">
+                <div className="col-9">
                   <h1>
                     <Link to={"/" + this.projectId + "/testcase/" + this.state.testcase.id}>
                       {this.state.testcase.name || this.state.testcase.importedName || ""}
@@ -529,6 +543,18 @@ class TestCase extends SubComponent {
                   </h1>
                 </div>
                 {!this.state.readonly && (
+                   <div className="col-1">
+                     <div class="dropdown">
+                       <span class="dropdown-toggle clickable" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                           <FontAwesomeIcon icon={faBars} />
+                       </span>
+                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                           <a class="dropdown-item" href="#" onClick={e => this.cloneTestCase()}>Clone</a>
+                         </div>
+                     </div>
+                   </div>
+                 )}
+                {!this.state.readonly && (
                   <div className="col-2">
                     <Checkbox
                       toggle
@@ -538,6 +564,7 @@ class TestCase extends SubComponent {
                     />
                   </div>
                 )}
+
               </div>
               {!this.state.readonly && (
                 <div id="name-form" className="inplace-form" style={{ display: "none" }}>
