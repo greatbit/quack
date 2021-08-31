@@ -28,13 +28,13 @@ class TestCase extends SubComponent {
     this.tinymcePlugins = [
       "advlist autolink lists link image charmap print preview anchor",
       "searchreplace visualblocks code table fullscreen",
-      "insertdatetime media table paste code help wordcount",
+      "insertdatetime media table paste codesample help wordcount autosave",
     ];
     this.tinymceToolbar =
       "undo redo | formatselect | " +
       "bold italic forecolor backcolor | alignleft aligncenter " +
       "alignright alignjustify | bullist numlist outdent indent | " +
-      "removeformat | table | help";
+      "removeformat | table | codesample | help";
     this.state = {
       testcase: {
         id: null,

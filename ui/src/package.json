@@ -16,6 +16,7 @@
     "jquery": "^3.3.1",
     "moment": "^2.24.0",
     "popper.js": "^1.14.3",
+    "prismjs": "^1.24.1",
     "prop-types": "^15.7.2",
     "qs": "^6.7.0",
     "query-string": "^6.5.0",
@@ -57,7 +58,6 @@
     ]
   },
   "eslintConfig": {
-    
     "extends": [
       "react-app",
       "prettier"
