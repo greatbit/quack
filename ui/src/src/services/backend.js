@@ -25,6 +25,7 @@ const getMutationOptions = body => ({
 const backend = {
   get: (url, options) => fetchJSON(url, "GET", options),
   post: (url, body) => fetchJSON(url, "POST", getMutationOptions(body)),
+  postPlain: (url, body) => fetchInternal(url, "POST", getMutationOptions(body)),
   delete: url => fetchInternal(url, "DELETE"),
   put: (url, body) => fetchJSON(url, "PUT", getMutationOptions(body)),
 };

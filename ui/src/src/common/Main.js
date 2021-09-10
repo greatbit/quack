@@ -53,17 +53,17 @@ class Main extends Component {
           <Route
             exact
             path="/user/create-redirect"
-            render={props => <Redirect {...props} requestUrl={"/api/user/create-redirect"} />}
+            render={props => <Redirect {...props} requestUrl={"user/create-redirect"} />}
           />
           <Route
             exact
             path="/user/all-users-redirect"
-            render={props => <Redirect {...props} requestUrl={"/api/user/all-redirect"} />}
+            render={props => <Redirect {...props} requestUrl={"user/all-redirect"} />}
           />
           <Route
             exact
             path="/user/change-password-redirect"
-            render={props => <Redirect {...props} requestUrl={"/api/user/change-password-redirect"} />}
+            render={props => <Redirect {...props} requestUrl={"user/change-password-redirect"} />}
           />
 
           <Route exact path="/user/create" component={CreateUser} />

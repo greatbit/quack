@@ -28,7 +28,7 @@ class ChangePassword extends SubComponent {
       event.preventDefault();
       return;
     }
-    Backend.post("user/change-password", { newPassword: this.state.password })
+    Backend.postPlain("user/change-password", { newPassword: this.state.password })
       .then(response => {
         Utils.onSuccessMessage("Password successfully updated");
         window.location = "/";
