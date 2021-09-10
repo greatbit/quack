@@ -226,6 +226,8 @@ export function isUserOwnerOrAdmin(createdById) {
 export function onErrorMessage(message, error) {
   if (error && error.response && error.response.message) {
     message = message + error.response.message;
+  } else if (error && error.message) {
+    message = message + error.message;
   }
   $("#error-message-text").html(message);
   $("#error-alert").show();

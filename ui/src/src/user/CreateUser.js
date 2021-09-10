@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
+import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
 
 class CreateUser extends Component {
@@ -24,9 +25,12 @@ class CreateUser extends Component {
   }
 
   handleSubmit(event) {
-    Backend.post("user", this.state.user).then(response => {
-      window.location = decodeURI("/user/profile/" + response.login);
-    });
+    Backend.post("user", this.state.user)
+        .then(response => {
+          window.location = decodeURI("/user/profile/" + response.login);
+        }).catch(error => {
+          Utils.onErrorMessage("Couldn't create a user: ", error);
+        });
     event.preventDefault();
   }
 
