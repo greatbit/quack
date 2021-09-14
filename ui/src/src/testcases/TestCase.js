@@ -381,6 +381,7 @@ class TestCase extends SubComponent {
   getAttributeKeysToAdd() {
     return (this.state.projectAttributes || [])
       .filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id))
+      .filter(attribute => attribute.id !== 'broken')
       .map(attribute => ({ value: attribute.id, label: attribute.name }));
   }
 
