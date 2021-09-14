@@ -184,6 +184,7 @@ class TestCasesFilter extends Component {
   }
 
   handleFilter() {
+    this.state.testSuite.filter.skip = 0;
     this.props.onFilter(this.state.testSuite.filter);
   }
 
