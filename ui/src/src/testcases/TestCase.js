@@ -35,6 +35,7 @@ class TestCase extends SubComponent {
       "bold italic forecolor backcolor | alignleft aligncenter " +
       "alignright alignjustify | bullist numlist outdent indent | " +
       "removeformat | table | codesample | help";
+    this.tinymceContentStyle = "p {margin: 0}";
     this.state = {
       testcase: {
         id: null,
@@ -625,6 +626,7 @@ class TestCase extends SubComponent {
                         menubar: false,
                         plugins: this.tinymcePlugins,
                         toolbar: this.tinymceToolbar,
+                        content_style: this.tinymceContentStyle
                       }}
                       onEditorChange={val =>
                         this.handleChange("description", { target: { value: val } }, null, null, true)
@@ -680,6 +682,7 @@ class TestCase extends SubComponent {
                         menubar: false,
                         plugins: this.tinymcePlugins,
                         toolbar: this.tinymceToolbar,
+                        content_style: this.tinymceContentStyle
                       }}
                       onEditorChange={val =>
                         this.handleChange("preconditions", { target: { value: val } }, null, null, true)
@@ -726,6 +729,7 @@ class TestCase extends SubComponent {
                                   menubar: false,
                                   plugins: this.tinymcePlugins,
                                   toolbar: this.tinymceToolbar,
+                                  content_style: this.tinymceContentStyle
                                 }}
                                 onEditorChange={val => this.handleStepActionChange(i, val, false)}
                               />
@@ -739,6 +743,7 @@ class TestCase extends SubComponent {
                                   menubar: false,
                                   plugins: this.tinymcePlugins,
                                   toolbar: this.tinymceToolbar,
+                                  content_style: this.tinymceContentStyle
                                 }}
                                 onEditorChange={val => this.handleStepExpectationChange(i, val, false)}
                               />
@@ -817,6 +822,7 @@ class TestCase extends SubComponent {
                                     menubar: false,
                                     plugins: this.tinymcePlugins,
                                     toolbar: this.tinymceToolbar,
+                                    content_style: this.tinymceContentStyle
                                   }}
                                   onEditorChange={val => this.handleStepActionChange(i, val, false)}
                                 />
@@ -830,6 +836,7 @@ class TestCase extends SubComponent {
                                     menubar: false,
                                     plugins: this.tinymcePlugins,
                                     toolbar: this.tinymceToolbar,
+                                    content_style: this.tinymceContentStyle
                                   }}
                                   onEditorChange={val => this.handleStepExpectationChange(i, val, false)}
                                 />

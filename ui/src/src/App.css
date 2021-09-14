@@ -319,14 +319,14 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
     margin-left: 220px;
 }
 
-.inplace-display{
-    white-space: pre-wrap;
-}
-
 .tox-notifications-container {
     display: none !important;
 }
 
 .rounded {
     border-radius: .8rem!important;
+}
+
+.inplace-display p {
+    margin-bottom: 0rem;
 }
