@@ -41,7 +41,7 @@ class Header extends Component {
           this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
         }
       });
-    Backend.get("project?includedFields=name,description,id,allowedGroups")
+    Backend.get("project?includedFields=name,description,id,readWriteGroups,readWriteUsers")
       .then(response => {
         this.state.projects = response;
         this.setState(this.state);
