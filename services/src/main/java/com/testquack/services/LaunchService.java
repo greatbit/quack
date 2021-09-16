@@ -108,7 +108,7 @@ public class LaunchService extends BaseService<Launch> {
                 launchTestCase.setFailureDetails(failureDetails);
                 addFailureDetails(request, session, projectId, launchTestCase, failureDetails);
             }
-            updateStatus(session.getPerson().getId(), launchTestCase, status);
+            updateStatus(session.getPerson().getLogin(), launchTestCase, status);
             update(session, projectId, launch);
 
             //Emit audit on terminal status
@@ -295,19 +295,10 @@ public class LaunchService extends BaseService<Launch> {
     }
 
     private void updateStatus(String userId, LaunchTestCase launchTestCase, LaunchStatus status) {
-        LaunchStatus currentStatus = launchTestCase.getLaunchStatus();
-        if (currentStatus.equals(RUNNING) &&
-                !emptyIfNull(launchTestCase.getCurrentUser()).equals(userId) &&
-                !status.equals(RUNNABLE)){
-            throw new EntityAccessDeniedException(
-                    format("Test Case with UUID %s is being executed by user %s", launchTestCase.getUuid(), launchTestCase.getCurrentUser())
-            );
-        } else {
-            if (status.equals(RUNNING)){
-                launchTestCase.setCurrentUser(userId);
-            }
-            launchTestCase.setLaunchStatus(status);
+        if (status.equals(RUNNING)){
+            launchTestCase.setCurrentUser(userId);
         }
+        launchTestCase.setLaunchStatus(status);
         if (!launchTestCase.getUsers().contains(userId)){
             launchTestCase.getUsers().add(userId);
         }
