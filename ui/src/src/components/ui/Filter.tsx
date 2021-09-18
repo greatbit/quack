@@ -1,29 +1,40 @@
-import { useMemo } from "react";
+import { EventHandler, MouseEvent, useMemo } from "react";
 import SelectedValues from "./SelectedValues";
 import { BasicListbox as CustomListbox } from "./ListBox";
 import XCircleIcon from "@heroicons/react/solid/XCircleIcon";
 import { inputBackgroundClasses, inputBorderClasses, inputTextClasses } from "./input";
 import clsx from "clsx";
 import { focusClasses } from "./focus";
+import { ExistingAttribute, FakeAttribute } from "../../domain";
 
-const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
+export type FilterValue = {
+  attribute: string | undefined;
+  values: string[];
+};
+export type FilterProps = {
+  value: FilterValue;
+  onChange: (value: FilterValue) => void;
+  attributes: (ExistingAttribute | FakeAttribute)[];
+  onRemoveClick: EventHandler<MouseEvent>;
+};
+const Filter = ({ value, onChange, attributes, onRemoveClick }: FilterProps) => {
   const selectedAttribute = useMemo(
     () => attributes.find(attribute => attribute.id === value?.attribute),
     [attributes, value],
   );
 
   const selectedValues = value?.values || [];
-  const handleAttributeChange = attribute => {
+  const handleAttributeChange = (attribute: string | undefined) => {
     onChange({ attribute, values: [] });
   };
-  const handleValueChange = newValue => {
+  const handleValueChange = (newValue: string) => {
     const prev = value?.values ?? [];
     onChange({
       ...value,
       values: prev.includes(newValue) ? prev.filter(value => value !== newValue) : [...prev, newValue],
     });
   };
-  const handleRemoveValueClick = (e, removeValue) => {
+  const handleRemoveValueClick = (e: MouseEvent, removeValue: string) => {
     e.stopPropagation();
     const prev = value?.values ?? [];
     onChange({
@@ -48,7 +59,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
         onChange={handleAttributeChange}
         label={
           value?.attribute ? (
-            selectedAttribute.name
+            selectedAttribute?.name
           ) : (
             <CustomListbox.Placeholder>Select attribute</CustomListbox.Placeholder>
           )
@@ -64,7 +75,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
       <CustomListbox
         className="flex-grow flex-shrink-0"
         buttonClassName="pl-1"
-        value={selectedValues}
+        value={selectedValues as any}
         onChange={handleValueChange}
         label={
           selectedValues.length ? (
@@ -78,7 +89,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }) => {
           )
         }
       >
-        {selectedAttribute?.values.length &&
+        {!!selectedAttribute?.values.length &&
           selectedAttribute?.values.map(attributeValue => (
             <CustomListbox.Option
               key={attributeValue.id}

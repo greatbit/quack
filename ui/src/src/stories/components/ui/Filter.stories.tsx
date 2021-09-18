@@ -9,7 +9,7 @@ export default {
   args: { attributes },
 };
 
-export const Default = args => {
+export const Default = (args: any) => {
   const [state, setState] = useState({ attribute: undefined, values: [] });
   return <Filter value={state} onChange={setState} {...args} />;
 };

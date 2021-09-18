@@ -20,7 +20,7 @@ export default {
   argTypes: { onClose: { action: true } },
 };
 
-export const Default = args => (
+export const Default = (args: any) => (
   <Dialog open {...args} className="max-w-md w-100">
     <Dialog.Title className="p-5">{args.title}</Dialog.Title>
     <Dialog.Close onClick={args.onClose} />
@@ -30,7 +30,7 @@ export const Default = args => (
   </Dialog>
 );
 
-export const WithOKCancelFooter = args => (
+export const WithOKCancelFooter = (args: any) => (
   <Dialog open {...args} className="max-w-md w-100">
     <div className="p-5">
       <p>{args.text}</p>
@@ -39,7 +39,7 @@ export const WithOKCancelFooter = args => (
   </Dialog>
 );
 
-export const LongText = args => (
+export const LongText = (args: any) => (
   <Dialog open {...args} className="max-w-md">
     <Dialog.Title className="p-5">{args.title}</Dialog.Title>
     <Dialog.Close />

@@ -1,5 +1,5 @@
 import XCircleIcon from "@heroicons/react/solid/XCircleIcon";
-import { EventHandler, MouseEvent, ReactNode } from "react";
+import { MouseEvent, ReactNode } from "react";
 
 export interface Value {
   id: string;
@@ -23,7 +23,7 @@ const SelectedValue = ({ value, label, onRemoveClick }: SelectedValueProps) => (
 export interface SelectedValuesProps<TValue extends Value> {
   values: string[];
   allValues: TValue[];
-  onRemoveClick: EventHandler<MouseEvent>;
+  onRemoveClick: (e: MouseEvent, value: string) => void;
 }
 const SelectedValues = <TValue extends Value>({ values, allValues, onRemoveClick }: SelectedValuesProps<TValue>) => (
   <div className="flex flex-wrap gap-2 mt-2 mb-2">

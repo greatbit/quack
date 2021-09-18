@@ -1,6 +1,20 @@
 import qs from "qs";
 import * as Utils from "../common/Utils";
-import { Attribute, Suite } from "../domain";
+import {
+  ExistingAttribute,
+  ExistingSuite,
+  Meta,
+  SuiteDraft,
+  WithID,
+  FakeAttribute,
+  ExistingAttributeFilter,
+  TimeMeta,
+  DeletedMeta,
+  AttributeFilterDraft,
+  ExistingTestCase,
+  RootTestCaseGroup,
+} from "../domain";
+
 export const getApiBaseUrl = (url: string) => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
 const getOptions = (options?: RequestInit) => ({
   ...options,
@@ -41,36 +55,179 @@ const backend = {
 };
 
 export interface TestCasesFilter {}
-const mapServerAttributesToClient = (response: Attribute[]) => {
-  const attributes = response.sort((a, b) => (a.name || "").localeCompare(b.name));
-  attributes.unshift({
-    id: "broken",
-    name: "Broken",
-    values: [
-      { id: "true", name: "True" },
-      { id: "false", name: "False" },
-    ],
-  });
-  return attributes;
+type ServerAttribute = Meta &
+  WithID & {
+    name: string;
+    values: string[];
+    attrValues: { uuid: string; value: string }[];
+  };
+const mapServerAttributeToClient = (attribute: ServerAttribute) => ({
+  ...copyMeta(attribute),
+  id: attribute.id,
+  name: attribute.name,
+  values: attribute.attrValues
+    ? attribute.attrValues.map(({ uuid, value }) => ({ id: uuid, name: value }))
+    : attribute.values.map(value => ({ id: value.toLowerCase(), name: value })),
+});
+
+const mapServerAttributesToClient = (response: ServerAttribute[]): (ExistingAttribute | FakeAttribute)[] => {
+  const clientAttributes = response.map(mapServerAttributeToClient);
+  const attributes = clientAttributes.sort((a, b) => (a.name || "").localeCompare(b.name));
+  return [
+    {
+      id: "broken",
+      name: "Broken",
+      values: [
+        { id: "true", name: "True" },
+        { id: "false", name: "False" },
+      ],
+    },
+    ...attributes,
+  ];
 };
+
+const mapFiltersToQueryParams = (filters: AttributeFilterDraft[]): string =>
+  filters
+    .reduce<{ key: string; value: string }[]>(
+      (acc, filter) => [
+        ...acc,
+        ...filter.values.reduce<{ key: string; value: string }[]>(
+          (acc, value) => [...acc, { key: `attributes.${filter.attribute}`, value }],
+          [],
+        ),
+      ],
+      [],
+    )
+    .map(param => `${param.key}=${encodeURIComponent(param.value)}`)
+    .join("&");
+
+const mapGroupsToQueryParams = (groups: string[]) => groups.map(group => `groups=${group}`).join("&");
 
 export const backendService = {
   project: (projectId: string) => ({
     testSuites: {
       single: (testSuiteId: string) => ({
-        get: () => backend.get(projectId + "/testsuite/" + testSuiteId),
+        get: () =>
+          backend.get<ExistingServerSuite>(projectId + "/testsuite/" + testSuiteId).then(mapServerSuiteToClient),
+        update: async (suite: ExistingSuite) =>
+          mapServerSuiteToClient(
+            await backend.put<ExistingServerSuite>(projectId + "/testsuite", mapClientSuiteToBackend(suite)),
+          ),
       }),
-      create: (suite: Suite) => backend.post(projectId + "/testsuite/", suite),
+      create: async (suite: SuiteDraft) =>
+        mapServerSuiteToClient(await backend.post(projectId + "/testsuite/", mapNewClientSuiteToBackend(suite))),
     },
     attributes: {
-      list: () => backend.get<Attribute[]>(projectId + "/attribute").then(mapServerAttributesToClient),
+      list: () => backend.get<ServerAttribute[]>(projectId + "/attribute").then(mapServerAttributesToClient),
     },
-    testcases: {
+    testCases: {
       count: (filter: TestCasesFilter) => backend.get(projectId + "/testcase/count?" + qs.stringify(filter)),
-      tree: (filter: TestCasesFilter) => backend.get(projectId + "/testcase/tree?" + qs.stringify(filter)),
-      list: (filter: TestCasesFilter) => backend.get(projectId + "/testcase?" + qs.stringify(filter)),
+      tree: (filters: AttributeFilterDraft[], groups: string[]) =>
+        backend.get<RootTestCaseGroup>(
+          projectId + "/testcase/tree?" + [mapFiltersToQueryParams(filters), mapGroupsToQueryParams(groups)].join("&"),
+        ),
+      list: (filters: AttributeFilterDraft[]) =>
+        backend.get<ExistingTestCase[]>(projectId + "/testcase?" + mapFiltersToQueryParams(filters)),
     },
   }),
 };
+
+export type ServerAttributeFilterPayload = {
+  id: string;
+  attrValues: AttrValue[];
+};
+export type ServerAttributeFilterDraft = {
+  id: string | undefined;
+  attrValues: AttrValue[];
+};
+const mapNewClientFilterToBackend = (filter: AttributeFilterDraft): ServerAttributeFilterDraft => ({
+  id: filter.attribute,
+  attrValues: filter.values.map(value => ({ value })),
+});
+
+const copyMeta = (meta: Meta & WithID): Meta & WithID => ({
+  createdBy: meta.createdBy,
+  createdTime: meta.createdTime,
+  lastModifiedBy: meta.lastModifiedBy,
+  lastModifiedTime: meta.lastModifiedTime,
+  deleted: meta.deleted,
+  id: meta.id,
+});
+
+export type AttrValue = { value: string };
+export type ServerAttributeFilter = DeletedMeta & TimeMeta & { id: string; attrValues: AttrValue[] };
+export type ExistingServerAttributeFilter = WithID & DeletedMeta & TimeMeta & {};
+export interface ServerSuite {
+  name: string;
+  filter: {
+    filters: ServerAttributeFilter[];
+    groups: string[];
+    notFields: Record<string, string[]>;
+  };
+}
+export type ExistingServerSuite = ServerSuite & WithID & Meta;
+export type NewServerSuite = {
+  name: string;
+  filter: {
+    filters: ServerAttributeFilterDraft[];
+    groups: string[];
+    notFields: Record<string, string[]>;
+  };
+};
+
+export const mapNewSuiteToServer = (suite: SuiteDraft): NewServerSuite => ({
+  name: suite.name,
+  filter: {
+    filters: suite.filters.map(mapNewClientFilterToBackend),
+    groups: [],
+    notFields: {},
+  },
+});
+
+const mapClientFilterToBackend = (filter: ExistingAttributeFilter): ServerAttributeFilter => ({
+  attrValues: filter.values.map(value => ({ value: value })),
+  createdTime: filter.createdTime,
+  id: filter.attribute,
+  lastModifiedTime: filter.lastModifiedTime,
+  deleted: filter.deleted,
+});
+
+const mapNewClientSuiteToBackend = (suite: SuiteDraft) => ({
+  name: suite.name,
+  filter: {
+    filters: suite.filters.map(mapNewClientFilterToBackend),
+    groups: [],
+    notFields: {
+      id: suite.excludedTestCases,
+    },
+  },
+});
+
+const mapClientSuiteToBackend = (suite: ExistingSuite): ExistingServerSuite => ({
+  ...copyMeta(suite),
+  name: suite.name,
+  filter: {
+    filters: suite.filters.map(mapClientFilterToBackend),
+    groups: [],
+    notFields: {
+      id: suite.excludedTestCases,
+    },
+  },
+});
+
+const mapServerFilterToClient = (filter: ServerAttributeFilter): ExistingAttributeFilter => ({
+  attribute: filter.id,
+  values: filter.attrValues.map(value => value.value),
+  createdTime: filter.createdTime,
+  deleted: filter.deleted,
+  lastModifiedTime: filter.lastModifiedTime,
+});
+
+const mapServerSuiteToClient = (suite: ExistingServerSuite): ExistingSuite => ({
+  ...copyMeta(suite),
+  name: suite.name,
+  filters: (suite.filter?.filters ?? []).map(mapServerFilterToClient),
+  excludedTestCases: suite.filter.notFields.id ?? [],
+});
 
 export default backend;

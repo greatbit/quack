@@ -7,7 +7,7 @@ export default {
   args: { label: "test" },
 };
 
-export const Default = args => {
+export const Default = (args: any) => {
   const [state, setState] = useState({ attribute: undefined, values: [] });
   return (
     <CustomListbox value={state} onChange={setState} {...args}>

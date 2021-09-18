@@ -17,3 +17,9 @@ html {
   font-size: 15px;
 }
 
+body .tailwind .pl-5 {
+  padding: 1.25rem !important;
+}
+body .tailwind .p-5 {
+  padding: 1.25rem !important;
+}

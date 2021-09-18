@@ -1,4 +1,4 @@
-import React from "react";
+import { MouseEvent } from "react";
 import SelectedValues from "../../../components/ui/SelectedValues";
 import { attributes } from "./attributes";
 
@@ -11,9 +11,16 @@ export default {
     values: allValues.map(val => val.id),
     allValues,
   },
+  argTypes: {
+    onRemoveClick: { action: true },
+  },
 };
 
-export const Default = args => {
+export const Default = (args: {
+  values: string[];
+  allValues: any;
+  onRemoveClick: (e: MouseEvent, value: string) => void;
+}) => {
   return (
     <div className="bg-neutral-fade6 rounded-md flex p-3">
       <SelectedValues {...args} />

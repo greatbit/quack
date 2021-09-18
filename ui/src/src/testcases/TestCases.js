@@ -3,7 +3,7 @@
 import React, { useCallback } from "react";
 import SubComponent from "../common/SubComponent";
 import TestCaseForm from "../testcases/TestCaseForm";
-import TestCasesFilter from "../testcases/TestCasesFilter";
+import TestCasesFilter from "../testcases/TestCasesFilters";
 import TestCase from "../testcases/TestCase";
 import $ from "jquery";
 import qs from "qs";

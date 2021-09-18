@@ -1,5 +1,3 @@
-import React from "react";
-
 import Button from "../../../components/ui/Button";
 
 export default {
@@ -12,6 +10,6 @@ export default {
   argTypes: { onClick: { action: true } },
 };
 
-export const Default = args => <Button {...args} />;
-export const Primary = args => <Button.Primary {...args} />;
-export const Link = args => <Button.Link {...args} />;
+export const Default = (args: any) => <Button {...args} />;
+export const Primary = (args: any) => <Button.Primary {...args} />;
+export const Link = (args: any) => <Button.Link {...args} />;

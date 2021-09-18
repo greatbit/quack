@@ -80,3 +80,4 @@ fabric.properties
 
 .vscode
 
+ui/src/yarn-error.log

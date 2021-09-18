@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
-import TestCases from "../testcases/TestCases";
+import TestCasesScreen from "../testcases/TestCasesScreen";
 import TestSuites from "../testsuites/TestSuites";
 import Projects from "../projects/Projects";
 import ProjectForm from "../projects/ProjectForm";
@@ -24,6 +24,7 @@ import Events from "../audit/Events";
 import Redirect from "../common/Redirect";
 import { Suspense } from "react";
 import Loading from "../components/ui/Loading";
+import { RecoilRoot } from "recoil";
 
 class Main extends Component {
   onProjectChange(project) {
@@ -111,7 +112,13 @@ class Main extends Component {
             <Route
               exact
               path="/:project/testcases"
-              render={props => <TestCases {...props} onProjectChange={this.onProjectChange.bind(this)} />}
+              render={props => (
+                <RecoilRoot>
+                  <Suspense fallback={<Loading />}>
+                    <TestCasesScreen projectID={props.match.params.project} />
+                  </Suspense>
+                </RecoilRoot>
+              )}
             />
             <Route
               path="/:project/testsuites"
