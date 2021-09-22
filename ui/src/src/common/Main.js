@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import TestCasesScreen from "../testcases/TestCasesScreen";
+import TestSuiteScreen from "../testcases/TestSuiteScreen";
 import TestSuites from "../testsuites/TestSuites";
 import Projects from "../projects/Projects";
 import ProjectForm from "../projects/ProjectForm";
@@ -121,9 +122,21 @@ class Main extends Component {
               )}
             />
             <Route
+              exact
+              path="/:project/testsuites/:id"
+              render={props => (
+                <RecoilRoot>
+                  <Suspense fallback={<Loading />}>
+                    <TestSuiteScreen projectID={props.match.params.project} suiteID={props.match.params.id} />
+                  </Suspense>
+                </RecoilRoot>
+              )}
+            />
+            <Route
               path="/:project/testsuites"
               render={props => <TestSuites {...props} onProjectChange={this.onProjectChange.bind(this)} />}
             />
+
             <Route
               exact
               path="/:project/launches/"

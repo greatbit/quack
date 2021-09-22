@@ -40,9 +40,11 @@ export type AttributeFilterDraft = {
   values: string[];
 };
 export type ExistingAttributeFilter = AttributeFilter & DeletedMeta & TimeMeta;
+
 export interface Suite {
   name: string;
-  filters: ExistingAttributeFilter[];
+  filters: (ExistingAttributeFilter | AttributeFilterDraft)[];
+  groups: string[];
   excludedTestCases: string[];
 }
 

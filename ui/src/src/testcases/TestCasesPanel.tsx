@@ -1,9 +1,8 @@
 import Button from "../components/ui/Button";
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 import PlayIcon from "@heroicons/react/solid/PlayIcon";
 import { ExistingAttribute, FakeAttribute } from "../domain";
 import TestCase from "./TestCase";
-import { Loading } from "../components/ui";
 
 export type TestCasesPanelProps = PropsWithChildren<{
   projectID: string;

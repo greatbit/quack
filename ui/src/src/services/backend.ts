@@ -110,9 +110,7 @@ export const backendService = {
         get: () =>
           backend.get<ExistingServerSuite>(projectId + "/testsuite/" + testSuiteId).then(mapServerSuiteToClient),
         update: async (suite: ExistingSuite) =>
-          mapServerSuiteToClient(
-            await backend.put<ExistingServerSuite>(projectId + "/testsuite", mapClientSuiteToBackend(suite)),
-          ),
+          mapServerSuiteToClient(await backend.put(projectId + "/testsuite/", mapClientSuiteToBackend(suite))),
       }),
       create: async (suite: SuiteDraft) =>
         mapServerSuiteToClient(await backend.post(projectId + "/testsuite/", mapNewClientSuiteToBackend(suite))),
@@ -155,17 +153,34 @@ const copyMeta = (meta: Meta & WithID): Meta & WithID => ({
 });
 
 export type AttrValue = { value: string };
-export type ServerAttributeFilter = DeletedMeta & TimeMeta & { id: string; attrValues: AttrValue[] };
+export type ServerAttributeFilter = DeletedMeta & TimeMeta & { id: string | undefined; attrValues: AttrValue[] };
+
 export type ExistingServerAttributeFilter = WithID & DeletedMeta & TimeMeta & {};
 export interface ServerSuite {
   name: string;
   filter: {
-    filters: ServerAttributeFilter[];
+    filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
     groups: string[];
     notFields: Record<string, string[]>;
   };
 }
-export type ExistingServerSuite = ServerSuite & WithID & Meta;
+export type ExistingServerSuite = ServerSuite &
+  WithID &
+  Meta & {
+    filter?: {
+      filters: ServerAttributeFilter[];
+      groups: string[];
+      notFields: Record<string, string[]>;
+    };
+  };
+export type SaveExistingSuiteParams = ServerSuite &
+  WithID &
+  Meta & {
+    filter: {
+      filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
+    };
+  };
+
 export type NewServerSuite = {
   name: string;
   filter: {
@@ -183,13 +198,22 @@ export const mapNewSuiteToServer = (suite: SuiteDraft): NewServerSuite => ({
     notFields: {},
   },
 });
+const isExistingAttributeFilter = (
+  filter: ExistingAttributeFilter | AttributeFilterDraft,
+): filter is ExistingAttributeFilter => !!(filter as ExistingAttributeFilter).createdTime;
 
-const mapClientFilterToBackend = (filter: ExistingAttributeFilter): ServerAttributeFilter => ({
+const mapClientFilterToBackend = (
+  filter: ExistingAttributeFilter | AttributeFilterDraft,
+): ServerAttributeFilter | ServerAttributeFilterDraft => ({
   attrValues: filter.values.map(value => ({ value: value })),
-  createdTime: filter.createdTime,
   id: filter.attribute,
-  lastModifiedTime: filter.lastModifiedTime,
-  deleted: filter.deleted,
+  ...(isExistingAttributeFilter(filter)
+    ? {
+        createdTime: filter.createdTime,
+        lastModifiedTime: filter.lastModifiedTime,
+        deleted: filter.deleted,
+      }
+    : {}),
 });
 
 const mapNewClientSuiteToBackend = (suite: SuiteDraft) => ({
@@ -203,7 +227,7 @@ const mapNewClientSuiteToBackend = (suite: SuiteDraft) => ({
   },
 });
 
-const mapClientSuiteToBackend = (suite: ExistingSuite): ExistingServerSuite => ({
+const mapClientSuiteToBackend = (suite: ExistingSuite): SaveExistingSuiteParams => ({
   ...copyMeta(suite),
   name: suite.name,
   filter: {
@@ -216,7 +240,7 @@ const mapClientSuiteToBackend = (suite: ExistingSuite): ExistingServerSuite => (
 });
 
 const mapServerFilterToClient = (filter: ServerAttributeFilter): ExistingAttributeFilter => ({
-  attribute: filter.id,
+  attribute: filter.id!,
   values: filter.attrValues.map(value => value.value),
   createdTime: filter.createdTime,
   deleted: filter.deleted,
@@ -227,7 +251,8 @@ const mapServerSuiteToClient = (suite: ExistingServerSuite): ExistingSuite => ({
   ...copyMeta(suite),
   name: suite.name,
   filters: (suite.filter?.filters ?? []).map(mapServerFilterToClient),
-  excludedTestCases: suite.filter.notFields.id ?? [],
+  groups: suite.filter?.groups ?? [],
+  excludedTestCases: suite.filter?.notFields.id ?? [],
 });
 
 export default backend;

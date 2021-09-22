@@ -1,6 +1,6 @@
 import { FunctionComponent, Suspense } from "react";
 import { backendService } from "../services/backend";
-import { selectorFamily, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { useJSONQueryStringState, useQueryStringState } from "../lib/hooks";
 import TestCasesFilter from "./TestCasesFilters";
 import { FilterValue } from "../components/ui/Filter";
@@ -11,32 +11,20 @@ import { useHistory } from "react-router";
 import TestCaseList from "./TestCaseList";
 import TestCaseTree from "./TestCaseTree";
 import { useExclusion } from "./hooks";
-import { exclusionAtom } from "./testCasesScreen.data";
+import { attributesSelector, exclusionAtom } from "./testCasesScreen.data";
 import { Loading } from "../components/ui";
 
 export type TestCasesScreenProps = {
   projectID: string;
 };
 
-export type WithProjectID = {
-  projectID: string;
-};
-
-const attributesSelector = selectorFamily({
-  key: "project-attributes",
-  get:
-    ({ projectID }: WithProjectID) =>
-    () =>
-      backendService.project(projectID).attributes.list(),
-});
-
-const useSaveSuite = (projectID: string, filters: AttributeFilterDraft[], excludedTestCases: string[]) => {
+const useCreateSuite = (projectID: string, filters: AttributeFilterDraft[], excludedTestCases: string[]) => {
   const history = useHistory();
   return async (values: FormValues) => {
     const suite = await backendService
       .project(projectID)
       .testSuites.create({ filters, excludedTestCases, name: values.name });
-    history.push(`/${projectID}/suites/${suite.id}`);
+    history.push(`/${projectID}/testsuites/${suite.id}`);
   };
 };
 
@@ -46,7 +34,7 @@ const TextCasesScreen: FunctionComponent<TestCasesScreenProps> = ({ projectID })
   const [groups, handleChangeGroups] = useJSONQueryStringState<string[]>("groups", []);
   const [showSaveDialog, setShowSaveDialog] = useQueryStringState("save");
   const [isTestCaseSelected, toggleTestCase, excludedTestCases, setExcludedTestCases] = useExclusion(exclusionAtom);
-  const saveSuite = useSaveSuite(projectID, filters!, groups!);
+  const saveSuite = useCreateSuite(projectID, filters!, groups!);
 
   const sharedListProps = {
     projectID,

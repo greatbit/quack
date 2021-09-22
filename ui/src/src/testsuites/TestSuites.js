@@ -93,37 +93,31 @@ class TestSuites extends SubComponent {
           <div className="sweet-loading">
             <FadeLoader sizeUnit={"px"} size={100} color={"#135f38"} loading={this.state.loading} />
           </div>
-          {this.state.testSuitesToDisplay.map(
-            function (testSuite) {
-              return (
-                <div className="col-sm-6" key={testSuite.id}>
-                  <div className="card testsuite-card col-sm-10">
-                    <div className="card-body">
-                      <div className="row">
-                        <div className="col-11">
-                          <h5 className="card-title">{testSuite.name}</h5>
-                        </div>
-                        <div className="col1">
-                          <span
-                            className="clickable edit-icon-visible red float-right"
-                            onClick={e => this.removeTestSuiteConfirmation(testSuite.id)}
-                          >
-                            <FontAwesomeIcon icon={faMinusCircle} />
-                          </span>
-                        </div>
-                      </div>
-                      <p className="card-text">
-                        <Link to={"/" + this.props.match.params.project + "/testcases?testSuite=" + testSuite.id}>
-                          View
-                        </Link>
-                      </p>
+          {this.state.testSuitesToDisplay.map(testSuite => (
+            <div className="col-sm-6" key={testSuite.id}>
+              <div className="card testsuite-card col-sm-10">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-11">
+                      <h5 className="card-title">{testSuite.name}</h5>
+                    </div>
+                    <div className="col1">
+                      <span
+                        className="clickable edit-icon-visible red float-right"
+                        onClick={e => this.removeTestSuiteConfirmation(testSuite.id)}
+                      >
+                        <FontAwesomeIcon icon={faMinusCircle} />
+                      </span>
                     </div>
                   </div>
-                  <div className="col-sm-1"></div>
+                  <p className="card-text">
+                    <Link to={"/" + this.props.match.params.project + "/testsuites/" + testSuite.id}>View</Link>
+                  </p>
                 </div>
-              );
-            }.bind(this),
-          )}
+              </div>
+              <div className="col-sm-1"></div>
+            </div>
+          ))}
         </div>
 
         <div className="modal fade" tabIndex="-1" role="dialog" id="remove-testsuite-confirmation">

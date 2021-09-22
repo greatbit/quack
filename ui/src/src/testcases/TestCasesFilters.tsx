@@ -7,17 +7,19 @@ import { inputBackgroundClasses } from "../components/ui/input";
 import Listbox from "../components/ui/ListBox";
 import SelectedValues from "../components/ui/SelectedValues";
 import { captionClasses } from "../components/ui/typography";
-import { ExistingAttribute, FakeAttribute } from "../domain";
+import { ExistingAttribute, ExistingAttributeFilter, FakeAttribute } from "../domain";
 
 export type TestCasesFiltersProps = {
   projectAttributes: (FakeAttribute | ExistingAttribute)[];
   groups: string[];
   filters: FilterValue[];
   onChangeGroups: (value: string[]) => void;
-  onChangeFilters: (value: FilterValue[]) => void;
-  onSaveSuiteClick: () => void;
-  showSave: boolean;
-};
+  onChangeFilters: (value: (FilterValue | ExistingAttributeFilter)[]) => void;
+} & (
+  | { showSave: true; onSaveSuiteClick: () => void }
+  | { showSave?: false | undefined; onSaveSuiteClick?: () => void }
+);
+
 const TestCasesFilter = ({
   projectAttributes,
   groups,
