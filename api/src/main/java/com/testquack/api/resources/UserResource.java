@@ -7,10 +7,10 @@ import com.testquack.beans.User;
 import com.testquack.services.BaseService;
 import com.testquack.services.UserService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import ru.greatbit.whoru.auth.AuthProvider;
 import ru.greatbit.whoru.auth.RedirectResponse;
 import ru.greatbit.whoru.auth.Session;
@@ -19,6 +19,7 @@ import ru.greatbit.whoru.auth.SessionProvider;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -33,6 +34,9 @@ public class UserResource extends BaseResource<User> {
 
     @Autowired
     private UserService service;
+
+    @Value("${quack.ui.url}")
+    private String baseUiUrl;
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
@@ -95,6 +99,12 @@ public class UserResource extends BaseResource<User> {
     @Path("/login")
     public Session login(@QueryParam("login") String login,
                          @QueryParam("password") String password) {
+        return authProvider.doAuth(request, response);
+    }
+
+    @GET
+    @Path("/auth")
+    public Session login() throws IOException {
         return authProvider.doAuth(request, response);
     }
 

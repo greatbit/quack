@@ -13,15 +13,17 @@ class Auth extends Component {
       .then(response => {
         var url = response.url || "/login";
         var retpath = params.retpath || "";
-        var retpathParamName = response.retpathParamName || "retpath";
-        if (
-          retpath.startsWith(window.location.origin + "/auth") ||
-          retpath.startsWith(window.location.origin + "/login")
-        ) {
-          retpath = "/";
-        }
+        if(!response.strictUrl){
+            var retpathParamName = response.retpathParamName || "retpath";
+            if (
+              retpath.startsWith(window.location.origin + "/auth") ||
+              retpath.startsWith(window.location.origin + "/login")
+            ) {
+              retpath = "/";
+            }
 
-        url = url + "?" + retpathParamName + "=" + encodeURIComponent(retpath);
+            url = url + "?" + retpathParamName + "=" + encodeURIComponent(retpath);
+        }
         window.location = url;
       })
       .catch(error => console.log(error));

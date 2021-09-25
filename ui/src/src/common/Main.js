@@ -14,6 +14,7 @@ import Attributes from "../attributes/Attributes";
 import TestCaseForm from "../testcases/TestCaseForm";
 import TestCase from "../testcases/TestCase";
 import Auth from "../user/Auth";
+import IdpAuth from "../user/IdpAuth";
 import Login from "../user/Login";
 import Profile from "../user/Profile";
 import ChangePassword from "../user/ChangePassword";
@@ -49,6 +50,12 @@ class Main extends Component {
           <Route exact path="/projects/new" component={ProjectForm} />
 
           <Route exact path="/auth" component={Auth} />
+          <Route
+              path="/idpauth"
+              render={props => (
+                <IdpAuth {...props}/>
+              )}
+            />
 
           <Route
             exact
