@@ -6,6 +6,7 @@ import com.testquack.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.greatbit.whoru.auth.Person;
+import ru.greatbit.whoru.auth.RedirectResponse;
 import ru.greatbit.whoru.auth.error.UnauthorizedException;
 import ru.greatbit.whoru.auth.providers.BaseDbAuthProvider;
 
@@ -66,6 +67,11 @@ public class DbAuthProvider extends BaseDbAuthProvider {
         return userService.suggestUsers(literal).stream().
                 map(user -> format("%s:%s %s", user.getId(), user.getFirstName(), user.getLastName())).
                 collect(Collectors.toSet());
+    }
+
+    @Override
+    public RedirectResponse redirectNotAuthTo(HttpServletRequest request) {
+        return new RedirectResponse("/login", "retpath", false);
     }
 
     private Person convertUser(User user){

@@ -35,11 +35,7 @@ class Header extends Component {
         }
       })
       .catch(() => {
-        var url = window.location.pathname;
-        var resourceLocation = url.substring(url.lastIndexOf("/") + 1);
-        if (resourceLocation !== "login") {
-          this.props.history.push("/auth?retpath=" + encodeURIComponent(window.location.href));
-        }
+        console.log("Unable to fetch session");
       });
     Backend.get("project?includedFields=name,description,id,readWriteGroups,readWriteUsers")
       .then(response => {
