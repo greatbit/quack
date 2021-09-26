@@ -1,14 +1,1 @@
-{
-  "options": {},
-  "indexes": [
-    {
-      "v": 2,
-      "key": {
-        "_id": 1
-      },
-      "name": "_id_",
-      "ns": "test.sequencer"
-    }
-  ],
-  "uuid": "fce0c25b603f4097a912d38bcb7309d8"
-}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"3b629b6ab0874bd4b92e80515403cf18","collectionName":"sequencer"}

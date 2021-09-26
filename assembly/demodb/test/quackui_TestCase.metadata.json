@@ -1,14 +1,1 @@
-{
-  "options": {},
-  "indexes": [
-    {
-      "v": 2,
-      "key": {
-        "_id": 1
-      },
-      "name": "_id_",
-      "ns": "test.quackui_TestCase"
-    }
-  ],
-  "uuid": "9aab7e33b6d9442a885541a9c77d6988"
-}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"bf41a24785f141ce9e994594c1bb78de","collectionName":"quackui_TestCase"}
