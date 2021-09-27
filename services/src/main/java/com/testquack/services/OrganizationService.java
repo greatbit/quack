@@ -49,7 +49,7 @@ public class OrganizationService extends BaseService<Organization> {
     }
 
     public Organization createOrganization(Session user, Organization entity) {
-        if (entity.getId() != null && repository.exists(null, entity.getId())) {
+        if (entity.getId() != null && repository.exists(null,null, entity.getId())) {
             throw new EntityValidationException(format("Organization with id %s already exists", entity.getId()));
         }
         entity.getAdmins().add(user.getId());
@@ -59,7 +59,7 @@ public class OrganizationService extends BaseService<Organization> {
 
     @Override
     public List<Organization> findFiltered(Session session, String projectId, Filter filter) {
-        return getRepository().find(projectId, filter).stream().filter(
+        return getRepository().find(null, projectId, filter).stream().filter(
                 organization -> session.isIsAdmin() ||
                         organization.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
                         organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||
@@ -73,14 +73,14 @@ public class OrganizationService extends BaseService<Organization> {
 
         Difference<String> usersDiff = CollectionUtils.getDiff(existingEntity.getAllowedUsers(), entity.getAllowedUsers());
         usersDiff.getAdded().forEach(addedUserId -> {
-            User user = userRepository.findOne(projectId, addedUserId);
+            User user = userRepository.findOne(null, projectId, addedUserId);
             if (!user.getOrganizations().contains(entity.getId())){
                 user.getOrganizations().add(entity.getId());
             }
             userRepository.save(user);
         });
         usersDiff.getRemoved().forEach(removedUserId -> {
-            User user = userRepository.findOne(projectId, removedUserId);
+            User user = userRepository.findOne(null, projectId, removedUserId);
             if (user.getOrganizations().contains(entity.getId())){
                 user.getOrganizations().remove(entity.getId());
             }
@@ -90,14 +90,14 @@ public class OrganizationService extends BaseService<Organization> {
 
         Difference<String> adminsDiff = CollectionUtils.getDiff(existingEntity.getAdmins(), entity.getAdmins());
         adminsDiff.getAdded().forEach(addedUserId -> {
-            User user = userRepository.findOne(projectId, addedUserId);
+            User user = userRepository.findOne(null, projectId, addedUserId);
             if (!user.getAdminOfOrganizations().contains(entity.getId())){
                 user.getAdminOfOrganizations().add(entity.getId());
             }
             userRepository.save(user);
         });
         adminsDiff.getRemoved().forEach(removedUserId -> {
-            User user = userRepository.findOne(projectId, removedUserId);
+            User user = userRepository.findOne(null, projectId, removedUserId);
             if (user.getAdminOfOrganizations().contains(entity.getId()) &&
                     !session.getPerson().getLogin().equals(removedUserId)){
                 user.getAdminOfOrganizations().remove(entity.getId());

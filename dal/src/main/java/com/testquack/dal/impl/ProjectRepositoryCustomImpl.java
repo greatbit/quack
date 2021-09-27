@@ -10,6 +10,8 @@ import com.testquack.beans.Project;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class ProjectRepositoryCustomImpl extends CommonRepositoryImpl<Project>
         implements ProjectRepositoryCustom {
 
@@ -29,7 +31,7 @@ public class ProjectRepositoryCustomImpl extends CommonRepositoryImpl<Project>
     }
 
     @Override
-    protected String getCollectionName(String projectId) {
-        return "projects";
+    protected String getCollectionName(String organizationId, String projectId) {
+        return isEmpty(organizationId) ? "projects" : organizationId + "_" + "projects";
     }
 }

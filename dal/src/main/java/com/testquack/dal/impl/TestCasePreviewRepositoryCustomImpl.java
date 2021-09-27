@@ -13,7 +13,7 @@ public class TestCasePreviewRepositoryCustomImpl extends CommonRepositoryImpl<Te
     }
 
     @Override
-    protected String getCollectionName(String projectId) {
-        return getCollectionName(projectId, TestCase.class);
+    protected String getCollectionName(String organizationId, String projectId) {
+        return getCollectionName(organizationId, projectId, TestCase.class);
     }
 }

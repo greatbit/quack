@@ -7,19 +7,19 @@ import java.util.List;
 
 public interface CommonRepository<E> {
 
-    List<E> find(String projectId, Filter filter);
+    List<E> find(String organizationId, String projectId, Filter filter);
 
-    long count(String projectId, Filter filter);
+    long count(String organizationId, String projectId, Filter filter);
 
-    E findOne(String projectId, String id);
+    E findOne(String organizationId, String projectId, String id);
 
-    boolean exists(String projectId, String id);
+    boolean exists(String organizationId, String projectId, String id);
 
-    E save(String projectId, E entity);
+    E save(String organizationId, String projectId, E entity);
 
-    Collection<E> save(String projectId, Collection<E> entities);
+    Collection<E> save(String organizationId, String projectId, Collection<E> entities);
 
-    void delete(String projectId, String entityId);
+    void delete(String organizationId, String projectId, String entityId);
 
-    void delete(String projectId, Filter filter);
+    void delete(String organizationId, String projectId, Filter filter);
 }
