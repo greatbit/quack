@@ -13,6 +13,8 @@ import {
   AttributeFilterDraft,
   ExistingTestCase,
   RootTestCaseGroup,
+  isExistingAttributeFilter,
+  isExistingAttribute,
 } from "../domain";
 
 export const getApiBaseUrl = (url: string) => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
@@ -61,7 +63,23 @@ type ServerAttribute = Meta &
     readonly values: string[];
     readonly attrValues: { readonly uuid: string; readonly value: string }[];
   };
-const mapServerAttributeToClient = (attribute: ServerAttribute) => ({
+
+type FakeServerAttribute = {
+  id: string;
+  readonly name: string;
+  readonly values: string[];
+  readonly attrValues: { readonly uuid: string; readonly value: string }[];
+};
+export const mapClientAttributeToServer = (
+  attribute: ExistingAttribute | FakeAttribute,
+): ServerAttribute | FakeServerAttribute => ({
+  ...(isExistingAttribute(attribute) ? copyMeta(attribute) : {}),
+  id: attribute.id,
+  name: attribute.name,
+  attrValues: attribute.values.map(({ id, name }) => ({ uuid: id, value: name })),
+  values: [],
+});
+const mapServerAttributeToClient = (attribute: ServerAttribute): ExistingAttribute => ({
   ...copyMeta(attribute),
   id: attribute.id,
   name: attribute.name,
@@ -201,9 +219,6 @@ export const mapNewSuiteToServer = (suite: SuiteDraft): NewServerSuite => ({
     notFields: {},
   },
 });
-const isExistingAttributeFilter = (
-  filter: ExistingAttributeFilter | AttributeFilterDraft,
-): filter is ExistingAttributeFilter => !!(filter as ExistingAttributeFilter).createdTime;
 
 const mapClientFilterToBackend = (
   filter: ExistingAttributeFilter | AttributeFilterDraft,

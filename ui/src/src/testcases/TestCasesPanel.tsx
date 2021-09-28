@@ -1,8 +1,9 @@
 import Button from "../components/ui/Button";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import PlayIcon from "@heroicons/react/solid/PlayIcon";
 import { ExistingAttribute, FakeAttribute } from "../domain";
 import TestCase from "./TestCase";
+import { mapClientAttributeToServer } from "../services/backend";
 
 export type TestCasesPanelProps = PropsWithChildren<{
   projectID: string;
@@ -10,7 +11,11 @@ export type TestCasesPanelProps = PropsWithChildren<{
   attributes: (ExistingAttribute | FakeAttribute)[];
 }>;
 
+const useLegacyAttributes = (attributes: (ExistingAttribute | FakeAttribute)[]) =>
+  useMemo(() => attributes.map(mapClientAttributeToServer), [attributes]);
+
 const TestCasesPanel = ({ children, selectedTestCaseID, projectID, attributes }: TestCasesPanelProps): JSX.Element => {
+  const legacyAttributes = useLegacyAttributes(attributes);
   return (
     <div className="flex mt-5 gap-3">
       <div className="w-1/3 bg-white ml-8 pb-8  border">
@@ -25,7 +30,7 @@ const TestCasesPanel = ({ children, selectedTestCaseID, projectID, attributes }:
       </div>
       <div className="w-2/3 mr-8 bg-white border p-5">
         {selectedTestCaseID && (
-          <TestCase projectId={projectID} projectAttributes={attributes} testcaseId={selectedTestCaseID} />
+          <TestCase projectId={projectID} projectAttributes={legacyAttributes} testcaseId={selectedTestCaseID} />
         )}
       </div>
     </div>

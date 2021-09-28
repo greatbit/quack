@@ -27,6 +27,8 @@ export type ExistingAttribute = WithID &
     readonly values: AttributeValue[];
   };
 
+export const isExistingAttribute = (attribute: ExistingAttribute | FakeAttribute): attribute is ExistingAttribute =>
+  !!(attribute as ExistingAttribute).createdTime;
 export type FakeAttribute = WithID & {
   readonly name: "Broken";
   readonly values: AttributeValue[];
@@ -40,6 +42,9 @@ export type AttributeFilterDraft = {
   readonly values: string[];
 };
 export type ExistingAttributeFilter = AttributeFilter & DeletedMeta & TimeMeta;
+export const isExistingAttributeFilter = (
+  filter: ExistingAttributeFilter | AttributeFilterDraft,
+): filter is ExistingAttributeFilter => !!(filter as ExistingAttributeFilter).createdTime;
 
 export interface Suite {
   readonly name: string;
