@@ -5,7 +5,7 @@ import { atomFamily, RecoilState, selectorFamily, useRecoilState, useRecoilValue
 import { FilterValue } from "../components/ui/Filter";
 import { ExistingAttributeFilter, ExistingSuite, listToBoolHash } from "../domain";
 
-import { attributesSelector, WithProjectID } from "./testCasesScreen.data";
+import { attributesSelector } from "./testCasesScreen.data";
 
 import { TestCasesScreenStateless } from "./TestCasesScreenStateless";
 import SuiteHeader from "./SuiteHeader";
@@ -15,14 +15,12 @@ export type TestSuiteScreenProps = {
   suiteID: string;
 };
 
-type SuiteSelectorParams = WithProjectID & { suiteID: string };
-
-const suiteAtom = atomFamily<ExistingSuite | undefined, SuiteSelectorParams>({
+const suiteAtom = atomFamily<ExistingSuite | undefined, TestSuiteScreenProps>({
   key: "existing-suite",
   default: undefined,
 });
 
-const suiteSelector = selectorFamily<ExistingSuite, SuiteSelectorParams>({
+const suiteSelector = selectorFamily<ExistingSuite, TestSuiteScreenProps>({
   key: "suite",
   get:
     ({ projectID, suiteID }) =>
@@ -35,15 +33,15 @@ const suiteSelector = selectorFamily<ExistingSuite, SuiteSelectorParams>({
     },
 });
 
-const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, projectID: string, suiteID: string) => {
+const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, params: TestSuiteScreenProps) => {
   const [suite, setSuite] = useRecoilState(suiteState);
   const [isSaving, setIsSaving] = useState(false);
   const save = async (updatedSuite: Partial<ExistingSuite>) => {
     setIsSaving(true);
     try {
       const savedSuite = await backendService
-        .project(projectID)
-        .testSuites.single(suiteID)
+        .project(params.projectID)
+        .testSuites.single(params.suiteID)
         .update({ ...suite, ...updatedSuite });
       setSuite(savedSuite);
     } finally {
@@ -59,7 +57,7 @@ const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, s
   const suiteState = suiteSelector(selectorParams);
 
   const suite = useRecoilValue(suiteState);
-  const [saveSuite, isSaving] = useSaveSuite(suiteState, projectID, suiteID);
+  const [saveSuite, isSaving] = useSaveSuite(suiteState, selectorParams);
   const exclusionHash = useMemo(() => listToBoolHash(suite.excludedTestCases), [suite.excludedTestCases]);
   const isTestCaseSelected = (id: string) => !exclusionHash[id];
   const setExcludedTestCasesHandler = useCallback(

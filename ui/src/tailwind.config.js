@@ -27,11 +27,11 @@ module.exports = {
       purple: "#8C54FF",
     },
     fontFamily: {
-      sans: ["Noto Sans", "sans-serif"],
+      sans: ["Rubik", "Noto Sans", "sans-serif"],
     },
     fontSize: {
       base: "16px",
-      sm: "12px",
+      sm: "13px",
       lg: "28px",
       xl: "34px",
       xxl: "48px",

@@ -16,10 +16,9 @@ export type TestCasesFiltersProps = {
   disabled?: boolean;
   onChangeGroups: (value: string[]) => void;
   onChangeFilters: (value: (FilterValue | ExistingAttributeFilter)[]) => void;
-} & (
-  | { showSave: true; onSaveSuiteClick: () => void }
-  | { showSave?: false | undefined; onSaveSuiteClick?: () => void }
-);
+  showSave?: boolean;
+  onSaveSuiteClick?: () => void;
+};
 
 const TestCasesFilter = ({
   projectAttributes,

@@ -1,9 +1,12 @@
 import Button from "../components/ui/Button";
 import { PropsWithChildren, useMemo } from "react";
 import PlayIcon from "@heroicons/react/solid/PlayIcon";
+import PlusCircleIcon from "@heroicons/react/outline/PlusCircleIcon";
 import { ExistingAttribute, FakeAttribute } from "../domain";
 import TestCase from "./TestCase";
 import { mapClientAttributeToServer } from "../services/backend";
+import { captionClasses } from "../components/ui/typography";
+import clsx from "clsx";
 
 export type TestCasesPanelProps = PropsWithChildren<{
   projectID: string;
@@ -19,10 +22,14 @@ const TestCasesPanel = ({ children, selectedTestCaseID, projectID, attributes }:
   return (
     <div className="flex mt-5 gap-3">
       <div className="w-1/3 bg-white ml-8 pb-8  border">
-        <div className="flex gap-2 pt-5 pl-5 items-middle flex-wrap">
-          <h2 className="text-xl text-neutral flex-grow">Test cases</h2>
+        <div className="flex gap-2 pt-5 pl-5 items-center flex-wrap">
+          <h2 className={clsx(captionClasses, "m-0 flex-grow")}>Test cases</h2>
+          <Button.Link className="flex gap-2 items-center">
+            <PlusCircleIcon className="w-6 h-6" />
+            Add
+          </Button.Link>
           <Button.Primary className="flex gap-2 pl-3 pr-3 items-center">
-            <PlayIcon className="w-5 h-5" />
+            <PlayIcon className="w-6 h-6" />
             Launch
           </Button.Primary>
         </div>

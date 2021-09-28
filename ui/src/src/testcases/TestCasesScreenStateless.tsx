@@ -19,6 +19,8 @@ export type TestCasesScreenStatelessProps = {
   projectID: string;
   isTestCaseSelected: (id: string) => boolean;
   onToggleTestCase: (id: string) => void;
+  showSaveSuite?: boolean;
+  onSaveSuiteClick?: () => void;
 };
 
 export const TestCasesScreenStateless = ({
@@ -30,10 +32,12 @@ export const TestCasesScreenStateless = ({
   exclusionState,
   beforeFilters,
   disableFilters,
+  showSaveSuite,
+  onSaveSuiteClick,
   ...other
 }: TestCasesScreenStatelessProps) => (
   <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
-    <div className="bg-neutral-fade6 pt-8 pb-8">
+    <div className="bg-neutral-fade6 pt-8 pb-8 font-sans text-neutral">
       {beforeFilters}
       <TestCasesFilter
         disabled={disableFilters}
@@ -42,6 +46,8 @@ export const TestCasesScreenStateless = ({
         filters={filters}
         onChangeFilters={onChangeFilters}
         onChangeGroups={onChangeGroups}
+        showSave={!!showSaveSuite}
+        onSaveSuiteClick={onSaveSuiteClick}
       />
 
       <Suspense

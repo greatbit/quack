@@ -51,6 +51,8 @@ const TextCasesScreen: FunctionComponent<TestCasesScreenProps> = ({ projectID })
         onChangeFilters={handleChangeFilters}
         onChangeGroups={handleChangeGroups}
         onToggleTestCase={toggleTestCase}
+        showSaveSuite
+        onSaveSuiteClick={() => setShowSaveDialog("true")}
       />
     </>
   );

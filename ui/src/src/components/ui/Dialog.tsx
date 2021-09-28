@@ -25,7 +25,7 @@ const Dialog = ({ children, className, onOverlayClick, onClose, ...other }: Dial
   return (
     <HeadlessDialog
       {...other}
-      className="text-neutral z-20 inset-0 fixed flex items-center justify-center overflow-y-auto"
+      className="text-neutral z-20 inset-0 fixed flex items-center justify-center overflow-y-auto font-sans"
       onClose={onClose}
     >
       <div className="flex items-center justify-center min-h-screen">
@@ -50,7 +50,7 @@ const Close = ({ className, ...other }: ButtonHTMLAttributes<HTMLButtonElement>)
     )}
     {...other}
   >
-    <XCircleIcon className="w-5 h-5" />
+    <XCircleIcon className="w-6 h-6" />
   </button>
 );
 
