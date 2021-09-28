@@ -73,13 +73,16 @@ const TestCaseList = ({
   const handleLoadMoreClick = async () => {
     setLoadingMore(true);
     try {
-      setTestCases(await backendService.project(projectID).testCases.list(filters, testCases.length));
+      setTestCases([
+        ...testCases,
+        ...(await backendService.project(projectID).testCases.list(filters, testCases.length)),
+      ]);
     } finally {
       setLoadingMore(false);
     }
   };
   const testCaseCount = useRecoilValue(testCaseCountSelector({ projectID, filters }));
-  console.info(testCaseCount);
+
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", testCases[0]?.id);
   return (
     <TestCasesPanel projectID={projectID} attributes={attributes} selectedTestCaseID={selectedTestCaseID}>
