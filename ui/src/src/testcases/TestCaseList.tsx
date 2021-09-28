@@ -1,5 +1,5 @@
-import { useRecoilValue } from "recoil";
-import { ExistingAttribute, FakeAttribute, AttributeFilterDraft } from "../domain";
+import { atomFamily, useRecoilState, useRecoilValue } from "recoil";
+import { ExistingAttribute, FakeAttribute, AttributeFilterDraft, ExistingTestCase } from "../domain";
 import List from "../components/testcase/List";
 import TestCaseListItem from "../components/testcase/TestCaseListItem";
 import TestCasesPanel from "./TestCasesPanel";
@@ -7,7 +7,8 @@ import { useQueryStringState } from "../lib/hooks";
 import { selectorFamily } from "recoil";
 import { backendService } from "../services/backend";
 import { WithProjectID } from "./testCasesScreen.data";
-
+import Button from "../components/ui/Button";
+import { useState } from "react";
 export type TestCaseListProps = {
   projectID: string;
   isTestCaseSelected: (id: string) => boolean;
@@ -34,12 +35,28 @@ export const attributesSelector = selectorFamily({
       backendService.project(projectID).attributes.list(),
 });
 
-export const testCaseListSelector = selectorFamily({
+const testCaseAtom = atomFamily<ExistingTestCase[] | undefined, TestCaseListSelectorParams>({
+  key: "test-case-atom",
+  default: undefined,
+});
+export const testCaseListSelector = selectorFamily<ExistingTestCase[], TestCaseListSelectorParams>({
   key: "test-case-list-selector",
+  get:
+    ({ projectID, filters }) =>
+    ({ get }) =>
+      get(testCaseAtom({ projectID, filters })) || backendService.project(projectID).testCases.list(filters),
+  set:
+    ({ projectID, filters }) =>
+    ({ set }, value) =>
+      set(testCaseAtom({ projectID, filters }), value),
+});
+
+export const testCaseCountSelector = selectorFamily({
+  key: "test-case-count-selector",
   get:
     ({ projectID, filters }: TestCaseListSelectorParams) =>
     () =>
-      backendService.project(projectID).testCases.list(filters),
+      backendService.project(projectID).testCases.count(filters),
 });
 
 const TestCaseList = ({
@@ -50,7 +67,19 @@ const TestCaseList = ({
   filters,
   disabled,
 }: TestCaseListProps) => {
-  const testCases = useRecoilValue(testCaseListSelector({ projectID, filters }));
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [testCases, setTestCases] = useRecoilState(testCaseListSelector({ projectID, filters }));
+
+  const handleLoadMoreClick = async () => {
+    setLoadingMore(true);
+    try {
+      setTestCases(await backendService.project(projectID).testCases.list(filters, testCases.length));
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+  const testCaseCount = useRecoilValue(testCaseCountSelector({ projectID, filters }));
+  console.info(testCaseCount);
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", testCases[0]?.id);
   return (
     <TestCasesPanel projectID={projectID} attributes={attributes} selectedTestCaseID={selectedTestCaseID}>
@@ -69,6 +98,15 @@ const TestCaseList = ({
             />
           ))}
         </List>
+        {testCases.length < testCaseCount && (
+          <Button.Link
+            className="flex justify-center text-primary text-base w-full"
+            disabled={loadingMore}
+            onClick={handleLoadMoreClick}
+          >
+            Load more
+          </Button.Link>
+        )}
       </div>
     </TestCasesPanel>
   );

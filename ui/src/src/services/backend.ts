@@ -119,13 +119,16 @@ export const backendService = {
       list: () => backend.get<ServerAttribute[]>(projectId + "/attribute").then(mapServerAttributesToClient),
     },
     testCases: {
-      count: (filter: TestCasesFilter) => backend.get(projectId + "/testcase/count?" + qs.stringify(filter)),
+      count: (filters: AttributeFilterDraft[]) =>
+        backend.get<number>(projectId + "/testcase/count?" + mapFiltersToQueryParams(filters)),
       tree: (filters: AttributeFilterDraft[], groups: string[]) =>
         backend.get<RootTestCaseGroup>(
           projectId + "/testcase/tree?" + [mapFiltersToQueryParams(filters), mapGroupsToQueryParams(groups)].join("&"),
         ),
-      list: (filters: AttributeFilterDraft[]) =>
-        backend.get<ExistingTestCase[]>(projectId + "/testcase?" + mapFiltersToQueryParams(filters)),
+      list: (filters: AttributeFilterDraft[], offset: number = 0) =>
+        backend.get<ExistingTestCase[]>(
+          projectId + "/testcase?skip=" + offset.toString() + mapFiltersToQueryParams(filters),
+        ),
     },
   }),
 };

@@ -30,7 +30,7 @@ module.exports = {
       sans: ["Noto Sans", "sans-serif"],
     },
     fontSize: {
-      base: "15px",
+      base: "16px",
       sm: "12px",
       lg: "28px",
       xl: "34px",
