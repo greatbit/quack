@@ -11,13 +11,15 @@ export type FilterValue = {
   attribute: string | undefined;
   values: string[];
 };
+
 export type FilterProps = {
   value: FilterValue;
   onChange: (value: FilterValue) => void;
   attributes: (ExistingAttribute | FakeAttribute)[];
   onRemoveClick: EventHandler<MouseEvent>;
+  disabled?: boolean;
 };
-const Filter = ({ value, onChange, attributes, onRemoveClick }: FilterProps) => {
+const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: FilterProps) => {
   const selectedAttribute = useMemo(
     () => attributes.find(attribute => attribute.id === value?.attribute),
     [attributes, value],
@@ -53,6 +55,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }: FilterProps) => 
       )}
     >
       <CustomListbox
+        disabled={disabled}
         className="flex-grow flex-shrink-0"
         buttonClassName="pl-1"
         value={value?.attribute}
@@ -73,6 +76,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick }: FilterProps) => 
       </CustomListbox>
       <span className="font-semibold">{selectedValues.length > 1 ? "in" : "="}</span>
       <CustomListbox
+        disabled={disabled}
         className="flex-grow flex-shrink-0"
         buttonClassName="pl-1"
         value={selectedValues as any}

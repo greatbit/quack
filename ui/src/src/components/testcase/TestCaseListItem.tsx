@@ -3,6 +3,8 @@ import { ExistingTestCase } from "../../domain";
 import clsx from "clsx";
 import Checkbox from "../ui/Checkbox";
 
+export const getIndentStyle = (level: number) => ({ marginLeft: `${level * 2 + 1.25}rem` });
+
 export type TestCaseListItemProps = {
   disabled?: boolean;
   testCase: ExistingTestCase;
@@ -26,7 +28,7 @@ const TestCaseListItem: FunctionComponent<TestCaseListItemProps> = memo(
     return (
       <li
         onClick={handleClick}
-        className={clsx("text-base pt-3 pb-3 pl-5 pr-5 flex items-start gap-3", {
+        className={clsx("text-base pt-3 pb-3 pr-5 flex items-start gap-3", {
           "bg-primary text-white border-white": selected,
         })}
       >
@@ -44,7 +46,7 @@ const TestCaseListItem: FunctionComponent<TestCaseListItemProps> = memo(
           iconClassName={clsx({
             "text-neutral-fade1": !selected,
           })}
-          style={{ marginLeft: `${(level + 1) * 28}px` }}
+          style={getIndentStyle(level + 1)}
         />
         <div className="pt-0">{testCase.name}</div>
       </li>

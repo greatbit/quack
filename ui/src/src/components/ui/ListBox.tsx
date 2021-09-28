@@ -14,6 +14,7 @@ export type BasicListboxProps<TValue> = PropsWithChildren<{
   onChange: (newValue: TValue) => void;
   className?: string;
   buttonClassName?: string;
+  disabled?: boolean;
 }>;
 
 export function BasicListbox<TValue>({
@@ -23,9 +24,16 @@ export function BasicListbox<TValue>({
   children,
   className,
   buttonClassName,
+  disabled,
 }: BasicListboxProps<TValue>) {
   return (
-    <HeadlessListBox value={value} onChange={onChange} as="div" className={clsx(className, "relative", "flex")}>
+    <HeadlessListBox
+      disabled={disabled}
+      value={value}
+      onChange={onChange}
+      as="div"
+      className={clsx(className, "relative", "flex")}
+    >
       <HeadlessListBox.Button
         className={clsx("flex items-center gap-1", buttonClassName, inputTextClasses, inputLayoutClasses, focusClasses)}
       >

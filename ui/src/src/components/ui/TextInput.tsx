@@ -13,7 +13,7 @@ const TextInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElem
   ),
 );
 
-export type OKCancelTextInputProps = HTMLAttributes<HTMLDivElement> & {
+export type OKCancelTextInputProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> & {
   value: InputHTMLAttributes<HTMLInputElement>["value"];
   onChange: (value: string) => void;
   onOKClick: (e: MouseEvent | KeyboardEvent) => void;

@@ -1,16 +1,14 @@
-import { FunctionComponent, Suspense } from "react";
+import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import { backendService } from "../services/backend";
-import { atomFamily, selectorFamily, useRecoilState, useRecoilValue } from "recoil";
+import { atomFamily, RecoilState, selectorFamily, useRecoilState, useRecoilValue } from "recoil";
 
-import TestCasesFilter from "./TestCasesFilters";
 import { FilterValue } from "../components/ui/Filter";
 import { ExistingAttributeFilter, ExistingSuite, listToBoolHash } from "../domain";
 
-import TestCaseList from "./TestCaseList";
-import TestCaseTree from "./TestCaseTree";
-import { useExclusion } from "./hooks";
 import { attributesSelector, WithProjectID } from "./testCasesScreen.data";
-import { Loading } from "../components/ui";
+
+import { TestCasesScreenStateless } from "./TestCasesScreenStateless";
+import SuiteHeader from "./SuiteHeader";
 
 export type TestSuiteScreenProps = {
   projectID: string;
@@ -23,6 +21,7 @@ const suiteAtom = atomFamily<ExistingSuite | undefined, SuiteSelectorParams>({
   key: "existing-suite",
   default: undefined,
 });
+
 const suiteSelector = selectorFamily<ExistingSuite, SuiteSelectorParams>({
   key: "suite",
   get:
@@ -36,48 +35,43 @@ const suiteSelector = selectorFamily<ExistingSuite, SuiteSelectorParams>({
     },
 });
 
-const useSaveSuite = (params: SuiteSelectorParams) => {
-  const [suite, setSuite] = useRecoilState(suiteSelector(params));
-  return async (updatedSuite: Partial<ExistingSuite>) => {
-    console.info("updated", updatedSuite);
-    const savedSuite = await backendService
-      .project(params.projectID)
-      .testSuites.single(params.suiteID)
-      .update({ ...suite, ...updatedSuite });
-    setSuite(savedSuite);
+const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, projectID: string, suiteID: string) => {
+  const [suite, setSuite] = useRecoilState(suiteState);
+  const [isSaving, setIsSaving] = useState(false);
+  const save = async (updatedSuite: Partial<ExistingSuite>) => {
+    setIsSaving(true);
+    try {
+      const savedSuite = await backendService
+        .project(projectID)
+        .testSuites.single(suiteID)
+        .update({ ...suite, ...updatedSuite });
+      setSuite(savedSuite);
+    } finally {
+      setIsSaving(false);
+    }
   };
+  return [save, isSaving] as [typeof save, typeof isSaving];
 };
-
-const exclusionSelector = selectorFamily<Record<string, boolean>, SuiteSelectorParams>({
-  key: "exclusionsSelector",
-  get:
-    params =>
-    ({ get }) => {
-      const suite = get(suiteSelector(params));
-      return listToBoolHash(suite.excludedTestCases);
-    },
-  set:
-    params =>
-    ({ get, set }, newValue) => {
-      const selector = suiteSelector(params);
-      set(selector, {
-        ...get(selector),
-        excludedTestCases: Object.keys(newValue).filter(key => (newValue as Record<string, boolean>)[key]),
-      });
-    },
-});
 
 const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, suiteID }) => {
   const selectorParams = { projectID, suiteID };
   const attributes = useRecoilValue(attributesSelector({ projectID }));
+  const suiteState = suiteSelector(selectorParams);
 
-  const [isTestCaseSelected, , excludedTestCases] = useExclusion(exclusionSelector(selectorParams));
-
-  const suite = useRecoilValue(suiteSelector(selectorParams));
-  const saveSuite = useSaveSuite(selectorParams);
-  const setExcludedTestCasesHandler = async (exclusion: Record<string, boolean>) => {
-    await saveSuite({ ...suite, excludedTestCases: Object.keys(exclusion).filter(key => !!exclusion[key]) });
-  };
+  const suite = useRecoilValue(suiteState);
+  const [saveSuite, isSaving] = useSaveSuite(suiteState, projectID, suiteID);
+  const exclusionHash = useMemo(() => listToBoolHash(suite.excludedTestCases), [suite.excludedTestCases]);
+  const isTestCaseSelected = (id: string) => !exclusionHash[id];
+  const setExcludedTestCasesHandler = useCallback(
+    async (exclusion: Record<string, boolean>) => {
+      await saveSuite({ ...suite, excludedTestCases: Object.keys(exclusion).filter(key => !!exclusion[key]) });
+    },
+    [saveSuite, suite],
+  );
+  const exclusionState = useMemo(
+    () => [exclusionHash, setExcludedTestCasesHandler] as [typeof exclusionHash, typeof setExcludedTestCasesHandler],
+    [exclusionHash, setExcludedTestCasesHandler],
+  );
   const handleToggleTestCase = async (id: string) => {
     await saveSuite({
       ...suite,
@@ -94,46 +88,24 @@ const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, s
   const handleChangeGroups = async (groups: string[]) => {
     saveSuite({ ...suite, groups });
   };
-
-  const sharedListProps = {
-    projectID,
-    filters: suite.filters,
-    isTestCaseSelected,
-    onToggleTestCase: handleToggleTestCase,
-    attributes,
+  const handleChangeSuiteName = (name: string) => {
+    saveSuite({ ...suite, name });
   };
-
   return (
-    <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
-      <div className="bg-neutral-fade6 pt-8 pb-8">
-        <TestCasesFilter
-          projectAttributes={attributes}
-          groups={suite.groups!}
-          filters={suite.filters!}
-          onChangeFilters={handleChangeFilters}
-          onChangeGroups={handleChangeGroups}
-        />
-
-        <Suspense
-          fallback={
-            <div className="flex justify-center mt-8">
-              <Loading />
-            </div>
-          }
-        >
-          {suite.groups.length === 0 ? (
-            <TestCaseList {...sharedListProps} />
-          ) : (
-            <TestCaseTree
-              {...sharedListProps}
-              groups={suite.groups}
-              excludedTestCases={excludedTestCases}
-              setExcludedTestCases={setExcludedTestCasesHandler}
-            />
-          )}
-        </Suspense>
-      </div>
-    </div>
+    <TestCasesScreenStateless
+      disableTestCaseList={isSaving}
+      beforeFilters={<SuiteHeader className="mr-8 mb-5 ml-8" name={suite.name} onChange={handleChangeSuiteName} />}
+      disableFilters={isSaving}
+      projectID={projectID}
+      filters={suite.filters}
+      attributes={attributes}
+      exclusionState={exclusionState}
+      groups={suite.groups}
+      isTestCaseSelected={isTestCaseSelected}
+      onChangeFilters={handleChangeFilters}
+      onChangeGroups={handleChangeGroups}
+      onToggleTestCase={handleToggleTestCase}
+    />
   );
 };
 

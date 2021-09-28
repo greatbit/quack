@@ -1,10 +1,11 @@
-import { ExistingTestCase, GroupState, TestCaseGroup } from "../../../domain";
+import { ExistingTestCase, TestCaseGroup } from "../../../domain";
 import List from "../../../components/testcase/List";
 import TestCaseListItem from "../../../components/testcase/TestCaseListItem";
 import TestCaseGroupComponent from "../../../components/testcase/TestCaseGroup";
 import { useState } from "react";
-import { useTreeExclusion, useSelection, useExclusion } from "../../../testcases/hooks";
-import { atom } from "recoil";
+import { useSelection, useExclusion, ExclusionHash } from "../../../testcases/hooks";
+
+import { useToggleGroupState } from "../../../testcases/TestCaseTree";
 
 export type Args = {
   testCases: ExistingTestCase[];
@@ -14,6 +15,7 @@ export type Actions = {
   onClick: (id: string) => void;
   onCheckboxClick: (id: string) => void;
   onChevronClick: (id: string) => void;
+  onToggleGroupClick: (group: TestCaseGroup) => void;
 };
 
 const testCases: ExistingTestCase[] = [
@@ -87,16 +89,22 @@ const group2: TestCaseGroup = {
   testCases: [testCases[2]],
 };
 
-export const Grouped = ({ testCases, onClick, onCheckboxClick, onChevronClick, ...other }: Args & Actions) => {
+export const Grouped = ({
+  testCases,
+  onClick,
+  onCheckboxClick,
+  onToggleGroupClick,
+  onChevronClick,
+  ...other
+}: Args & Actions) => {
   return (
     <List>
       <TestCaseGroupComponent
-        getGroupState={() => GroupState.Unselected}
         testCaseGroup={group2}
         isGroupOpen={id => ["group1", "group2"].includes(id)}
         selectedTestCase="1"
         isTestCaseSelected={id => ["1", "2"].includes(id)}
-        onCheckboxClick={onCheckboxClick}
+        onCheckboxClick={onToggleGroupClick}
         onTestCaseCheckboxClick={onCheckboxClick}
         onTestCaseClick={onClick}
         onChevronClick={onChevronClick}
@@ -105,25 +113,22 @@ export const Grouped = ({ testCases, onClick, onCheckboxClick, onChevronClick, .
     </List>
   );
 };
-const exclusionAtom = atom<Record<string, boolean>>({
-  key: "exclusionAtom",
-  default: {},
-});
+
 export const GroupedStateful = () => {
   const [selectedTestCase, setSelectedTestCase] = useState<string | undefined>(undefined);
   const [openGroups, handleChevronClick] = useSelection(["group1"]);
-  const [isTestCaseSelected, handleTestCaseCheckboxClick, excludedTestCases, setExcludedTestCases] =
-    useExclusion(exclusionAtom);
-  const [isGroupSelected, handleCheckboxClick] = useTreeExclusion([group2], excludedTestCases, setExcludedTestCases);
+  const exclusionState = useState<ExclusionHash>({});
+  const [isTestCaseSelected, handleTestCaseCheckboxClick] = useExclusion(exclusionState);
+  // const [isGroupSelected, handleCheckboxClick] = useTreeExclusion([group2], exclusionState[0], exclusionState[1]);
+  const toggleGroupState = useToggleGroupState(exclusionState);
   return (
     <List>
       <TestCaseGroupComponent
         testCaseGroup={group2}
         isGroupOpen={openGroups}
-        getGroupState={() => GroupState.Selected}
         selectedTestCase={selectedTestCase}
         isTestCaseSelected={isTestCaseSelected}
-        onCheckboxClick={handleCheckboxClick}
+        onCheckboxClick={toggleGroupState}
         onTestCaseCheckboxClick={handleTestCaseCheckboxClick}
         onTestCaseClick={setSelectedTestCase}
         onChevronClick={handleChevronClick}

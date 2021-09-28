@@ -6,8 +6,9 @@ export type FiltersProps = {
   attributes: (ExistingAttribute | FakeAttribute)[];
   value: FilterValue[];
   onChange: (value: FilterValue[]) => void;
+  disabled?: boolean;
 };
-const Filters = ({ attributes, value, onChange }: FiltersProps) => {
+const Filters = ({ attributes, value, onChange, disabled }: FiltersProps) => {
   const handleFilterChange = (index: number) => (newValue: FilterValue) =>
     onChange(value.map((filter, i) => (i === index ? newValue : filter)));
   const handleRemoveFilterClick = (index: number) => () =>
@@ -17,6 +18,7 @@ const Filters = ({ attributes, value, onChange }: FiltersProps) => {
     <div className="flex flex-wrap gap-3">
       {value.map((filter, index) => (
         <Filter
+          disabled={disabled}
           key={index}
           value={filter}
           attributes={attributes}
@@ -27,6 +29,7 @@ const Filters = ({ attributes, value, onChange }: FiltersProps) => {
       <button
         className="flex items-center text-base text-primary gap-1 focus:outline-focus"
         onClick={handleAddFilterClick}
+        disabled={disabled}
       >
         <PlusCircleIcon className="w-5 h-5" />
         <span>Add filter</span>

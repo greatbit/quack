@@ -1,11 +1,12 @@
 import { useRecoilValue } from "recoil";
-import { AttributeFilterDraft, ExistingAttribute, FakeAttribute } from "../domain";
-
+import { ExistingAttribute, FakeAttribute, AttributeFilterDraft } from "../domain";
 import List from "../components/testcase/List";
 import TestCaseListItem from "../components/testcase/TestCaseListItem";
-import { useQueryStringState } from "../lib/hooks";
-import { testCaseListSelector } from "./testCasesScreen.data";
 import TestCasesPanel from "./TestCasesPanel";
+import { useQueryStringState } from "../lib/hooks";
+import { selectorFamily } from "recoil";
+import { backendService } from "../services/backend";
+import { WithProjectID } from "./testCasesScreen.data";
 
 export type TestCaseListProps = {
   projectID: string;
@@ -13,9 +14,42 @@ export type TestCaseListProps = {
   onToggleTestCase: (id: string) => void;
   filters: AttributeFilterDraft[];
   attributes: (ExistingAttribute | FakeAttribute)[];
+  disabled?: boolean;
 };
 
-const TestCaseList = ({ attributes, projectID, isTestCaseSelected, onToggleTestCase, filters }: TestCaseListProps) => {
+export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
+  groups: string[];
+};
+
+export type TestCaseListSelectorParams = {
+  projectID: string;
+  filters: AttributeFilterDraft[];
+};
+
+export const attributesSelector = selectorFamily({
+  key: "project-attributes",
+  get:
+    ({ projectID }: WithProjectID) =>
+    () =>
+      backendService.project(projectID).attributes.list(),
+});
+
+export const testCaseListSelector = selectorFamily({
+  key: "test-case-list-selector",
+  get:
+    ({ projectID, filters }: TestCaseListSelectorParams) =>
+    () =>
+      backendService.project(projectID).testCases.list(filters),
+});
+
+const TestCaseList = ({
+  attributes,
+  projectID,
+  isTestCaseSelected,
+  onToggleTestCase,
+  filters,
+  disabled,
+}: TestCaseListProps) => {
   const testCases = useRecoilValue(testCaseListSelector({ projectID, filters }));
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", testCases[0]?.id);
   return (
@@ -31,6 +65,7 @@ const TestCaseList = ({ attributes, projectID, isTestCaseSelected, onToggleTestC
               onCheckboxClick={onToggleTestCase}
               selected={selectedTestCaseID === testCase.id}
               onClick={setSelectedTestCaseID}
+              disabled={disabled}
             />
           ))}
         </List>

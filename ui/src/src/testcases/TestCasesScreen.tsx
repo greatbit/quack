@@ -1,18 +1,16 @@
-import { FunctionComponent, Suspense } from "react";
+import { FunctionComponent, useState } from "react";
 import { backendService } from "../services/backend";
 import { useRecoilValue } from "recoil";
 import { useJSONQueryStringState, useQueryStringState } from "../lib/hooks";
-import TestCasesFilter from "./TestCasesFilters";
 import { FilterValue } from "../components/ui/Filter";
 import { AttributeFilterDraft } from "../domain";
 import SuiteDialog from "../components/suite/Dialog";
 import { FormValues } from "../components/suite/Form";
 import { useHistory } from "react-router";
-import TestCaseList from "./TestCaseList";
-import TestCaseTree from "./TestCaseTree";
-import { useExclusion } from "./hooks";
-import { attributesSelector, exclusionAtom } from "./testCasesScreen.data";
-import { Loading } from "../components/ui";
+import { ExclusionHash, useExclusion } from "./hooks";
+import { attributesSelector } from "./testCasesScreen.data";
+import { TestCasesScreenStateless } from "./TestCasesScreenStateless";
+import { SuiteHeaderText } from "./SuiteHeader";
 
 export type TestCasesScreenProps = {
   projectID: string;
@@ -33,57 +31,28 @@ const TextCasesScreen: FunctionComponent<TestCasesScreenProps> = ({ projectID })
   const [filters, handleChangeFilters] = useJSONQueryStringState<FilterValue[]>("filters", []);
   const [groups, handleChangeGroups] = useJSONQueryStringState<string[]>("groups", []);
   const [showSaveDialog, setShowSaveDialog] = useQueryStringState("save");
-  const [isTestCaseSelected, toggleTestCase, excludedTestCases, setExcludedTestCases] = useExclusion(exclusionAtom);
+  const exclusionState = useState<ExclusionHash>({});
+  const [isTestCaseSelected, toggleTestCase] = useExclusion(exclusionState);
   const saveSuite = useCreateSuite(projectID, filters!, groups!);
 
-  const sharedListProps = {
-    projectID,
-    filters,
-    isTestCaseSelected,
-    onToggleTestCase: toggleTestCase,
-    attributes,
-  };
-
   return (
-    <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
-      <div className="bg-neutral-fade6 pt-8 pb-8">
-        {showSaveDialog === "true" && (
-          <SuiteDialog
-            initialValues={{ name: "" }}
-            onSubmit={saveSuite}
-            onCancel={() => setShowSaveDialog(undefined)}
-          />
-        )}
-        <TestCasesFilter
-          projectAttributes={attributes}
-          groups={groups!}
-          filters={filters!}
-          onChangeFilters={handleChangeFilters}
-          onChangeGroups={handleChangeGroups}
-          showSave
-          onSaveSuiteClick={() => setShowSaveDialog("true")}
-        />
-
-        <Suspense
-          fallback={
-            <div className="flex justify-center mt-8">
-              <Loading />
-            </div>
-          }
-        >
-          {groups.length === 0 ? (
-            <TestCaseList {...sharedListProps} />
-          ) : (
-            <TestCaseTree
-              {...sharedListProps}
-              groups={groups}
-              excludedTestCases={excludedTestCases}
-              setExcludedTestCases={setExcludedTestCases}
-            />
-          )}
-        </Suspense>
-      </div>
-    </div>
+    <>
+      {showSaveDialog === "true" && (
+        <SuiteDialog initialValues={{ name: "" }} onSubmit={saveSuite} onCancel={() => setShowSaveDialog(undefined)} />
+      )}
+      <TestCasesScreenStateless
+        beforeFilters={<SuiteHeaderText className="mr-8 mb-5 ml-8">Test cases</SuiteHeaderText>}
+        projectID={projectID}
+        filters={filters}
+        attributes={attributes}
+        exclusionState={exclusionState}
+        groups={groups}
+        isTestCaseSelected={isTestCaseSelected}
+        onChangeFilters={handleChangeFilters}
+        onChangeGroups={handleChangeGroups}
+        onToggleTestCase={toggleTestCase}
+      />
+    </>
   );
 };
 

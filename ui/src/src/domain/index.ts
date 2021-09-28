@@ -1,74 +1,74 @@
 export interface WithID {
-  id: string;
+  readonly id: string;
 }
 
 export type DeletedMeta = {
-  deleted: boolean;
+  readonly deleted: boolean;
 };
 
 export type TimeMeta = {
-  createdTime: number;
-  lastModifiedTime: number;
+  readonly createdTime: number;
+  readonly lastModifiedTime: number;
 };
 
 export type Meta = TimeMeta &
   DeletedMeta & {
-    createdBy: string;
-    lastModifiedBy: string;
+    readonly createdBy: string;
+    readonly lastModifiedBy: string;
   };
 
 export interface AttributeValue extends WithID {
-  name: string;
+  readonly name: string;
 }
 
 export type ExistingAttribute = WithID &
   Meta & {
-    name: string;
-    values: AttributeValue[];
+    readonly name: string;
+    readonly values: AttributeValue[];
   };
 
 export type FakeAttribute = WithID & {
-  name: "Broken";
-  values: AttributeValue[];
+  readonly name: "Broken";
+  readonly values: AttributeValue[];
 };
 export interface AttributeFilter {
-  attribute: string;
-  values: string[];
+  readonly attribute: string;
+  readonly values: string[];
 }
 export type AttributeFilterDraft = {
-  attribute: string | undefined;
-  values: string[];
+  readonly attribute: string | undefined;
+  readonly values: string[];
 };
 export type ExistingAttributeFilter = AttributeFilter & DeletedMeta & TimeMeta;
 
 export interface Suite {
-  name: string;
-  filters: (ExistingAttributeFilter | AttributeFilterDraft)[];
-  groups: string[];
-  excludedTestCases: string[];
+  readonly name: string;
+  readonly filters: (ExistingAttributeFilter | AttributeFilterDraft)[];
+  readonly groups: string[];
+  readonly excludedTestCases: string[];
 }
 
 export type SuiteDraft = {
-  name: string;
-  filters: AttributeFilterDraft[];
-  excludedTestCases: string[];
+  readonly name: string;
+  readonly filters: AttributeFilterDraft[];
+  readonly excludedTestCases: string[];
 };
 export type ExistingSuite = WithID & Meta & Suite;
 
 export interface TestCase {
-  name: string;
+  readonly name: string;
 }
 
 export type ExistingTestCase = WithID & TestCase;
 export type TestCaseGroup = {
-  id: string;
-  count: number;
-  isLeaf: boolean;
-  testCases: ExistingTestCase[];
-  children: TestCaseGroup[] | undefined;
-  title: string;
+  readonly id: string;
+  readonly count: number;
+  readonly isLeaf: boolean;
+  readonly testCases: ExistingTestCase[];
+  readonly children: TestCaseGroup[] | undefined;
+  readonly title: string;
 };
-export type RootTestCaseGroup = Omit<TestCaseGroup, "id"> & { children: TestCaseGroup[] };
+export type RootTestCaseGroup = Omit<TestCaseGroup, "id"> & { children?: TestCaseGroup[] };
 
 export const flattenGroup = (group: TestCaseGroup): TestCaseGroup[] => [
   group,

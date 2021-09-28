@@ -57,9 +57,9 @@ const backend = {
 export interface TestCasesFilter {}
 type ServerAttribute = Meta &
   WithID & {
-    name: string;
-    values: string[];
-    attrValues: { uuid: string; value: string }[];
+    readonly name: string;
+    readonly values: string[];
+    readonly attrValues: { readonly uuid: string; readonly value: string }[];
   };
 const mapServerAttributeToClient = (attribute: ServerAttribute) => ({
   ...copyMeta(attribute),
@@ -131,12 +131,12 @@ export const backendService = {
 };
 
 export type ServerAttributeFilterPayload = {
-  id: string;
-  attrValues: AttrValue[];
+  readonly id: string;
+  readonly attrValues: AttrValue[];
 };
 export type ServerAttributeFilterDraft = {
-  id: string | undefined;
-  attrValues: AttrValue[];
+  readonly id: string | undefined;
+  readonly attrValues: AttrValue[];
 };
 const mapNewClientFilterToBackend = (filter: AttributeFilterDraft): ServerAttributeFilterDraft => ({
   id: filter.attribute,
@@ -157,36 +157,36 @@ export type ServerAttributeFilter = DeletedMeta & TimeMeta & { id: string | unde
 
 export type ExistingServerAttributeFilter = WithID & DeletedMeta & TimeMeta & {};
 export interface ServerSuite {
-  name: string;
-  filter: {
-    filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
-    groups: string[];
-    notFields: Record<string, string[]>;
+  readonly name: string;
+  readonly filter: {
+    readonly filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
+    readonly groups: string[];
+    readonly notFields: Record<string, string[]>;
   };
 }
 export type ExistingServerSuite = ServerSuite &
   WithID &
   Meta & {
-    filter?: {
-      filters: ServerAttributeFilter[];
-      groups: string[];
-      notFields: Record<string, string[]>;
+    readonly filter?: {
+      readonly filters: ServerAttributeFilter[];
+      readonly groups: string[];
+      readonly notFields: Record<string, string[]>;
     };
   };
 export type SaveExistingSuiteParams = ServerSuite &
   WithID &
   Meta & {
-    filter: {
-      filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
+    readonly filter: {
+      readonly filters: (ServerAttributeFilter | ServerAttributeFilterDraft)[];
     };
   };
 
 export type NewServerSuite = {
-  name: string;
-  filter: {
-    filters: ServerAttributeFilterDraft[];
-    groups: string[];
-    notFields: Record<string, string[]>;
+  readonly name: string;
+  readonly filter: {
+    readonly filters: ServerAttributeFilterDraft[];
+    readonly groups: string[];
+    readonly notFields: Record<string, string[]>;
   };
 };
 
@@ -232,7 +232,7 @@ const mapClientSuiteToBackend = (suite: ExistingSuite): SaveExistingSuiteParams 
   name: suite.name,
   filter: {
     filters: suite.filters.map(mapClientFilterToBackend),
-    groups: [],
+    groups: suite.groups,
     notFields: {
       id: suite.excludedTestCases,
     },

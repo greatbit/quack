@@ -13,6 +13,7 @@ export type TestCasesFiltersProps = {
   projectAttributes: (FakeAttribute | ExistingAttribute)[];
   groups: string[];
   filters: FilterValue[];
+  disabled?: boolean;
   onChangeGroups: (value: string[]) => void;
   onChangeFilters: (value: (FilterValue | ExistingAttributeFilter)[]) => void;
 } & (
@@ -28,6 +29,7 @@ const TestCasesFilter = ({
   onChangeFilters,
   onSaveSuiteClick,
   showSave,
+  disabled,
 }: TestCasesFiltersProps) => {
   const handleRemoveGroupClick = (e: MouseEvent, value: string) => {
     e.stopPropagation();
@@ -43,6 +45,7 @@ const TestCasesFilter = ({
       <div className="flex min-w">
         {projectAttributes.length > 0 && (
           <Listbox
+            disabled={disabled}
             className={inputBackgroundClasses}
             value={groups as any}
             onChange={handleChangeGroups}
@@ -68,7 +71,7 @@ const TestCasesFilter = ({
         )}
       </div>
       <div className={clsx("w-1/5 min-h-10 flex items-center pt-2.5", captionClasses)}>Attributes</div>
-      <Filters attributes={projectAttributes} value={filters} onChange={onChangeFilters} />
+      <Filters disabled={disabled} attributes={projectAttributes} value={filters} onChange={onChangeFilters} />
     </div>
   );
 };

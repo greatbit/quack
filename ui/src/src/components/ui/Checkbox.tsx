@@ -1,9 +1,9 @@
 import CheckIcon from "@heroicons/react/outline/CheckIcon";
 import clsx from "clsx";
-import { forwardRef } from "react";
+import { forwardRef, HTMLAttributes } from "react";
 import { focusClasses } from "../../components/ui/focus";
 
-export type CheckboxProps = React.HTMLAttributes<HTMLButtonElement> & {
+export type CheckboxProps = HTMLAttributes<HTMLButtonElement> & {
   iconClassName?: string;
   checked?: boolean;
   disabled?: boolean;
@@ -14,7 +14,7 @@ const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
   ({ checked, indeterminate, className, onClick, iconClassName, disabled, ...other }, ref) => (
     <button
       ref={ref}
-      className={clsx("border-2 rounded-md", focusClasses, className, { "opacity-60": disabled })}
+      className={clsx("border-2 rounded-md w-6 h-6", focusClasses, className, { "opacity-60": disabled })}
       onClick={disabled ? undefined : onClick}
       {...other}
     >

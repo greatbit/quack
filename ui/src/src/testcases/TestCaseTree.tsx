@@ -1,45 +1,44 @@
-import { useRecoilCallback, useRecoilValue } from "recoil";
+import { selectorFamily, useRecoilValue } from "recoil";
 
 import List from "../components/testcase/List";
-import { useQueryStringState } from "../lib/hooks";
+
 import { TestCaseListProps } from "./TestCaseList";
 import TestCaseGroupComponent from "../components/testcase/TestCaseGroup";
-import { useSelection } from "./hooks";
+import { ExclusionState, useSelection } from "./hooks";
 
-import { groupStateSelector, testCaseTreeSelector, TestCaseTreeSelectorParams } from "./testCasesScreen.data";
-import { GroupState } from "../domain";
+import { AttributeFilterDraft, getAllTestCases, listToBoolHash, TestCaseGroup } from "../domain";
 import TestCasesPanel from "./TestCasesPanel";
+import { useQueryStringState } from "../lib/hooks";
+import { backendService } from "../services/backend";
 
 export type TestCaseTreeProps = TestCaseListProps & {
   groups: string[];
-  excludedTestCases: Record<string, boolean>;
-  setExcludedTestCases: (excludedTestCases: Record<string, boolean>) => void;
+  exclusionState: ExclusionState;
 };
+export type TestCaseListSelectorParams = {
+  projectID: string;
+  filters: AttributeFilterDraft[];
+};
+export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
+  groups: string[];
+};
+export const testCaseTreeSelector = selectorFamily({
+  key: "test-case-list-selector",
+  get:
+    ({ projectID, filters, groups }: TestCaseTreeSelectorParams) =>
+    () =>
+      backendService.project(projectID).testCases.tree(filters, groups),
+});
 
-const useGroupState = ({ projectID, filters, groups }: TestCaseTreeSelectorParams) => {
-  const getGroupState = useRecoilCallback(
-    ({ snapshot }) =>
-      (groupID: string) =>
-        snapshot.getLoadable(groupStateSelector({ projectID, filters, groups, groupID })).getValue(),
-    [projectID, filters, groups],
-  );
-
-  const toggleGroupState = useRecoilCallback(
-    ({ set }) =>
-      (groupID: string) => {
-        set(
-          groupStateSelector({ projectID, filters, groups, groupID }),
-          oldValue =>
-            ({
-              [GroupState.Selected]: GroupState.Unselected,
-              [GroupState.Unselected]: GroupState.Selected,
-              [GroupState.Indeterminate]: GroupState.Selected,
-            }[oldValue]),
-        );
-      },
-    [],
-  );
-  return [getGroupState, toggleGroupState] as [typeof getGroupState, typeof toggleGroupState];
+export const useToggleGroupState = (exclusionState: ExclusionState) => (group: TestCaseGroup) => {
+  const cases = getAllTestCases([group]).map(testCase => testCase.id);
+  const exclusions = cases.map(id => exclusionState[0][id]);
+  const hasExcluded = exclusions.some(Boolean);
+  let value = false;
+  if (!hasExcluded) {
+    value = true;
+  }
+  exclusionState[1](listToBoolHash(cases, value));
 };
 
 const TestCaseTree = ({
@@ -49,16 +48,19 @@ const TestCaseTree = ({
   onToggleTestCase,
   filters,
   groups,
+  exclusionState,
+  disabled,
 }: TestCaseTreeProps) => {
   const testCases = useRecoilValue(testCaseTreeSelector({ projectID, filters, groups }));
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", undefined);
-  const [isGroupOpen, toggleGroup] = useSelection([]);
-  const [getGroupState, toggleGroupState] = useGroupState({ projectID, filters, groups });
+  const [isGroupOpen, toggleGroup] = useSelection();
+  const toggleGroupState = useToggleGroupState(exclusionState);
   return (
     <TestCasesPanel projectID={projectID} attributes={attributes} selectedTestCaseID={selectedTestCaseID}>
       <List>
-        {testCases.children.map(testCaseGroup => (
+        {testCases.children?.map(testCaseGroup => (
           <TestCaseGroupComponent
+            disabled={disabled}
             isTestCaseSelected={isTestCaseSelected}
             onChevronClick={toggleGroup}
             level={0}
@@ -67,21 +69,10 @@ const TestCaseTree = ({
             testCaseGroup={testCaseGroup}
             key={testCaseGroup.id}
             onTestCaseCheckboxClick={onToggleTestCase}
-            getGroupState={getGroupState}
             onCheckboxClick={toggleGroupState}
             isGroupOpen={isGroupOpen}
           />
         ))}
-        {/* {testCases.map(testCase => (
-          <TestCaseListItem
-            testCase={testCase}
-            level={-1}
-            checked={isTestCaseSelected(testCase.id)}
-            onCheckboxClick={onToggleTestCase}
-            selected={selectedTestCaseID === testCase.id}
-            onClick={setSelectedTestCaseID}
-          />
-        ))} */}
       </List>
     </TestCasesPanel>
   );
