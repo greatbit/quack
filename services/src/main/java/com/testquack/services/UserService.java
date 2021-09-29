@@ -4,7 +4,6 @@ import com.testquack.beans.Filter;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.testquack.beans.User;
 import com.testquack.dal.CommonRepository;
@@ -98,7 +97,7 @@ public class UserService extends BaseService<User> {
 
     public void changePassword(Session session, String login, String oldPassword, String newPassword) {
         if (userCanSave(session, login)){
-            User user = findOne(getCurrOrganizaionId(session), new Filter().withField("login", login));
+            User user = findOne(getCurrOrganizationId(session), new Filter().withField("login", login));
             user.setPassword(encryptPassword(newPassword, user.getLogin()));
             user.setPasswordChangeRequired(false);
             save(session, null, user);

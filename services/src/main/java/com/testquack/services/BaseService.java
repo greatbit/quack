@@ -2,7 +2,8 @@ package com.testquack.services;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ILock;
-import com.testquack.beans.EntityPreview;
+import com.testquack.beans.Organization;
+import com.testquack.dal.OrganizationRepository;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import com.testquack.services.errors.EntityValidationException;
@@ -43,10 +44,10 @@ public abstract class BaseService<E extends Entity> {
     protected HazelcastInstance hazelcastInstance;
 
     @Autowired
-    protected ProjectService projectService;
+    protected ProjectRepository projectRepository;
 
     @Autowired
-    protected ProjectRepository projectRepository;
+    protected OrganizationRepository organizationRepository;
 
     protected abstract CommonRepository<E> getRepository();
 
@@ -56,13 +57,13 @@ public abstract class BaseService<E extends Entity> {
 
     public List<E> findFiltered(Session session, String projectId, Filter filter){
         return userCanReadProject(session, projectId) ?
-                getRepository().find(getCurrOrganizaionId(session), projectId, filter).stream()
+                getRepository().find(getCurrOrganizationId(session), projectId, filter).stream()
                         .map(entity -> beforeReturn(session, projectId, entity)).collect(Collectors.toList()) :
                 Collections.emptyList();
     }
 
     public E findOne(Session session, String projectId, String id){
-        E entity = getRepository().findOne(getCurrOrganizaionId(session), projectId, id);
+        E entity = getRepository().findOne(getCurrOrganizationId(session), projectId, id);
         if (entity == null){
             throw new EntityNotFoundException();
         }
@@ -93,7 +94,7 @@ public abstract class BaseService<E extends Entity> {
                             entities.stream().map(obj -> obj == null ? "null" : obj.toString()).collect(joining(", ")))
             );
         }
-        return getRepository().save(getCurrOrganizaionId(user), projectId, entities);
+        return getRepository().save(getCurrOrganizationId(user), projectId, entities);
     }
 
 
@@ -106,13 +107,13 @@ public abstract class BaseService<E extends Entity> {
         }
         E entity = findOne(session, projectId, id);
         entity.setDeleted(true);
-        getRepository().save(getCurrOrganizaionId(session), projectId, entity);
+        getRepository().save(getCurrOrganizationId(session), projectId, entity);
         afterDelete(session, projectId, id);
     }
 
     public long count(Session session, String projectId, Filter filter){
 
-        return getRepository().count(getCurrOrganizaionId(session), projectId, filter);
+        return getRepository().count(getCurrOrganizationId(session), projectId, filter);
     }
 
 
@@ -127,7 +128,7 @@ public abstract class BaseService<E extends Entity> {
         if (session.isIsAdmin()){
             return true;
         }
-        Project project = projectRepository.findOne(getCurrOrganizaionId(session), null, projectId);
+        Project project = projectRepository.findOne(getCurrOrganizationId(session), null, projectId);
         if (project.isDeleted()) {
             throw new EntityNotFoundException(format("Project %s does not exist", projectId));
         }
@@ -152,7 +153,7 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected void beforeCreate(Session session, String projectId, E entity){
-        if (!isEmpty(entity.getId()) && getRepository().exists(getCurrOrganizaionId(session), projectId, entity.getId())){
+        if (!isEmpty(entity.getId()) && getRepository().exists(getCurrOrganizationId(session), projectId, entity.getId())){
             throw new EntityValidationException(format("Entity with id [%s] already exists", entity.getId()));
         }
         entity.setCreatedTime(System.currentTimeMillis());
@@ -234,7 +235,7 @@ public abstract class BaseService<E extends Entity> {
     private E doSave(Session session, String projectId, E entity){
         beforeSave(session, projectId, entity);
         if (validateEntity(entity)){
-            entity = getRepository().save(getCurrOrganizaionId(session), projectId, entity);
+            entity = getRepository().save(getCurrOrganizationId(session), projectId, entity);
             afterSave(session, projectId, entity);
             return entity;
         } else throw new EntityValidationException(getAccessDeniedMessage(session, entity, "SAVE"));
@@ -247,23 +248,38 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected boolean exists(Session session, String projectId, String entityId) {
-        return getRepository().exists(getCurrOrganizaionId(session), projectId, entityId);
+        return getRepository().exists(getCurrOrganizationId(session), projectId, entityId);
     }
 
     public void delete(Session session, String projectId, Filter filter) {
         if (userCanUpdateProject(session, projectId)) {
             findFiltered(session, projectId, filter).forEach(entity -> {
                 entity.setDeleted(true);
-                getRepository().save(getCurrOrganizaionId(session), projectId, entity);
+                getRepository().save(getCurrOrganizationId(session), projectId, entity);
             });
         }
     }
 
-    public String getCurrOrganizaionId(Session session){
-        String organizationId = (String) session.getMetainfo().get(CURRENT_ORGANIZATION_KEY);
-        if (organizationsEnabled && isEmpty(organizationId)){
-            throw new OrganizationNotSetException("Organization not set for session");
+    public String getCurrOrganizationId(Session session){
+        return (String) session.getMetainfo().get(CURRENT_ORGANIZATION_KEY);
+    }
+
+
+    //ToDo: USE
+    private boolean isUserInOrganization(Session session){
+        if (organizationsEnabled){
+            String currOrganizationId = getCurrOrganizationId(session);
+            if (currOrganizationId == null){
+                throw new OrganizationNotSetException("Organization not set for session");
+            }
+            Organization organization = organizationRepository.findOne(null, null, currOrganizationId);
+            if (organization.isDeleted()) {
+                throw new EntityNotFoundException(format("Organization %s does not exist", currOrganizationId));
+            }
+            return organization.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
+                    organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||
+                    organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals);
         }
-        return organizationId;
+        return true;
     }
 }

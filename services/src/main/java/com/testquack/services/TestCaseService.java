@@ -68,7 +68,7 @@ public class TestCaseService extends BaseService<TestCase> {
     public TestCaseTree findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
         TestCaseTree head = new TestCaseTree();
         List<TestCasePreview> testCases = userCanReadProject(session, projectId) ?
-                testCasePreviewRepository.find(getCurrOrganizaionId(session), projectId, filter) :
+                testCasePreviewRepository.find(getCurrOrganizationId(session), projectId, filter) :
                 Collections.emptyList();
         head.getTestCases().addAll(testCases);
 

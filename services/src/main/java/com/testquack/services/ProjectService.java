@@ -43,7 +43,7 @@ public class ProjectService extends BaseService<Project> {
     }
 
     public Project createProject(Session user, Project entity) {
-        if (entity.getId() != null && repository.exists(getCurrOrganizaionId(user), null, entity.getId())) {
+        if (entity.getId() != null && repository.exists(getCurrOrganizationId(user), null, entity.getId())) {
             throw new EntityValidationException(format("Project with id %s already exists", entity.getId()));
         }
         return create(user, null, entity);
@@ -51,7 +51,7 @@ public class ProjectService extends BaseService<Project> {
 
     @Override
     public List<Project> findFiltered(Session session, String projectId, Filter filter) {
-        return getRepository().find(getCurrOrganizaionId(session), projectId, filter).stream().filter(
+        return getRepository().find(getCurrOrganizationId(session), projectId, filter).stream().filter(
                 project -> session.isIsAdmin() || 
                         project.getReadWriteGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
                         project.getReadWriteUsers().stream().anyMatch(session.getPerson().getLogin()::equals)

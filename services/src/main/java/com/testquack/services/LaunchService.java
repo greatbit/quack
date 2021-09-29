@@ -2,7 +2,6 @@ package com.testquack.services;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 import com.hazelcast.core.ILock;
-import com.testquack.beans.Comment;
 import com.testquack.beans.Event;
 import com.testquack.beans.FailureDetails;
 import com.testquack.beans.Filter;
@@ -19,7 +18,6 @@ import com.testquack.beans.TestCaseTree;
 import com.testquack.beans.TestSuite;
 import com.testquack.beans.TestcaseFilter;
 import com.testquack.dal.impl.DBUtils;
-import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import com.testquack.tracker.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +29,10 @@ import ru.greatbit.whoru.auth.Session;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -55,7 +47,6 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.util.StringUtils.isEmpty;
 import static com.testquack.beans.LaunchStatus.*;
-import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
 @Service
 public class LaunchService extends BaseService<Launch> {
@@ -306,7 +297,7 @@ public class LaunchService extends BaseService<Launch> {
 
     public Map<String, LaunchStatistics> getLaunchesStatistics(Session session, String projectId, Filter filter) throws Exception {
         if (userCanReadProject(session, projectId)) {
-            return dbUtils.mapReduce(Launch.class, getCollectionName(getCurrOrganizaionId(session), projectId, Launch.class),
+            return dbUtils.mapReduce(Launch.class, getCollectionName(getCurrOrganizationId(session), projectId, Launch.class),
                     "launchStatsMap.js", "launchStatsReduce.js", filter, LaunchStatistics.class);
         }
         return emptyMap();
@@ -322,7 +313,7 @@ public class LaunchService extends BaseService<Launch> {
     public Collection<LaunchTestcaseStats> getTestCasesHeatMap(Session session, String projectId, Filter filter, int statsTopLimit) throws Exception {
         statsTopLimit = statsTopLimit == 0 ? 100 : statsTopLimit;
         if (userCanReadProject(session, projectId)) {
-            Map<String, LaunchTestcaseStats> unsortedMap = dbUtils.mapReduce(Launch.class, getCollectionName(getCurrOrganizaionId(session), projectId, Launch.class),
+            Map<String, LaunchTestcaseStats> unsortedMap = dbUtils.mapReduce(Launch.class, getCollectionName(getCurrOrganizationId(session), projectId, Launch.class),
                     "testcaseHeatMap.js", "testcaseHeatReduce.js", filter, LaunchTestcaseStats.class);
 
             MinMaxPriorityQueue<LaunchTestcaseStats> topStats = MinMaxPriorityQueue.
