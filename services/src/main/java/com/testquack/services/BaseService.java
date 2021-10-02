@@ -33,6 +33,7 @@ public abstract class BaseService<E extends Entity> {
 
     public final static String CURRENT_ORGANIZATION_KEY = "currentOrganization";
     public final static String ORGANIZATIONS_KEY = "organizations";
+    public final static String ORGANIZATIONS_ENABLED_KEY = "organizationsEnabled";
 
     @Value("${quack.organizations.enabled}")
     protected boolean organizationsEnabled;

@@ -34,7 +34,8 @@ class Header extends Component {
           } else if (
             this.state.session.metainfo.organizationsEnabled &&
             !this.state.session.metainfo.currentOrganization &&
-            window.location.pathname != "/orgselect"
+            window.location.pathname != "/orgselect" &&
+            window.location.pathname != "/organizations/new"
           ) {
             this.props.history.push("/orgselect");
           }

@@ -45,15 +45,14 @@ public class OrganizationService extends BaseService<Organization> {
             throw new EntityValidationException("Organization ID must contain at least 3 characters");
         }
         super.beforeCreate(session, projectId, entity);
-        sequencerService.create(projectId);
     }
 
     public Organization createOrganization(Session user, Organization entity) {
         if (entity.getId() != null && repository.exists(null,null, entity.getId())) {
             throw new EntityValidationException(format("Organization with id %s already exists", entity.getId()));
         }
-        entity.getAdmins().add(user.getId());
-        entity.getAllowedUsers().add(user.getId());
+        entity.getAdmins().add(user.getLogin());
+        entity.getAllowedUsers().add(user.getLogin());
         return create(user, null, entity);
     }
 

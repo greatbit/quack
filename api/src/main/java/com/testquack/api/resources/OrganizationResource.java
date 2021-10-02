@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.greatbit.whoru.auth.Session;
+import ru.greatbit.whoru.auth.SessionProvider;
 import ru.greatbit.whoru.jaxrs.Authenticable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,8 +22,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.testquack.services.BaseService.CURRENT_ORGANIZATION_KEY;
+import static com.testquack.services.BaseService.ORGANIZATIONS_KEY;
 import static javax.ws.rs.core.Response.ok;
 
 @Authenticable
@@ -30,6 +35,9 @@ public class OrganizationResource extends BaseResource<Organization> {
 
     @Autowired
     private OrganizationService service;
+
+    @Autowired
+    private SessionProvider sessionProvider;
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
@@ -65,7 +73,15 @@ public class OrganizationResource extends BaseResource<Organization> {
             @ApiResponse(code = 200, message = "Created entity")
     })
     public Organization create(@ApiParam(value = "Entity", required = true) Organization entity) {
-        return ((OrganizationService) getService()).createOrganization(getUserSession(), entity);
+        entity = ((OrganizationService) getService()).createOrganization(getUserSession(), entity);
+
+        Session session = getUserSession();
+        session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, entity.getId());
+        session.getMetainfo().putIfAbsent(ORGANIZATIONS_KEY, new ArrayList<String>());
+        ((Collection<String>)session.getMetainfo().get(ORGANIZATIONS_KEY)).add(entity.getId());
+        sessionProvider.replaceSession(session);
+
+        return entity;
     }
 
     @PUT
