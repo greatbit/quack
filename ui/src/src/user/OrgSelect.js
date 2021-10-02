@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import qs from "qs";
 import Backend from "../services/backend";
+import { Link } from "react-router-dom";
+
 class OrgSelect extends Component {
 
     constructor(props) {
@@ -31,11 +33,15 @@ class OrgSelect extends Component {
 
     render() {
       return (
-        <div>
+        <div className="text-center">
             {this.state.session.metainfo.organizations.length == 0 && (
                 <div>
-                    You are not a part of any organization.
-                    Ask your organization administrator to add you or create a new one.
+                    <h1 className="h3 mb-3 font-weight-normal">
+                        You are not a part of any organization
+                    </h1>
+                    <h1 className="h3 mb-3 font-weight-normal">
+                        Ask your organization administrator to add you or <Link to={"/organizations/new"}> create a new one</Link>
+                    </h1>
                 </div>
             )}
             {this.state.session.metainfo.organizations.length > 1 && (

@@ -31,6 +31,12 @@ class Header extends Component {
             window.location.pathname != "/user/changepass"
           ) {
             this.props.history.push("/user/change-password-redirect");
+          } else if (
+            this.state.session.metainfo.organizationsEnabled &&
+            !this.state.session.metainfo.currentOrganization &&
+            window.location.pathname != "/orgselect"
+          ) {
+            this.props.history.push("/orgselect");
           }
         }
       })

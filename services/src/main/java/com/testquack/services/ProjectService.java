@@ -1,5 +1,6 @@
 package com.testquack.services;
 
+import com.testquack.beans.Organization;
 import com.testquack.services.errors.EntityValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import com.testquack.dal.CommonRepository;
 import com.testquack.dal.ProjectRepository;
 import ru.greatbit.whoru.auth.Session;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,4 +72,14 @@ public class ProjectService extends BaseService<Project> {
             }
         });
     }
+
+    @Override
+    protected boolean userCanCreate(Session session, String projectId, Project project){
+        if (!organizationsEnabled){
+            return super.userCanCreate(session, projectId, project);
+        }
+        Organization organization = organizationRepository.findOne(null, null, getCurrOrganizationId(session));
+        return session.isIsAdmin() || (organization != null && organization.getAllowedGroups().contains(session.getPerson().getLogin()));
+    }
+
 }

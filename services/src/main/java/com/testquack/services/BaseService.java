@@ -112,8 +112,8 @@ public abstract class BaseService<E extends Entity> {
     }
 
     public long count(Session session, String projectId, Filter filter){
-
-        return getRepository().count(getCurrOrganizationId(session), projectId, filter);
+        return userCanReadProject(session, projectId) ?
+            getRepository().count(getCurrOrganizationId(session), projectId, filter) : 0;
     }
 
 
@@ -127,6 +127,9 @@ public abstract class BaseService<E extends Entity> {
     protected boolean userCanReadProject(Session session, String projectId){
         if (session.isIsAdmin()){
             return true;
+        }
+        if (!isUserInOrganization(session)){
+            return false;
         }
         Project project = projectRepository.findOne(getCurrOrganizationId(session), null, projectId);
         if (project.isDeleted()) {
@@ -264,9 +267,7 @@ public abstract class BaseService<E extends Entity> {
         return (String) session.getMetainfo().get(CURRENT_ORGANIZATION_KEY);
     }
 
-
-    //ToDo: USE
-    private boolean isUserInOrganization(Session session){
+    protected boolean isUserInOrganization(Session session){
         if (organizationsEnabled){
             String currOrganizationId = getCurrOrganizationId(session);
             if (currOrganizationId == null){
@@ -279,6 +280,21 @@ public abstract class BaseService<E extends Entity> {
             return organization.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
                     organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||
                     organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals);
+        }
+        return true;
+    }
+
+    protected boolean isUserOrganizationAdmin(Session session){
+        if (organizationsEnabled){
+            String currOrganizationId = getCurrOrganizationId(session);
+            if (currOrganizationId == null){
+                throw new OrganizationNotSetException("Organization not set for session");
+            }
+            Organization organization = organizationRepository.findOne(null, null, currOrganizationId);
+            if (organization.isDeleted()) {
+                throw new EntityNotFoundException(format("Organization %s does not exist", currOrganizationId));
+            }
+            return organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals);
         }
         return true;
     }

@@ -5,6 +5,7 @@ import TestSuites from "../testsuites/TestSuites";
 import Projects from "../projects/Projects";
 import ProjectForm from "../projects/ProjectForm";
 import Project from "../projects/Project";
+import OrganizationForm from "../organizations/OrganizationForm";
 import ProjectSettings from "../projects/ProjectSettings";
 import Launches from "../launches/Launches";
 import Launch from "../launches/Launch";
@@ -49,7 +50,9 @@ class Main extends Component {
           <Route exact path="/" component={Projects} />
           <Route exact path="/projects" component={Projects} />
           <Route exact path="/projects/new" component={ProjectForm} />
+
           <Route exact path="/orgselect" component={OrgSelect} />
+          <Route exact path="/organizations/new" component={OrganizationForm} />
 
           <Route exact path="/auth" component={Auth} />
           <Route
