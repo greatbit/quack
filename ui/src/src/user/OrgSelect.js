@@ -61,11 +61,16 @@ class OrgSelect extends Component {
                 </div>
             )}
             {this.state.session.metainfo.organizations.length > 1 && (
-                <div>
+                <div className='select-org'>
+                    <h2>Select Organization</h2>
                     {this.state.session.metainfo.organizations.map(function (organization, index) {
                       return (
-                        <div index={index}  className='clickable' onClick={e => this.changeOrganization(organization.id, e)}>
-                            {organization.name}
+                        <div index={index}  className='clickable card' onClick={e => this.changeOrganization(organization.id, e)}>
+                            <div className='card-body'>
+                                <div className='card-title'>
+                                    {organization.name}
+                                </div>
+                            </div>
                         </div>
                       )
                     }.bind(this))}

@@ -330,3 +330,9 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .inplace-display p {
     margin-bottom: 0rem;
 }
+
+.select-org {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+}

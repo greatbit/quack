@@ -51,7 +51,12 @@ class Main extends Component {
           <Route exact path="/projects" component={Projects} />
           <Route exact path="/projects/new" component={ProjectForm} />
 
-          <Route exact path="/orgselect" onSessionChange={this.onSessionChange.bind(this)} component={OrgSelect} />
+          <Route exact
+            path="/orgselect"
+            render={props =>(
+                <OrgSelect {...props} onSessionChange={this.onSessionChange.bind(this)} />
+                )}
+          />
           <Route exact path="/organizations/new" component={OrganizationForm} />
 
           <Route exact path="/auth" component={Auth} />
