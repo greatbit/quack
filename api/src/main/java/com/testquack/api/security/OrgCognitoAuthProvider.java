@@ -36,11 +36,15 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
             session.getMetainfo().put(ORGANIZATIONS_ENABLED_KEY, true);
             
             List<Organization> organizations = organizationService.findFiltered(session, null, new Filter());
-            session.getMetainfo().put(ORGANIZATIONS_KEY, organizations.stream().map(Organization::getId).collect(toList()));
+            session.getMetainfo().put(ORGANIZATIONS_KEY, organizations.stream().map(this::getShortOrganization).collect(toList()));
             if (organizations.size() == 1){
                 session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizations.get(0).getId());
             }
         }
         return session;
+    }
+
+    private Organization getShortOrganization(Organization organization) {
+        return new Organization().withId(organization.getId()).withName(organization.getName());
     }
 }

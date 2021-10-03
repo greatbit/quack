@@ -78,7 +78,9 @@ public class OrganizationResource extends BaseResource<Organization> {
         Session session = getUserSession();
         session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, entity.getId());
         session.getMetainfo().putIfAbsent(ORGANIZATIONS_KEY, new ArrayList<String>());
-        ((Collection<String>)session.getMetainfo().get(ORGANIZATIONS_KEY)).add(entity.getId());
+        ((Collection<Organization>)session.getMetainfo().get(ORGANIZATIONS_KEY)).add(
+                new Organization().withName(entity.getName()).withId(entity.getId())
+        );
         sessionProvider.replaceSession(session);
 
         return entity;

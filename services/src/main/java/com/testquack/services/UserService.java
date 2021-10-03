@@ -1,6 +1,7 @@
 package com.testquack.services;
 
 import com.testquack.beans.Filter;
+import com.testquack.dal.OrganizationRepository;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.testquack.dal.CommonRepository;
 import com.testquack.dal.UserRepository;
 import ru.greatbit.utils.string.StringUtils;
 import ru.greatbit.whoru.auth.Session;
+import ru.greatbit.whoru.auth.SessionProvider;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -24,7 +26,13 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class UserService extends BaseService<User> {
 
     @Autowired
+    private SessionProvider sessionProvider;
+
+    @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Override
     protected CommonRepository<User> getRepository() {
@@ -106,6 +114,15 @@ public class UserService extends BaseService<User> {
         }
     }
 
+    public Session changeOrganization(Session session, String organizationId){
+        if (!isUserInOrganization(session, organizationId)){
+            throw new EntityNotFoundException("Organization " + organizationId + " not found");
+        }
+        session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizationId);
+        sessionProvider.replaceSession(session);
+        return session;
+    }
+
     /////// Non-authenticable for internal usage
 
     public User findOne(String organizationId, Filter filter) {
@@ -124,5 +141,6 @@ public class UserService extends BaseService<User> {
     private User cleanUserSesitiveData(User user){
         return user.withPassword(null).withToken(null);
     }
+
 
 }

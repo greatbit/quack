@@ -175,4 +175,10 @@ public class UserResource extends BaseResource<User> {
         return authProvider.suggestUser(request, literal);
     }
 
+    @POST
+    @Path("/changeorg/{orgId}")
+    public Session login(@PathParam("orgId") String organizationId) {
+        return service.changeOrganization(getSession(), organizationId);
+    }
+
 }

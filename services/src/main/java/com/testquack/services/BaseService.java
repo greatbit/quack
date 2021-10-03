@@ -269,14 +269,17 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected boolean isUserInOrganization(Session session){
+        return isUserInOrganization(session, getCurrOrganizationId(session));
+    }
+
+    protected boolean isUserInOrganization(Session session, String organizationId){
         if (organizationsEnabled){
-            String currOrganizationId = getCurrOrganizationId(session);
-            if (currOrganizationId == null){
+            if (organizationId == null){
                 throw new OrganizationNotSetException("Organization not set for session");
             }
-            Organization organization = organizationRepository.findOne(null, null, currOrganizationId);
-            if (organization.isDeleted()) {
-                throw new EntityNotFoundException(format("Organization %s does not exist", currOrganizationId));
+            Organization organization = organizationRepository.findOne(null, null, organizationId);
+            if (organization == null || organization.isDeleted()) {
+                throw new EntityNotFoundException(format("Organization %s does not exist", organizationId));
             }
             return organization.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
                     organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||

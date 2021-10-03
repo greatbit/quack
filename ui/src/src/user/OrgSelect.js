@@ -11,6 +11,7 @@ class OrgSelect extends Component {
        this.state = {
           session: {metainfo:{organizations:[]}}
         };
+        this.onSessionChange = this.onSessionChange.bind(this);
     }
 
     componentDidMount() {
@@ -31,6 +32,21 @@ class OrgSelect extends Component {
           });
     }
 
+    onSessionChange(session) {
+      this.props.onSessionChange(session);
+    }
+
+    changeOrganization(organizationId){
+        Backend.post("user/changeorg/" + organizationId)
+          .then(response => {
+            this.onSessionChange(response);
+            window.location = "/";
+          })
+          .catch(error => {
+            console.log("Unable to change organization");
+          });
+    }
+
     render() {
       return (
         <div className="text-center">
@@ -46,7 +62,13 @@ class OrgSelect extends Component {
             )}
             {this.state.session.metainfo.organizations.length > 1 && (
                 <div>
-                    Display organization list here
+                    {this.state.session.metainfo.organizations.map(function (organization, index) {
+                      return (
+                        <div index={index}  className='clickable' onClick={e => this.changeOrganization(organization.id, e)}>
+                            {organization.name}
+                        </div>
+                      )
+                    }.bind(this))}
                 </div>
             )}
         </div>
