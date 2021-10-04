@@ -129,8 +129,12 @@ public abstract class BaseService<E extends Entity> {
         if (session.isIsAdmin()){
             return true;
         }
-        if (!isUserInOrganization(session)){
+        Organization organization = organizationRepository.findOne(null, null, getCurrOrganizationId(session));
+        if (!isUserInOrganization(session, organization)){
             return false;
+        }
+        if (isUserOrganizationAdmin(session, organization)){
+            return true;
         }
         Project project = projectRepository.findOne(getCurrOrganizationId(session), null, projectId);
         if (project.isDeleted()) {
@@ -278,8 +282,15 @@ public abstract class BaseService<E extends Entity> {
                 throw new OrganizationNotSetException("Organization not set for session");
             }
             Organization organization = organizationRepository.findOne(null, null, organizationId);
+            return isUserInOrganization(session, organization);
+        }
+        return true;
+    }
+
+    protected boolean isUserInOrganization(Session session, Organization organization){
+        if (organizationsEnabled) {
             if (organization == null || organization.isDeleted()) {
-                throw new EntityNotFoundException(format("Organization %s does not exist", organizationId));
+                throw new EntityNotFoundException(format("Organization %s does not exist", organization.getId()));
             }
             return organization.getAllowedGroups().stream().anyMatch(session.getPerson().getGroups()::contains) ||
                     organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||
@@ -295,11 +306,17 @@ public abstract class BaseService<E extends Entity> {
                 throw new OrganizationNotSetException("Organization not set for session");
             }
             Organization organization = organizationRepository.findOne(null, null, currOrganizationId);
-            if (organization.isDeleted()) {
-                throw new EntityNotFoundException(format("Organization %s does not exist", currOrganizationId));
-            }
-            return organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals);
+            return isUserOrganizationAdmin(session, organization);
         }
         return true;
+    }
+
+    protected boolean isUserOrganizationAdmin(Session session, Organization organization){
+        if (organizationsEnabled) {
+            if (organization.isDeleted()) {
+                throw new EntityNotFoundException(format("Organization %s does not exist", organization.getId()));
+            }
+            return organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals);
+        } return false;
     }
 }
