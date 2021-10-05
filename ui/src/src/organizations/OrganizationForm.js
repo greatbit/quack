@@ -139,7 +139,7 @@ class OrganizationForm extends Component {
 
   render() {
     return (
-      <div>
+      <div className='org-form'>
         {this.props.editCurrent &&
               (
                 <h1>Update Organization</h1>
@@ -152,54 +152,58 @@ class OrganizationForm extends Component {
         }
 
         <form>
-          <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Name</label>
-            <div className="col-sm-10">
-              {!this.state.readonly &&
-                <input type="text" name="name" value={this.state.organization.name} onChange={this.handleChange} />
-              }
-              {this.state.readonly &&
-                <input type="text" name="name" value={this.state.organization.name} onChange={this.handleChange} disabled/>
-              }
-            </div>
+          <div className="org-form-block">
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Name</label>
+                <div className="col-sm-9">
+                  {!this.state.readonly &&
+                    <input type="text" name="name" value={this.state.organization.name} onChange={this.handleChange} className="form-control"/>
+                  }
+                  {this.state.readonly &&
+                    <input type="text" name="name" value={this.state.organization.name} onChange={this.handleChange} className="form-control" disabled/>
+                  }
+                </div>
+              </div>
+
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Organization ID</label>
+                <div className="col-sm-9">
+                {!this.props.editCurrent &&
+                  <input type="text" name="id" value={this.state.organization.id || ""} onChange={this.handleChange} className="form-control"/>
+                }
+                {this.props.editCurrent &&
+                  <input type="text" name="id" value={this.state.organization.id || ""} onChange={this.handleChange} disabled className="form-control"/>
+                }
+                </div>
+              </div>
+
+              <div className="form-group row">
+                <label className="col-sm-3 col-form-label">Description</label>
+                <div className="col-sm-9">
+                {this.state.readonly &&
+                  <input
+                    type="text"
+                    name="description"
+                    className="form-control"
+                    value={this.state.organization.description}
+                    onChange={this.handleChange}
+                    disabled
+                  />
+                }
+                {!this.state.readonly &&
+                  <input
+                    type="text"
+                    name="description"
+                    className="form-control"
+                    value={this.state.organization.description}
+                    onChange={this.handleChange}
+                  />
+                }
+                </div>
+              </div>
           </div>
 
-          <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Organization ID</label>
-            <div className="col-sm-10">
-            {!this.props.editCurrent &&
-              <input type="text" name="id" value={this.state.organization.id || ""} onChange={this.handleChange} />
-            }
-            {this.props.editCurrent &&
-              <input type="text" name="id" value={this.state.organization.id || ""} onChange={this.handleChange} disabled />
-            }
-            </div>
-          </div>
-
-          <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Description</label>
-            <div className="col-sm-10">
-            {this.state.readonly &&
-              <input
-                type="text"
-                name="description"
-                value={this.state.organization.description}
-                onChange={this.handleChange}
-                disabled
-              />
-            }
-            {!this.state.readonly &&
-              <input
-                type="text"
-                name="description"
-                value={this.state.organization.description}
-                onChange={this.handleChange}
-              />
-            }
-            </div>
-          </div>
-
-          <div>
+          <div className="org-form-block">
             <h4> Administrators </h4>
             {this.state.organization.admins.map(function (admin, index) {
               return this.state.readonly ? (
@@ -219,15 +223,19 @@ class OrganizationForm extends Component {
                 );
             }.bind(this))}
             {!this.state.readonly && (
-                <div>
-                    <input type="text" name="administrators" value={this.state.administratorsEdit} onChange={this.handleAdminsChange}/>
-                    <button type="button" className="btn btn-primary" onClick={this.handleAdminAdded}> Add Administrator </button>
+                <div className="row org-users-form">
+                    <div className="col-sm-8">
+                        <input type="text" name="administrators" className="form-control" value={this.state.administratorsEdit} onChange={this.handleAdminsChange}/>
+                    </div>
+                    <div className="col-sm-4">
+                        <button type="button" className="btn btn-primary" onClick={this.handleAdminAdded}> Add Administrator </button>
+                    </div>
                 </div>
             )}
           </div>
 
 
-          <div>
+          <div className="org-form-block">
             <h4> Users </h4>
             {this.state.organization.allowedUsers.map(function (user, index) {
               return this.state.readonly ? (
@@ -244,13 +252,18 @@ class OrganizationForm extends Component {
               );
             }.bind(this))}
             {!this.state.readonly && (
-                <div>
-                    <input type="text" name="users" value={this.state.usersEdit} onChange={this.handleUsersChange}/>
-                    <button type="button" className="btn btn-primary" onClick={this.handleUserAdded}>Add User</button>
+                <div className="row org-users-form">
+                    <div className="col-sm-8">
+                        <input type="text" name="users" className="form-control" value={this.state.usersEdit} onChange={this.handleUsersChange}/>
+                    </div>
+                    <div className="col-sm-4">
+                        <button type="button" className="btn btn-primary" onClick={this.handleUserAdded}>Add User</button>
+                    </div>
                 </div>
             )}
           </div>
 
+          <div className="org-form-block">
           {this.props.editCurrent && !this.state.readonly &&
             (
               <button type="button" className="btn btn-primary" onClick={this.handleUpdate}>
@@ -265,7 +278,7 @@ class OrganizationForm extends Component {
                  </button>
               )
            }
-
+        </div>
         </form>
       </div>
     );
