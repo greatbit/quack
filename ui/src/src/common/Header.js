@@ -166,6 +166,14 @@ class Header extends Component {
                     </div>
                   )
                 }.bind(this))}
+                <div className="dropdown-divider"></div>
+                <Link className="dropdown-item " to="/organizations/edit">
+                    Edit Current Organization
+                </Link>
+                <Link className="dropdown-item " to="/organizations/new">
+                    Create New Organization
+                </Link>
+
             </div>
           )}
 

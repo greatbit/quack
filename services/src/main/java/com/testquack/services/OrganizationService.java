@@ -2,15 +2,12 @@ package com.testquack.services;
 
 import com.testquack.beans.Filter;
 import com.testquack.beans.Organization;
-import com.testquack.beans.User;
 import com.testquack.dal.CommonRepository;
 import com.testquack.dal.OrganizationRepository;
 import com.testquack.dal.UserRepository;
 import com.testquack.services.errors.EntityValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.greatbit.utils.collection.CollectionUtils;
-import ru.greatbit.utils.collection.Difference;
 import ru.greatbit.whoru.auth.Session;
 
 import java.util.List;
@@ -64,45 +61,6 @@ public class OrganizationService extends BaseService<Organization> {
                         organization.getAllowedUsers().stream().anyMatch(session.getPerson().getLogin()::equals) ||
                         organization.getAdmins().stream().anyMatch(session.getPerson().getLogin()::equals)
         ).collect(toList());
-    }
-
-    @Override
-    protected void beforeUpdate(Session session, String projectId, Organization existingEntity, Organization entity) {
-        super.beforeUpdate(session, projectId, existingEntity, entity);
-
-        Difference<String> usersDiff = CollectionUtils.getDiff(existingEntity.getAllowedUsers(), entity.getAllowedUsers());
-        usersDiff.getAdded().forEach(addedUserId -> {
-            User user = userRepository.findOne(null, projectId, addedUserId);
-            if (!user.getOrganizations().contains(entity.getId())){
-                user.getOrganizations().add(entity.getId());
-            }
-            userRepository.save(user);
-        });
-        usersDiff.getRemoved().forEach(removedUserId -> {
-            User user = userRepository.findOne(null, projectId, removedUserId);
-            if (user.getOrganizations().contains(entity.getId())){
-                user.getOrganizations().remove(entity.getId());
-            }
-            userRepository.save(user);
-        });
-
-
-        Difference<String> adminsDiff = CollectionUtils.getDiff(existingEntity.getAdmins(), entity.getAdmins());
-        adminsDiff.getAdded().forEach(addedUserId -> {
-            User user = userRepository.findOne(null, projectId, addedUserId);
-            if (!user.getAdminOfOrganizations().contains(entity.getId())){
-                user.getAdminOfOrganizations().add(entity.getId());
-            }
-            userRepository.save(user);
-        });
-        adminsDiff.getRemoved().forEach(removedUserId -> {
-            User user = userRepository.findOne(null, projectId, removedUserId);
-            if (user.getAdminOfOrganizations().contains(entity.getId()) &&
-                    !session.getPerson().getLogin().equals(removedUserId)){
-                user.getAdminOfOrganizations().remove(entity.getId());
-            }
-            userRepository.save(user);
-        });
     }
 
     @Override

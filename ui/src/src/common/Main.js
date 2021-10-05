@@ -58,6 +58,11 @@ class Main extends Component {
                 )}
           />
           <Route exact path="/organizations/new" component={OrganizationForm} />
+          <Route
+              exact
+              path="/organizations/edit"
+              render={props => <OrganizationForm {...props} editCurrent="true" />}
+            />
 
           <Route exact path="/auth" component={Auth} />
           <Route
