@@ -19,6 +19,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Service
 public class OrganizationService extends BaseService<Organization> {
 
+    public static final int DEFAULT_SESSIONS_CAPACITY = 5;
+
     @Autowired
     private OrganizationRepository repository;
 
@@ -41,6 +43,7 @@ public class OrganizationService extends BaseService<Organization> {
         if (entity.getId().length() < 3) {
             throw new EntityValidationException("Organization ID must contain at least 3 characters");
         }
+        entity.setLicenseCapacity(DEFAULT_SESSIONS_CAPACITY);
         super.beforeCreate(session, projectId, entity);
     }
 
@@ -81,5 +84,14 @@ public class OrganizationService extends BaseService<Organization> {
     @Override
     protected boolean userCanUpdate(Session session, String projectId, Organization organization){
         return session.isIsAdmin() || isUserOrganizationAdmin(session);
+    }
+
+    @Override
+    protected void beforeUpdate(Session session, String projectId, Organization existingEntity, Organization entity) {
+        if (!session.isIsAdmin()){
+            entity.setLicenseCapacity(existingEntity.getLicenseCapacity());
+            entity.setLicenseExpiration(existingEntity.getLicenseExpiration());
+        }
+        super.beforeUpdate(session, projectId, existingEntity, entity);
     }
 }
