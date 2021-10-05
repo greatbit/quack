@@ -348,3 +348,11 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .org-users-form {
     margin-top: 20px;
 }
+
+.project-form {
+    max-width: 700px;
+}
+
+.project-form-block {
+    margin-top: 40px;
+}
