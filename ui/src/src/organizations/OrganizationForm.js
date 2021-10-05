@@ -39,11 +39,11 @@ class OrganizationForm extends Component {
     if (this.props.editCurrent) {
         Backend.get("user/session")
           .then(response => {
-            const login = response.login;
+            this.currentLogin = response.login;
             if ((response.metainfo || {}).organizationsEnabled){
                 Backend.get("organization/" + response.metainfo.currentOrganization).then(response => {
                     this.state.organization = response;
-                    this.state.readonly = !(this.state.organization.admins||[]).includes(login);
+                    this.state.readonly = !(this.state.organization.admins||[]).includes(this.currentLogin );
                     this.setState(this.state);
                 }).catch((e) => {
                     console.log("Unable to fetch organization");
@@ -210,7 +210,7 @@ class OrganizationForm extends Component {
               (
                   <div index={index}>
                     {admin}
-                    {!this.state.readonly && (
+                    {!this.state.readonly && this.currentLogin !== admin && (
                         <span className="clickable edit-icon-visible red" onClick={e => this.handleAdminDeleted(index, e)}>
                           <FontAwesomeIcon icon={faMinusCircle} />
                         </span>
