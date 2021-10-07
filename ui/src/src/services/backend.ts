@@ -1,5 +1,6 @@
 import qs from "qs";
 import * as Utils from "../common/Utils";
+
 import {
   ExistingAttribute,
   ExistingSuite,
@@ -15,6 +16,7 @@ import {
   RootTestCaseGroup,
   isExistingAttributeFilter,
   isExistingAttribute,
+  NewTestCase,
 } from "../domain";
 
 export const getApiBaseUrl = (url: string) => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
@@ -51,7 +53,8 @@ const getMutationOptions = <TBody>(body: TBody) => ({
 
 const backend = {
   get: <TBody>(url: string, options?: RequestInit) => fetchJSON(url, "GET", options) as Promise<TBody>,
-  post: <TBody>(url: string, body: TBody) => fetchJSON(url, "POST", getMutationOptions(body)),
+  post: <TBody, TResponse>(url: string, body: TBody) =>
+    fetchJSON(url, "POST", getMutationOptions(body)) as Promise<TResponse>,
   delete: (url: string) => fetchInternal(url, "DELETE"),
   put: <TBody>(url: string, body: TBody) => fetchJSON(url, "PUT", getMutationOptions(body)),
 };
@@ -120,7 +123,73 @@ const mapFiltersToQueryParams = (filters: AttributeFilterDraft[]): string =>
     .join("&");
 
 const mapGroupsToQueryParams = (groups: string[]) => groups.map(group => `groups=${group}`).join("&");
+type NewServerTestCase = {
+  attributes: Record<string, string[]>;
+  description: string;
+  name: string;
+  id: null;
+  steps: never[];
+};
+const mapAttributeToServer =
+  (attributes: (FakeAttribute | ExistingAttribute)[], attribute: string | undefined) =>
+  (value: string): string | undefined => {
+    const attr = attributes.find(item => item.id === attribute);
+    if (!attr) {
+      return undefined;
+    }
+    return attr.values.find(val => val.id === value)?.name;
+  };
 
+const mapNewTestCaseToBackend =
+  (attributes: (FakeAttribute | ExistingAttribute)[]) =>
+  (values: NewTestCase): NewServerTestCase => {
+    return {
+      attributes: values.attributes.reduce(
+        (acc, attribute) => ({
+          ...acc,
+          [attribute.attribute!]: attribute.values
+            .map(mapAttributeToServer(attributes, attribute.attribute))
+            .filter(Boolean),
+        }),
+        {},
+      ),
+      id: null,
+      name: values.name,
+      description: values.description,
+      steps: [],
+    };
+  };
+type ServerTestCase = Omit<NewServerTestCase, "id"> &
+  WithID &
+  Meta & {
+    automated: boolean;
+    broken: boolean;
+    metadata: Record<string, never>;
+  };
+const mapServerTestCaseAttributesToClient =
+  (attributes: (FakeAttribute | ExistingAttribute)[]) =>
+  (serverAttributes: Record<string, string[]>): { attribute: string; values: string[] }[] => {
+    return Object.entries(serverAttributes).map(([attr, values]) => {
+      const attribute = attributes.find(item => item.id === attr);
+      return {
+        attribute: attr,
+        values: values.map(value => (attribute?.values ?? []).find(val => val.name === value)!.id!),
+      };
+    });
+  };
+const mapServerTestCaseToClient =
+  (attributes: (FakeAttribute | ExistingAttribute)[]) =>
+  (serverTestCase: ServerTestCase): ExistingTestCase => ({
+    ...copyMeta(serverTestCase),
+    automated: serverTestCase.automated,
+    broken: serverTestCase.broken,
+    name: serverTestCase.name,
+    description: serverTestCase.description,
+    deleted: serverTestCase.deleted,
+    steps: serverTestCase.steps,
+    metadata: serverTestCase.metadata,
+    attributes: mapServerTestCaseAttributesToClient(attributes)(serverTestCase.attributes),
+  });
 export const backendService = {
   project: (projectId: string) => ({
     testSuites: {
@@ -145,7 +214,14 @@ export const backendService = {
         ),
       list: (filters: AttributeFilterDraft[], offset: number = 0) =>
         backend.get<ExistingTestCase[]>(
-          projectId + "/testcase?skip=" + offset.toString() + mapFiltersToQueryParams(filters),
+          projectId + "/testcase?limit=50&skip=" + offset.toString() + mapFiltersToQueryParams(filters),
+        ),
+      create: async (values: NewTestCase, attributes: (ExistingAttribute | FakeAttribute)[]) =>
+        mapServerTestCaseToClient(attributes)(
+          await backend.post<NewServerTestCase, ServerTestCase>(
+            projectId + "/testcase",
+            mapNewTestCaseToBackend(attributes)(values),
+          ),
         ),
     },
   }),

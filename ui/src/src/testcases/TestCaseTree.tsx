@@ -1,4 +1,4 @@
-import { selectorFamily, useRecoilValue } from "recoil";
+import { atomFamily, selectorFamily, useRecoilState } from "recoil";
 
 import List from "../components/testcase/List";
 
@@ -6,10 +6,18 @@ import { TestCaseListProps } from "./TestCaseList";
 import TestCaseGroupComponent from "../components/testcase/TestCaseGroup";
 import { ExclusionState, useSelection } from "./hooks";
 
-import { AttributeFilterDraft, getAllTestCases, listToBoolHash, TestCaseGroup } from "../domain";
+import {
+  AttributeFilterDraft,
+  ExistingTestCase,
+  getAllTestCases,
+  listToBoolHash,
+  RootTestCaseGroup,
+  TestCaseGroup,
+} from "../domain";
 import TestCasesPanel from "./TestCasesPanel";
 import { useQueryStringState } from "../lib/hooks";
 import { backendService } from "../services/backend";
+import TestCaseListItem from "../components/testcase/TestCaseListItem";
 
 export type TestCaseTreeProps = TestCaseListProps & {
   groups: string[];
@@ -22,12 +30,23 @@ export type TestCaseListSelectorParams = {
 export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
   groups: string[];
 };
-export const testCaseTreeSelector = selectorFamily({
+
+const testCaseTreeAtom = atomFamily<RootTestCaseGroup | undefined, TestCaseTreeSelectorParams>({
+  key: "test-case-tree-atom",
+  default: undefined,
+});
+
+export const testCaseTreeSelector = selectorFamily<RootTestCaseGroup, TestCaseTreeSelectorParams>({
   key: "test-case-list-selector",
   get:
     ({ projectID, filters, groups }: TestCaseTreeSelectorParams) =>
-    () =>
+    ({ get }) =>
+      get(testCaseTreeAtom({ projectID, filters, groups })) ||
       backendService.project(projectID).testCases.tree(filters, groups),
+  set:
+    params =>
+    ({ set }, value) =>
+      set(testCaseTreeAtom(params), value),
 });
 
 export const useToggleGroupState = (exclusionState: ExclusionState) => (group: TestCaseGroup) => {
@@ -51,14 +70,36 @@ const TestCaseTree = ({
   exclusionState,
   disabled,
 }: TestCaseTreeProps) => {
-  const testCases = useRecoilValue(testCaseTreeSelector({ projectID, filters, groups }));
+  const [rootTestCaseGroup, setRootTestCaseGroop] = useRecoilState(
+    testCaseTreeSelector({ projectID, filters, groups }),
+  );
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", undefined);
   const [isGroupOpen, toggleGroup] = useSelection();
   const toggleGroupState = useToggleGroupState(exclusionState);
+  const handleTestCaseAdded = (testCase: ExistingTestCase) => {
+    setRootTestCaseGroop({ ...rootTestCaseGroup, testCases: [testCase, ...rootTestCaseGroup.testCases] });
+  };
+
   return (
-    <TestCasesPanel projectID={projectID} attributes={attributes} selectedTestCaseID={selectedTestCaseID}>
+    <TestCasesPanel
+      projectID={projectID}
+      attributes={attributes}
+      selectedTestCaseID={selectedTestCaseID}
+      onTestCaseAdded={handleTestCaseAdded}
+    >
       <List>
-        {testCases.children?.map(testCaseGroup => (
+        {rootTestCaseGroup.testCases.map(testCase => (
+          <TestCaseListItem
+            key={testCase.id}
+            testCase={testCase}
+            onClick={setSelectedTestCaseID}
+            onCheckboxClick={onToggleTestCase}
+            selected={selectedTestCaseID === testCase.id}
+            checked={isTestCaseSelected(testCase.id)}
+            level={-1}
+          />
+        ))}
+        {rootTestCaseGroup.children?.map(testCaseGroup => (
           <TestCaseGroupComponent
             disabled={disabled}
             isTestCaseSelected={isTestCaseSelected}

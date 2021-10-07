@@ -37,7 +37,7 @@ export const TestCasesScreenStateless = ({
   ...other
 }: TestCasesScreenStatelessProps) => (
   <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
-    <div className="bg-neutral-fade6 pt-8 pb-8 font-sans text-neutral">
+    <div className="bg-neutral-fade6 pt-8 pb-8 font-sans text-neutral font-normal">
       {beforeFilters}
       <TestCasesFilter
         disabled={disableFilters}

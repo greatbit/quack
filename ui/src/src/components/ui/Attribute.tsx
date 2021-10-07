@@ -12,14 +12,15 @@ export type FilterValue = {
   values: string[];
 };
 
-export type FilterProps = {
+export type AttributeProps = {
   value: FilterValue;
   onChange: (value: FilterValue) => void;
   attributes: (ExistingAttribute | FakeAttribute)[];
   onRemoveClick: EventHandler<MouseEvent>;
   disabled?: boolean;
 };
-const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: FilterProps) => {
+
+const Attribute = ({ value, onChange, attributes, onRemoveClick, disabled }: AttributeProps) => {
   const selectedAttribute = useMemo(
     () => attributes.find(attribute => attribute.id === value?.attribute),
     [attributes, value],
@@ -48,7 +49,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: Filter
   return (
     <div
       className={clsx(
-        "inline-flex items-center gap-2 flex-nowrap pl-3",
+        "inline-flex items-center gap-2  pl-2.5",
         inputBorderClasses,
         inputBackgroundClasses,
         inputTextClasses,
@@ -56,7 +57,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: Filter
     >
       <CustomListbox
         disabled={disabled}
-        className="flex-grow flex-shrink-0"
+        className="flex-grow flex-shrink"
         buttonClassName="pl-1"
         value={value?.attribute}
         onChange={handleAttributeChange}
@@ -77,7 +78,7 @@ const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: Filter
       <span className="font-semibold">{selectedValues.length > 1 ? "in" : "="}</span>
       <CustomListbox
         disabled={disabled}
-        className="flex-grow flex-shrink-0"
+        className="flex-grow flex-shrink"
         buttonClassName="pl-1"
         value={selectedValues as any}
         onChange={handleValueChange}
@@ -113,4 +114,4 @@ const Filter = ({ value, onChange, attributes, onRemoveClick, disabled }: Filter
     </div>
   );
 };
-export default Filter;
+export default Attribute;

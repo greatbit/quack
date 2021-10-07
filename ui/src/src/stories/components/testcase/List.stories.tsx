@@ -18,22 +18,57 @@ export type Actions = {
   onToggleGroupClick: (group: TestCaseGroup) => void;
 };
 
+const sharedMeta = {
+  createdTime: Date.now(),
+  lastModifiedTime: Date.now(),
+  deleted: false,
+  lastModifiedBy: "root",
+  createdBy: "root",
+};
 const testCases: ExistingTestCase[] = [
   {
     id: "1",
     name: "TestCase 1",
+    description: "Desc",
+    attributes: [],
+    automated: false,
+    steps: [],
+    broken: false,
+    metadata: {},
+    ...sharedMeta,
   },
   {
     id: "2",
     name: "TestCase 2. It has a very very very, incredibly long name.",
+    description: "Desc",
+    attributes: [],
+    automated: false,
+    steps: [],
+    broken: false,
+    metadata: {},
+    ...sharedMeta,
   },
   {
     id: "3",
     name: "TestCase 3. It has a very very very, incredibly long name.",
+    description: "Desc",
+    attributes: [],
+    automated: false,
+    steps: [],
+    broken: false,
+    metadata: {},
+    ...sharedMeta,
   },
   {
     id: "4",
     name: "TestCase 3. It has a very very very, incredibly long name.",
+    description: "Desc",
+    attributes: [],
+    automated: false,
+    steps: [],
+    broken: false,
+    metadata: {},
+    ...sharedMeta,
   },
 ];
 

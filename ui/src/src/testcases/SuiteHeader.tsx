@@ -11,7 +11,7 @@ export type SuiteHeaderProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"> 
 
 export const SuiteHeaderText = ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
   <h1
-    className={clsx(className, "flex items-center text-neutral text font-semibold text-lg gap-2 p-0 mt-0 mb-0")}
+    className={clsx(className, "flex items-center text-neutral text font-light text-xl gap-2 p-0 mt-0 mb-0")}
     {...props}
   >
     {children}

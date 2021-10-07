@@ -7,8 +7,9 @@ import { useQueryStringState } from "../lib/hooks";
 import { selectorFamily } from "recoil";
 import { backendService } from "../services/backend";
 import { WithProjectID } from "./testCasesScreen.data";
-import Button from "../components/ui/Button";
+import Button, { linkNeutralClasses } from "../components/ui/Button";
 import { useState } from "react";
+import clsx from "clsx";
 export type TestCaseListProps = {
   projectID: string;
   isTestCaseSelected: (id: string) => boolean;
@@ -84,8 +85,16 @@ const TestCaseList = ({
   const testCaseCount = useRecoilValue(testCaseCountSelector({ projectID, filters }));
 
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", testCases[0]?.id);
+  const handleAddTestCase = (testCase: ExistingTestCase) => {
+    setTestCases([testCase, ...testCases]);
+  };
   return (
-    <TestCasesPanel projectID={projectID} attributes={attributes} selectedTestCaseID={selectedTestCaseID}>
+    <TestCasesPanel
+      projectID={projectID}
+      attributes={attributes}
+      selectedTestCaseID={selectedTestCaseID}
+      onTestCaseAdded={handleAddTestCase}
+    >
       <div>
         <List>
           {testCases.map(testCase => (
@@ -103,7 +112,7 @@ const TestCaseList = ({
         </List>
         {testCases.length < testCaseCount && (
           <Button.Link
-            className="flex justify-center text-primary text-base w-full"
+            className={clsx("flex justify-center text-primary text-base w-full mt-3 mb-3", linkNeutralClasses)}
             disabled={loadingMore}
             onClick={handleLoadMoreClick}
           >

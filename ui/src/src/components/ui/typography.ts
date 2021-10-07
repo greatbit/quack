@@ -1,1 +1,1 @@
-export const captionClasses = "uppercase text-sm font-medium text-neutral-fade2";
+export const captionClasses = "uppercase text-sm font-normal text-neutral-fade2 tracking-wider";

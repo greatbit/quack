@@ -14,21 +14,30 @@ const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
   ({ checked, indeterminate, className, onClick, iconClassName, disabled, ...other }, ref) => (
     <button
       ref={ref}
-      className={clsx("border-2 rounded-md w-6 h-6", focusClasses, className, { "opacity-60": disabled })}
+      className={clsx("border-2 rounded-md w-6 h-6 flex-shrink-0 relative", focusClasses, className, {
+        "opacity-60": disabled,
+      })}
       onClick={disabled ? undefined : onClick}
       {...other}
     >
-      {indeterminate ? (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
-          <rect fill="current" width="16" height="16" x="4" y="4" rx="3" ry="3"></rect>
-        </svg>
-      ) : (
-        <CheckIcon
-          className={clsx("w-5 h-5 stroke-current block duration-200 transition-opacity", iconClassName, {
+      <svg
+        viewBox="0 0 24 24"
+        className={clsx("w-6 h-6 fill-current absolute top-0 left-0 duration-200 transition-opacity", {
+          "opacity-0": !indeterminate,
+        })}
+      >
+        <rect fill="current" width="16" height="16" x="2" y="2" rx="3" ry="3"></rect>
+      </svg>
+
+      <CheckIcon
+        className={clsx(
+          "w-5 h-5 stroke-current block duration-200 transition-opacity absolute top-0 left-0",
+          iconClassName,
+          {
             "opacity-0": !checked,
-          })}
-        />
-      )}
+          },
+        )}
+      />
     </button>
   ),
 );

@@ -62,9 +62,27 @@ export type ExistingSuite = WithID & Meta & Suite;
 
 export interface TestCase {
   readonly name: string;
+  readonly description: string;
+  readonly attributes: FilterValue[];
 }
 
-export type ExistingTestCase = WithID & TestCase;
+export type ExistingTestCase = WithID &
+  TestCase &
+  Meta & {
+    readonly automated: boolean;
+    readonly broken: boolean;
+    readonly metadata: Record<string, any>;
+    readonly steps: never[];
+  };
+export type FilterValue = {
+  attribute: string | undefined;
+  values: string[];
+};
+export type NewTestCase = {
+  name: string;
+  description: string;
+  attributes: FilterValue[];
+};
 export type TestCaseGroup = {
   readonly id: string;
   readonly count: number;

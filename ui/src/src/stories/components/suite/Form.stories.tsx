@@ -10,5 +10,5 @@ export default {
   argTypes: { onSubmit: { action: true }, onCancel: { action: true } },
 };
 
-export const Default = args => <Form {...args} />;
-export const Dialog = args => <SuiteDialog {...args} />;
+export const Default = (args: any) => <Form {...args} />;
+export const Dialog = (args: any) => <SuiteDialog {...args} />;

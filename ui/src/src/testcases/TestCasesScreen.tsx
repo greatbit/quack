@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 import { backendService } from "../services/backend";
 import { useRecoilValue } from "recoil";
 import { useJSONQueryStringState, useQueryStringState } from "../lib/hooks";
-import { FilterValue } from "../components/ui/Filter";
+import { FilterValue } from "../components/ui/Attribute";
 import { AttributeFilterDraft } from "../domain";
 import SuiteDialog from "../components/suite/Dialog";
 import { FormValues } from "../components/suite/Form";

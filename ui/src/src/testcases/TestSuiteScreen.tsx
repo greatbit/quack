@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import { backendService } from "../services/backend";
 import { atomFamily, RecoilState, selectorFamily, useRecoilState, useRecoilValue } from "recoil";
 
-import { FilterValue } from "../components/ui/Filter";
+import { FilterValue } from "../components/ui/Attribute";
 import { ExistingAttributeFilter, ExistingSuite, listToBoolHash } from "../domain";
 
 import { attributesSelector } from "./testCasesScreen.data";

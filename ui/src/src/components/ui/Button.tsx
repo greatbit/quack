@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { ButtonHTMLAttributes } from "react";
 import { focusClasses } from "./focus";
 
-export const baseClasses = "duration-200 font-semibold ";
+export const baseClasses = "duration-200 font-medium";
 
 const Button = ({ className, ...other }: ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button className={clsx(className, baseClasses)} {...other} />
@@ -24,8 +24,8 @@ Button.Transparent = Transparent;
 
 export const linkTextClasses = "text-base";
 export const linkClasses = "pl-3 pr-3 rounded-md";
-export const linkNeutralClasses = "text-neutral-fade1 hover:text-neutral";
-export const linkPrimaryClasses = "text-base text-primary hover:text-primary-hover";
+export const linkNeutralClasses = "text-neutral-fade2 hover:text-neutral";
+export const linkPrimaryClasses = "text-primary hover:text-primary-hover";
 const Link = ({ className, ...other }: ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button className={clsx(className, baseClasses, linkTextClasses, focusClasses, linkClasses)} {...other} />
 );

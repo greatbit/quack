@@ -6,7 +6,9 @@ import { inputBorderClasses, inputLayoutClasses, inputTextClasses } from "./inpu
 import { focusClasses } from "./focus";
 import { PropsWithChildren, ReactNode } from "react";
 
-const Placeholder = ({ children }: PropsWithChildren<{}>) => <span className="text-neutral-fade2">{children}</span>;
+const Placeholder = ({ children }: PropsWithChildren<{}>) => (
+  <span className="text-neutral-fade2 whitespace-nowrap">{children}</span>
+);
 
 export type BasicListboxProps<TValue> = PropsWithChildren<{
   label?: ReactNode;
@@ -35,7 +37,13 @@ export function BasicListbox<TValue>({
       className={clsx(className, "relative", "flex")}
     >
       <HeadlessListBox.Button
-        className={clsx("flex items-center gap-1", buttonClassName, inputTextClasses, inputLayoutClasses, focusClasses)}
+        className={clsx(
+          "flex flex-grow items-center gap-1",
+          buttonClassName,
+          inputTextClasses,
+          inputLayoutClasses,
+          focusClasses,
+        )}
       >
         <span className="flex-grow">{label}</span>
         <SelectorIcon className="w-4 h-4 text-neutral-fade2 hover:text-neutral-fade1 transition-colors duration-200" />

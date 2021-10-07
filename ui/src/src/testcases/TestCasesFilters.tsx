@@ -1,8 +1,8 @@
 import clsx from "clsx";
 import { MouseEvent } from "react";
 import Button from "../components/ui/Button";
-import { FilterValue } from "../components/ui/Filter";
-import Filters from "../components/ui/Filters";
+import { FilterValue } from "../components/ui/Attribute";
+import Attributes from "../components/ui/Attributes";
 import { inputBackgroundClasses } from "../components/ui/input";
 import Listbox from "../components/ui/ListBox";
 import SelectedValues from "../components/ui/SelectedValues";
@@ -40,7 +40,7 @@ const TestCasesFilter = ({
   const projectAttributesToGroupBy = projectAttributes.filter(attribute => attribute.id !== "broken");
   return (
     <div className="bg-white gap-3 p-5 ml-8 mr-8 mb-8 border">
-      <div className={clsx("w-1/5 h-10 pt-3", captionClasses)}>Grouping</div>
+      <div className={clsx("pb-1", captionClasses)}>Grouping</div>
       <div className="flex min-w">
         {projectAttributes.length > 0 && (
           <Listbox
@@ -69,8 +69,14 @@ const TestCasesFilter = ({
           </div>
         )}
       </div>
-      <div className={clsx("w-1/5 min-h-10 flex items-center pt-2.5", captionClasses)}>Attributes</div>
-      <Filters disabled={disabled} attributes={projectAttributes} value={filters} onChange={onChangeFilters} />
+      <div className={clsx("pb-1 pt-5", captionClasses)}>Attributes</div>
+      <Attributes
+        disabled={disabled}
+        attributes={projectAttributes}
+        value={filters}
+        onChange={onChangeFilters}
+        addLinkContent="Add filter"
+      />
     </div>
   );
 };

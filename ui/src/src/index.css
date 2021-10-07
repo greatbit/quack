@@ -1,13 +1,7 @@
-@tailwind base; 
-
-@tailwind components;
-
-@tailwind utilities;
-
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap');
 
-body {
+html body {
   margin: 0;
   padding: 0;
   font-family: 'Noto Sans', sans-serif;
@@ -15,7 +9,7 @@ body {
 }
 
 html {
-  font-size: 15px;
+  font-size: 16px;
 }
 
 body .tailwind .pl-5 {

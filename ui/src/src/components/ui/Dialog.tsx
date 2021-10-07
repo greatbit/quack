@@ -4,7 +4,7 @@ import XCircleIcon from "@heroicons/react/outline/XCircleIcon";
 import clsx from "clsx";
 import { ButtonHTMLAttributes, EventHandler, MouseEvent, PropsWithChildren } from "react";
 import { useLayoutEffect } from "react";
-import Button from "./Button";
+import Button, { linkNeutralClasses } from "./Button";
 import { focusClasses } from "./focus";
 
 export type DialogProps = PropsWithChildren<{
@@ -28,7 +28,7 @@ const Dialog = ({ children, className, onOverlayClick, onClose, ...other }: Dial
       className="text-neutral z-20 inset-0 fixed flex items-center justify-center overflow-y-auto font-sans"
       onClose={onClose}
     >
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen w-full">
         <HeadlessDialog.Overlay
           className="z-10 absolute opacity-80 bg-white w-screen h-screen"
           onClick={onOverlayClick}
@@ -78,7 +78,7 @@ export const OKCancelFooter = ({
     <Button.Primary onClick={onOKClick} type={OKType} className="pl-8 pr-8">
       {OKText}
     </Button.Primary>
-    <Button.Link onClick={onCancelClick} type={cancelType}>
+    <Button.Link className={linkNeutralClasses} onClick={onCancelClick} type={cancelType}>
       {cancelText}
     </Button.Link>
   </div>

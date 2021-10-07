@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
-import Filter from "../../../components/ui/Filter";
+import Attribute from "../../../components/ui/Attribute";
 import { attributes } from "./attributes";
 
 export default {
-  component: Filter,
-  title: "components/ui/Filter",
+  component: Attribute,
+  title: "components/ui/Attribute",
   args: { attributes },
 };
 
 export const Default = (args: any) => {
   const [state, setState] = useState({ attribute: undefined, values: [] });
-  return <Filter value={state} onChange={setState} {...args} />;
+  return <Attribute value={state} onChange={setState} {...args} />;
 };

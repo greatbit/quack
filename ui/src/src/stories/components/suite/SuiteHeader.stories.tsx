@@ -1,4 +1,3 @@
-import React from "react";
 import SuiteHeader from "../../../testcases/SuiteHeader";
 
 export default {
@@ -10,4 +9,4 @@ export default {
   argTypes: { onChange: { action: true } },
 };
 
-export const Default = args => <SuiteHeader {...args} />;
+export const Default = (args: any) => <SuiteHeader {...args} />;

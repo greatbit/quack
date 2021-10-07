@@ -23,11 +23,11 @@ const Form = ({ initialValues, initialFocus, onSubmit, onCancel, ...other }: For
   <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
     {({ values, errors, handleSubmit, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit} {...other}>
-        <h3 className="uppercase font-medium text-base text-neutral-fade2 mt-3 mb-5">Save a new test case</h3>
+        <h3 className="uppercase font-medium text-base text-neutral-fade2 mt-3 mb-5">Save a new test suite</h3>
         <p className="text-base text-neutral mb-4">
           Your new test suite requires a name. Please choose something meaningful and easy to remember.
         </p>
-        <label htmlFor="name" className={clsx("block mb-2", captionClasses)}>
+        <label htmlFor="name" className={clsx("block mb-2 font-medium", captionClasses)}>
           Suite name
         </label>
         <TextInput
