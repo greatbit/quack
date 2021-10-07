@@ -5,7 +5,7 @@ import { atomFamily, RecoilState, selectorFamily, useRecoilState, useRecoilValue
 import { FilterValue } from "../components/ui/Attribute";
 import { ExistingAttributeFilter, ExistingSuite, listToBoolHash } from "../domain";
 
-import { attributesSelector } from "./testCasesScreen.data";
+import { attributesSelector, useExistingProject } from "./testCasesScreen.data";
 
 import { TestCasesScreenStateless } from "./TestCasesScreenStateless";
 import SuiteHeader from "./SuiteHeader";
@@ -15,12 +15,16 @@ export type TestSuiteScreenProps = {
   suiteID: string;
 };
 
-const suiteAtom = atomFamily<ExistingSuite | undefined, TestSuiteScreenProps>({
+export type SuiteState = {
+  projectID: string;
+  suiteID: string;
+};
+const suiteAtom = atomFamily<ExistingSuite | undefined, SuiteState>({
   key: "existing-suite",
   default: undefined,
 });
 
-const suiteSelector = selectorFamily<ExistingSuite, TestSuiteScreenProps>({
+const suiteSelector = selectorFamily<ExistingSuite, SuiteState>({
   key: "suite",
   get:
     ({ projectID, suiteID }) =>
@@ -33,7 +37,7 @@ const suiteSelector = selectorFamily<ExistingSuite, TestSuiteScreenProps>({
     },
 });
 
-const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, params: TestSuiteScreenProps) => {
+const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, params: SuiteState) => {
   const [suite, setSuite] = useRecoilState(suiteState);
   const [isSaving, setIsSaving] = useState(false);
   const save = async (updatedSuite: Partial<ExistingSuite>) => {
@@ -53,6 +57,7 @@ const useSaveSuite = (suiteState: RecoilState<ExistingSuite>, params: TestSuiteS
 
 const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, suiteID }) => {
   const selectorParams = { projectID, suiteID };
+  const project = useExistingProject(projectID)!;
   const attributes = useRecoilValue(attributesSelector({ projectID }));
   const suiteState = suiteSelector(selectorParams);
 
@@ -94,7 +99,7 @@ const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, s
       disableTestCaseList={isSaving}
       beforeFilters={<SuiteHeader className="mr-8 mb-5 ml-8" name={suite.name} onChange={handleChangeSuiteName} />}
       disableFilters={isSaving}
-      projectID={projectID}
+      project={project}
       filters={suite.filters}
       attributes={attributes}
       exclusionState={exclusionState}

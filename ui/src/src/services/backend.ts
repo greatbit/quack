@@ -17,6 +17,8 @@ import {
   isExistingAttributeFilter,
   isExistingAttribute,
   NewTestCase,
+  ExistingProject,
+  NewLaunchConfig,
 } from "../domain";
 
 export const getApiBaseUrl = (url: string) => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
@@ -31,7 +33,12 @@ const fetchInternal = (url: string, method: HttpMethod, options?: RequestInit) =
   fetch(getApiBaseUrl(url), { ...getOptions(options), method })
     .then(async response => {
       if (!response.ok) {
-        if (response.status === 401 && window.location.pathname !== "/login") {
+        if (
+          response.status === 401 &&
+          window.location.pathname !== "/login" &&
+          window.location.pathname !== "/idpauth" &&
+          window.location.pathname !== "/login"
+        ) {
           window.location.href = "/login?" + qs.stringify({ retpath: window.location.pathname });
         } else {
           throw new Error(await response.text());
@@ -190,8 +197,14 @@ const mapServerTestCaseToClient =
     metadata: serverTestCase.metadata,
     attributes: mapServerTestCaseAttributesToClient(attributes)(serverTestCase.attributes),
   });
+export type NewServerLaunchConfig = {};
+const mapNewLaunchConfigToServer = (config: NewLaunchConfig): NewServerLaunchConfig => ({});
 export const backendService = {
   project: (projectId: string) => ({
+    single: () => backend.get<ExistingProject>("project/" + projectId),
+    launches: {
+      create: (config: NewLaunchConfig) => backend.post(projectId + "/launch", mapNewLaunchConfigToServer(config)),
+    },
     testSuites: {
       single: (testSuiteId: string) => ({
         get: () =>

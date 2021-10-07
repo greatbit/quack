@@ -10,7 +10,7 @@ export type SuiteDialogProps = {
 const SuiteDialog = ({ initialValues, onCancel, onSubmit, ...other }: SuiteDialogProps) => {
   const firstElementRef = useRef<HTMLInputElement>(null);
   return (
-    <Dialog open onClose={onCancel} className="max-w-xl w-100" onOverlayClick={onCancel} {...other}>
+    <Dialog open onClose={onCancel} centered className="max-w-xl w-100" onOverlayClick={onCancel} {...other}>
       <Dialog.Close onClick={onCancel} />
       <Form
         initialValues={initialValues}

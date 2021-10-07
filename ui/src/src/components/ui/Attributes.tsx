@@ -11,9 +11,18 @@ export type AttributesProps = {
   disabled?: boolean;
   className?: string;
   addLinkContent: ReactNode;
+  useInLabelling?: boolean;
 };
 
-const Attributes = ({ attributes, value, onChange, disabled, className, addLinkContent }: AttributesProps) => {
+const Attributes = ({
+  attributes,
+  value,
+  onChange,
+  disabled,
+  className,
+  addLinkContent,
+  useInLabelling,
+}: AttributesProps) => {
   const handleFilterChange = (index: number) => (newValue: FilterValue) =>
     onChange(value.map((filter, i) => (i === index ? newValue : filter)));
   const handleRemoveFilterClick = (index: number) => () =>
@@ -29,6 +38,7 @@ const Attributes = ({ attributes, value, onChange, disabled, className, addLinkC
           attributes={attributes}
           onChange={handleFilterChange(index)}
           onRemoveClick={handleRemoveFilterClick(index)}
+          useInLabelling={useInLabelling}
         />
       ))}
       <button

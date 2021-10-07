@@ -1,5 +1,14 @@
 import clsx from "clsx";
-import { forwardRef, HTMLAttributes, InputHTMLAttributes, KeyboardEvent, MouseEvent, useEffect, useRef } from "react";
+import {
+  forwardRef,
+  HTMLAttributes,
+  InputHTMLAttributes,
+  KeyboardEvent,
+  MouseEvent,
+  TextareaHTMLAttributes,
+  useEffect,
+  useRef,
+} from "react";
 import { iconClasses } from "./Button";
 import { focusClasses, focusWithinClasses, suppressFocusClasses } from "./focus";
 import CheckIcon from "@heroicons/react/solid/CheckIcon";
@@ -10,6 +19,12 @@ import { inputBorderClasses, inputClasses, inputLayoutClasses, paddingClasses } 
 const TextInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   ({ className, type = "text", ...other }: InputHTMLAttributes<HTMLInputElement>, ref) => (
     <input type={type} {...other} className={clsx(className, inputClasses, paddingClasses)} ref={ref} />
+  ),
+);
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(
+  ({ className, ...other }, ref) => (
+    <textarea className={clsx(className, inputClasses, paddingClasses, "pt-2 pb-2")} {...other} ref={ref} />
   ),
 );
 

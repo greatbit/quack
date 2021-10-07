@@ -1,6 +1,12 @@
 import { ReactNode, Suspense } from "react";
 import { Loading } from "../components/ui";
-import { AttributeFilterDraft, ExistingAttribute, ExistingAttributeFilter, FakeAttribute } from "../domain";
+import {
+  AttributeFilterDraft,
+  ExistingAttribute,
+  ExistingAttributeFilter,
+  ExistingProject,
+  FakeAttribute,
+} from "../domain";
 import { ExclusionState } from "./hooks";
 import TestCaseList from "./TestCaseList";
 import TestCasesFilter from "./TestCasesFilters";
@@ -16,7 +22,7 @@ export type TestCasesScreenStatelessProps = {
   onChangeFilters: (value: (AttributeFilterDraft | ExistingAttributeFilter)[]) => void;
   onChangeGroups: (value: string[]) => void;
   exclusionState: ExclusionState;
-  projectID: string;
+  project: ExistingProject;
   isTestCaseSelected: (id: string) => boolean;
   onToggleTestCase: (id: string) => void;
   showSaveSuite?: boolean;
@@ -34,6 +40,7 @@ export const TestCasesScreenStateless = ({
   disableFilters,
   showSaveSuite,
   onSaveSuiteClick,
+  project,
   ...other
 }: TestCasesScreenStatelessProps) => (
   <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
@@ -58,13 +65,14 @@ export const TestCasesScreenStateless = ({
         }
       >
         {groups.length === 0 ? (
-          <TestCaseList {...other} filters={filters} attributes={attributes} />
+          <TestCaseList {...other} filters={filters} attributes={attributes} project={project} />
         ) : (
           <TestCaseTree
             {...other}
             groups={groups}
             exclusionState={exclusionState}
             filters={filters}
+            project={project}
             attributes={attributes}
           />
         )}

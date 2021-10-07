@@ -1,5 +1,5 @@
 import { atomFamily, useRecoilState, useRecoilValue } from "recoil";
-import { ExistingAttribute, FakeAttribute, AttributeFilterDraft, ExistingTestCase } from "../domain";
+import { ExistingAttribute, FakeAttribute, AttributeFilterDraft, ExistingTestCase, ExistingProject } from "../domain";
 import List from "../components/testcase/List";
 import TestCaseListItem from "../components/testcase/TestCaseListItem";
 import TestCasesPanel from "./TestCasesPanel";
@@ -10,13 +10,14 @@ import { WithProjectID } from "./testCasesScreen.data";
 import Button, { linkNeutralClasses } from "../components/ui/Button";
 import { useState } from "react";
 import clsx from "clsx";
+
 export type TestCaseListProps = {
-  projectID: string;
   isTestCaseSelected: (id: string) => boolean;
   onToggleTestCase: (id: string) => void;
   filters: AttributeFilterDraft[];
   attributes: (ExistingAttribute | FakeAttribute)[];
   disabled?: boolean;
+  project: ExistingProject;
 };
 
 export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
@@ -62,12 +63,13 @@ export const testCaseCountSelector = selectorFamily({
 
 const TestCaseList = ({
   attributes,
-  projectID,
+  project,
   isTestCaseSelected,
   onToggleTestCase,
   filters,
   disabled,
 }: TestCaseListProps) => {
+  const projectID = project.id;
   const [loadingMore, setLoadingMore] = useState(false);
   const [testCases, setTestCases] = useRecoilState(testCaseListSelector({ projectID, filters }));
 
@@ -90,10 +92,10 @@ const TestCaseList = ({
   };
   return (
     <TestCasesPanel
-      projectID={projectID}
       attributes={attributes}
       selectedTestCaseID={selectedTestCaseID}
       onTestCaseAdded={handleAddTestCase}
+      project={project}
     >
       <div>
         <List>

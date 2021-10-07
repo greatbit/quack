@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
-import qs from "qs";
+
 import Backend from "../services/backend";
 class IdpAuth extends Component {
   render() {

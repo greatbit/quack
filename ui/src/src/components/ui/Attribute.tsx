@@ -18,9 +18,10 @@ export type AttributeProps = {
   attributes: (ExistingAttribute | FakeAttribute)[];
   onRemoveClick: EventHandler<MouseEvent>;
   disabled?: boolean;
+  useInLabelling?: boolean;
 };
 
-const Attribute = ({ value, onChange, attributes, onRemoveClick, disabled }: AttributeProps) => {
+const Attribute = ({ value, onChange, attributes, onRemoveClick, disabled, useInLabelling }: AttributeProps) => {
   const selectedAttribute = useMemo(
     () => attributes.find(attribute => attribute.id === value?.attribute),
     [attributes, value],
@@ -75,7 +76,7 @@ const Attribute = ({ value, onChange, attributes, onRemoveClick, disabled }: Att
           </CustomListbox.Option>
         ))}
       </CustomListbox>
-      <span className="font-semibold">{selectedValues.length > 1 ? "in" : "="}</span>
+      <span className="font-semibold">{selectedValues.length > 1 && useInLabelling ? "in" : "="}</span>
       <CustomListbox
         disabled={disabled}
         className="flex-grow flex-shrink"

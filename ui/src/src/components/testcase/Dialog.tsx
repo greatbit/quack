@@ -17,7 +17,7 @@ const TestCaseDialog = ({ onCancel, onSubmit, attributes, ...other }: SuiteDialo
     description: "",
   };
   return (
-    <Dialog open onClose={onCancel} className="max-w-xl w-full" onOverlayClick={onCancel} {...other}>
+    <Dialog open centered onClose={onCancel} className="max-w-xl w-full" onOverlayClick={onCancel} {...other}>
       <Dialog.Close onClick={onCancel} />
       <Form
         initialValues={initialValues}

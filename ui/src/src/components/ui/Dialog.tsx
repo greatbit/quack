@@ -12,9 +12,10 @@ export type DialogProps = PropsWithChildren<{
   onOverlayClick: EventHandler<MouseEvent>;
   onClose: (b: boolean) => void;
   open: boolean;
+  centered?: boolean;
 }>;
 
-const Dialog = ({ children, className, onOverlayClick, onClose, ...other }: DialogProps) => {
+const Dialog = ({ children, className, onOverlayClick, onClose, centered, ...other }: DialogProps) => {
   // TODO: Remove this when we get rid of Bootstrap
   useLayoutEffect(() => {
     const root = document.getElementById("headlessui-portal-root");
@@ -23,17 +24,17 @@ const Dialog = ({ children, className, onOverlayClick, onClose, ...other }: Dial
     }
   });
   return (
-    <HeadlessDialog
-      {...other}
-      className="text-neutral z-20 inset-0 fixed flex items-center justify-center overflow-y-auto font-sans"
-      onClose={onClose}
-    >
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <HeadlessDialog.Overlay
-          className="z-10 absolute opacity-80 bg-white w-screen h-screen"
-          onClick={onOverlayClick}
-        />
-        <div className={clsx(className, "z-30 shadow-2xl bg-white rounded-xl relative")}>{children}</div>
+    <HeadlessDialog {...other} onClose={onClose}>
+      <HeadlessDialog.Overlay
+        className="z-10 absolute opacity-80 bg-white w-screen h-screen left-0 top-0"
+        onClick={onOverlayClick}
+      />
+      <div
+        className={clsx("text-neutral z-20 inset-0 fixed flex flex-col overflow-y-auto font-sans align-items-center", {
+          "justify-center": centered,
+        })}
+      >
+        <div className={clsx(className, "z-30 shadow-2xl bg-white rounded-xl relative self-center")}>{children}</div>
       </div>
     </HeadlessDialog>
   );

@@ -26,11 +26,12 @@ class CreateUser extends Component {
 
   handleSubmit(event) {
     Backend.post("user", this.state.user)
-        .then(response => {
-          window.location = decodeURI("/user/profile/" + response.login);
-        }).catch(error => {
-          Utils.onErrorMessage("Couldn't create a user: ", error);
-        });
+      .then(response => {
+        window.location = decodeURI("/user/profile/" + response.login);
+      })
+      .catch(error => {
+        Utils.onErrorMessage("Couldn't create a user: ", error);
+      });
     event.preventDefault();
   }
 

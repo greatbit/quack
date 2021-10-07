@@ -8,7 +8,7 @@ import SuiteDialog from "../components/suite/Dialog";
 import { FormValues } from "../components/suite/Form";
 import { useHistory } from "react-router";
 import { ExclusionHash, useExclusion } from "./hooks";
-import { attributesSelector } from "./testCasesScreen.data";
+import { attributesSelector, useExistingProject } from "./testCasesScreen.data";
 import { TestCasesScreenStateless } from "./TestCasesScreenStateless";
 import { SuiteHeaderText } from "./SuiteHeader";
 
@@ -28,6 +28,7 @@ const useCreateSuite = (projectID: string, filters: AttributeFilterDraft[], excl
 
 const TextCasesScreen: FunctionComponent<TestCasesScreenProps> = ({ projectID }) => {
   const attributes = useRecoilValue(attributesSelector({ projectID }));
+  const project = useExistingProject(projectID)!;
   const [filters, handleChangeFilters] = useJSONQueryStringState<FilterValue[]>("filters", []);
   const [groups, handleChangeGroups] = useJSONQueryStringState<string[]>("groups", []);
   const [showSaveDialog, setShowSaveDialog] = useQueryStringState("save");
@@ -42,7 +43,7 @@ const TextCasesScreen: FunctionComponent<TestCasesScreenProps> = ({ projectID })
       )}
       <TestCasesScreenStateless
         beforeFilters={<SuiteHeaderText className="mr-8 mb-5 ml-8">Test cases</SuiteHeaderText>}
-        projectID={projectID}
+        project={project}
         filters={filters}
         attributes={attributes}
         exclusionState={exclusionState}

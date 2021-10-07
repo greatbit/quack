@@ -62,7 +62,7 @@ export const useToggleGroupState = (exclusionState: ExclusionState) => (group: T
 
 const TestCaseTree = ({
   attributes,
-  projectID,
+  project,
   isTestCaseSelected,
   onToggleTestCase,
   filters,
@@ -71,7 +71,7 @@ const TestCaseTree = ({
   disabled,
 }: TestCaseTreeProps) => {
   const [rootTestCaseGroup, setRootTestCaseGroop] = useRecoilState(
-    testCaseTreeSelector({ projectID, filters, groups }),
+    testCaseTreeSelector({ projectID: project.id, filters, groups }),
   );
   const [selectedTestCaseID, setSelectedTestCaseID] = useQueryStringState("selected", undefined);
   const [isGroupOpen, toggleGroup] = useSelection();
@@ -82,7 +82,7 @@ const TestCaseTree = ({
 
   return (
     <TestCasesPanel
-      projectID={projectID}
+      project={project}
       attributes={attributes}
       selectedTestCaseID={selectedTestCaseID}
       onTestCaseAdded={handleTestCaseAdded}

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { MouseEvent } from "react";
+import { MouseEvent, useMemo } from "react";
 import Button from "../components/ui/Button";
 import { FilterValue } from "../components/ui/Attribute";
 import Attributes from "../components/ui/Attributes";
@@ -7,7 +7,7 @@ import { inputBackgroundClasses } from "../components/ui/input";
 import Listbox from "../components/ui/ListBox";
 import SelectedValues from "../components/ui/SelectedValues";
 import { captionClasses } from "../components/ui/typography";
-import { ExistingAttribute, ExistingAttributeFilter, FakeAttribute } from "../domain";
+import { ExistingAttribute, ExistingAttributeFilter, FakeAttribute, isExistingAttribute } from "../domain";
 
 export type TestCasesFiltersProps = {
   projectAttributes: (FakeAttribute | ExistingAttribute)[];
@@ -37,7 +37,7 @@ const TestCasesFilter = ({
   const handleChangeGroups = (value: string) => {
     onChangeGroups(groups.includes(value) ? groups.filter(item => item !== value) : [...groups, value]);
   };
-  const projectAttributesToGroupBy = projectAttributes.filter(attribute => attribute.id !== "broken");
+  const projectAttributesToGroupBy = useMemo(() => projectAttributes.filter(isExistingAttribute), [projectAttributes]);
   return (
     <div className="bg-white gap-3 p-5 ml-8 mr-8 mb-8 border">
       <div className={clsx("pb-1", captionClasses)}>Grouping</div>
@@ -76,6 +76,7 @@ const TestCasesFilter = ({
         value={filters}
         onChange={onChangeFilters}
         addLinkContent="Add filter"
+        useInLabelling
       />
     </div>
   );

@@ -2,16 +2,18 @@ import Button, { linkNeutralClasses } from "../components/ui/Button";
 import { PropsWithChildren, useMemo, useState } from "react";
 import PlayIcon from "@heroicons/react/solid/PlayIcon";
 import PlusCircleIcon from "@heroicons/react/outline/PlusCircleIcon";
-import { ExistingAttribute, ExistingTestCase, FakeAttribute } from "../domain";
+import { ExistingAttribute, ExistingProject, ExistingTestCase, FakeAttribute, NewLaunchConfig } from "../domain";
 import TestCase from "./TestCase";
 import { backendService, mapClientAttributeToServer } from "../services/backend";
 import clsx from "clsx";
 import { captionClasses } from "../components/ui/typography";
 import Dialog from "../components/testcase/Dialog";
+import RunDialog from "../components/run/Dialog";
+import { FormValues as RunFormValues } from "../components/run/Form";
 import { FormValues } from "../components/testcase/Form";
 
 export type TestCasesPanelProps = PropsWithChildren<{
-  projectID: string;
+  project: ExistingProject;
   selectedTestCaseID: string | undefined;
   attributes: (ExistingAttribute | FakeAttribute)[];
   onTestCaseAdded: (testCase: ExistingTestCase) => void;
@@ -23,7 +25,7 @@ const useLegacyAttributes = (attributes: (ExistingAttribute | FakeAttribute)[]) 
 const TestCasesPanel = ({
   children,
   selectedTestCaseID,
-  projectID,
+  project,
   attributes,
   onTestCaseAdded,
 }: TestCasesPanelProps): JSX.Element => {
@@ -31,12 +33,30 @@ const TestCasesPanel = ({
   const [showAddTestCase, setShowAddTestCase] = useState(false);
   const handleAddFormSubmit = async (values: FormValues) => {
     setShowAddTestCase(false);
-    onTestCaseAdded(await backendService.project(projectID).testCases.create(values, attributes));
+    onTestCaseAdded(await backendService.project(project.id).testCases.create(values, attributes));
   };
+  const [showLaunch, setShowLaunch] = useState(false);
+  const handleLaunchSubmit = async ({ launcherID, ...other }: RunFormValues) => {
+    const result = await backendService.project(project.id).launches.create({
+      ...other,
+      launcherId: launcherID!,
+      launcherUuid: project.launcherConfigs.find(config => config.id === launcherID)!.uuid,
+    } as NewLaunchConfig);
+    console.info(result);
+  };
+
   return (
     <>
       {showAddTestCase && (
         <Dialog attributes={attributes} onCancel={() => setShowAddTestCase(false)} onSubmit={handleAddFormSubmit} />
+      )}
+      {showLaunch && (
+        <RunDialog
+          environments={project.environments}
+          launcherConfigs={project.launcherConfigs}
+          onCancel={() => setShowLaunch(false)}
+          onSubmit={handleLaunchSubmit}
+        />
       )}
       <div className="flex mt-5 gap-3">
         <div className="w-1/3 bg-white ml-8 pb-8  border">
@@ -50,7 +70,7 @@ const TestCasesPanel = ({
               <PlusCircleIcon className="w-6 h-6" />
               Add
             </Button.Link>
-            <Button.Primary className="flex gap-2 pl-3 pr-3 items-center">
+            <Button.Primary className="flex gap-2 pl-3 pr-3 items-center" onClick={() => setShowLaunch(true)}>
               <PlayIcon className="w-6 h-6" />
               Launch
             </Button.Primary>
@@ -59,7 +79,7 @@ const TestCasesPanel = ({
         </div>
         <div className="w-2/3 mr-8 bg-white border p-5 pb-7">
           {selectedTestCaseID && (
-            <TestCase projectId={projectID} projectAttributes={legacyAttributes} testcaseId={selectedTestCaseID} />
+            <TestCase projectId={project.id} projectAttributes={legacyAttributes} testcaseId={selectedTestCaseID} />
           )}
         </div>
       </div>

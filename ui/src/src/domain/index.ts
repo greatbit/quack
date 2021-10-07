@@ -17,6 +17,39 @@ export type Meta = TimeMeta &
     readonly lastModifiedBy: string;
   };
 
+export type LauncherProperties = {
+  readonly requestBody?: string;
+  readonly endpoint?: string;
+  readonly requestHeaders?: string;
+  readonly requestType?: string;
+  readonly timeout?: string;
+};
+
+export type NewLaunchConfig = {
+  readonly name: string;
+  readonly environments: string[];
+  readonly launcherId: string;
+  readonly launcherUuid: string;
+  readonly endpoint: string;
+  readonly method: string;
+  readonly headers: string;
+  readonly body: string;
+  readonly timeout: string;
+};
+
+export type ExistingLaunchConfig = WithID & {
+  readonly name: string;
+  readonly properties: LauncherProperties;
+  readonly uuid: string;
+};
+
+export type ProjectData = {
+  name: string;
+  description: string;
+  launcherConfigs: ExistingLaunchConfig[];
+  environments: string[];
+};
+export type ExistingProject = ProjectData & Meta & WithID;
 export interface AttributeValue extends WithID {
   readonly name: string;
 }

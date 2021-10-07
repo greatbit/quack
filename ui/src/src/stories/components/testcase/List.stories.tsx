@@ -25,6 +25,7 @@ const sharedMeta = {
   lastModifiedBy: "root",
   createdBy: "root",
 };
+
 const testCases: ExistingTestCase[] = [
   {
     id: "1",
@@ -83,7 +84,7 @@ export default {
   argTypes: { onClick: { action: true }, onCheckboxClick: { action: true }, onChevronClick: { action: true } },
 };
 
-export const Default = ({ testCases, onClick, onCheckboxClick, ...other }: Args & Actions) => {
+export const Default = ({ testCases, onClick, onCheckboxClick }: Args & Actions) => {
   return (
     <List>
       <TestCaseListItem
@@ -124,30 +125,21 @@ const group2: TestCaseGroup = {
   testCases: [testCases[2]],
 };
 
-export const Grouped = ({
-  testCases,
-  onClick,
-  onCheckboxClick,
-  onToggleGroupClick,
-  onChevronClick,
-  ...other
-}: Args & Actions) => {
-  return (
-    <List>
-      <TestCaseGroupComponent
-        testCaseGroup={group2}
-        isGroupOpen={id => ["group1", "group2"].includes(id)}
-        selectedTestCase="1"
-        isTestCaseSelected={id => ["1", "2"].includes(id)}
-        onCheckboxClick={onToggleGroupClick}
-        onTestCaseCheckboxClick={onCheckboxClick}
-        onTestCaseClick={onClick}
-        onChevronClick={onChevronClick}
-        level={0}
-      />
-    </List>
-  );
-};
+export const Grouped = ({ onClick, onCheckboxClick, onToggleGroupClick, onChevronClick }: Args & Actions) => (
+  <List>
+    <TestCaseGroupComponent
+      testCaseGroup={group2}
+      isGroupOpen={id => ["group1", "group2"].includes(id)}
+      selectedTestCase="1"
+      isTestCaseSelected={id => ["1", "2"].includes(id)}
+      onCheckboxClick={onToggleGroupClick}
+      onTestCaseCheckboxClick={onCheckboxClick}
+      onTestCaseClick={onClick}
+      onChevronClick={onChevronClick}
+      level={0}
+    />
+  </List>
+);
 
 export const GroupedStateful = () => {
   const [selectedTestCase, setSelectedTestCase] = useState<string | undefined>(undefined);
