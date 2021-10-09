@@ -41,6 +41,7 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
                 session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizations.get(0).getId());
             }
         }
+        sessionProvider.replaceSession(session);
         return session;
     }
 

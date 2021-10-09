@@ -7,6 +7,7 @@ import com.testquack.dal.OrganizationRepository;
 import com.testquack.dal.UserRepository;
 import com.testquack.services.errors.EntityValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.greatbit.whoru.auth.Session;
 
@@ -19,7 +20,8 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @Service
 public class OrganizationService extends BaseService<Organization> {
 
-    public static final int DEFAULT_SESSIONS_CAPACITY = 5;
+    @Value("${quack.organization.default.sessions.capacity}")
+    public int defaultSessionCapacity;
 
     @Autowired
     private OrganizationRepository repository;
@@ -43,7 +45,7 @@ public class OrganizationService extends BaseService<Organization> {
         if (entity.getId().length() < 3) {
             throw new EntityValidationException("Organization ID must contain at least 3 characters");
         }
-        entity.setLicenseCapacity(DEFAULT_SESSIONS_CAPACITY);
+        entity.setLicenseCapacity(defaultSessionCapacity);
         super.beforeCreate(session, projectId, entity);
     }
 

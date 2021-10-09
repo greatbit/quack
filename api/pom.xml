@@ -136,6 +136,10 @@
         </dependency>
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
+            <artifactId>hazelcast-session-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.greatbit.whoru</groupId>
             <artifactId>jaxrs-ws-auth</artifactId>
         </dependency>
 
