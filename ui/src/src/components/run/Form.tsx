@@ -1,34 +1,54 @@
 import { Formik } from "formik";
 import { OKCancelFooter } from "../ui/Dialog";
-import TextInput, { Textarea } from "../ui/TextInput";
+import TextInput from "../ui/TextInput";
 import * as Yup from "yup";
 import FieldError from "../ui/FieldError";
 import clsx from "clsx";
 import { captionClasses } from "../ui/typography";
-import { FormHTMLAttributes, Ref, useMemo } from "react";
-import { ExistingLaunchConfig } from "../../domain";
+import { ComponentType, FormHTMLAttributes, Ref, useMemo } from "react";
+import { ExistingLaunchConfig, LauncherId, NewLaunchConfig } from "../../domain";
 import { Listbox } from "../ui";
 import { Option } from "../ui/ListBox";
 import SelectedValues from "../ui/SelectedValues";
+import RequestLauncherProperties from "./RequestLauncherProperties";
+import LikenLauncherProperties from "./LikenLauncherProperties";
+import SmithLauncherProperties from "./SmithLauncherProperties";
+
+const laucherIdToPropertiesComponentMap: Record<LauncherId, ComponentType<{}>> = {
+  "request-launcher": RequestLauncherProperties,
+  "liken-launcher": LikenLauncherProperties,
+  "smith-launcher": SmithLauncherProperties,
+};
 
 const schema = Yup.object().shape({
   name: Yup.string().required("Please give this run a name"),
   environments: Yup.array().min(1, "Please select at least one environment"),
-  endpoint: Yup.string().required("Please enter an endpoint"),
-  method: Yup.string().required("Please seelct an HTTP method"),
-  timeout: Yup.number().positive("Please enter a positive value"),
+  launcherUuid: Yup.string().required("Please select a launcher config"),
+  properties: Yup.object()
+    .when("launcherId", {
+      is: "request-launcher",
+      then: Yup.object({
+        endpoint: Yup.string().required("Please enter an endpoint"),
+        requestType: Yup.string().required("Please seelct an HTTP method"),
+        timeout: Yup.number().positive("Please enter a positive value"),
+      }),
+    })
+    .when("launcherId", {
+      is: "liken-launcher",
+      then: Yup.object({
+        apiEndpoint: Yup.string().required("Please enter an endpoint"),
+        frontendEndpoint: Yup.string().required("Please enter an endpoint"),
+      }),
+    })
+    .when("launcherId", {
+      is: "smith-launcher",
+      then: Yup.object({
+        apiEndpoint: Yup.string().required("Please enter an endpoint"),
+      }),
+    }),
 });
 
-export type FormValues = {
-  name: string;
-  environments: string[];
-  launcherID: string | undefined;
-  endpoint: string | undefined;
-  method: string | undefined;
-  body: string | undefined;
-  headers: string | undefined;
-  timeout: string | undefined;
-};
+export type FormValues = Partial<Omit<NewLaunchConfig, "environments">> & Pick<NewLaunchConfig, "environments">;
 
 export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & {
   initialValues: FormValues;
@@ -39,24 +59,14 @@ export type FormProps = Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> & 
   environments: string[];
 };
 
-const useMethods = () =>
-  useMemo(
-    () => [
-      {
-        id: "GET",
-        name: "GET",
-      },
-      {
-        id: "POST",
-        name: "POST",
-      },
-      {
-        id: "PUT",
-        name: "PUT",
-      },
-    ],
-    [],
-  );
+export type PropertiesComponentProps = {
+  launcherId: LauncherId;
+};
+
+const PropertiesComponent = ({ launcherId }: PropertiesComponentProps) => {
+  const Component = laucherIdToPropertiesComponentMap[launcherId];
+  return Component ? <Component /> : null;
+};
 
 const Form = ({
   initialValues,
@@ -68,12 +78,11 @@ const Form = ({
   ...other
 }: FormProps) => {
   const environmentValues = useMemo(() => environments.map(env => ({ id: env, name: env })), [environments]);
-  const methods = useMethods();
   return (
     <Formik initialValues={initialValues} validationSchema={schema} onSubmit={onSubmit}>
-      {({ values, errors, handleSubmit, handleChange, handleBlur, setFieldValue, setValues }) => (
+      {({ values, errors, handleSubmit, handleChange, setFieldValue, setValues }) => (
         <form onSubmit={handleSubmit} {...other}>
-          <h3 className="uppercase font-medium text-base text-neutral-fade2 mt-3 mb-5">Create a new test case</h3>
+          <h3 className="mt-3 mb-5 text-base font-medium uppercase text-neutral-fade2">Run selected testcases</h3>
           <label htmlFor="name" className={clsx("block mb-2 font-medium", captionClasses)}>
             Test case name
           </label>
@@ -126,103 +135,33 @@ const Form = ({
 
           <label className={clsx("block mb-2 font-medium mt-8", captionClasses)}>Launcher config</label>
           <Listbox
-            value={values.launcherID}
-            onChange={value => {
-              const props = launcherConfigs.find(item => item.id === value)!.properties;
+            value={values.launcherId}
+            onChange={(value: any) => {
+              console.info("setting", value);
+
+              const config = launcherConfigs.find(item => item.uuid === value)!;
+              console.info(config);
               setValues({
                 ...values,
-                launcherID: value,
-                body: props.requestBody,
-                endpoint: props.endpoint,
-                headers: props.requestHeaders,
-                method: props.requestType,
-                timeout: props.timeout,
+                launcherId: config.launcherId,
+                launcherUuid: config.uuid,
+                properties: config.properties,
               });
             }}
             label={
-              launcherConfigs.find(config => config.id === values.launcherID)?.name || (
+              launcherConfigs.find(config => config.uuid === values.launcherUuid)?.name || (
                 <Listbox.Placeholder>Select launch config</Listbox.Placeholder>
               )
             }
           >
             {launcherConfigs.map(config => (
-              <Option value={config.id} key={config.id}>
+              <Option value={config.uuid} key={config.uuid}>
                 {config.name}
               </Option>
             ))}
           </Listbox>
-
-          <label htmlFor="endpoint" className={clsx("block mb-2 font-medium mt-8", captionClasses)}>
-            Endpoint
-          </label>
-          <TextInput
-            name="endpoint"
-            className="block w-full"
-            placeholder="Endpoint"
-            value={values.endpoint}
-            onChange={handleChange}
-          />
-          <FieldError>{errors.endpoint}</FieldError>
-
-          <label htmlFor="type" className={clsx("block mb-2 font-medium mt-8", captionClasses)}>
-            HTTP Method
-          </label>
-          <Listbox
-            value={values.method}
-            onChange={value => setFieldValue("method", value)}
-            label={
-              methods.find(method => method.id === values.method)?.name || (
-                <Listbox.Placeholder>Select HTTP method</Listbox.Placeholder>
-              )
-            }
-          >
-            {methods.map(method => (
-              <Option value={method.id} key={method.id}>
-                {method.name}
-              </Option>
-            ))}
-          </Listbox>
-          <FieldError>{errors.method}</FieldError>
-
-          <label htmlFor="headers" className={clsx("block mb-2 font-medium mt-8", captionClasses)}>
-            HTTP Headers
-          </label>
-          <Textarea
-            name="headers"
-            className="block w-full"
-            placeholder="Headers"
-            value={values.headers}
-            onChange={handleChange}
-            rows={7}
-          />
-          <FieldError>{errors.headers}</FieldError>
-
-          <label htmlFor="body" className={clsx("block mb-2 font-medium mt-8", captionClasses)}>
-            Request body
-          </label>
-          <Textarea
-            name="body"
-            className="block w-full"
-            placeholder="Body"
-            value={values.body}
-            onChange={handleChange}
-            rows={7}
-          />
-          <FieldError>{errors.body}</FieldError>
-
-          <label htmlFor="timeout" className={clsx("block mb-2 font-medium mt-8", captionClasses)}>
-            Timeout
-          </label>
-          <TextInput
-            name="timeout"
-            type="number"
-            className="block w-full"
-            placeholder="Timeout"
-            value={values.timeout}
-            onChange={handleChange}
-          />
-          <FieldError>{errors.timeout}</FieldError>
-
+          <FieldError>{errors.launcherUuid}</FieldError>
+          {values.launcherId && <PropertiesComponent launcherId={values.launcherId} />}
           <OKCancelFooter OKText="Save" OKType="submit" onCancelClick={onCancel} className="pt-8" />
         </form>
       )}

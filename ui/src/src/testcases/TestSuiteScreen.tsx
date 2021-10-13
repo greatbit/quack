@@ -96,8 +96,9 @@ const TestSuiteScreen: FunctionComponent<TestSuiteScreenProps> = ({ projectID, s
   };
   return (
     <TestCasesScreenStateless
+      suite={suite}
       disableTestCaseList={isSaving}
-      beforeFilters={<SuiteHeader className="mr-8 mb-5 ml-8" name={suite.name} onChange={handleChangeSuiteName} />}
+      beforeFilters={<SuiteHeader className="mb-5 ml-8 mr-8" name={suite.name} onChange={handleChangeSuiteName} />}
       disableFilters={isSaving}
       project={project}
       filters={suite.filters}

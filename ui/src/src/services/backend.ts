@@ -19,6 +19,7 @@ import {
   NewTestCase,
   ExistingProject,
   NewLaunchConfig,
+  isExistingSuite,
 } from "../domain";
 
 export const getApiBaseUrl = (url: string) => (process.env.REACT_APP_BASE_API_URL || "/api/") + url;
@@ -198,12 +199,34 @@ const mapServerTestCaseToClient =
     attributes: mapServerTestCaseAttributesToClient(attributes)(serverTestCase.attributes),
   });
 export type NewServerLaunchConfig = {};
-const mapNewLaunchConfigToServer = (config: NewLaunchConfig): NewServerLaunchConfig => ({});
+export type NewServerLaunchConfigResponse = {
+  launchGroup: string;
+  id: string;
+};
+
+const mapNewLaunchConfigToServer = (
+  config: NewLaunchConfig,
+  suite: ExistingSuite | SuiteDraft,
+): NewServerLaunchConfig => ({
+  ...config,
+  testSuite: {
+    ...(isExistingSuite(suite) ? mapClientSuiteToBackend(suite) : mapNewClientSuiteToBackend(suite)),
+    excludedFields: [],
+    includedFields: ["name", "id", "attributes"],
+    limit: 0,
+    skip: 0,
+  },
+  properties: [],
+});
 export const backendService = {
   project: (projectId: string) => ({
     single: () => backend.get<ExistingProject>("project/" + projectId),
     launches: {
-      create: (config: NewLaunchConfig) => backend.post(projectId + "/launch", mapNewLaunchConfigToServer(config)),
+      create: (config: NewLaunchConfig, suite: ExistingSuite | SuiteDraft) =>
+        backend.post<NewServerLaunchConfig, NewServerLaunchConfigResponse>(
+          projectId + "/launch",
+          mapNewLaunchConfigToServer(config, suite),
+        ),
     },
     testSuites: {
       single: (testSuiteId: string) => ({

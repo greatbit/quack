@@ -13,18 +13,15 @@ export type RunDialogProps = {
 const RunDialog = ({ onCancel, onSubmit, environments, launcherConfigs, ...other }: RunDialogProps) => {
   const firstElementRef = useRef<HTMLInputElement>(null);
   return (
-    <Dialog open onClose={onCancel} className="max-w-xl w-full" onOverlayClick={onCancel} {...other}>
+    <Dialog open onClose={onCancel} className="w-full max-w-xl" onOverlayClick={onCancel} {...other}>
       <Dialog.Close onClick={onCancel} />
       <Form
         initialValues={{
-          environments: [],
-          body: "",
-          endpoint: "",
-          headers: "",
-          launcherID: undefined,
-          method: "GET",
+          environments: [] as string[],
+          launcherId: undefined,
+          launcherUuid: undefined,
           name: "",
-          timeout: undefined,
+          properties: undefined,
         }}
         onSubmit={onSubmit}
         onCancel={onCancel}

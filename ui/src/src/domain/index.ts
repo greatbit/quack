@@ -17,7 +17,8 @@ export type Meta = TimeMeta &
     readonly lastModifiedBy: string;
   };
 
-export type LauncherProperties = {
+export type LauncherId = "request-launcher" | "liken-launcher" | "smith-launcher";
+export type RequestLauncherProperties = {
   readonly requestBody?: string;
   readonly endpoint?: string;
   readonly requestHeaders?: string;
@@ -25,21 +26,52 @@ export type LauncherProperties = {
   readonly timeout?: string;
 };
 
+export type LikenLauncherProperties = {
+  apiEndpoint?: string;
+  frontendEndpoint?: string;
+  placeholders?: string;
+  prefixA?: string;
+  prefixB?: string;
+  urlA?: string;
+  urlB?: string;
+  paramsA?: string;
+  paramsB?: string;
+
+  timeout?: string;
+};
+
+export type SmithLauncherProperties = {
+  apiEnpoint?: string;
+  awsAccountId?: string;
+  resultsArn?: string;
+  s3Arn?: string;
+
+  timeout?: string;
+};
+
 export type NewLaunchConfig = {
   readonly name: string;
   readonly environments: string[];
-  readonly launcherId: string;
   readonly launcherUuid: string;
-  readonly endpoint: string;
-  readonly method: string;
-  readonly headers: string;
-  readonly body: string;
-  readonly timeout: string;
-};
+} & (
+  | {
+      readonly launcherId: "request-launcher";
+      readonly properties: RequestLauncherProperties;
+    }
+  | {
+      readonly launcherId: "liken-launcher";
+      readonly properties: LikenLauncherProperties;
+    }
+  | {
+      readonly launcherId: "smith-launcher";
+      readonly properties: SmithLauncherProperties;
+    }
+);
 
-export type ExistingLaunchConfig = WithID & {
+export type ExistingLaunchConfig = {
+  readonly launcherId: LauncherId;
   readonly name: string;
-  readonly properties: LauncherProperties;
+  readonly properties: RequestLauncherProperties;
   readonly uuid: string;
 };
 
@@ -89,8 +121,11 @@ export interface Suite {
 export type SuiteDraft = {
   readonly name: string;
   readonly filters: AttributeFilterDraft[];
+  readonly groups: string[];
   readonly excludedTestCases: string[];
 };
+export const isExistingSuite = (suite: ExistingSuite | SuiteDraft): suite is ExistingSuite =>
+  !!(suite as ExistingSuite).id;
 export type ExistingSuite = WithID & Meta & Suite;
 
 export interface TestCase {

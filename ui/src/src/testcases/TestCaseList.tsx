@@ -1,5 +1,13 @@
 import { atomFamily, useRecoilState, useRecoilValue } from "recoil";
-import { ExistingAttribute, FakeAttribute, AttributeFilterDraft, ExistingTestCase, ExistingProject } from "../domain";
+import {
+  ExistingAttribute,
+  FakeAttribute,
+  AttributeFilterDraft,
+  ExistingTestCase,
+  ExistingProject,
+  ExistingSuite,
+  SuiteDraft,
+} from "../domain";
 import List from "../components/testcase/List";
 import TestCaseListItem from "../components/testcase/TestCaseListItem";
 import TestCasesPanel from "./TestCasesPanel";
@@ -18,6 +26,7 @@ export type TestCaseListProps = {
   attributes: (ExistingAttribute | FakeAttribute)[];
   disabled?: boolean;
   project: ExistingProject;
+  suite: ExistingSuite | SuiteDraft;
 };
 
 export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
@@ -68,6 +77,7 @@ const TestCaseList = ({
   onToggleTestCase,
   filters,
   disabled,
+  suite,
 }: TestCaseListProps) => {
   const projectID = project.id;
   const [loadingMore, setLoadingMore] = useState(false);
@@ -96,6 +106,7 @@ const TestCaseList = ({
       selectedTestCaseID={selectedTestCaseID}
       onTestCaseAdded={handleAddTestCase}
       project={project}
+      suite={suite}
     >
       <div>
         <List>

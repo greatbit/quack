@@ -20,13 +20,13 @@ export type Actions = {
 
 const launcherConfigs: ExistingLaunchConfig[] = [
   {
-    id: "config-1",
+    launcherId: "request-launcher",
     name: "Launch config 1",
     properties: {},
     uuid: "config-1",
   },
   {
-    id: "config-2",
+    launcherId: "request-launcher",
     name: "Launch config 2",
     properties: {
       endpoint: "http://google.com",

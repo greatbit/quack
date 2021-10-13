@@ -5,7 +5,9 @@ import {
   ExistingAttribute,
   ExistingAttributeFilter,
   ExistingProject,
+  ExistingSuite,
   FakeAttribute,
+  SuiteDraft,
 } from "../domain";
 import { ExclusionState } from "./hooks";
 import TestCaseList from "./TestCaseList";
@@ -27,6 +29,7 @@ export type TestCasesScreenStatelessProps = {
   onToggleTestCase: (id: string) => void;
   showSaveSuite?: boolean;
   onSaveSuiteClick?: () => void;
+  suite: ExistingSuite | SuiteDraft;
 };
 
 export const TestCasesScreenStateless = ({
@@ -44,7 +47,7 @@ export const TestCasesScreenStateless = ({
   ...other
 }: TestCasesScreenStatelessProps) => (
   <div className="tailwind" style={{ marginLeft: "-15px", marginRight: "-15px" }}>
-    <div className="bg-neutral-fade6 pt-8 pb-8 font-sans text-neutral font-normal">
+    <div className="pt-8 pb-8 font-sans font-normal bg-neutral-fade6 text-neutral">
       {beforeFilters}
       <TestCasesFilter
         disabled={disableFilters}

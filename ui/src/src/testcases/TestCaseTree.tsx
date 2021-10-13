@@ -23,10 +23,12 @@ export type TestCaseTreeProps = TestCaseListProps & {
   groups: string[];
   exclusionState: ExclusionState;
 };
+
 export type TestCaseListSelectorParams = {
   projectID: string;
   filters: AttributeFilterDraft[];
 };
+
 export type TestCaseTreeSelectorParams = TestCaseListSelectorParams & {
   groups: string[];
 };
@@ -69,6 +71,7 @@ const TestCaseTree = ({
   groups,
   exclusionState,
   disabled,
+  suite,
 }: TestCaseTreeProps) => {
   const [rootTestCaseGroup, setRootTestCaseGroop] = useRecoilState(
     testCaseTreeSelector({ projectID: project.id, filters, groups }),
@@ -86,6 +89,7 @@ const TestCaseTree = ({
       attributes={attributes}
       selectedTestCaseID={selectedTestCaseID}
       onTestCaseAdded={handleTestCaseAdded}
+      suite={suite}
     >
       <List>
         {rootTestCaseGroup.testCases.map(testCase => (
