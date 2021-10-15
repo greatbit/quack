@@ -1,5 +1,5 @@
 /* eslint-disable react/no-direct-mutation-state */
-import React, { Component } from "react";
+import { Component, memo } from "react";
 import * as Utils from "../common/Utils";
 import { FadeLoader } from "react-spinners";
 import Backend from "../services/backend";
@@ -82,4 +82,4 @@ class EventsWidget extends Component {
   }
 }
 
-export default EventsWidget;
+export default memo(EventsWidget);

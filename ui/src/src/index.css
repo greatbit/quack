@@ -1,5 +1,20 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap');
+
+html body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 15px;
+}
+
+html {
+  font-size: 16px;
+}
+
+body .tailwind .pl-5 {
+  padding: 1.25rem !important;
+}
+body .tailwind .p-5 {
+  padding: 1.25rem !important;
 }

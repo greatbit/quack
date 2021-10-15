@@ -1,4 +1,5 @@
 import '../src/index.css';
+import 'tailwindcss/tailwind.css';
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -9,3 +10,13 @@ export const parameters = {
     },
   },
 }
+
+const withTailwindWrapper=(Story,context)=> (
+  <div className="tailwind">
+    <div className="font-sans">
+      <Story {...context} />
+    </div>
+  </div>
+);
+
+export const decorators = [withTailwindWrapper];

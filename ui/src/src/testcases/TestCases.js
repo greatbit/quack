@@ -1,17 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable eqeqeq */
-import React from "react";
+import React, { useCallback } from "react";
 import SubComponent from "../common/SubComponent";
 import TestCaseForm from "../testcases/TestCaseForm";
-import TestCasesFilter from "../testcases/TestCasesFilter";
+import TestCasesFilter from "../testcases/TestCasesFilters";
 import TestCase from "../testcases/TestCase";
 import $ from "jquery";
 import qs from "qs";
 import * as Utils from "../common/Utils";
 import { FadeLoader } from "react-spinners";
-import Backend from "../services/backend";
+import backend, { backendService } from "../services/backend";
+import { selectorFamily, useRecoilValue } from "recoil";
+import { useHistory, useLocation } from "react-router";
+import { useMemo } from "react";
 
-var jQuery = require("jquery");
+const jQuery = require("jquery");
 window.jQuery = jQuery;
 window.jQuery = $;
 window.$ = $;
@@ -34,7 +37,6 @@ class TestCases extends SubComponent {
   state = {
     testcasesTree: { children: [] },
     testcaseToEdit: Object.assign({}, this.defaultTestcase, { attributes: {}, steps: [] }),
-    projectAttributes: [],
     selectedTestCase: {},
     filter: {
       includedFields: "id,name,attributes,importedName,automated",
@@ -61,7 +63,7 @@ class TestCases extends SubComponent {
 
   componentDidMount() {
     super.componentDidMount();
-    var params = qs.parse(this.props.location.search.substring(1));
+    const params = qs.parse(this.props.location.search.substring(1));
     if (params.testcase) {
       this.state.selectedTestCase = { id: params.testcase };
       this.setState(this.state);
@@ -72,20 +74,6 @@ class TestCases extends SubComponent {
       };
       this.setState(this.state);
     }
-    Backend.get(this.props.match.params.project + "/attribute")
-      .then(response => {
-        this.state.projectAttributes = response.sort((a, b) => (a.name || "").localeCompare(b.name));
-        this.state.projectAttributes.unshift({
-          id: "broken",
-          name: "Broken",
-          values: ["True", "False"],
-        });
-        this.setState(this.state);
-        this.refreshTree();
-      })
-      .catch(error => {
-        Utils.onErrorMessage("Couldn't fetch attributes: ", error);
-      });
   }
 
   editTestcase(testcaseId) {
@@ -130,7 +118,9 @@ class TestCases extends SubComponent {
     this.state.filter = filter;
     this.state.loading = true;
     this.setState(this.state);
-    Backend.get(this.props.match.params.project + "/testcase/tree?" + this.getFilterApiRequestParams(filter))
+    backendService
+      .project(this.props.match.params.project)
+      .testcases.tree(filter)
       .then(response => {
         this.state.testcasesTree = response;
         this.state.loading = false;
@@ -152,21 +142,20 @@ class TestCases extends SubComponent {
   }
 
   updateCount() {
-    Backend.get(
-      this.props.match.params.project + "/testcase/count?" + this.getFilterApiRequestParams(this.state.filter),
-    )
+    backendService
+      .project(this.props.match.params.project)
+      .testcases.count(this.state.filter)
       .then(response => {
         this.state.count = response;
         this.setState(this.state);
-      })
-      .catch(error => {
-        Utils.onErrorMessage("Couldn't fetch testcases number: ", error);
       });
   }
 
   loadMoreTestCases(event) {
     this.state.filter.skip = (this.state.filter.skip || 0) + this.testCasesFetchLimit;
-    Backend.get(this.props.match.params.project + "/testcase?" + this.getFilterApiRequestParams(this.state.filter))
+    backendService
+      .project(this.props.match.params.project)
+      .testcases.list(this.state.filter)
       .then(response => {
         if (response) {
           this.state.testcasesTree.testCases = this.state.testcasesTree.testCases.concat(response);
@@ -183,32 +172,32 @@ class TestCases extends SubComponent {
     event.preventDefault();
   }
 
-  getFilterApiRequestParams(filter) {
-    var tokens = (filter.groups || []).map(function (group) {
-      return "groups=" + group;
-    });
-    filter.filters.forEach(function (filter) {
-      filter.attrValues.forEach(function (attrValue) {
-        if (filter.id == "broken" && attrValue.value && attrValue.value != "") {
-          tokens.push(filter.id + "=" + attrValue.value);
-        } else {
-          tokens.push("attributes." + filter.id + "=" + attrValue.value);
-        }
-      });
-    });
+  // getFilterApiRequestParams(filter) {
+  //   var tokens = (filter.groups || []).map(function (group) {
+  //     return "groups=" + group;
+  //   });
+  //   filter.filters.forEach(function (filter) {
+  //     filter.attrValues.forEach(function (attrValue) {
+  //       if (filter.id == "broken" && attrValue.value && attrValue.value != "") {
+  //         tokens.push(filter.id + "=" + attrValue.value);
+  //       } else {
+  //         tokens.push("attributes." + filter.id + "=" + attrValue.value);
+  //       }
+  //     });
+  //   });
 
-    if ((filter.groups || []).length > 0) {
-      filter.skip = 0;
-      filter.limit = 0;
-    }
-    if (filter.skip) {
-      tokens.push("skip=" + filter.skip);
-    }
-    if (filter.limit) {
-      tokens.push("limit=" + filter.limit);
-    }
-    return tokens.join("&");
-  }
+  //   if ((filter.groups || []).length > 0) {
+  //     filter.skip = 0;
+  //     filter.limit = 0;
+  //   }
+  //   if (filter.skip) {
+  //     tokens.push("skip=" + filter.skip);
+  //   }
+  //   if (filter.limit) {
+  //     tokens.push("limit=" + filter.limit);
+  //   }
+  //   return tokens.join("&");
+  // }
 
   onTestcaseSelected(id) {
     this.state.selectedTestCase = Utils.getTestCaseFromTree(id, this.state.testcasesTree, function (testCase, id) {
@@ -333,12 +322,18 @@ class TestCases extends SubComponent {
 
   render() {
     return (
-      <div>
+      <div className="tailwind">
         <div>
           <TestCasesFilter
-            projectAttributes={this.state.projectAttributes}
+            projectAttributes={this.props.attributes}
             onFilter={this.onFilter}
             project={this.props.match.params.project}
+            filters={this.props.filters}
+            onChangeFilters={this.props.onChangeFilters}
+            groups={this.props.groups}
+            onChangeGroups={this.props.onChangeGroups}
+            onCloseSuiteDialog={this.props.onCloseSuiteDialog}
+            onSubmitSuiteDialog={this.props.onSubmitSuiteDialog}
           />
         </div>
 
@@ -354,7 +349,7 @@ class TestCases extends SubComponent {
             <TestCaseForm
               project={this.props.match.params.project}
               testcase={this.state.testcaseToEdit}
-              projectAttributes={this.state.projectAttributes}
+              projectAttributes={this.props.attributes}
               onTestCaseAdded={this.onTestCaseAdded}
             />
           </div>
@@ -377,7 +372,7 @@ class TestCases extends SubComponent {
             {this.state.selectedTestCase && this.state.selectedTestCase.id && (
               <TestCase
                 projectId={this.props.match.params.project}
-                projectAttributes={this.state.projectAttributes}
+                projectAttributes={this.props.attributes}
                 testcaseId={this.state.selectedTestCase.id}
               />
             )}
@@ -388,4 +383,113 @@ class TestCases extends SubComponent {
   }
 }
 
-export default TestCases;
+const saveSuite = (projectID, suite) => {
+  backendService
+    .project(this.props.match.params.project)
+    .createSuite(suite)
+    .then(response => {
+      this.state.testSuite = response;
+      this.state.testSuiteNameToDisplay = this.state.testSuite.name;
+      this.setState(this.state);
+      $("#suite-modal").modal("toggle");
+
+      this.props.history.push(
+        "/" + this.props.match.params.project + "/testcases?testSuite=" + this.state.testSuite.id,
+      );
+    });
+};
+
+const projectAttributesSelector = selectorFamily({
+  key: "project.attributes",
+  get: projectId => () => backendService.project(projectId).attributes.list(),
+});
+
+const testSuiteSelector = selectorFamily({
+  key: "project.testSuites",
+  get:
+    ({ projectID, suiteID }) =>
+    () =>
+      suiteID ? backendService.project(projectID).testSuites.single.get(suiteID) : undefined,
+});
+
+const testCasesSelector = selectorFamily({
+  key: "testCases",
+  get:
+    ({ projectID, suiteID }) =>
+    async () => {
+      const suitePromise = suiteID
+        ? backendService.project(projectID).testSuites.single(suiteID).get()
+        : Promise.resolve(undefined);
+      const attributesPromise = backendService.project(projectID).attributes.list();
+      const [attributes, suite] = await Promise.all([attributesPromise, suitePromise]);
+      return { attributes, suite };
+    },
+});
+
+const useParsedQuery = options => {
+  const location = useLocation();
+  const queryString = location.search;
+  return useMemo(() => qs.parse(queryString, { ignoreQueryPrefix: true, ...options }), [options, queryString]);
+};
+
+const useQueryStringState = (name, initialValue) => {
+  const query = useParsedQuery();
+  const history = useHistory();
+  const set = useCallback(
+    value => {
+      history.push(
+        qs.stringify(
+          {
+            ...query,
+            [name]: value,
+          },
+          { addQueryPrefix: true },
+        ),
+      );
+    },
+    [history, name, query],
+  );
+  return [query[name] || initialValue, set];
+};
+
+const useJSONQueryStringState = (name, initialValue) => {
+  const [value, setValue] = useQueryStringState(name);
+  const parsedFilters = useMemo(() => (value ? JSON.parse(value) : initialValue), [initialValue, value]);
+  const updateFilters = useCallback(
+    filters => {
+      setValue(JSON.stringify(filters));
+    },
+    [setValue],
+  );
+  return [parsedFilters, updateFilters];
+};
+
+const TestCasesWithData = props => {
+  const projectID = props.match.params.project;
+  const suiteID = props.match.params.testsuite;
+  const { attributes, suite } = useRecoilValue(testCasesSelector({ projectID, suiteID }));
+  const [filters, handleChangeFilters] = useJSONQueryStringState("filters", []);
+  const [groups, handleChangeGroups] = useJSONQueryStringState("groups", []);
+  const handleCloseSuiteDialog = async ({ name }) => {
+    await backendService.project(projectID).testSuites.create({
+      name,
+      filters,
+      groups,
+    });
+  };
+  return (
+    <TestCases
+      {...props}
+      attributes={attributes}
+      suite={suite}
+      filters={filters}
+      onChangeFilters={handleChangeFilters}
+      groups={groups}
+      onChangeGroups={handleChangeGroups}
+      onCloseSuiteDialog={handleCloseSuiteDialog}
+      onSubmitSuiteDialog={handleCloseSuiteDialog}
+    />
+  );
+};
+
+export default TestCasesWithData;

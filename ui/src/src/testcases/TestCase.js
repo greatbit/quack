@@ -152,16 +152,19 @@ class TestCase extends SubComponent {
       });
   }
 
-  cloneTestCase(){
-      Backend.post(this.projectId  + "/testcase/" + this.state.testcase.id + "/clone")
-            .then(response => {
-              window.location.href = window.location.href.replace('testcase=' + this.state.testcase.id, 'testcase=' + response.id)
-            })
-            .catch(error => {
-              Utils.onErrorMessage("Couldn't clone testcase: ", error);
-              this.state.loading = false;
-              this.setState(this.state);
-            });
+  cloneTestCase() {
+    Backend.post(this.projectId + "/testcase/" + this.state.testcase.id + "/clone")
+      .then(response => {
+        window.location.href = window.location.href.replace(
+          "testcase=" + this.state.testcase.id,
+          "testcase=" + response.id,
+        );
+      })
+      .catch(error => {
+        Utils.onErrorMessage("Couldn't clone testcase: ", error);
+        this.state.loading = false;
+        this.setState(this.state);
+      });
   }
 
   handleChange(fieldName, event, index, arrObjectKey, skipStateRefresh) {
@@ -382,7 +385,7 @@ class TestCase extends SubComponent {
   getAttributeKeysToAdd() {
     return (this.state.projectAttributes || [])
       .filter(attribute => !(Object.keys(this.state.testcase.attributes || {}) || []).includes(attribute.id))
-      .filter(attribute => attribute.id !== 'broken')
+      .filter(attribute => attribute.id !== "broken")
       .map(attribute => ({ value: attribute.id, label: attribute.name }));
   }
 
@@ -545,17 +548,27 @@ class TestCase extends SubComponent {
                   </h1>
                 </div>
                 {!this.state.readonly && (
-                   <div className="col-1">
-                     <div class="dropdown">
-                       <span class="dropdown-toggle clickable" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           <FontAwesomeIcon icon={faBars} />
-                       </span>
-                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                           <a class="dropdown-item" href="#" onClick={e => this.cloneTestCase()}>Clone</a>
-                         </div>
-                     </div>
-                   </div>
-                 )}
+                  <div className="col-1">
+                    <div class="dropdown">
+                      <span
+                        class="dropdown-toggle clickable"
+                        href="#"
+                        role="button"
+                        id="dropdownMenuLink"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <FontAwesomeIcon icon={faBars} />
+                      </span>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="#" onClick={e => this.cloneTestCase()}>
+                          Clone
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {!this.state.readonly && (
                   <div className="col-2">
                     <Checkbox
@@ -566,7 +579,6 @@ class TestCase extends SubComponent {
                     />
                   </div>
                 )}
-
               </div>
               {!this.state.readonly && (
                 <div id="name-form" className="inplace-form" style={{ display: "none" }}>
@@ -626,7 +638,7 @@ class TestCase extends SubComponent {
                         menubar: false,
                         plugins: this.tinymcePlugins,
                         toolbar: this.tinymceToolbar,
-                        content_style: this.tinymceContentStyle
+                        content_style: this.tinymceContentStyle,
                       }}
                       onEditorChange={val =>
                         this.handleChange("description", { target: { value: val } }, null, null, true)
@@ -682,7 +694,7 @@ class TestCase extends SubComponent {
                         menubar: false,
                         plugins: this.tinymcePlugins,
                         toolbar: this.tinymceToolbar,
-                        content_style: this.tinymceContentStyle
+                        content_style: this.tinymceContentStyle,
                       }}
                       onEditorChange={val =>
                         this.handleChange("preconditions", { target: { value: val } }, null, null, true)
@@ -729,7 +741,7 @@ class TestCase extends SubComponent {
                                   menubar: false,
                                   plugins: this.tinymcePlugins,
                                   toolbar: this.tinymceToolbar,
-                                  content_style: this.tinymceContentStyle
+                                  content_style: this.tinymceContentStyle,
                                 }}
                                 onEditorChange={val => this.handleStepActionChange(i, val, false)}
                               />
@@ -743,7 +755,7 @@ class TestCase extends SubComponent {
                                   menubar: false,
                                   plugins: this.tinymcePlugins,
                                   toolbar: this.tinymceToolbar,
-                                  content_style: this.tinymceContentStyle
+                                  content_style: this.tinymceContentStyle,
                                 }}
                                 onEditorChange={val => this.handleStepExpectationChange(i, val, false)}
                               />
@@ -822,7 +834,7 @@ class TestCase extends SubComponent {
                                     menubar: false,
                                     plugins: this.tinymcePlugins,
                                     toolbar: this.tinymceToolbar,
-                                    content_style: this.tinymceContentStyle
+                                    content_style: this.tinymceContentStyle,
                                   }}
                                   onEditorChange={val => this.handleStepActionChange(i, val, false)}
                                 />
@@ -836,7 +848,7 @@ class TestCase extends SubComponent {
                                     menubar: false,
                                     plugins: this.tinymcePlugins,
                                     toolbar: this.tinymceToolbar,
-                                    content_style: this.tinymceContentStyle
+                                    content_style: this.tinymceContentStyle,
                                   }}
                                   onEditorChange={val => this.handleStepExpectationChange(i, val, false)}
                                 />

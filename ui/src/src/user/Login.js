@@ -27,18 +27,19 @@ class Login extends Component {
 
   handleSubmit(event) {
     Backend.post("user/login?login=" + this.state.login + "&password=" + this.state.password)
-        .then(response => {
-          this.onSessionChange(response);
-          var params = qs.parse(this.props.location.search.substring(1));
-          var retpath = decodeURIComponent(params.retpath || "");
-          var decodedReptath = decodeURI(retpath);
-          if (decodedReptath === "") {
-            decodedReptath = "/";
-          }
-          window.location = decodeURI(decodedReptath);
-        }).catch(error => {
-            Utils.onErrorMessage("Unable to login: ", error);
-        });
+      .then(response => {
+        this.onSessionChange(response);
+        var params = qs.parse(this.props.location.search.substring(1));
+        var retpath = decodeURIComponent(params.retpath || "");
+        var decodedReptath = decodeURI(retpath);
+        if (decodedReptath === "") {
+          decodedReptath = "/";
+        }
+        window.location = decodeURI(decodedReptath);
+      })
+      .catch(error => {
+        Utils.onErrorMessage("Unable to login: ", error);
+      });
     event.preventDefault();
   }
 

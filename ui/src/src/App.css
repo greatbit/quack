@@ -35,9 +35,16 @@
 }
 
 .tree-side{
-    height: 100vh;
-    overflow-y: scroll;
+    height: 100%;
+    overflow-y: auto;
     z-index: 0;
+}
+
+.tailwind .list-group-item {
+    background: transparent;
+}
+.tailwind .list-group-item.active {
+    background: #2E5BFF;
 }
 
 .testcase-side{
@@ -123,7 +130,6 @@ code {
 
 .bg-green {
     background-color: #135f38!important;
-    #background-color: #13515f!important;
 }
 
 .edit-icon-visible {

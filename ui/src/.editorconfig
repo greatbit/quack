@@ -3,3 +3,5 @@ trim_trailing_whitespace = true
 charset = utf-8
 indent_style = space
 insert_final_newline = true
+tab_width = 2
+indent_size = 2

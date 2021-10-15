@@ -54,22 +54,22 @@ class LaunchesWidget extends SubComponent {
     return (
       <div class="progress">
         <div
-          class="progress-bar progress-bar-striped"
+          className="progress-bar progress-bar-striped"
           role="progressbar"
           style={this.getProgressStyle(launch.launchStats.statusCounters.RUNNING, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-success"
+          className="progress-bar bg-success"
           role="progressbar"
           style={this.getProgressStyle(launch.launchStats.statusCounters.PASSED, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-danger"
+          className="progress-bar bg-danger"
           role="progressbar"
           style={this.getProgressStyle(launch.launchStats.statusCounters.FAILED, launch.launchStats.total)}
         ></div>
         <div
-          class="progress-bar bg-warning"
+          className="progress-bar bg-warning"
           role="progressbar"
           style={this.getProgressStyle(launch.launchStats.statusCounters.BROKEN, launch.launchStats.total)}
         ></div>
