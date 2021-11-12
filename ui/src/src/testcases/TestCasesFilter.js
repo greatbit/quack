@@ -297,7 +297,7 @@ class TestCasesFilter extends Component {
                       />
                       <Select
                         className="col-6 filter-attribute-val-select"
-                        value={filter.attrValues.map(function (attrValue) {
+                        value={(filter.attrValues || []).map(function (attrValue) {
                           return { value: attrValue.value, label: attrValue.value };
                         })}
                         isMulti

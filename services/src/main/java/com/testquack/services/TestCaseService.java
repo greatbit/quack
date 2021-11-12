@@ -68,6 +68,15 @@ public class TestCaseService extends BaseService<TestCase> {
     public TestCaseTree findFilteredTree(Session session, String projectId, TestcaseFilter filter) {
         TestCaseTree head = new TestCaseTree();
         List<TestCasePreview> testCases = userCanReadProject(session, projectId) ? testCasePreviewRepository.find(projectId, filter) : Collections.emptyList();
+        head.getTestCases().addAll(testCases.stream().map(TestCase::new).collect(Collectors.toList()));
+
+        buildTree(head, new ArrayList<>(filter.getGroups()));
+        return head;
+    }
+
+    public TestCaseTree findFilteredTreeFullCase(Session session, String projectId, TestcaseFilter filter) {
+        TestCaseTree head = new TestCaseTree();
+        List<TestCase> testCases = userCanReadProject(session, projectId) ? repository.find(projectId, filter) : Collections.emptyList();
         head.getTestCases().addAll(testCases);
 
         buildTree(head, new ArrayList<>(filter.getGroups()));
@@ -83,7 +92,7 @@ public class TestCaseService extends BaseService<TestCase> {
         String groupId = groups.get(0);
         List<String> nextGroups = groups.stream().skip(1).collect(Collectors.toList());
 
-        Map<String, List<TestCasePreview>> casesByGroupValues = new HashMap<>();
+        Map<String, List<TestCase>> casesByGroupValues = new HashMap<>();
         head.getTestCases().forEach(testCase -> {
             Set<String> attrValues = testCase.getAttributes().entrySet().stream().
                     filter(attribute -> groupId.equals(attribute.getKey())).
@@ -110,7 +119,7 @@ public class TestCaseService extends BaseService<TestCase> {
 
     }
 
-    private void addToMapOfList(Map<String, List<TestCasePreview>> casesByGroupValues, String attrValue, TestCasePreview testCase) {
+    private void addToMapOfList(Map<String, List<TestCase>> casesByGroupValues, String attrValue, TestCase testCase) {
         casesByGroupValues.putIfAbsent(attrValue, new ArrayList<>());
         casesByGroupValues.get(attrValue).add(testCase);
     }

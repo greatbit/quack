@@ -9,6 +9,21 @@ import static java.util.stream.Collectors.toList;
 
 public class TestCase extends TestCaseBase {
 
+    public TestCase() {
+        super();
+    }
+
+    public TestCase(TestCasePreview testCasePreview){
+        super();
+        this.attributes = testCasePreview.getAttributes();
+        this.automated = testCasePreview.isAutomated();
+        this.broken = testCasePreview.isBroken();
+        this.deleted = testCasePreview.isDeleted();
+        this.id = testCasePreview.getId();
+        this.importedName = testCasePreview.getImportedName();
+        this.name = testCasePreview.getName();
+    }
+
     private Map<String, Set<String>> attributes = new HashMap<>();
 
     private Map<String, Object> metaData = new HashMap<>();
