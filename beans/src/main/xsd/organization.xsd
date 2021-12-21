@@ -23,6 +23,9 @@
                     <xs:element name="externalSystemId" type="xs:string"/>
                     <xs:element name="externalName" type="xs:string"/>
                     <xs:element name="licenseCapacity" type="xs:int"/>
+                    <xs:element name="paymentId" type="xs:string"/>
+                    <xs:element name="licenseExpiration" type="xs:long"/>
+                    <xs:element name="licenseString" type="xs:string"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

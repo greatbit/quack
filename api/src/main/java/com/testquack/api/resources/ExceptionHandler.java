@@ -1,5 +1,6 @@
 package com.testquack.api.resources;
 
+import com.testquack.api.errors.LicenseCapacityReachedException;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import com.testquack.services.errors.EntityValidationException;
@@ -48,6 +49,8 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
             return createResponse(SERVICE_UNAVAILABLE, e);
         } catch (WebApplicationException e) {
             return createResponse(e.getResponse().getStatusInfo(), e);
+        } catch (LicenseCapacityReachedException e){
+            return createResponse(PAYMENT_REQUIRED, e);
         } catch (RuntimeException re) {
             return createResponse(BAD_REQUEST, re);
         } catch (Exception e) {

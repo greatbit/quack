@@ -72,12 +72,12 @@
         <jetty.port>9999</jetty.port>
         <jetty.version>9.4.35.v20201120</jetty.version>
         <sl4j.version>1.7.22</sl4j.version>
-        <hazelcast.version>3.8</hazelcast.version>
+        <hazelcast.version>3.12.12</hazelcast.version>
         <camel.version>3.6.0</camel.version>
         <camel.aws.version>2.25.2</camel.aws.version>
         <swagger.version>1.5.10</swagger.version>
         <jaxb.version>1.11.1</jaxb.version>
-        <whoru.version>1.5</whoru.version>
+        <whoru.version>1.7</whoru.version>
         <plow.version>1.4</plow.version>
         <aws.cli.version>1.11.702</aws.cli.version>
     </properties>
@@ -284,6 +284,11 @@
             <dependency>
                 <groupId>ru.greatbit.whoru</groupId>
                 <artifactId>cognito-auth-provider</artifactId>
+                <version>${whoru.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.greatbit.whoru</groupId>
+                <artifactId>hazelcast-session-provider</artifactId>
                 <version>${whoru.version}</version>
             </dependency>
 

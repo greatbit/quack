@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface UserRepositoryCustom {
 
-    public List<User> suggestUsers(String literal);
+    public List<User> suggestUsers(String organizationId, String literal);
 }

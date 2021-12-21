@@ -67,20 +67,20 @@ class ProjectForm extends Component {
 
   render() {
     return (
-      <div>
+      <div className="project-form">
         <h1>Create Project</h1>
         <form>
           <div className="form-group row">
             <label className="col-sm-2 col-form-label">Name</label>
             <div className="col-sm-10">
-              <input type="text" name="name" value={this.state.project.name} onChange={this.handleChange} />
+              <input type="text" name="name" className="form-control" value={this.state.project.name} onChange={this.handleChange} />
             </div>
           </div>
 
           <div className="form-group row">
             <label className="col-sm-2 col-form-label">Project ID</label>
             <div className="col-sm-10">
-              <input type="text" name="id" value={this.state.project.id || ""} onChange={this.handleChange} />
+              <input type="text" name="id" className="form-control" value={this.state.project.id || ""} onChange={this.handleChange} />
             </div>
           </div>
 
@@ -90,14 +90,17 @@ class ProjectForm extends Component {
               <input
                 type="text"
                 name="description"
+                className="form-control"
                 value={this.state.project.description}
                 onChange={this.handleChange}
               />
             </div>
           </div>
-          <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>
-            Create
-          </button>
+          <div className="project-form-block">
+              <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>
+                Create
+              </button>
+          </div>
         </form>
       </div>
     );

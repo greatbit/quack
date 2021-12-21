@@ -9,6 +9,8 @@ import { withRouter } from "react-router";
 import * as UserSession from "../user/UserSession";
 import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 class Header extends Component {
   constructor(props) {
@@ -31,6 +33,13 @@ class Header extends Component {
             window.location.pathname != "/user/changepass"
           ) {
             this.props.history.push("/user/change-password-redirect");
+          } else if (
+            this.state.session.metainfo.organizationsEnabled &&
+            !this.state.session.metainfo.currentOrganization &&
+            window.location.pathname != "/orgselect" &&
+            window.location.pathname != "/organizations/new"
+          ) {
+            this.props.history.push("/orgselect");
           }
         }
       })
@@ -66,6 +75,17 @@ class Header extends Component {
       UserSession.getSession().permissions = session.person.permissions;
     }
     this.props.onSessionChange(session);
+  }
+
+  changeOrganization(organizationId){
+      Backend.post("user/changeorg/" + organizationId)
+        .then(response => {
+          this.onSessionChange(response);
+          window.location = "/";
+        })
+        .catch(error => {
+          console.log("Unable to change organization");
+        });
   }
 
   getProject() {
@@ -131,11 +151,36 @@ class Header extends Component {
     if (this.state.session.id) {
       profileContext = (
         <span>
-          <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>
-            Profile
-          </a>
+        {!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled && (
+          <div>
+            <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>
+                Profile
+            </a>
+          </div>
+         )}
 
-          {Utils.isUserOwnerOrAdmin() && (
+          {this.state.session.metainfo && this.state.session.metainfo.organizationsEnabled && (
+            <div>
+                {this.state.session.metainfo.organizations.map(function (organization, index) {
+                  return (
+                    <div index={index}  className='clickable dropdown-item' onClick={e => this.changeOrganization(organization.id, e)}>
+                        {organization.name}
+                        {this.state.session.metainfo.currentOrganization === organization.id && (<span> <FontAwesomeIcon icon={faCheck} /></span>)}
+                    </div>
+                  )
+                }.bind(this))}
+                <div className="dropdown-divider"></div>
+                <Link className="dropdown-item " to="/organizations/edit">
+                    Edit Current Organization
+                </Link>
+                <Link className="dropdown-item " to="/organizations/new">
+                    Create New Organization
+                </Link>
+
+            </div>
+          )}
+
+          {Utils.isUserOwnerOrAdmin() && (!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled) && (
             <div>
               <div className="dropdown-divider"></div>
               <a className="dropdown-item" href={"/user/all-users-redirect"}>

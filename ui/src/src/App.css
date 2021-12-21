@@ -330,3 +330,29 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 .inplace-display p {
     margin-bottom: 0rem;
 }
+
+.select-org {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+}
+
+.org-form-block {
+    margin-top: 40px;
+}
+
+.org-form {
+    max-width: 700px;
+}
+
+.org-users-form {
+    margin-top: 20px;
+}
+
+.project-form {
+    max-width: 700px;
+}
+
+.project-form-block {
+    margin-top: 40px;
+}

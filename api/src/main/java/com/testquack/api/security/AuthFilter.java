@@ -2,6 +2,7 @@ package com.testquack.api.security;
 
 import com.testquack.beans.User;
 import com.testquack.dal.UserRepository;
+import com.testquack.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+
     @Context
     HttpServletRequest request;
 
@@ -65,8 +69,10 @@ public class AuthFilter implements ContainerRequestFilter, ContainerResponseFilt
         if (authProvider.isAuthenticated(request)){
             final Session session = authProvider.getSession(request);
             logger.debug(format("Session exists: %s, login %s", session.getId(), session.getName()));
-            if (session.getPerson().getLogin() != null && !userRepository.exists(null, session.getPerson().getLogin())) {
-                userRepository.save(null,
+            if (session.getPerson().getLogin() != null && !userRepository.exists(userService.getCurrOrganizationId(session),null, session.getPerson().getLogin())) {
+                userRepository.save(
+                        userService.getCurrOrganizationId(session),
+                        null,
                         new User().withCreatedTime(System.currentTimeMillis()).
                                 withId(session.getPerson().getLogin()).
                                 withLogin(session.getPerson().getLogin()).

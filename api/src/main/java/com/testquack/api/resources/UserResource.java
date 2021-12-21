@@ -51,7 +51,7 @@ public class UserResource extends BaseResource<User> {
     @GET
     @Path("/{login}")
     public User getUser(@PathParam("login") String login) {
-        return service.findOne(new Filter().withField("login", login));
+        return service.findOne(getSession(), null, login);
     }
 
     @DELETE
@@ -173,6 +173,14 @@ public class UserResource extends BaseResource<User> {
     @Path("/users/suggest")
     public Set<String> suggestUsers(@QueryParam("literal") String literal) {
         return authProvider.suggestUser(request, literal);
+    }
+
+    @POST
+    @Path("/changeorg/{orgId}")
+    public Session login(@PathParam("orgId") String organizationId) {
+        Session session = service.changeOrganization(getSession(), organizationId);
+        sessionProvider.replaceSession(session);
+        return session;
     }
 
 }

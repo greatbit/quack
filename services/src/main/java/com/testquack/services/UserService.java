@@ -1,10 +1,10 @@
 package com.testquack.services;
 
 import com.testquack.beans.Filter;
+import com.testquack.dal.OrganizationRepository;
 import com.testquack.services.errors.EntityAccessDeniedException;
 import com.testquack.services.errors.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.testquack.beans.User;
 import com.testquack.dal.CommonRepository;
@@ -26,6 +26,9 @@ public class UserService extends BaseService<User> {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     @Override
     protected CommonRepository<User> getRepository() {
@@ -75,7 +78,7 @@ public class UserService extends BaseService<User> {
     @Override
     protected void beforeCreate(Session session, String projectId, User user) {
         super.beforeCreate(session, projectId, user);
-        if(exists(projectId, user.getLogin())){
+        if(exists(session, projectId, user.getLogin())){
             throw new RuntimeException(format("User with login %s already exists", user.getLogin()));
         }
         user.setId(user.getLogin());
@@ -98,7 +101,7 @@ public class UserService extends BaseService<User> {
 
     public void changePassword(Session session, String login, String oldPassword, String newPassword) {
         if (userCanSave(session, login)){
-            User user = findOne(new Filter().withField("login", login));
+            User user = findOne(getCurrOrganizationId(session), new Filter().withField("login", login));
             user.setPassword(encryptPassword(newPassword, user.getLogin()));
             user.setPasswordChangeRequired(false);
             save(session, null, user);
@@ -107,23 +110,32 @@ public class UserService extends BaseService<User> {
         }
     }
 
+    public Session changeOrganization(Session session, String organizationId){
+        if (!isUserInOrganization(session, organizationId)){
+            throw new EntityNotFoundException("Organization " + organizationId + " not found");
+        }
+        session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizationId);
+        return session;
+    }
+
     /////// Non-authenticable for internal usage
 
-    public User findOne(Filter filter) {
-        return repository.find(null, filter).stream().findFirst().orElseThrow(EntityNotFoundException::new);
+    public User findOne(String organizationId, Filter filter) {
+        return repository.find(organizationId,null, filter).stream().findFirst().orElseThrow(EntityNotFoundException::new);
     }
 
     public List<User> findAll() {
         return StreamSupport.stream(repository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
-    public List<User> suggestUsers(String literal) {
-        return repository.suggestUsers(literal);
+    public List<User> suggestUsers(String organizationId, String literal) {
+        return repository.suggestUsers(organizationId, literal);
     }
 
 
     private User cleanUserSesitiveData(User user){
         return user.withPassword(null).withToken(null);
     }
+
 
 }

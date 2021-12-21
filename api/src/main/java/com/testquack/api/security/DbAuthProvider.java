@@ -47,7 +47,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
 
     @Override
     protected Person findPersonByLogin(String login) {
-        return convertUser(userService.findOne(new Filter().withField("login", login)));
+        return convertUser(userService.findOne(null, new Filter().withField("login", login)));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
 
     @Override
     public Set<String> suggestUser(HttpServletRequest request, String literal) {
-        return userService.suggestUsers(literal).stream().
+        return userService.suggestUsers(null, literal).stream().
                 map(user -> format("%s:%s %s", user.getId(), user.getFirstName(), user.getLastName())).
                 collect(Collectors.toSet());
     }

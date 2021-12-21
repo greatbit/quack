@@ -18,7 +18,7 @@ public class OrganizationRepositoryCustomImpl extends CommonRepositoryImpl<Organ
     }
 
     @Override
-    protected String getCollectionName(String projectId) {
+    protected String getCollectionName(String organizationId, String projectId) {
         return "organizations";
     }
 }

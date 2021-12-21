@@ -46,11 +46,12 @@ public class ProjectRepositoryTest extends DalBaseTest {
 
     @Test
     public void findFilteredSingleFieldTest(){
-        projectRepository.save("projects", new Project().withName("Pr1"));
-        projectRepository.save("projects", new Project().withName("Pr2"));
-        projectRepository.save("projects", new Project().withName("Pr3"));
+        projectRepository.save(null, "projects", new Project().withName("Pr1"));
+        projectRepository.save(null, "projects", new Project().withName("Pr2"));
+        projectRepository.save(null, "projects", new Project().withName("Pr3"));
 
         List<Project> projects = projectRepository.find(
+                null,
                 null,
                 new Filter().withField("name", "Pr2")
         );
@@ -60,11 +61,12 @@ public class ProjectRepositoryTest extends DalBaseTest {
 
     @Test
     public void findFilteredMultipleValuesFieldTest(){
-        projectRepository.save("projects", new Project().withName("Pr1"));
-        projectRepository.save("projects", new Project().withName("Pr2"));
-        projectRepository.save("projects", new Project().withName("Pr3"));
+        projectRepository.save(null, "projects", new Project().withName("Pr1"));
+        projectRepository.save(null, "projects", new Project().withName("Pr2"));
+        projectRepository.save(null, "projects", new Project().withName("Pr3"));
 
         List<Project> projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withField("name", "Pr2").
@@ -77,11 +79,12 @@ public class ProjectRepositoryTest extends DalBaseTest {
 
     @Test
     public void findFilteredMultipleFieldTest(){
-        projectRepository.save("projects", new Project().withName("Pr1").withCreatedBy("AAA"));
-        projectRepository.save("projects", new Project().withName("Pr2").withCreatedBy("AAA"));
-        projectRepository.save("projects", new Project().withName("Pr3").withCreatedBy("BBB"));
+        projectRepository.save(null, "projects", new Project().withName("Pr1").withCreatedBy("AAA"));
+        projectRepository.save(null, "projects", new Project().withName("Pr2").withCreatedBy("AAA"));
+        projectRepository.save(null, "projects", new Project().withName("Pr3").withCreatedBy("BBB"));
 
         List<Project> projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withField("name", "Pr2").
@@ -94,11 +97,12 @@ public class ProjectRepositoryTest extends DalBaseTest {
 
     @Test
     public void findOrderedTest(){
-        projectRepository.save("projects", new Project().withName("Pr1"));
-        projectRepository.save("projects", new Project().withName("Pr2"));
-        projectRepository.save("projects", new Project().withName("Pr3"));
+        projectRepository.save(null, "projects", new Project().withName("Pr1"));
+        projectRepository.save(null, "projects", new Project().withName("Pr2"));
+        projectRepository.save(null, "projects", new Project().withName("Pr3"));
 
         List<Project> projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withSortField("name")
@@ -108,6 +112,7 @@ public class ProjectRepositoryTest extends DalBaseTest {
                 contains("Pr1", "Pr2", "Pr3"));
 
         projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withSortField("name").withOrder(Order.DESC)
@@ -119,8 +124,9 @@ public class ProjectRepositoryTest extends DalBaseTest {
 
     @Test
     public void findLimitedFieldsTest(){
-        projectRepository.save("projects", new Project().withName("Pr1").withCreatedBy("AAA"));
+        projectRepository.save(null, "projects", new Project().withName("Pr1").withCreatedBy("AAA"));
         List<Project> projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withExcludedField("createdBy")
@@ -130,6 +136,7 @@ public class ProjectRepositoryTest extends DalBaseTest {
         assertNull(projects.get(0).getCreatedBy());
 
         projects = projectRepository.find(
+                null,
                 null,
                 new Filter().
                         withIncludedField("createdBy")

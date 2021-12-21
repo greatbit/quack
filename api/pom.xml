@@ -136,14 +136,18 @@
         </dependency>
         <dependency>
             <groupId>ru.greatbit.whoru</groupId>
+            <artifactId>hazelcast-session-provider</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.greatbit.whoru</groupId>
             <artifactId>jaxrs-ws-auth</artifactId>
         </dependency>
 
         <!-- Cognito Auth -->
-<!--        <dependency>-->
-<!--            <groupId>ru.greatbit.whoru</groupId>-->
-<!--            <artifactId>cognito-auth-provider</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>ru.greatbit.whoru</groupId>
+            <artifactId>cognito-auth-provider</artifactId>
+        </dependency>
 
         <!--Swagger-->
         <dependency>

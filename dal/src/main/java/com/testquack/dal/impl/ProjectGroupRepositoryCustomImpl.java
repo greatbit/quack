@@ -12,7 +12,7 @@ public class ProjectGroupRepositoryCustomImpl extends CommonRepositoryImpl<Proje
     }
 
     @Override
-    protected String getCollectionName(String projectId) {
+    protected String getCollectionName(String organizationId, String projectId) {
         return "project-groups";
     }
 }
