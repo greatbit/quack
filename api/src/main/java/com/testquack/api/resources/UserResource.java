@@ -178,7 +178,9 @@ public class UserResource extends BaseResource<User> {
     @POST
     @Path("/changeorg/{orgId}")
     public Session login(@PathParam("orgId") String organizationId) {
-        return service.changeOrganization(getSession(), organizationId);
+        Session session = service.changeOrganization(getSession(), organizationId);
+        sessionProvider.replaceSession(session);
+        return session;
     }
 
 }

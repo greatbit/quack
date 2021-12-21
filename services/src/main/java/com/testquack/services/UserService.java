@@ -11,7 +11,6 @@ import com.testquack.dal.CommonRepository;
 import com.testquack.dal.UserRepository;
 import ru.greatbit.utils.string.StringUtils;
 import ru.greatbit.whoru.auth.Session;
-import ru.greatbit.whoru.auth.SessionProvider;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
@@ -24,9 +23,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class UserService extends BaseService<User> {
-
-    @Autowired
-    private SessionProvider sessionProvider;
 
     @Autowired
     private UserRepository repository;
@@ -119,7 +115,6 @@ public class UserService extends BaseService<User> {
             throw new EntityNotFoundException("Organization " + organizationId + " not found");
         }
         session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizationId);
-        sessionProvider.replaceSession(session);
         return session;
     }
 

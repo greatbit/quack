@@ -151,13 +151,17 @@ class Header extends Component {
     if (this.state.session.id) {
       profileContext = (
         <span>
-          <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>
-            Profile
-          </a>
+        {!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled && (
+          <div>
+            <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>
+                Profile
+            </a>
+            <div className="dropdown-divider"></div>
+          </div>
+         )}
 
           {this.state.session.metainfo && this.state.session.metainfo.organizationsEnabled && (
             <div>
-                <div className="dropdown-divider"></div>
                 {this.state.session.metainfo.organizations.map(function (organization, index) {
                   return (
                     <div index={index}  className='clickable dropdown-item' onClick={e => this.changeOrganization(organization.id, e)}>
@@ -177,7 +181,7 @@ class Header extends Component {
             </div>
           )}
 
-          {Utils.isUserOwnerOrAdmin() && (
+          {Utils.isUserOwnerOrAdmin() && (!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled) && (
             <div>
               <div className="dropdown-divider"></div>
               <a className="dropdown-item" href={"/user/all-users-redirect"}>

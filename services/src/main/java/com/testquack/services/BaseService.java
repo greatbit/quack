@@ -308,7 +308,7 @@ public abstract class BaseService<E extends Entity> {
             Organization organization = organizationRepository.findOne(null, null, currOrganizationId);
             return isUserOrganizationAdmin(session, organization);
         }
-        return true;
+        return false;
     }
 
     protected boolean isUserOrganizationAdmin(Session session, Organization organization){
