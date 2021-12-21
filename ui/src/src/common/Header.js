@@ -156,7 +156,6 @@ class Header extends Component {
             <a className="dropdown-item" href={"/user/profile/" + this.state.session.person.login}>
                 Profile
             </a>
-            <div className="dropdown-divider"></div>
           </div>
          )}
 

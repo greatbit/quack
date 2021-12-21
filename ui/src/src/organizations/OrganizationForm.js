@@ -142,7 +142,14 @@ class OrganizationForm extends Component {
       <div className='org-form'>
         {this.props.editCurrent &&
               (
+              <div>
                 <h1>Update Organization</h1>
+                <div>
+                    <b>{this.state.organization.licenseCapacity}</b> parallel user sessions are currently available for organization.
+                    <br/>
+                    Please <a href="https://www.testquack.com/#contacts" target="_blanc">contact us</a> to purchase more.
+                </div>
+              </div>
               )
         }
         {!this.props.editCurrent &&
@@ -202,7 +209,6 @@ class OrganizationForm extends Component {
                 </div>
               </div>
           </div>
-
           <div className="org-form-block">
             <h4> Administrators </h4>
             {this.state.organization.admins.map(function (admin, index) {
