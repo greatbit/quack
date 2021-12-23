@@ -16,7 +16,6 @@ import ru.greatbit.utils.serialize.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +84,8 @@ public class DBUtils {
         // Add ordering
         if (!isEmpty(filter.getSortField())) {
             Sort sort = filter.getOrder() != null && filter.getOrder().equals(Order.DESC) ?
-                    new Sort(Sort.Direction.DESC, filter.getSortField()) :
-                    new Sort(Sort.Direction.ASC, filter.getSortField());
+                    Sort.by(Sort.Direction.DESC, filter.getSortField()) :
+                    Sort.by(Sort.Direction.ASC, filter.getSortField());
             query.with(sort);
         }
 

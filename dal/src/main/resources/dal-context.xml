@@ -28,11 +28,11 @@
     <mongo:repositories base-package="com.testquack.dal" repository-impl-postfix="CustomImpl"/>
 
     <!-- Grid FS -->
-    <mongo:mapping-converter id="converter" />
+    <mongo:mapping-converter id="mappingMongoConverter" />
     <bean name="gridFsTemplate"
           class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
         <constructor-arg ref="mongoDbFactory" />
-        <constructor-arg ref="converter" />
+        <constructor-arg ref="mappingMongoConverter" />
     </bean>
 
 

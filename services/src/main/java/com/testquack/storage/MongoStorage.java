@@ -7,6 +7,7 @@ import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,7 +24,7 @@ public class MongoStorage implements Storage {
     private GridFsTemplate gridOperations;
 
     @Autowired
-    private MongoDbFactory mongoDbFactory;
+    private MongoDatabaseFactory mongoDbFactory;
 
     @Override
     public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
@@ -56,7 +57,7 @@ public class MongoStorage implements Storage {
         }
     }
     private GridFSBucket getGridFs() {
-        MongoDatabase db = mongoDbFactory.getDb();
+        MongoDatabase db = mongoDbFactory.getMongoDatabase();
         return GridFSBuckets.create(db);
     }
 }

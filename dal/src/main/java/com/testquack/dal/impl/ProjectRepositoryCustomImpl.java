@@ -20,7 +20,7 @@ public class ProjectRepositoryCustomImpl extends CommonRepositoryImpl<Project>
 
     @Override
     public List<Project> findByOrganizationId(String id) {
-        Query query = new Query().with(new Sort(Sort.Direction.ASC, "id"));
+        Query query = new Query().with(Sort.by(Sort.Direction.ASC, "id"));
         query.addCriteria(Criteria.where("organizationId").in(id));
         return mongoOperations.find(query, Project.class);
     }
