@@ -37,14 +37,8 @@
         </dependency>
 
         <!-- MongoDB -->
-<!--        <dependency>-->
-<!--            <groupId>org.mongodb</groupId>-->
-<!--            <artifactId>mongo-java-driver</artifactId>-->
-<!--            <version>3.12.10</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.mongodb</groupId>
-<!--            <artifactId>mongodb-driver-legacy</artifactId>-->
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.4.0</version>
         </dependency>
