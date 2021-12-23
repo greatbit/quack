@@ -1,11 +1,15 @@
 package com.testquack.dal;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
+import com.mongodb.ServerApi;
+import com.mongodb.ServerApiVersion;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +20,7 @@ import static com.mongodb.internal.connection.ServerAddressHelper.createServerAd
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Configuration
-public class MongoConfig extends AbstractMongoConfiguration {
+public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Value("${mongo.replicaSet}")
     String replicaSet;
@@ -30,15 +34,14 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Value("${mongo.password}")
     String password;
 
+    @Value("${mongo.uri}")
+    String uri;
+
     @Override
     public MongoClient mongoClient() {
-        MongoClientOptions clientOptions =
-                MongoClientOptions.builder().
-                        connectionsPerHost(40).
-                        threadsAllowedToBlockForConnectionMultiplier(1000).
-                        connectTimeout(15000).
-                        socketTimeout(60000).
-                        build();
+        if(!isEmpty(uri)){
+            return getClientByUri();
+        }
 
         List<ServerAddress> addresses = Stream.of(replicaSet.split(",")).
                 map(String::trim).
@@ -51,14 +54,27 @@ public class MongoConfig extends AbstractMongoConfiguration {
                 }).
                 collect(Collectors.toList());
 
-        if (isEmpty(username)){
-            return new MongoClient(addresses, clientOptions);
+        MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder()
+                .applyToClusterSettings(builder ->
+                        builder.hosts(addresses)
+                );
+
+        if (!isEmpty(username)){
+            settingsBuilder.credential(createCredential(username, dbname, password.toCharArray()));
         }
-        return new MongoClient(
-                addresses,
-                createCredential(username, dbname, password.toCharArray()),
-                clientOptions
-        );
+
+        return MongoClients.create(settingsBuilder.build());
+    }
+
+    private MongoClient getClientByUri(){
+        ConnectionString connectionString = new ConnectionString(uri);
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .serverApi(ServerApi.builder()
+                        .version(ServerApiVersion.V1)
+                        .build())
+                .build();
+        return MongoClients.create(settings);
     }
 
     @Override

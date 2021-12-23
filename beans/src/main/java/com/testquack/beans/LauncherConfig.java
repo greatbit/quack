@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class LauncherConfig extends LauncherConfigBase {
     @XmlElement(required = true)
-    private final Map<String, String> properties = new HashMap<>();
+    private Map<String, String> properties = new HashMap<>();
 
     @Override
     public Object createNewInstance() {
@@ -15,5 +15,9 @@ public class LauncherConfig extends LauncherConfigBase {
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
     }
 }

@@ -9,7 +9,7 @@ public class LaunchStats {
     protected int total;
 
     @XmlElement(required = true)
-    private final Map<LaunchStatus, Integer> statusCounters;
+    private Map<LaunchStatus, Integer> statusCounters;
 
     public LaunchStats() {
         statusCounters = new HashMap<>();
@@ -31,5 +31,9 @@ public class LaunchStats {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public void setStatusCounters(Map<LaunchStatus, Integer> statusCounters) {
+        this.statusCounters = statusCounters;
     }
 }
