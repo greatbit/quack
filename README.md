@@ -65,10 +65,10 @@ How to run in Docker
 
 2. Place [conf/quack.properties](https://github.com/greatbit/quack/blob/master/assembly/quack.properties) somewhere in the system (e.g. /etc/quack)
 
-3 docker run -v PATH_TO_DIRECTORY_WITH_PROPERTIES:/etc/quack --network host -it -d greatbit/quack
+3 docker run -v PATH_TO_DIRECTORY_WITH_PROPERTIES:/etc/quack -p 27017:27017 -p 8080:8080 -p 80:80 -d greatbit/quack
 
 e.g.:
-docker run -v /etc/quack:/etc/quack --network host -it -d greatbit/quack
+docker run -v /etc/quack:/etc/quack -p 27017:27017 -p 8080:8080 -p 80:80 -d greatbit/quack
 
 How to run on a standalone server
 ==========
