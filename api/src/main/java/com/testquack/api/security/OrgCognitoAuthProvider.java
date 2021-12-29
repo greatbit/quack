@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class OrgCognitoAuthProvider extends CognitoAuthProvider {
 
-    public final static String ALL_IN_ORGANIZATION_GROUP = "All_In_Organization";
+    public final static String ALL_IN_ORGANIZATION_GROUP = "All_Users";
 
     @Value("${quack.organizations.enabled}")
     private boolean ORGANIZATIONS_ENABLED;
