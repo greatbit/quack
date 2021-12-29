@@ -2,7 +2,6 @@ package com.testquack.api.security;
 
 import com.testquack.beans.Filter;
 import com.testquack.beans.Organization;
-import com.testquack.dal.OrganizationRepository;
 import com.testquack.services.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +12,11 @@ import ru.greatbit.whoru.auth.providers.CognitoAuthProvider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.testquack.services.BaseService.CURRENT_ORGANIZATION_KEY;
 import static com.testquack.services.BaseService.ORGANIZATIONS_ENABLED_KEY;
@@ -22,6 +25,8 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class OrgCognitoAuthProvider extends CognitoAuthProvider {
+
+    public final static String ALL_IN_ORGANIZATION_GROUP = "All_In_Organization";
 
     @Value("${quack.organizations.enabled}")
     private boolean ORGANIZATIONS_ENABLED;
@@ -41,11 +46,35 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
                 session.getMetainfo().put(CURRENT_ORGANIZATION_KEY, organizations.get(0).getId());
             }
         }
+        session.getPerson().getGroups().add(ALL_IN_ORGANIZATION_GROUP);
         sessionProvider.replaceSession(session);
         return session;
     }
 
     private Organization getShortOrganization(Organization organization) {
         return new Organization().withId(organization.getId()).withName(organization.getName());
+    }
+
+    @Override
+    public Set<String> suggestUser(HttpServletRequest request, String literal) {
+        Set<String> groups = new LinkedHashSet<>();
+        groups.add(ALL_IN_ORGANIZATION_GROUP);
+        groups.addAll(new HashSet<>(Optional.ofNullable(getCurrentOrganizatio(request))
+                .orElse(new Organization())
+                .getAllowedUsers()));
+        return groups;
+    }
+
+    @Override
+    public Set<String> getAllGroups(HttpServletRequest request) {
+        return new HashSet<>(Optional.ofNullable(getCurrentOrganizatio(request))
+                .orElse(new Organization())
+                .getAllowedGroups());
+    }
+
+    private Organization getCurrentOrganizatio(HttpServletRequest request){
+        Session session = getSession(request);
+        String currentOrgId = organizationService.getCurrOrganizationId(session);
+        return organizationService.findOne(session, null, currentOrgId);
     }
 }
