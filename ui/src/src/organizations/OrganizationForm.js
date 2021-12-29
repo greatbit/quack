@@ -53,7 +53,18 @@ class OrganizationForm extends Component {
           .catch((e) => {
             console.log("Unable to fetch session");
           });
+    } else {
+        Backend.get("user/session")
+          .then(response => {
+            this.currentLogin = response.login;
+            this.state.organization.admins.push(response.login);
+            this.setState(this.state);
+          })
+          .catch((e) => {
+            console.log("Unable to fetch session");
+          });
     }
+
   }
 
   handleAdminsChange(event) {
