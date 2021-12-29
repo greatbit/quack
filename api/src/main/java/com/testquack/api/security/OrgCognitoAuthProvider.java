@@ -17,6 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.testquack.services.BaseService.CURRENT_ORGANIZATION_KEY;
 import static com.testquack.services.BaseService.ORGANIZATIONS_ENABLED_KEY;
@@ -56,13 +57,18 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     }
 
     @Override
-    public Set<String> suggestUser(HttpServletRequest request, String literal) {
-        Set<String> groups = new LinkedHashSet<>();
-        groups.add(ALL_IN_ORGANIZATION_GROUP);
-        groups.addAll(new HashSet<>(Optional.ofNullable(getCurrentOrganizatio(request))
+    public Set<String> getAllUsers(HttpServletRequest request) {
+        return new HashSet<>(Optional.ofNullable(getCurrentOrganizatio(request))
                 .orElse(new Organization())
-                .getAllowedUsers()));
-        return groups;
+                .getAllowedUsers());
+    }
+
+    @Override
+    public Set<String> suggestUser(HttpServletRequest request, String literal) {
+        return getAllUsers(request).stream()
+                .filter(item -> item.contains(literal))
+                .sorted()
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override
@@ -70,6 +76,18 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
         return new HashSet<>(Optional.ofNullable(getCurrentOrganizatio(request))
                 .orElse(new Organization())
                 .getAllowedGroups());
+    }
+
+    @Override
+    public Set<String> suggestGroups(HttpServletRequest request, String literal) {
+        List<String> existingGroups = getAllGroups(request).stream()
+                .filter(item -> item.contains(literal))
+                .sorted()
+                .collect(Collectors.toList());
+        Set<String> groups = new LinkedHashSet<>();
+        groups.add(ALL_IN_ORGANIZATION_GROUP);
+        groups.addAll(existingGroups);
+        return groups;
     }
 
     private Organization getCurrentOrganizatio(HttpServletRequest request){
