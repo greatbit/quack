@@ -68,25 +68,27 @@ class ProjectForm extends Component {
   render() {
     return (
       <div className="project-form">
-        <h1>Create Project</h1>
+        <div className="project-form-title">
+            <h1>Create Project</h1>
+        </div>
         <form>
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Name</label>
-            <div className="col-sm-10">
+            <label className="col-sm-3 col-form-label">Name</label>
+            <div className="col-sm-9">
               <input type="text" name="name" className="form-control" value={this.state.project.name} onChange={this.handleChange} />
             </div>
           </div>
 
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Project ID</label>
-            <div className="col-sm-10">
+            <label className="col-sm-3 col-form-label">Project ID</label>
+            <div className="col-sm-9">
               <input type="text" name="id" className="form-control" value={this.state.project.id || ""} onChange={this.handleChange} />
             </div>
           </div>
 
           <div className="form-group row">
-            <label className="col-sm-2 col-form-label">Description</label>
-            <div className="col-sm-10">
+            <label className="col-sm-3 col-form-label">Description</label>
+            <div className="col-sm-9">
               <input
                 type="text"
                 name="description"
