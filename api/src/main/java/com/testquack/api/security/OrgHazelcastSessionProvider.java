@@ -2,7 +2,7 @@ package com.testquack.api.security;
 
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.core.EntryEvent;
-import com.hazelcast.core.IMap;
+import com.hazelcast.map.IMap;
 import com.hazelcast.map.listener.EntryEvictedListener;
 import com.hazelcast.map.listener.EntryRemovedListener;
 import com.testquack.api.errors.LicenseCapacityReachedException;

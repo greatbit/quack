@@ -4,14 +4,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     http://www.hazelcast.com/schema/spring
-    http://www.hazelcast.com/schema/spring/hazelcast-spring-3.0.xsd">
+    http://www.hazelcast.com/schema/spring/hazelcast-spring-5.0.xsd">
 
     <import resource="classpath:dal-context.xml"/>
 
     <!-- Hazelcast -->
     <hz:hazelcast id="hazelcastInstance">
         <hz:config>
-            <hz:group name="${hazelcast.group.name}" password="${hazelcast.group.password}"/>
+<!--            <hz:group name="${hazelcast.group.name}" password="${hazelcast.group.password}"/>-->
             <hz:properties>
                 <hz:property name="hazelcast.merge.first.run.delay.seconds">5</hz:property>
                 <hz:property name="hazelcast.merge.next.run.delay.seconds">5</hz:property>
@@ -20,9 +20,10 @@
             <hz:network port="${hazelcast.port}" port-auto-increment="${hazelcast.port.auto.increment}">
                 <hz:join>
                     <hz:multicast enabled="false" multicast-group="224.2.2.3" multicast-port="54327"/>
-                    <hz:tcp-ip enabled="true">
+                    <hz:tcp-ip enabled="${hazelcast.tcpip.enabled}">
                         <hz:members>${hazelcast.members}</hz:members>
                     </hz:tcp-ip>
+                    <hz:aws enabled="${hazelcast.aws.enabled}"></hz:aws>
                 </hz:join>
                 <hz:interfaces>
                     <hz:interface>${hazelcast.interface}</hz:interface>

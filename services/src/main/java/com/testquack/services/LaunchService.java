@@ -1,7 +1,7 @@
 package com.testquack.services;
 
 import com.google.common.collect.MinMaxPriorityQueue;
-import com.hazelcast.core.ILock;
+import com.hazelcast.cp.lock.FencedLock;
 import com.testquack.beans.Event;
 import com.testquack.beans.FailureDetails;
 import com.testquack.beans.Filter;
@@ -85,9 +85,9 @@ public class LaunchService extends BaseService<Launch> {
                                                      Session session, String projectId,
                                                      String launchId, String testCaseUUID,
                                                      LaunchStatus status, FailureDetails failureDetails) throws Exception {
-        ILock lock = hazelcastInstance.getLock(Launch.class + launchId + "updateLaunchTestCaseStatus");
+        FencedLock lock = hazelcastInstance.getCPSubsystem().getLock(Launch.class + launchId + "updateLaunchTestCaseStatus");
         try{
-            lock.lock(lockTtl, TimeUnit.MINUTES);
+            lock.tryLock(lockTtl, TimeUnit.MINUTES);
             Launch launch = findOne(session, projectId, launchId);
             LaunchTestCase launchTestCase = findLaunchTestCaseInTree(launch.getTestCaseTree(), testCaseUUID);
             if (launchTestCase == null){

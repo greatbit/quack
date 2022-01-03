@@ -1,7 +1,7 @@
 package com.testquack.services;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ILock;
+import com.hazelcast.cp.lock.FencedLock;
 import com.testquack.beans.Organization;
 import com.testquack.dal.OrganizationRepository;
 import com.testquack.services.errors.EntityAccessDeniedException;
@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -221,9 +222,9 @@ public abstract class BaseService<E extends Entity> {
         if (!userCanUpdate(session, projectId, entity)){
             throw new EntityAccessDeniedException(getAccessDeniedMessage(session, entity, "UPDATE"));
         }
-        ILock lock = hazelcastInstance.getLock(entity.getClass() + entity.getId());
+        FencedLock lock = hazelcastInstance.getCPSubsystem().getLock(entity.getClass() + entity.getId());
         try{
-            lock.lock(lockTtl, TimeUnit.MINUTES);
+            lock.tryLock(lockTtl, TimeUnit.MINUTES);
             E existingEntity = findOne(session, projectId, entity.getId());
             beforeUpdate(session, projectId, existingEntity, entity);
             if (existingEntity != null) {

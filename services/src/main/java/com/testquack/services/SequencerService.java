@@ -1,7 +1,7 @@
 package com.testquack.services;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ILock;
+import com.hazelcast.cp.lock.FencedLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.testquack.beans.Sequencer;
@@ -23,8 +23,8 @@ public class SequencerService {
     private final long LOCK_TTL = 5;
 
     public Sequencer create(String projectId){
-        ILock lock = hazelcastInstance.getLock(getLockId(projectId));
-        lock.lock(LOCK_TTL, TimeUnit.MINUTES);
+        FencedLock lock = hazelcastInstance.getCPSubsystem().getLock(getLockId(projectId));
+        lock.tryLock(LOCK_TTL, TimeUnit.MINUTES);
         try {
             return repository.save(new Sequencer().withId(projectId));
         } finally {
@@ -33,8 +33,8 @@ public class SequencerService {
     }
 
     public Sequencer increment(String projectId){
-        ILock lock = hazelcastInstance.getLock(getLockId(projectId));
-        lock.lock(LOCK_TTL, TimeUnit.MINUTES);
+        FencedLock lock = hazelcastInstance.getCPSubsystem().getLock(getLockId(projectId));
+        lock.tryLock(LOCK_TTL, TimeUnit.MINUTES);
         try {
             Sequencer sequencer = repository.findById(projectId).orElse(new Sequencer().withId(projectId));
             sequencer.setIndex(sequencer.getIndex() + 1);
