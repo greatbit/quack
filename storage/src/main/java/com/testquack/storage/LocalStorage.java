@@ -14,7 +14,7 @@ public class LocalStorage implements Storage {
     private String STORAGE_BASE_PATH;
 
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
+    public Attachment upload(String organizationId, String projectId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
         File file = new File(STORAGE_BASE_PATH + File.separator + UUID.randomUUID().toString(), fileName);
         file.getParentFile().mkdirs();
         OutputStream os = new FileOutputStream(file);

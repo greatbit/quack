@@ -91,11 +91,11 @@ class Attachments extends SubComponent {
         <div className="col-sm-11">
           <a
             href={
-              getApiBaseUrl() +
+              getApiBaseUrl("") +
               this.state.projectId +
-              "/testcase/attachment/" +
+              "/testcase/" +
               this.state.testcase.id +
-              "/" +
+              "/attachment/" +
               attachment.id
             }
             target="_blank"

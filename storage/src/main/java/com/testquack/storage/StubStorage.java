@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class StubStorage implements Storage {
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
+    public Attachment upload(String organizationId, String projectId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
         return new Attachment().withId(UUID.randomUUID().toString()).withTitle(fileName);
     }
 

@@ -2,9 +2,11 @@ package com.testquack.storage;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static org.jvnet.jaxb2_commons.lang.StringUtils.isEmpty;
 
 public class S3Storage implements Storage {
 
@@ -56,7 +60,11 @@ public class S3Storage implements Storage {
                 .withSocketTimeout(AMAZON_STORAGE_TIMEOUT)
                 .withTcpKeepAlive(true)
                 .withMaxErrorRetry(AMAZON_STORAGE_RETRIES);
-        client = new AmazonS3Client(awsCreds, configuration);
+        client = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+                .withClientConfiguration(configuration)
+                .withRegion(AMAZON_STORAGE_REGION)
+                .build();
 
         if (!isBucketExists()) {
             try {
@@ -69,8 +77,8 @@ public class S3Storage implements Storage {
     }
 
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
-        String fileNameInCloud = LocalDateTime.now().format(formatter) + fileName;
+    public Attachment upload(String organizationId, String projectId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
+        String fileNameInCloud = createFileS3key(organizationId, projectId, fileName);
         try {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(size);
@@ -81,6 +89,11 @@ public class S3Storage implements Storage {
             throw new IOException(e);
         }
         return new Attachment().withUrl(AMAZON_FILE_PATH_FLAG + fileNameInCloud).withDataSize(size);
+    }
+
+    private String createFileS3key(String organizationId, String projectId, String fileName){
+        String key = projectId + "/" + LocalDateTime.now().format(formatter) + fileName;
+        return isEmpty(organizationId) ? key : organizationId + "/" + key;
     }
 
     @Override

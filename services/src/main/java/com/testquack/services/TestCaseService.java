@@ -172,6 +172,16 @@ public class TestCaseService extends BaseService<TestCase> {
 
     }
 
+    @Override
+    protected TestCase beforeReturn(Session session, String projectId, TestCase entity) {
+        entity = super.beforeReturn(session, projectId, entity);
+        entity.getAttachments().forEach(attachment -> {
+            attachment.setUrl(null);
+            attachment.setStorageType(null);
+        });
+        return entity;
+    }
+
     public List<TestCase> importTestCases(Session user, String projectId, List<TestCase> testCases){
         testCases.forEach(testCase -> importTestCase(user, projectId, testCase));
         return testCases;
@@ -229,7 +239,7 @@ public class TestCaseService extends BaseService<TestCase> {
     }
 
     public TestCase uploadAttachment(Session userSession, String projectId, String testcaseId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
-        Attachment attachment = storage.upload(uploadedInputStream, fileName, size);
+        Attachment attachment = storage.upload(getCurrOrganizationId(userSession), projectId, uploadedInputStream, fileName, size);
         return update(userSession, projectId,
                 (TestCase) new TestCase().withId(testcaseId).withLastModifiedTime(Long.MAX_VALUE),
                 ((originalEntity, newEntity) -> {
@@ -243,12 +253,12 @@ public class TestCaseService extends BaseService<TestCase> {
     }
 
     public Attachment getAttachment(Session userSession, String projectId, String testcaseId, String attachmentId) {
-        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        TestCase testCase = findOneUnfiltered(userSession, projectId, testcaseId);
         return getAttachment(testCase, attachmentId);
     }
 
     public TestCase deleteAttachment(Session userSession, String projectId, String testcaseId, String attachmentId) throws IOException {
-        TestCase testCase = findOne(userSession, projectId, testcaseId);
+        TestCase testCase = findOneUnfiltered(userSession, projectId, testcaseId);
         Attachment attachment = getAttachment(testCase, attachmentId);
         storage.remove(attachment);
         testCase.getAttachments().remove(attachment);

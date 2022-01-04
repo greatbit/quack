@@ -64,7 +64,7 @@ public abstract class BaseService<E extends Entity> {
                 Collections.emptyList();
     }
 
-    public E findOne(Session session, String projectId, String id){
+    public E findOneUnfiltered(Session session, String projectId, String id){
         E entity = getRepository().findOne(getCurrOrganizationId(session), projectId, id);
         if (entity == null){
             throw new EntityNotFoundException();
@@ -74,6 +74,11 @@ public abstract class BaseService<E extends Entity> {
                     format("User %s can't read entity %s", session.getPerson().getId(), id)
             );
         }
+        return entity;
+    }
+
+    public E findOne(Session session, String projectId, String id){
+        E entity = findOneUnfiltered(session, projectId, id);
         return beforeReturn(session, projectId, entity);
     }
 

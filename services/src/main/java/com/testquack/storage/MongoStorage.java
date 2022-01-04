@@ -27,7 +27,7 @@ public class MongoStorage implements Storage {
     private MongoDatabaseFactory mongoDbFactory;
 
     @Override
-    public Attachment upload(InputStream uploadedInputStream, String fileName, long size) throws IOException {
+    public Attachment upload(String organizationId, String projectId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
         DBObject metaData = new BasicDBObject();
         metaData.put("name", fileName);
         try {
