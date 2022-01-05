@@ -219,13 +219,13 @@ class Header extends Component {
           {this.props.project && (
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
-                  Attributes
+                <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
+                  TestCases
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
-                  TestCases
+                <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
+                  Launches
                 </Link>
               </li>
               <li className="nav-item">
@@ -234,8 +234,8 @@ class Header extends Component {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
-                  Launches
+                <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
+                  Attributes
                 </Link>
               </li>
             </ul>
