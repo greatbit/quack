@@ -42,6 +42,7 @@ class Attachments extends SubComponent {
       $("#file-data").fileinput({
         previewFileType: "any",
         uploadUrl: getApiBaseUrl(this.state.projectId + "/testcase/" + this.state.testcase.id + "/attachment"),
+        maxFileSize: 100000
       });
       $("#file-data").on(
         "fileuploaded",
@@ -137,12 +138,6 @@ class Attachments extends SubComponent {
               />
             </div>
             <br />
-            <button type="reset" className="btn btn-light">
-              Reset
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
           </form>
         </div>
 

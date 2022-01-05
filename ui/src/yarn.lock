@@ -4583,10 +4583,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-fileinput@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-5.2.2.tgz#076e23c456258138d41d11c26e90866807453c40"
-  integrity sha512-hrFvpxkO06oyoBo6sdLnAZGsGZMrLbBNx17A4e+VtoBSTphOaupiX68r9yo3N0LmnpEi7J7O3ESAJm1m/37KOA==
+bootstrap-fileinput@^5.2.7:
+  version "5.2.7"
+  resolved "https://registry.yarnpkg.com/bootstrap-fileinput/-/bootstrap-fileinput-5.2.7.tgz#2b48ebcc61750918c0a58322e011de6a5af39486"
+  integrity sha512-YPWn4PeLXOpayOiYp0Vv61IGihgMnHlihHkOH/AE46leD9gvg54u9KWFfoDE1fbFiamo8ubdimp6S2Ztw2diCw==
   dependencies:
     bootstrap ">= 3.4.1"
     jquery ">= 1.9.0"

@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.testquack.beans.Attachment;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -45,6 +47,9 @@ public class S3Storage implements Storage {
 
     @Value("${storage.amazons3.max.retry}")
     private int AMAZON_STORAGE_RETRIES;
+
+    @Value("${storage.amazons3.temp.folder}")
+    private String AMAZON_STORAGE_TRMP_FOLDER;
 
 
     private AmazonS3 client;
@@ -79,16 +84,21 @@ public class S3Storage implements Storage {
     @Override
     public Attachment upload(String organizationId, String projectId, InputStream uploadedInputStream, String fileName, long size) throws IOException {
         String fileNameInCloud = createFileS3key(organizationId, projectId, fileName);
+        File tempFile = new File(AMAZON_STORAGE_TRMP_FOLDER + File.separator + fileNameInCloud);
+        FileUtils.copyInputStreamToFile(uploadedInputStream, tempFile);
+        long fileSize = tempFile.length() / 1024;
         try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(size);
-            client.putObject(new PutObjectRequest(AMAZON_STORAGE_BUCKET_NAME, fileNameInCloud,
-                    uploadedInputStream, metadata));
+            client.putObject(new PutObjectRequest(AMAZON_STORAGE_BUCKET_NAME, fileNameInCloud, tempFile));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             throw new IOException(e);
+        } finally {
+            tempFile.delete();
         }
-        return new Attachment().withUrl(AMAZON_FILE_PATH_FLAG + fileNameInCloud).withDataSize(size);
+        return new Attachment()
+                .withUrl(AMAZON_FILE_PATH_FLAG + fileNameInCloud)
+                .withTitle(fileName)
+                .withDataSize(fileSize);
     }
 
     private String createFileS3key(String organizationId, String projectId, String fileName){

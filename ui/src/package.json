@@ -8,7 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.2",
     "@tinymce/tinymce-react": "^3.12.6",
     "bootstrap": "^4.1.2",
-    "bootstrap-fileinput": "^5.2.2",
+    "bootstrap-fileinput": "^5.2.7",
     "bootstrap-icons": "^1.5.0",
     "d3": "^5.9.2",
     "gijgo": "^1.9.13",

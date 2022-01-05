@@ -19,10 +19,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>launcher</artifactId>
         </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>smith-launcher</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s3-storage</artifactId>
         </dependency>
 
         <!-- Jersey + Spring -->
