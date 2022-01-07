@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
@@ -52,7 +53,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
 
     @Override
     public Set<String> suggestGroups(HttpServletRequest request, String literal) {
-        return Collections.emptySet();
+        return emptySet();
     }
 
     @Override
@@ -64,6 +65,7 @@ public class DbAuthProvider extends BaseDbAuthProvider {
 
     @Override
     public Set<String> suggestUser(HttpServletRequest request, String literal) {
+        if (isEmpty(literal)) return emptySet();
         return userService.suggestUsers(null, literal).stream().
                 map(user -> format("%s:%s %s", user.getId(), user.getFirstName(), user.getLastName())).
                 collect(Collectors.toSet());

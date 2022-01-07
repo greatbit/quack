@@ -83,9 +83,9 @@ class ProjectSettings extends SubComponent {
   }
 
   getGroups(literal, callback) {
-    var url = "user/groups/suggest";
+    var url = "user/groups/suggest?limit=20";
     if (literal) {
-      url = url + "?literal=" + literal;
+      url = url + "&literal=" + literal;
     }
     Backend.get(url)
       .then(response => {
@@ -97,9 +97,9 @@ class ProjectSettings extends SubComponent {
   }
 
   getUsers(literal, callback) {
-    var url = "user/users/suggest";
+    var url = "user/users/suggest?limit=20";
     if (literal) {
-      url = url + "?literal=" + literal;
+      url = url + "&literal=" + literal;
     }
     Backend.get(url)
       .then(response => {
@@ -328,6 +328,7 @@ class ProjectSettings extends SubComponent {
                 <AsyncSelect
                   value={this.state.groupsToDisplay}
                   isMulti
+                  defaultOptions={true}
                   cacheOptions
                   loadOptions={this.getGroups}
                   onChange={this.changeGroups}
@@ -343,6 +344,7 @@ class ProjectSettings extends SubComponent {
                   value={this.state.usersToDisplay}
                   isMulti
                   cacheOptions
+                  defaultOptions={true}
                   loadOptions={this.getUsers}
                   onChange={this.changeUsers}
                   options={this.mapUsersToView(this.state.users)}
