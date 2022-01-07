@@ -24,6 +24,7 @@ import static com.testquack.services.BaseService.CURRENT_ORGANIZATION_KEY;
 import static com.testquack.services.BaseService.ORGANIZATIONS_ENABLED_KEY;
 import static com.testquack.services.BaseService.ORGANIZATIONS_KEY;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class OrgCognitoAuthProvider extends CognitoAuthProvider {
@@ -32,6 +33,8 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
 
     @Value("${quack.organizations.enabled}")
     private boolean ORGANIZATIONS_ENABLED;
+
+    private final int SUGGEST_LIMIT = 20;
 
     @Autowired
     private OrganizationService organizationService;
@@ -68,8 +71,9 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     public Set<String> suggestUser(HttpServletRequest request, String literal) {
         return getAllUsers(request).stream()
                 .filter(Objects::nonNull)
-                .filter(item -> item.contains(literal))
+                .filter(item -> isEmpty(literal) || item.contains(literal))
                 .sorted()
+                .limit(SUGGEST_LIMIT)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
@@ -83,8 +87,9 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     @Override
     public Set<String> suggestGroups(HttpServletRequest request, String literal) {
         List<String> existingGroups = getAllGroups(request).stream()
-                .filter(item -> item.contains(literal))
+                .filter(item -> isEmpty(literal) || item.contains(literal))
                 .sorted()
+                .limit(SUGGEST_LIMIT)
                 .collect(Collectors.toList());
         Set<String> groups = new LinkedHashSet<>();
         groups.add(ALL_IN_ORGANIZATION_GROUP);
