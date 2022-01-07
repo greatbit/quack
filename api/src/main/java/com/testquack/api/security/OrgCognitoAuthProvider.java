@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,6 +67,7 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     @Override
     public Set<String> suggestUser(HttpServletRequest request, String literal) {
         return getAllUsers(request).stream()
+                .filter(Objects::nonNull)
                 .filter(item -> item.contains(literal))
                 .sorted()
                 .collect(Collectors.toCollection(LinkedHashSet::new));
