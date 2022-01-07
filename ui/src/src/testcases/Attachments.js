@@ -39,6 +39,7 @@ class Attachments extends SubComponent {
     }
     this.setState(this.state);
     if (this.state.projectId && this.state.testcase.id && this.state.testcase.id != null) {
+      $("#file-data").fileinput('destroy');
       $("#file-data").fileinput({
         previewFileType: "any",
         uploadUrl: getApiBaseUrl(this.state.projectId + "/testcase/" + this.state.testcase.id + "/attachment"),
@@ -47,7 +48,7 @@ class Attachments extends SubComponent {
       $("#file-data").on(
         "fileuploaded",
         function (event, file, previewId, index) {
-          this.onTestcaseUpdated();
+            this.onTestcaseUpdated();
         }.bind(this),
       );
     }
@@ -68,7 +69,6 @@ class Attachments extends SubComponent {
         this.state.testcase.attachments = (this.state.testcase.attachments || []).filter(
           attachment => attachment.id !== this.attachmentToRemove,
         );
-        this.setState(this.state);
         this.onTestcaseUpdated();
       })
       .catch(error => {
