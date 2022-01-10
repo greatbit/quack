@@ -368,3 +368,7 @@ a.organization-title-settings-link:link, a.organization-title-settings-link:visi
 a.link-black, a.link-black:link, a.link-black:link:visited {
     color: black !important;
 }
+
+.hidden {
+    display: none;
+}

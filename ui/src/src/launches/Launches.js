@@ -187,7 +187,7 @@ class Launches extends SubComponent {
         <div className="col-sm-3 launch-filter">
           <form>
             <div class="form-group">
-              <span className="float-right">
+              <span className="float-right hidden">
                 <Link
                   to={
                     "/" +
