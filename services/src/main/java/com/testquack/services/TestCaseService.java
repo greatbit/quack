@@ -146,7 +146,7 @@ public class TestCaseService extends BaseService<TestCase> {
             entity.setName(entity.getImportedName());
         }
         if (isEmpty(entity.getId())) {
-            Sequencer sequencer = sequencerService.increment(projectId);
+            Sequencer sequencer = sequencerService.increment(getCurrOrganizationId(session), projectId);
             entity.setId(Long.toString(sequencer.getIndex()));
         }
     }

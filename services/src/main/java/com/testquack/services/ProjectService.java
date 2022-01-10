@@ -41,7 +41,7 @@ public class ProjectService extends BaseService<Project> {
             throw new EntityValidationException("Project ID must contain at least 3 characters");
         }
         super.beforeCreate(session, projectId, entity);
-        sequencerService.create(projectId);
+        sequencerService.create(getCurrOrganizationId(session), projectId);
     }
 
     public Project createProject(Session user, Project entity) {
