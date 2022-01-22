@@ -230,7 +230,7 @@ public abstract class BaseService<E extends Entity> {
         FencedLock lock = hazelcastInstance.getCPSubsystem().getLock(entity.getClass() + entity.getId());
         try{
             lock.tryLock(lockTtl, TimeUnit.MINUTES);
-            E existingEntity = findOne(session, projectId, entity.getId());
+            E existingEntity = findOneUnfiltered(session, projectId, entity.getId());
             beforeUpdate(session, projectId, existingEntity, entity);
             if (existingEntity != null) {
                 if (existingEntity.getLastModifiedTime() > entity.getLastModifiedTime()) {
