@@ -160,6 +160,7 @@ public class TestCaseService extends BaseService<TestCase> {
     @Override
     protected void beforeUpdate(Session session, String projectId, TestCase existingEntity, TestCase entity) {
         super.beforeUpdate(session, projectId, existingEntity, entity);
+        entity.setAttachments(existingEntity.getAttachments());
         if (existingEntity != null) {
             eventService.create(session, projectId,
                     new Event().withEventType(EventType.UPDATED.toString()).
