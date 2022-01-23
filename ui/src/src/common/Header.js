@@ -11,11 +11,17 @@ import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import {Helmet} from "react-helmet";
 
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.emptyState = { session: { person: { firstName: "Guest" } } };
+    this.emptyState = {
+        session: {
+            person: { firstName: "Guest"},
+            metainfo: {analyticsEnabled: false}
+        }
+    };
     this.state = Object.assign({}, { session: this.props.session, projects: [] });
     this.logOut = this.logOut.bind(this);
   }
@@ -207,6 +213,22 @@ class Header extends Component {
     }
     return (
       <nav className="navbar navbar-expand-md navbar-dark bg-green">
+
+      {/* Google analytics*/}
+      { this.state.session.metainfo && this.state.session.metainfo.analyticsEnabled && (
+            <Helmet>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-4CEVX7JVR7"></script>
+            </Helmet>
+        )}
+        { this.state.session.metainfo && this.state.session.metainfo.analyticsEnabled && (
+            <Helmet
+              script={[{
+                type: 'text/javascript',
+                innerHTML: "window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4CEVX7JVR7');"
+              }]}
+            />
+        )}
+
         <Link className="navbar-brand" to="/">
           <img src="/images/smalllogoquack.png" />
         </Link>
