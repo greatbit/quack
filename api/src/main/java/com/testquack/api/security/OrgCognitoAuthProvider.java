@@ -34,6 +34,11 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     @Value("${quack.organizations.enabled}")
     private boolean ORGANIZATIONS_ENABLED;
 
+    @Value("${google.analytics.enabled}")
+    private boolean GOOGLE_ANALYTICS_ENABLED;
+
+    public final static String ANALYTICS_ENALBED = "analyticsEnabled";
+
     private final int SUGGEST_LIMIT = 20;
 
     @Autowired
@@ -42,6 +47,7 @@ public class OrgCognitoAuthProvider extends CognitoAuthProvider {
     @Override
     public Session doAuth(HttpServletRequest request, HttpServletResponse response) {
         Session session = super.doAuth(request, response);
+        session.getMetainfo().put(ANALYTICS_ENALBED, GOOGLE_ANALYTICS_ENABLED);
         if (ORGANIZATIONS_ENABLED){
             session.getMetainfo().put(ORGANIZATIONS_ENABLED_KEY, true);
             

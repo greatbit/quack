@@ -42,7 +42,7 @@
                         <executable>yarn</executable>
                         <arguments>
                             <argument>install</argument>
-                            <argument>--frozen-lockfile</argument>
+<!--                            <argument>&#45;&#45;frozen-lockfile</argument>-->
                         </arguments>
                         <workingDirectory>src</workingDirectory>
                     </configuration>
