@@ -70,9 +70,6 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         ConnectionString connectionString = new ConnectionString(uri);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
-                .serverApi(ServerApi.builder()
-                        .version(ServerApiVersion.V1)
-                        .build())
                 .build();
         return MongoClients.create(settings);
     }
