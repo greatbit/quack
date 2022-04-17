@@ -33,16 +33,14 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(Exception error) {
         try {
-            logger.warn("Exception has occurred for user {} : {}",
-                    (securityContext != null && getUserSession() != null) ? getUserSession().getName() : "Unknown",
-                    error.getMessage(), error);
             throw error;
         } catch (NotFoundException | EntityNotFoundException e) {
             return createResponse(NOT_FOUND, e);
         } catch (EntityValidationException | TrackerValidationException e) {
             return createResponse(BAD_REQUEST, e);
         } catch (UnauthorizedException e ) {
-            return createResponse(UNAUTHORIZED, e);
+            logger.info("User session not found and will be prompt to authorize");
+            return createResponse(UNAUTHORIZED, e, false);
         } catch (EntityAccessDeniedException e){
             return createResponse(FORBIDDEN, e);
         } catch (ServiceUnavailableException e){
@@ -63,7 +61,16 @@ public class ExceptionHandler implements ExceptionMapper<Exception> {
         return (Session) securityContext.getUserPrincipal();
     }
 
-    protected Response createResponse(Response.StatusType status, Exception e) {
+    private Response createResponse(Response.StatusType status, Exception e) {
+        return createResponse(status, e, true);
+    }
+
+    private Response createResponse(Response.StatusType status, Exception e, boolean logWarn) {
+        if (logWarn){
+            logger.warn("Exception has occurred for user {} : {}",
+                    (securityContext != null && getUserSession() != null) ? getUserSession().getName() : "Unknown",
+                    e.getMessage(), e);
+        }
         return status(status).entity(new Object(){
             public String message = e.getMessage();
             public int code = status.getStatusCode();
