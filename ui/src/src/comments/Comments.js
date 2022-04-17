@@ -18,6 +18,7 @@ class Comments extends SubComponent {
     this.state = {
       comments: [],
       commentToEdit: {},
+      session: {person:{}}
     };
 
     this.projectId = props.projectId;
@@ -35,11 +36,18 @@ class Comments extends SubComponent {
     this.refreshCommentToEdit();
     this.handleUpdateChange = this.handleUpdateChange.bind(this);
     this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
+    this.getSession = this.getSession.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
+    this.getSession();
   }
+
+  getSession() {
+    Backend.get("user/session").then(response => {this.state.session = response;})
+        .catch(() => {console.log("Unable to fetch session");});
+    }
 
   componentWillReceiveProps(nextProps) {
     var fetchCommentsNeeded = nextProps.forceFetch || false;
@@ -181,7 +189,7 @@ class Comments extends SubComponent {
                       {Utils.timeToDate(comment.createdTime)}
                     </div>
 
-                    {Utils.isUserOwnerOrAdmin(comment.createdBy) && (
+                    {Utils.isUserOwnerOrAdmin(this.state.session, comment.createdBy) && (
                       <div className="col-2">
                         <span className="clickable edit-icon-visible" onClick={e => this.toggleEdit(i, e)}>
                           <FontAwesomeIcon icon={faPencilAlt} />

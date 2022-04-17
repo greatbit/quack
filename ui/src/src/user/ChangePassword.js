@@ -5,12 +5,28 @@ import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
 
 class ChangePassword extends SubComponent {
-  state = {};
+  state = {session: {person:{}}};
 
   constructor(props) {
     super(props);
+    this.state.profileId = this.props.match.params.profileId;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getSession = this.getSession.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.getSession();
+  }
+
+  getSession() {
+    Backend.get("user/session")
+      .then(response => {
+        this.state.session = response;
+        this.setState(this.state);
+      })
+      .catch(() => {console.log("Unable to fetch session");});
   }
 
   handleChange(event) {
@@ -28,7 +44,7 @@ class ChangePassword extends SubComponent {
       event.preventDefault();
       return;
     }
-    Backend.postPlain("user/change-password", { newPassword: this.state.password })
+    Backend.postPlain("user/change-password", { newPassword: this.state.password, login: this.state.profileId })
       .then(response => {
         Utils.onSuccessMessage("Password successfully updated");
         window.location = "/";
@@ -42,21 +58,23 @@ class ChangePassword extends SubComponent {
   render() {
     return (
       <div className="text-center">
-        <form className="form-signin">
-          <h1 className="h3 mb-3 font-weight-normal">Change Password</h1>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="form-control"
-            placeholder="New Password"
-            required=""
-            onChange={this.handleChange}
-          />
-          <button className="btn btn-lg btn-primary btn-block" onClick={this.handleSubmit}>
-            Submit
-          </button>
-        </form>
+        {Utils.isUserOwnerOrAdmin(this.state.session, this.state.session.person.login) && (
+            <form className="form-signin">
+              <h1 className="h3 mb-3 font-weight-normal">Change Password</h1>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className="form-control"
+                placeholder="New Password"
+                required=""
+                onChange={this.handleChange}
+              />
+              <button className="btn btn-lg btn-primary btn-block" onClick={this.handleSubmit}>
+                Submit
+              </button>
+            </form>
+        )}
       </div>
     );
   }

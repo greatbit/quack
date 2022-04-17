@@ -84,8 +84,8 @@ class Main extends Component {
           />
           <Route
             exact
-            path="/user/change-password-redirect"
-            render={props => <Redirect {...props} requestUrl={"user/change-password-redirect"} />}
+            path="/user/change-password-redirect/:login"
+            render={props => <Redirect {...props} requestUrl={"user/change-password-redirect?login=" + props.match.params["login"] || ""} />}
           />
 
           <Route exact path="/user/create" component={CreateUser} />
@@ -96,7 +96,7 @@ class Main extends Component {
           />
 
           <Route exact path="/user/profile/:profileId" component={Profile} />
-          <Route exact path="/user/changepass" component={ChangePassword} />
+          <Route exact path="/user/changepass/:profileId" component={ChangePassword} />
 
           <Route
             path="/login"

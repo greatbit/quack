@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Collections.emptySet;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
 @Service
 public class DbAuthProvider extends BaseDbAuthProvider {
@@ -69,6 +70,12 @@ public class DbAuthProvider extends BaseDbAuthProvider {
         return userService.suggestUsers(null, literal).stream().
                 map(user -> format("%s:%s %s", user.getId(), user.getFirstName(), user.getLastName())).
                 collect(Collectors.toSet());
+    }
+
+    @Override
+    public RedirectResponse redirectChangePasswordTo(HttpServletRequest request) {
+        String login = emptyIfNull(request.getParameter("login"));
+        return new RedirectResponse(changePasswordUrl + "/" + login, "retpath", false);
     }
 
     @Override

@@ -35,10 +35,10 @@ class Header extends Component {
           this.onSessionChange(this.state.session);
           if (
             this.state.session.person.defaultPassword &&
-            window.location.pathname != "/user/change-password-redirect" &&
-            window.location.pathname != "/user/changepass"
+            !window.location.pathname.includes("/user/change-password-redirect") &&
+            !window.location.pathname.includes("/user/changepass")
           ) {
-            this.props.history.push("/user/change-password-redirect");
+            this.props.history.push("/user/change-password-redirect/" + this.state.session.person.login);
           } else if (
             this.state.session.metainfo.organizationsEnabled &&
             !this.state.session.metainfo.currentOrganization &&
@@ -138,7 +138,7 @@ class Header extends Component {
                 </Link>
               );
             })}
-            {Utils.isUserOwnerOrAdmin() && (
+            {Utils.isUserOwnerOrAdmin(this.state.session) && (
               <div>
                 <hr />
                 <Link to={"/projects/new"} className="dropdown-item">
@@ -186,7 +186,7 @@ class Header extends Component {
             </div>
           )}
 
-          {Utils.isUserOwnerOrAdmin() && (!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled) && (
+          {Utils.isUserOwnerOrAdmin(this.state.session) && (!this.state.session.metainfo || !this.state.session.metainfo.organizationsEnabled) && (
             <div>
               <div className="dropdown-divider"></div>
               <a className="dropdown-item" href={"/user/all-users-redirect"}>

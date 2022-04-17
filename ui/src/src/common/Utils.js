@@ -217,9 +217,9 @@ export function getDatepickerTime(timeMillis) {
   return null;
 }
 
-export function isUserOwnerOrAdmin(createdById) {
+export function isUserOwnerOrAdmin(userSession, createdById) {
   return (
-    UserSession.getSession() && (UserSession.getSession().isAdmin || UserSession.getSession().login === createdById)
+    userSession && (userSession.isAdmin || userSession.person.login === createdById)
   );
 }
 

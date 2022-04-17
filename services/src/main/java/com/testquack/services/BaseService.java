@@ -71,7 +71,7 @@ public abstract class BaseService<E extends Entity> {
         }
         if (!userCanRead(session, projectId, entity)) {
             throw new EntityAccessDeniedException(
-                    format("User %s can't read entity %s", session.getPerson().getId(), id)
+                    format("User %s can't read entity %s", session.getPerson().getLogin(), id)
             );
         }
         return entity;
@@ -85,7 +85,7 @@ public abstract class BaseService<E extends Entity> {
     public E save(Session user, String projectId, E entity){
         if (!userCanSave(user, projectId, entity)){
             throw new EntityAccessDeniedException(
-                    format("User %s can't save entity %s", user.getPerson().getId(), entity.getId())
+                    format("User %s can't save entity %s", user.getPerson().getLogin(), entity.getId())
             );
         }
         return isEmpty(entity.getId()) ?
@@ -97,7 +97,7 @@ public abstract class BaseService<E extends Entity> {
         if (!userCanSave(user, projectId, entities)){
             throw new EntityAccessDeniedException(
                     format("User %s can't save entities %s",
-                            user.getPerson().getId(),
+                            user.getPerson().getLogin(),
                             entities.stream().map(obj -> obj == null ? "null" : obj.toString()).collect(joining(", ")))
             );
         }
@@ -109,7 +109,7 @@ public abstract class BaseService<E extends Entity> {
         beforeDelete(session, projectId, id);
         if (!userCanDelete(session, projectId, id)){
             throw new EntityAccessDeniedException(
-                    format("User %s can't delete entity %s", session.getPerson().getId(), id)
+                    format("User %s can't delete entity %s", session.getPerson().getLogin(), id)
             );
         }
         E entity = findOne(session, projectId, id);
@@ -171,7 +171,7 @@ public abstract class BaseService<E extends Entity> {
             throw new EntityValidationException(format("Entity with id [%s] already exists", entity.getId()));
         }
         entity.setCreatedTime(System.currentTimeMillis());
-        entity.setCreatedBy(session.getPerson().getId());
+        entity.setCreatedBy(session.getPerson().getLogin());
         if (entity.getName() == "") {
             entity.setName(entity.getClass().getSimpleName());
         }
@@ -256,7 +256,7 @@ public abstract class BaseService<E extends Entity> {
     }
 
     protected String getAccessDeniedMessage(Session session, E ent, String action){
-        String login = session != null && session.getPerson() != null ? session.getPerson().getId() : "unknown";
+        String login = session != null && session.getPerson() != null ? session.getPerson().getLogin() : "unknown";
         String entId = ent != null && ent.getId() != null ? ent.getId().toString() : "new entity";
         return format("User %s doesn't have %s permissions on %s", login, action, entId);
     }

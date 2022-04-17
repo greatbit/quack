@@ -36,7 +36,7 @@ public class CommentService extends BaseService<Comment> {
     }
 
     private boolean userIsTheOwner(Session session, Comment comment) {
-        return session.getPerson().getId().equals(comment.getCreatedBy());
+        return session.getPerson().getLogin().equals(comment.getCreatedBy());
     }
 
 }

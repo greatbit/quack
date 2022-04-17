@@ -7,7 +7,7 @@ import Backend from "../services/backend";
 class Profile extends SubComponent {
   state = {
     profile: {},
-    session: {}
+    session: {person:{}}
   };
 
   constructor(props) {
@@ -55,19 +55,10 @@ class Profile extends SubComponent {
 
             <div>
               <div className="row">
-                <div className="col-12">Edit Profile Details</div>
-              </div>
-              <div className="row">
                 <div className="col-12">
-                  <Link to="/user/change-password-redirect">Change Password</Link>
+                  <Link to={"/user/change-password-redirect/" + this.state.profile.id}>Change Password</Link>
                 </div>
               </div>
-
-              {Utils.isUserOwnerOrAdmin() && (
-                <div className="row">
-                  <div className="col-12">Suspend User</div>
-                </div>
-              )}
             </div>
         )}
       </div>
