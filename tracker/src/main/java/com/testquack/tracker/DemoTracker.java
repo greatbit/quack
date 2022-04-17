@@ -5,7 +5,6 @@ import com.testquack.beans.IssuePriority;
 import com.testquack.beans.IssueType;
 import com.testquack.beans.TrackerProject;
 import ru.greatbit.whoru.auth.Session;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -17,7 +16,7 @@ public class DemoTracker implements Tracker {
 
     @Override
     public Issue getIssue(HttpServletRequest request, Session userSession, String issueId) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -33,7 +32,7 @@ public class DemoTracker implements Tracker {
 
     @Override
     public Issue updateIssue(HttpServletRequest request, Session userSession, Issue issue) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

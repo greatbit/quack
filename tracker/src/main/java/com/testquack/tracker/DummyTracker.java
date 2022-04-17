@@ -5,13 +5,10 @@ import com.testquack.beans.IssuePriority;
 import com.testquack.beans.IssueType;
 import com.testquack.beans.TrackerProject;
 import ru.greatbit.whoru.auth.Session;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class DummyTracker implements Tracker {
 

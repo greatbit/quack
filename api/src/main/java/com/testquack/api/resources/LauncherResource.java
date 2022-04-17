@@ -8,7 +8,6 @@ import com.testquack.services.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.greatbit.plow.PluginsContainer;
 import ru.greatbit.whoru.jaxrs.Authenticable;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -47,11 +46,11 @@ public class LauncherResource extends BaseResource<Project> {
 
     @Override
     protected Filter initFilter(HttpServletRequest hsr) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected BaseService<Project> getService() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }
