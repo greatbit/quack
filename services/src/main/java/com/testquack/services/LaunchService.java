@@ -229,6 +229,7 @@ public class LaunchService extends BaseService<Launch> {
         TestcaseFilter filter = (TestcaseFilter) launch.getTestSuite().getFilter().withSkip(0).withLimit(0);
         filter.getExcludedFields().clear();
         filter.getIncludedFields().clear();
+        filter.withField("deleted", false);
         TestCaseTree tcTree = testCaseService.findFilteredTreeFullCase(session, projectId, filter);
         launch.setTestCaseTree(convertToLaunchTestCases(tcTree));
         return launch;
