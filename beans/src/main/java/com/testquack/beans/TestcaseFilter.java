@@ -32,10 +32,10 @@ public class TestcaseFilter extends Filter {
         super();
     }
 
-    private Set<String> groups = new LinkedHashSet<>();
+    private List<String> groups = new ArrayList<>();
     private List<Attribute> filters = new ArrayList<>();
 
-    public Set<String> getGroups() {
+    public List<String> getGroups() {
         return groups;
     }
 
@@ -43,7 +43,7 @@ public class TestcaseFilter extends Filter {
         return filters;
     }
 
-    public void setGroups(Set<String> groups) {
+    public void setGroups(List<String> groups) {
         this.groups = groups;
     }
 
