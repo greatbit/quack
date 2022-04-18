@@ -81,6 +81,7 @@ public class UserService extends BaseService<User> {
         if(exists(session, projectId, user.getLogin())){
             throw new RuntimeException(format("User with login %s already exists", user.getLogin()));
         }
+        user.setLogin(user.getLogin().trim());
         user.setId(user.getLogin());
         user.setPassword(encryptPassword(user.getPassword(), user.getLogin()));
         user.setPasswordChangeRequired(true);
