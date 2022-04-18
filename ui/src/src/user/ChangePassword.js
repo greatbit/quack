@@ -47,7 +47,6 @@ class ChangePassword extends SubComponent {
     Backend.postPlain("user/change-password", { newPassword: this.state.password, login: this.state.profileId })
       .then(response => {
         Utils.onSuccessMessage("Password successfully updated");
-        window.location = "/";
       })
       .catch(error => {
         Utils.onErrorMessage("Couldn't change password: ", error);
