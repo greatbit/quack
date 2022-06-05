@@ -240,6 +240,7 @@ public class LaunchService extends BaseService<Launch> {
                 {
                     LaunchTestCase launchTestCase = new LaunchTestCase();
                     testCase.copyTo(launchTestCase);
+                    launchTestCase.getAttributes().putAll(testCase.getAttributes());
                     return launchTestCase.withUuid(UUID.randomUUID().toString()).
                             withLaunchStatus(RUNNABLE);
 
