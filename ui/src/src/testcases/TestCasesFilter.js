@@ -80,6 +80,9 @@ class TestCasesFilter extends Component {
       Backend.get(this.props.match.params.project + "/testsuite/" + params.testSuite)
         .then(response => {
           this.state.testSuite = response;
+          if (this.state.testSuite.filter.filters.length == 0){
+            this.state.testSuite.filter.filters = this.defaultFilters
+          }
           this.state.testSuiteNameToDisplay = this.state.testSuite.name;
           this.state.groupsToDisplay = this.state.testSuite.filter.groups.map(
             function (attrId) {
