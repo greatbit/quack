@@ -14,7 +14,12 @@ export function parseTree(testcasesTree, uncheckedList) {
 
 export function getTreeNode(node, parentsToUpdate, uncheckedList) {
   uncheckedList = uncheckedList || [];
-  var resultNode = { text: node.title, isLeaf: false, id: node.id, uuid: node.uuid };
+  var resultNode = {
+    text: "<b>" + node.title + "</b>",
+    isLeaf: false,
+    id: node.id,
+    uuid: node.uuid
+  };
   resultNode.TOTAL = 0;
   resultNode.PASSED = 0;
   resultNode.FAILED = 0;
@@ -27,7 +32,7 @@ export function getTreeNode(node, parentsToUpdate, uncheckedList) {
     resultNode.children = [];
     node.testCases.forEach(function (testCase) {
       resultNode.children.push({
-        text: testCase.name || testCase.importedName || "",
+        text: (testCase.name || testCase.importedName || "") + "<span class='text-muted'> (" + testCase.id + ")</span>",
         id: testCase.id,
         uuid: testCase.uuid,
         isLeaf: true,
