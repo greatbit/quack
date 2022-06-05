@@ -86,6 +86,9 @@ docker build -t greatbit/quack .
 or api only
 docker build -t greatbit/quack-api -f Dockerfile-api .
 
+docker tag IMAGE_ID greatbit/quack:latest
+docker tag IMAGE_ID greatbit/quack:VERSION
+
 
 Run API only with built-in Mongo and CORS enabled
 docker-compose -f docker-compose-api.yml up
