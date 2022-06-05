@@ -82,6 +82,7 @@ public class TestcaseFilter extends Filter {
         fulltextSearchFields.add("steps.action");
         fulltextSearchFields.add("steps.expectation");
         fulltextSearchFields.add("properties.value");
+        fulltextSearchFields.add("id");
         return fulltextSearchFields;
     }
 }

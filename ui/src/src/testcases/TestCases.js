@@ -207,6 +207,9 @@ class TestCases extends SubComponent {
     if (filter.limit) {
       tokens.push("limit=" + filter.limit);
     }
+    if (filter.fulltext && filter.fulltext != ""){
+        tokens.push("fulltext=" + filter.fulltext);
+    }
     return tokens.join("&");
   }
 
@@ -287,7 +290,7 @@ class TestCases extends SubComponent {
     if (this.state.selectedTestCase && this.state.selectedTestCase.id) {
       testcaseIdAttr = "testcase=" + this.state.selectedTestCase.id;
     }
-    var urlParts = [this.getFilterQParams(filter), this.getGroupingQParams(filter), testcaseIdAttr];
+    var urlParts = [this.getFilterQParams(filter), this.getGroupingQParams(filter), testcaseIdAttr, this.getFulltextQParams(filter)];
     if (this.state.testSuite) {
       urlParts.push("testSuite=" + this.state.testSuite.id);
     }
@@ -296,6 +299,11 @@ class TestCases extends SubComponent {
         return val !== "";
       })
       .join("&");
+  }
+
+  getFulltextQParams(filter){
+    if (!filter.fulltext || filter.fulltext == "") return "";
+    return "fulltext=" + filter.fulltext;
   }
 
   getFilterQParams(filter) {

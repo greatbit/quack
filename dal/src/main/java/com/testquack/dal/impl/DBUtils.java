@@ -63,7 +63,7 @@ public class DBUtils {
         // Add fulltext search
         if (!isEmpty(filter.getFulltext())){
             List<Criteria> fulltextOrCriterias = filter.getFulltextSearchFields().stream()
-                    .map(field -> new Criteria(field).regex(filter.getFulltext()))
+                    .map(field -> new Criteria(field).regex(filter.getFulltext(), "i"))
                     .collect(Collectors.toList());
             Criteria fulltextOrCriteria = criteria.orOperator(fulltextOrCriterias);
             andCriterias.add(fulltextOrCriteria);

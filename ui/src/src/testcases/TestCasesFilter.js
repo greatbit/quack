@@ -44,6 +44,7 @@ class TestCasesFilter extends Component {
     this.getValuesByAttributeId = this.getValuesByAttributeId.bind(this);
     this.changeFilterAttributeId = this.changeFilterAttributeId.bind(this);
     this.changeFilterAttributeValues = this.changeFilterAttributeValues.bind(this);
+    this.changeFulltext = this.changeFulltext.bind(this);
     this.handleFilter = this.handleFilter.bind(this);
     this.getAttributeName = this.getAttributeName.bind(this);
     this.createLaunchModal = this.createLaunchModal.bind(this);
@@ -133,6 +134,9 @@ class TestCasesFilter extends Component {
           this.state.testSuite.filter.filters.shift();
         }
       }
+      if (params.fulltext){
+          this.state.testSuite.filter.fulltext = params.fulltext;
+      }
       this.setState(this.state);
       this.props.onFilter(this.state.testSuite.filter);
     }
@@ -168,6 +172,11 @@ class TestCasesFilter extends Component {
       return value.value;
     });
     this.state.groupsToDisplay = values;
+    this.setState(this.state);
+  }
+
+  changeFulltext(event){
+    this.state.testSuite.filter.fulltext = event.target.value;
     this.setState(this.state);
   }
 
@@ -321,7 +330,24 @@ class TestCasesFilter extends Component {
               }.bind(this),
             )}
           </div>
+          <div className="row filter-control-row">
+              <div className="col-1">Search</div>
+              <div className="col-5">
+                  <div className="row">
+                      <div className="col-11">
+                          <input
+                              type="text"
+                              className="form-control"
+                              name="fulltext"
+                              value={this.state.testSuite.filter.fulltext || ""}
+                              onChange={e => this.changeFulltext(e)}
+                            />
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
+
         <div
           className="modal fade"
           id="launch-modal"
