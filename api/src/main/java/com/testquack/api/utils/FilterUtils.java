@@ -16,6 +16,7 @@ public class FilterUtils {
     public final static String INCLUDED_FIELDS = "includedFields";
     public final static String EXCLUDED_FIELDS = "excludedFields";
     public final static String NOT_PREFIX = "not_";
+    public final static String FULLTEXT = "fulltext";
 
 
     public static Filter initFilter(HttpServletRequest hsr) {
@@ -26,10 +27,15 @@ public class FilterUtils {
         if (hsr.getParameter(LIMIT) != null) {
             filter.setLimit(Integer.parseInt(hsr.getParameter(LIMIT)));
         }
+        if (hsr.getParameter(FULLTEXT) != null) {
+            filter.setFulltext(hsr.getParameter(FULLTEXT));
+        }
 
         //Add fields filter
         hsr.getParameterMap().entrySet().stream().
-                filter(entry -> !entry.getKey().equals(SKIP) && !entry.getKey().equals(LIMIT)).
+                filter(entry -> !entry.getKey().equals(SKIP) &&
+                        !entry.getKey().equals(LIMIT) &&
+                        !entry.getKey().equals(FULLTEXT) ).
                 filter(entry -> !entry.getKey().startsWith(NOT_PREFIX)).
                 filter(entry -> !entry.getKey().startsWith(ORDER_BY)).
                 filter(entry -> !entry.getKey().startsWith(ORDER_DIR)).

@@ -16,6 +16,7 @@ import ru.greatbit.utils.serialize.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,10 +57,21 @@ public class DBUtils {
         Criteria criteria = new Criteria();
 
         // Add AND fields criterias
-        List<Criteria> fieldsCriteria = filter.getFieldsForQuery().entrySet().stream().
+        List<Criteria> andCriterias = filter.getFieldsForQuery().entrySet().stream().
                 map(field -> getFieldCriteris(entityClass, field.getKey(), field.getValue())).collect(Collectors.toList());
-        if (!fieldsCriteria.isEmpty()) {
-            criteria.andOperator(fieldsCriteria.toArray(new Criteria[fieldsCriteria.size()]));
+
+        // Add fulltext search
+        if (!isEmpty(filter.getFulltext())){
+            List<Criteria> fulltextOrCriterias = filter.getFulltextSearchFields().stream()
+                    .map(field -> new Criteria(field).regex(filter.getFulltext()))
+                    .collect(Collectors.toList());
+            Criteria fulltextOrCriteria = criteria.orOperator(fulltextOrCriterias);
+            andCriterias.add(fulltextOrCriteria);
+        }
+
+        // Append AND criteria (should be single AND in the query)
+        if (!andCriterias.isEmpty()) {
+            criteria.andOperator(andCriterias.toArray(new Criteria[andCriterias.size()]));
         }
 
 
@@ -69,6 +81,8 @@ public class DBUtils {
         if (!notFieldsCriteria.isEmpty()) {
             criteria.norOperator(notFieldsCriteria.toArray(new Criteria[notFieldsCriteria.size()]));
         }
+
+
 
         // Add paging
         Query query = Query.query(criteria).skip(filter.getSkip()).limit(filter.getLimit());

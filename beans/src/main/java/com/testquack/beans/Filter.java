@@ -1,6 +1,7 @@
 package com.testquack.beans;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 
@@ -96,5 +97,9 @@ public class Filter extends BaseFilter{
     @Override
     public Object createNewInstance() {
         return new Filter();
+    }
+
+    public Set<String> getFulltextSearchFields(){
+        return Arrays.asList("name").stream().collect(Collectors.toSet());
     }
 }

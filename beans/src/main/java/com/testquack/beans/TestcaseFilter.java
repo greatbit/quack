@@ -21,6 +21,7 @@ public class TestcaseFilter extends Filter {
         this.order = filter.order;
         this.skip = filter.skip;
         this.sortField = filter.sortField;
+        this.fulltext = filter.fulltext;
     }
 
     @Override
@@ -71,5 +72,16 @@ public class TestcaseFilter extends Filter {
             );
         });
         return fieldsFilterCopy;
+    }
+
+    @Override
+    public Set<String> getFulltextSearchFields() {
+        Set<String> fulltextSearchFields = super.getFulltextSearchFields();
+        fulltextSearchFields.add("description");
+        fulltextSearchFields.add("preconditions");
+        fulltextSearchFields.add("steps.action");
+        fulltextSearchFields.add("steps.expectation");
+        fulltextSearchFields.add("properties.value");
+        return fulltextSearchFields;
     }
 }
