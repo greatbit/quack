@@ -372,3 +372,8 @@ a.link-black, a.link-black:link, a.link-black:link:visited {
 .hidden {
     display: none;
 }
+
+.testcase-id-in-title {
+    font-size: 80%;
+    margin-right: 15px;
+}

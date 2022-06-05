@@ -529,6 +529,7 @@ class TestCase extends SubComponent {
               <div id="name-display" className="inplace-display row">
                 <div className="col-9">
                   <h1>
+                    <em><span className="testcase-id-in-title text-muted">{this.state.testcase.id}</span></em>
                     <Link to={"/" + this.projectId + "/testcase/" + this.state.testcase.id}>
                       {this.state.testcase.name || this.state.testcase.importedName || ""}
                     </Link>
