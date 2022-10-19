@@ -270,7 +270,7 @@ class TestCasesFilter extends Component {
         <div>
           <div className="row filter-control-row">
             <div className="col-1">Grouping</div>
-            <div className="col-5 grouping-control">
+            <div className="col-5">
               <Select
                 value={this.state.groupsToDisplay}
                 isMulti
@@ -300,50 +300,52 @@ class TestCasesFilter extends Component {
                </div>
             </div>
           </div>
-          <div className="row filter-control-row">
-            <div className="col-1">Filter</div>
+
+            <div>
             {this.state.testSuite.filter.filters.map(
               function (filter, i) {
                 return (
-                  <div className="col-5" key={i}>
-                    <div className="row">
-                      <Select
-                        className="col-5 filter-attribute-id-select"
-                        value={{ value: filter.id, label: filter.name }}
-                        onChange={e => this.changeFilterAttributeId(i, e)}
-                        options={this.getProjectAttributesSelect()}
-                      />
-                      <Select
-                        className="col-6 filter-attribute-val-select"
-                        value={(filter.attrValues || []).map(function (attrValue) {
-                          return { value: attrValue.value, label: attrValue.value };
-                        })}
-                        isMulti
-                        onChange={e => this.changeFilterAttributeValues(i, e)}
-                        options={this.getValuesByAttributeId(filter.id).map(function (attrValue) {
-                          return { value: attrValue.value, label: attrValue.value };
-                        })}
-                      />
-                      {filter.id && (
-                        <span
-                          className="col-1 remove-filter-icon clickable red"
-                          index={i}
-                          onClick={e => this.removeFilter(i, e)}
-                        >
-                          <FontAwesomeIcon icon={faMinusCircle} />
-                        </span>
-                      )}
-                    </div>
+                <div className="row filter-control-row" key={i}>
+                  <div className="col-1">
+                      {i == 0 ? "Filter" : ""}
                   </div>
+                  <Select
+                    className="col-2 filter-attribute-id-select"
+                    value={{ value: filter.id, label: filter.name }}
+                    onChange={e => this.changeFilterAttributeId(i, e)}
+                    options={this.getProjectAttributesSelect()}
+                  />
+                  <Select
+                    className="col-3 filter-attribute-val-select"
+                    value={(filter.attrValues || []).map(function (attrValue) {
+                      return { value: attrValue.value, label: attrValue.value };
+                    })}
+                    isMulti
+                    onChange={e => this.changeFilterAttributeValues(i, e)}
+                    options={this.getValuesByAttributeId(filter.id).map(function (attrValue) {
+                      return { value: attrValue.value, label: attrValue.value };
+                    })}
+                  />
+                  {filter.id && (
+                    <span
+                      className="col-1 remove-filter-icon clickable red"
+                      index={i}
+                      onClick={e => this.removeFilter(i, e)}
+                    >
+                      <FontAwesomeIcon icon={faMinusCircle} />
+                    </span>
+                  )}
+                </div>
                 );
               }.bind(this),
             )}
-          </div>
+            </div>
+
           <div className="row filter-control-row">
               <div className="col-1">Search</div>
               <div className="col-5">
                   <div className="row">
-                      <div className="col-11">
+                      <div className="col-12">
                           <input
                               type="text"
                               className="form-control"
