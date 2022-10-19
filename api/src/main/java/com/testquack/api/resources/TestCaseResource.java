@@ -180,4 +180,13 @@ public class TestCaseResource extends BaseCrudResource<TestCase> {
                                   @PathParam("testcaseId") final String testcaseId) {
         return service.cloneTestCase(getUserSession(), projectId, testcaseId);
     }
+
+    @GET
+    @Path("/csv")
+    public Response exportToCSV(@ApiParam(value = "Project Id", required = true) @PathParam("projectId") String projectId) {
+        return Response
+                .ok(service.exportToCSV(getUserSession(), projectId, (TestcaseFilter) initFilter(request)), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition", format("attachment; filename = %s", "testcases.csv"))
+                .build();
+    }
 }

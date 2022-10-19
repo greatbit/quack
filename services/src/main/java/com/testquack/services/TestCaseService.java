@@ -2,6 +2,7 @@ package com.testquack.services;
 
 import com.testquack.beans.Attachment;
 import com.testquack.beans.Attribute;
+import com.testquack.beans.EntityPreview;
 import com.testquack.beans.Event;
 import com.testquack.beans.EventType;
 import com.testquack.beans.Filter;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static org.springframework.util.StringUtils.isEmpty;
 import static ru.greatbit.utils.string.StringUtils.emptyIfNull;
 
@@ -330,8 +332,55 @@ public class TestCaseService extends BaseService<TestCase> {
         TestCase testCaseToCreate = cleanTestCaseForDuplication(originalTestCase);
         testCaseToCreate.setName("Clone of " + originalTestCase.getName());
         return create(userSession, projectId, testCaseToCreate);
+    }
+
+    public String exportToCSV(Session session, String projectId, TestcaseFilter filter) {
+        List<TestCase> testCases = userCanReadProject(session, projectId) ?
+                repository.find(getCurrOrganizationId(session), projectId, filter) :
+                Collections.emptyList();
+        testCases.sort(Comparator.comparing(EntityPreview::getId));
+        return mapTestcasesToCsv(session, projectId, testCases);
+    }
+
+    private String mapTestcasesToCsv(Session session, String projectId, List<TestCase> testCases) {
+        Map<String, String> attributesWithNames = attributeService.findFiltered(session, projectId, new Filter()).stream()
+                .collect(Collectors.toMap(Attribute::getId, Attribute::getName, (v1,v2)->v1, LinkedHashMap::new));
+        String header = buildCsvHeader(attributesWithNames);
+        String testcasesCsv = buildTestcasesCsv(testCases, attributesWithNames);
+        return header + "\n" + testcasesCsv;
+    }
+
+    private String buildTestcasesCsv(List<TestCase> testCases, Map<String, String> attributesWithNames) {
+        return testCases.stream().map(testCase -> buildTestcaseCsv(testCase, attributesWithNames))
+                .collect(Collectors.joining("\n"));
+    }
+
+    private String buildTestcaseCsv(TestCase testCase, Map<String, String> attributesWithNames) {
+        return testCase.getId() + "," + wrapCsvLine(testCase.getName()) + "," + getTestcaseAttributesCsv(testCase, attributesWithNames);
+    }
+
+    private String getTestcaseAttributesCsv(TestCase testCase, Map<String, String> attributesWithNames) {
+        return attributesWithNames.keySet().stream()
+                .map(attributeKey -> getTestcaseAttributeValuesInCSV(testCase, attributeKey))
+                .map(this::wrapCsvLine)
+                .collect(Collectors.joining(","));
+    }
+
+    private String getTestcaseAttributeValuesInCSV(TestCase testCase, String attributeKey){
+        Set<String> values = testCase.getAttributes().getOrDefault(attributeKey, Collections.emptySet());
+        return String.join(",", values);
 
     }
+
+    private String wrapCsvLine(String csvLine){
+        return "\"" + csvLine + "\"";
+    }
+
+    private String buildCsvHeader(Map<String, String> attributesWithNames) {
+        return "Id,Name," +
+                attributesWithNames.values().stream().map(this::wrapCsvLine).collect(Collectors.joining(","));
+    }
+
 
     private TestCase cleanTestCaseForDuplication(TestCase originalTestCase){
         TestCase copyTestCase = (TestCase) originalTestCase.copyTo(new TestCase());
