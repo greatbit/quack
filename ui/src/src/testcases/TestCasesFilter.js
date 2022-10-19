@@ -6,7 +6,7 @@ import { withRouter } from "react-router";
 import Select from "react-select";
 import qs from "qs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faMinusCircle, faFilter, faSave, faPlay, faPlus, faBars, faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import $ from "jquery";
 import * as Utils from "../common/Utils";
 import Backend from "../services/backend";
@@ -280,18 +280,24 @@ class TestCasesFilter extends Component {
             </div>
             <div className="col-2"></div>
             <div className="col-4 btn-group" role="group">
-              <button type="button" className="btn btn-primary" onClick={this.handleFilter}>
-                Filter
+              <button type="button" className="btn btn-primary" title="Filter Tescases" onClick={this.handleFilter}>
+                <FontAwesomeIcon icon={faFilter} />
               </button>
-              <button type="button" className="btn btn-warning" onClick={this.showSuiteModal}>
-                Save
+              <button type="button" className="btn btn-warning" title="Save Test Suite" onClick={this.showSuiteModal}>
+                <FontAwesomeIcon icon={faSave} />
               </button>
-              <button type="button" className="btn btn-success" onClick={this.createLaunchModal}>
-                Launch
+              <button type="button" className="btn btn-success" title="Launch Tescases" onClick={this.createLaunchModal}>
+                <FontAwesomeIcon icon={faPlay} />
               </button>
-              <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#editTestcase">
-                Add Test Case
+              <button type="button" className="btn btn-primary" title="Add Testcase" data-toggle="modal" data-target="#editTestcase">
+                <FontAwesomeIcon icon={faPlus} />
               </button>
+              <button type="button" title="More" class="btn dropdown-toggle clickable" href="#" role="button" id="dropdownMoreLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 <FontAwesomeIcon icon={faBars} />
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMoreLink">
+                 <a class="dropdown-item" href={"/api/" + this.props.match.params.project + "/testcase/csv"} title="Export to CSV"><FontAwesomeIcon icon={faFileCsv} /> Export to CSV</a>
+               </div>
             </div>
           </div>
           <div className="row filter-control-row">
