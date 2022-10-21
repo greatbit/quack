@@ -71,7 +71,7 @@ class Launch extends SubComponent {
         if (!this.state.launch.testSuite || !this.state.launch.testSuite.filter) {
           this.state.launch.testSuite = { filter: { groups: [] } };
         }
-        if (this.state.selectedTestCase.uuid) {
+        if (this.state.selectedTestCase && this.state.selectedTestCase.uuid) {
           this.state.selectedTestCase = Utils.getTestCaseFromTree(
             this.state.selectedTestCase.uuid,
             this.state.launch.testCaseTree,
