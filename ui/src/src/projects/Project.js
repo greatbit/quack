@@ -68,11 +68,11 @@ class Project extends SubComponent {
             <div className="card project-card">
               <div className="card-header">
                 <span>
-                  <Link to={"/" + this.state.project.id + "/testsuites"}>Test Suites</Link>
+                  <Link to={"/" + this.state.project.id + "/launches"}>Launches</Link>
                 </span>
               </div>
               <div className="card-body">
-                <TestSuitesWidget limit={11} projectId={this.state.project.id} />
+                <LaunchesWidget limit={5} projectId={this.state.project.id} />
               </div>
             </div>
           </div>
@@ -80,11 +80,11 @@ class Project extends SubComponent {
             <div className="card project-card">
               <div className="card-header">
                 <span>
-                  <Link to={"/" + this.state.project.id + "/launches"}>Launches</Link>
+                  <Link to={"/" + this.state.project.id + "/testsuites"}>Test Suites</Link>
                 </span>
               </div>
               <div className="card-body">
-                <LaunchesWidget limit={5} projectId={this.state.project.id} />
+                <TestSuitesWidget limit={11} projectId={this.state.project.id} />
               </div>
             </div>
           </div>
