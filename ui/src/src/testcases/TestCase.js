@@ -773,7 +773,7 @@ class TestCase extends SubComponent {
                                 <div className="card-text">
                                   <div
                                     dangerouslySetInnerHTML={{
-                                      __html: i + 1 + ". " + this.state.testcase.steps[i].action,
+                                      __html: "<b><i>" + (i + 1) + ". Step </i></b>" + this.state.testcase.steps[i].action,
                                     }}
                                   ></div>
                                 </div>
@@ -788,19 +788,24 @@ class TestCase extends SubComponent {
                                 ></div>
 
                                 {!this.state.readonly && (
-                                  <a href="#" className="card-link" onClick={e => this.toggleEdit("steps", e, i)}>
-                                    Edit
-                                  </a>
-                                )}
+                                <div className="row">
+                                  <div className="col-md-10"></div>
+                                  <div className="col-md-1">
+                                    <a href="#" className="card-link" onClick={e => this.toggleEdit("steps", e, i)}>
+                                      Edit
+                                    </a>
+                                  </div>
 
-                                {!this.state.readonly && (
-                                  <ConfirmButton
-                                    onSubmit={this.removeStep}
-                                    buttonClass={"card-link red float-right"}
-                                    id={i}
-                                    modalText={"Are you sure you want to remove Test Step?"}
-                                    buttonText={"Remove"}
-                                  />
+                                  <div className="col-md-1">
+                                    <ConfirmButton
+                                      onSubmit={this.removeStep}
+                                      buttonClass={"card-link red float-right"}
+                                      id={i}
+                                      modalText={"Are you sure you want to remove Test Step?"}
+                                      buttonText={"Remove"}
+                                    />
+                                  </div>
+                                </div>
                                 )}
                               </div>
                             </div>
