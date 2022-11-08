@@ -212,7 +212,30 @@ class Header extends Component {
       );
     }
     return (
-      <nav className="navbar navbar-expand-md navbar-dark bg-green">
+      <div>
+        <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided"
+              data-toggle="menubar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="hamburger-bar"></span>
+              </button>
+              <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-collapse"
+                data-toggle="collapse">
+                <i class="icon md-more" aria-hidden="true"></i>
+              </button>
+              <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+                <Link to="/">
+                  <img className="navbar-brand-logo" src="/images/smalllogoquack.png" />
+                </Link>
+                <span class="navbar-brand-text hidden-xs-down"> QuAck</span>
+              </div>
+              <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search"
+                data-toggle="collapse">
+                <span class="sr-only">Toggle Search</span>
+                <i class="icon md-search" aria-hidden="true"></i>
+              </button>
+          </div>
 
       {/* Google analytics*/}
       { this.state.session.metainfo && this.state.session.metainfo.analyticsEnabled && (
@@ -229,58 +252,120 @@ class Header extends Component {
             />
         )}
 
-        <Link className="navbar-brand" to="/">
-          <img src="/images/smalllogoquack.png" />
-        </Link>
-        <button type="button" className="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          {this.renderProjects()}
-          {!this.props.project && <ul className="navbar-nav mr-auto"></ul>}
-          {this.props.project && (
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
-                  TestCases
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
-                  Launches
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
-                  Suites
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
-                  Attributes
-                </Link>
-              </li>
-            </ul>
-          )}
-          <ul className="navbar-nav">
-            <li className="nav-item dropdown">
-              <a
-                className="nav-item nav-link dropdown-toggle mr-md-2"
-                href="#"
-                id="bd-login"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {this.state.session.person.firstName || ""} {this.state.session.person.lastName || ""}
+      <div class="navbar-container container-fluid">
+
+        <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
+
+          <ul class="nav navbar-toolbar">
+            <li class="nav-item hidden-float" id="toggleMenubar">
+              <a class="nav-link" data-toggle="menubar" href="#" role="button">
+                <i class="icon hamburger hamburger-arrow-left">
+                  <span class="sr-only">Toggle menubar</span>
+                  <span class="hamburger-bar"></span>
+                </i>
               </a>
-              <div className="dropdown-menu dropdown-menu-right" aria-labelledby="bd-login">
+            </li>
+            <li class="nav-item hidden-sm-down" id="toggleFullscreen">
+              <a class="nav-link icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">
+                <span class="sr-only">Toggle fullscreen</span>
+              </a>
+            </li>
+            <li class="nav-item hidden-float">
+              <a class="nav-link icon md-search" data-toggle="collapse" href="#" data-target="#site-navbar-search"
+                role="button">
+                <span class="sr-only">Toggle Search</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown dropdown-fw dropdown-mega">
+              <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="fade"
+                role="button">{this.state.projectName || "Projects"} <i class="icon md-chevron-down" aria-hidden="true"></i></a>
+              <div class="dropdown-menu" role="menu">
+                <div class="mega-content">
+              <Link className="dropdown-item " to="/projects">
+                All
+              </Link>
+              {this.state.projects.map(function (project) {
+                return (
+                  <Link to={"/projects/" + project.id} key={project.id} className="dropdown-item">
+                    {project.name}
+                  </Link>
+                );
+              })}
+              {Utils.isUserOwnerOrAdmin(this.state.session) && (
+                <div>
+                  <hr />
+                  <Link to={"/projects/new"} className="dropdown-item">
+                    Create Project
+                  </Link>
+                </div>
+              )}
+
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
+                data-animation="scale-up" role="button">
+                <span class="avatar avatar-online">
+                  <img src="/images/isericon.png" alt="..." />
+                  <i></i>
+                </span>
+              </a>
+              <div class="dropdown-menu" role="menu">
                 {profileContext}
               </div>
             </li>
           </ul>
         </div>
+
+        <div class="collapse navbar-search-overlap" id="site-navbar-search">
+          <form role="search">
+            <div class="form-group">
+              <div class="input-search">
+                <i class="input-search-icon md-search" aria-hidden="true"></i>
+                <input type="text" class="form-control" name="site-search" placeholder="Search..." />
+                <button type="button" class="input-search-close icon md-close" data-target="#site-navbar-search"
+                  data-toggle="collapse" aria-label="Close"></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
       </nav>
+      <div class="site-menubar">
+          {this.props.project && (
+            <ul className="site-menu">
+              <li className="site-menu-item">
+                <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
+                  <i class="site-menu-icon md-case-check" aria-hidden="true"></i>
+                  <span class="site-menu-title">TestCases</span>
+                </Link>
+              </li>
+              <li className="site-menu-item">
+                <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
+                  <i class="site-menu-icon md-case-play" aria-hidden="true"></i>
+                  <span class="site-menu-title">Launches</span>
+                </Link>
+              </li>
+              <li className="site-menu-item">
+                <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
+                  <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
+                  <span class="site-menu-title">Suites</span>
+                </Link>
+              </li>
+              <li className="site-menu-item">
+                <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
+                  <i class="site-menu-icon md-format-list-bulleted" aria-hidden="true"></i>
+                  <span class="site-menu-title">Attributes</span>
+                </Link>
+              </li>
+            </ul>
+          )}
+      </div>
+    </div>
     );
   }
 }

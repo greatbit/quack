@@ -1,0 +1,79 @@
+.waves-effect {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 1;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; }
+  .waves-effect .waves-ripple {
+    position: absolute;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0.2);
+    background: radial-gradient(rgba(0, 0, 0, 0.2) 0, rgba(0, 0, 0, 0.3) 40%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.5) 60%, rgba(255, 255, 255, 0) 70%);
+    transition: all 0.5s ease-out;
+    transition-property: opacity, -webkit-transform;
+    transition-property: transform, opacity;
+    transition-property: transform, opacity, -webkit-transform;
+    -webkit-transform: scale(0) translate(0, 0);
+            transform: scale(0) translate(0, 0);
+    pointer-events: none; }
+  .waves-effect.waves-light .waves-ripple {
+    background: rgba(255, 255, 255, 0.4);
+    background: radial-gradient(rgba(255, 255, 255, 0.2) 0, rgba(255, 255, 255, 0.3) 40%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) 70%); }
+  .waves-effect.waves-classic .waves-ripple {
+    background: rgba(0, 0, 0, 0.1); }
+  .waves-effect.waves-classic.waves-light .waves-ripple {
+    background: rgba(255, 255, 255, 0.4); }
+  .waves-effect.waves-red .waves-ripple {
+    background-color: rgba(255, 205, 210, 0.7); }
+  .waves-effect.waves-purple .waves-ripple {
+    background-color: rgba(225, 190, 231, 0.7); }
+  .waves-effect.waves-light-blue .waves-ripple {
+    background-color: rgba(179, 229, 252, 0.7); }
+  .waves-effect.waves-teal .waves-ripple {
+    background-color: rgba(178, 223, 219, 0.7); }
+  .waves-effect.waves-green .waves-ripple {
+    background-color: rgba(200, 230, 201, 0.7); }
+  .waves-effect.waves-yellow .waves-ripple {
+    background-color: rgba(255, 249, 196, 0.7); }
+  .waves-effect.waves-orange .waves-ripple {
+    background-color: rgba(255, 224, 178, 0.7); }
+  .waves-effect.waves-brown .waves-ripple {
+    background-color: rgba(215, 204, 200, 0.7); }
+  .waves-effect.dropdown-item {
+    display: block; }
+
+.waves-notransition {
+  transition: none !important; }
+
+.waves-button,
+.waves-circle,
+.waves-round,
+.waves-float {
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%); }
+
+.waves-circle {
+  border-radius: 50%; }
+
+.waves-float {
+  -webkit-mask-image: none;
+  transition: all 300ms;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); }
+
+.waves-block {
+  display: block; }
+
+/* Firefox Bug: link not triggered */
+a.waves-effect .waves-ripple {
+  z-index: -1; }
