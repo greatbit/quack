@@ -237,12 +237,104 @@ class Header extends Component {
               </button>
           </div>
 
+
+          <div className="site-gridmenu">
+            <div>
+              <div>
+                <ul>
+                  <li>
+                    <a href="apps/mailbox/mailbox.html">
+                      <i className="icon md-email"></i>
+                      <span>Mailbox</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/calendar/calendar.html">
+                      <i className="icon md-calendar"></i>
+                      <span>Calendar</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/contacts/contacts.html">
+                      <i className="icon md-account"></i>
+                      <span>Contacts</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/media/overview.html">
+                      <i className="icon md-videocam"></i>
+                      <span>Media</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/documents/categories.html">
+                      <i className="icon md-receipt"></i>
+                      <span>Documents</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/projects/projects.html">
+                      <i className="icon md-image"></i>
+                      <span>Project</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="apps/forum/forum.html">
+                      <i className="icon md-comments"></i>
+                      <span>Forum</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="index.html">
+                      <i className="icon md-view-dashboard"></i>
+                      <span>Dashboard</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
       {/* Google analytics*/}
       { this.state.session.metainfo && this.state.session.metainfo.analyticsEnabled && (
             <Helmet>
                 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4CEVX7JVR7"></script>
             </Helmet>
         )}
+
+        <Helmet>
+          <script src="/assets/js/breakpoints.min.js"></script>
+          {/*<script>*/}
+          {/*  Breakpoints();*/}
+          {/*</script>*/}
+
+          <script src="/assets/js/Global/Component.js"></script>
+          <script src="/assets/js/Global/Plugin.js"></script>
+          <script src="/assets/js/Global/Base.js"></script>
+          <script src="/assets/js/Global/Config.js"></script>
+
+          <script src="/assets/js/Section/Menubar.js"></script>
+          <script src="/assets/js/Section/Sidebar.js"></script>
+          <script src="/assets/js/Section/PageAside.js"></script>
+          <script src="/assets/js/Section/GridMenu.js"></script>
+
+          <script src="/assets/js/config/colors.js"></script>
+          <script src="/assets/js/config/tour.js"></script>
+          {/*<script>Config.set('assets', '../assets');</script>*/}
+
+          <script src="/assets/js/Site.js"></script>
+
+          <script src="/assets/js/Plugin/asscrollable.js"></script>
+          <script src="/assets/js/Plugin/slidepanel.js"></script>
+          <script src="/assets/js/Plugin/switchery.js"></script>
+          <script src="/assets/js/Plugin/matchheight.js"></script>
+          <script src="/assets/js/Plugin/jvectormap.js"></script>
+          <script src="/assets/js/Plugin/peity.js"></script>
+
+          <script src="/assets/js/v1.js"></script>
+        </Helmet>
+
+
         { this.state.session.metainfo && this.state.session.metainfo.analyticsEnabled && (
             <Helmet
               script={[{
@@ -336,34 +428,36 @@ class Header extends Component {
       </div>
       </nav>
       <div class="site-menubar">
+        <ul className="site-menu">
           {this.props.project && (
-            <ul className="site-menu">
-              <li className="site-menu-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
-                  <i class="site-menu-icon md-case-check" aria-hidden="true"></i>
-                  <span class="site-menu-title">TestCases</span>
-                </Link>
-              </li>
-              <li className="site-menu-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
-                  <i class="site-menu-icon md-case-play" aria-hidden="true"></i>
-                  <span class="site-menu-title">Launches</span>
-                </Link>
-              </li>
-              <li className="site-menu-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
-                  <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
-                  <span class="site-menu-title">Suites</span>
-                </Link>
-              </li>
-              <li className="site-menu-item">
-                <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
-                  <i class="site-menu-icon md-format-list-bulleted" aria-hidden="true"></i>
-                  <span class="site-menu-title">Attributes</span>
-                </Link>
-              </li>
-            </ul>
+            <span>
+            <li className="site-menu-item">
+              <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
+                <i class="site-menu-icon md-case-check" aria-hidden="true"></i>
+                <span class="site-menu-title">TestCases</span>
+              </Link>
+            </li>
+            <li className="site-menu-item">
+              <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
+                <i class="site-menu-icon md-case-play" aria-hidden="true"></i>
+                <span class="site-menu-title">Launches</span>
+              </Link>
+            </li>
+            <li className="site-menu-item">
+              <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
+                <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
+                <span class="site-menu-title">Suites</span>
+              </Link>
+            </li>
+            <li className="site-menu-item">
+              <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
+                <i class="site-menu-icon md-format-list-bulleted" aria-hidden="true"></i>
+                <span class="site-menu-title">Attributes</span>
+              </Link>
+            </li>
+            </span>
           )}
+        </ul>
       </div>
     </div>
     );

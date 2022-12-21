@@ -1,3 +1,4 @@
+/* eslint no-undef: "off"*/
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
@@ -19,9 +20,31 @@ import "./vendor/flag-icon-css/flag-icon.css"
 import "./vendor/waves/waves.css"
 import "./css/site.min.css";
 
+
+import "jquery.mmenu/dist/jquery.mmenu.js"
+
+
+
+import "./vendor/babel-external-helpers/babel-external-helpers.js"
+import "./vendor/popper-js/umd/popper.min.js"
+import "./vendor/animsition/animsition.js"
+import "./vendor/mousewheel/jquery.mousewheel.js"
+import "./vendor/asscrollbar/jquery-asScrollbar.js"
+import "./vendor/asscrollable/jquery-asScrollable.js"
+import "./vendor/waves/waves.js"
+import "./vendor/switchery/switchery.js"
+import "./vendor/intro-js/intro.js"
+import "./vendor/screenfull/screenfull.js"
+
+//import "./vendor/slidepanel/jquery-slidePanel.js"
+
+
 // Fonts
 import "./fonts/material-design/material-design.min.css"
 import "./fonts/brand-icons/brand-icons.min.css"
+
+// import  "./assets/js/Global/Component.js"
+// import "./assets/js/Global/Base.js"
 
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
@@ -33,3 +56,4 @@ ReactDOM.render(
   document.getElementById("root"),
 );
 registerServiceWorker();
+

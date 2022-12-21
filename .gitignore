@@ -79,4 +79,4 @@ fabric.properties
 .idea
 
 .vscode
-
+.DS_Store
