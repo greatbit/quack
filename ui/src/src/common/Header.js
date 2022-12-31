@@ -12,7 +12,6 @@ import Backend from "../services/backend";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import {Helmet} from "react-helmet";
-import { slide as Menu } from 'react-burger-menu'
 
 
 class Header extends Component {
@@ -386,52 +385,55 @@ class Header extends Component {
       </div>
       </nav>
       <div class="site-menubar">
+
+
+        {this.props.project && (
         <ul className="site-menu">
-          <li className="site-menu-item active">
-            <i className="site-menu-icon md-case-check"/>
-            <span className="site-menu-title">Dashboard</span>
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/"}>
+              <i className="site-menu-icon md-case-check"/>
+              <span className="site-menu-title">Dashboard</span>
+            </Link>
           </li>
-          {this.props.project && (
-            <span>
-            <li className="site-menu-item active">
-              <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
-                <i class="site-menu-icon md-case-check" aria-hidden="true"></i>
-                <span class="site-menu-title">TestCases</span>
-              </Link>
-            </li>
-            <li className="site-menu-item">
-              <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
-                <i class="site-menu-icon md-case-play" aria-hidden="true"></i>
-                <span class="site-menu-title">Launches</span>
-              </Link>
-            </li>
-            <li className="site-menu-item">
-              <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
-                <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
-                <span class="site-menu-title">Suites</span>
-              </Link>
-            </li>
-            <li className="site-menu-item">
-              <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
-                <i class="site-menu-icon md-format-list-bulleted" aria-hidden="true"></i>
-                <span class="site-menu-title">Attributes</span>
-              </Link>
-            </li>
-            </span>
-          )}
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/" + this.props.project + "/testcases"}>
+              <i class="site-menu-icon md-case-check" aria-hidden="true"></i>
+              <span class="site-menu-title">TestCases</span>
+            </Link>
+          </li>
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/" + this.props.project + "/launches"}>
+              <i class="site-menu-icon md-case-play" aria-hidden="true"></i>
+              <span class="site-menu-title">Launches</span>
+            </Link>
+          </li>
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/" + this.props.project + "/testsuites"}>
+              <i class="site-menu-icon md-collection-text" aria-hidden="true"></i>
+              <span class="site-menu-title">Suites</span>
+            </Link>
+          </li>
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/" + this.props.project + "/attributes"}>
+              <i class="site-menu-icon md-format-list-bulleted" aria-hidden="true"></i>
+              <span class="site-menu-title">Attributes</span>
+            </Link>
+          </li>
         </ul>
+        )}
+
+        {!this.props.project && (
+        <ul className="site-menu">
+          <li className="site-menu-item">
+            <Link className="nav-link" to={"/"}>
+              <i className="site-menu-icon md-case-check"/>
+              <span className="site-menu-title">Dashboard</span>
+            </Link>
+          </li>
+        </ul>
+        )}
+
       </div>
-
-
-        <div>
-        <Menu>
-          <a id="home" className="menu-item" href="/">Home</a>
-          <a id="about" className="menu-item" href="/about">About</a>
-          <a id="contact" className="menu-item" href="/contact">Contact</a>
-          <a onClick={ this.showSettings } className="menu-item--small" href="">Settings</a>
-        </Menu>
-        </div>
-
     </div>
     );
   }

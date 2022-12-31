@@ -24,7 +24,6 @@
     "query-string": "^6.5.0",
     "react": "^16.14.0",
     "react-axios": "^2.0.3",
-    "react-burger-menu": "^3.0.8",
     "react-date-picker": "^7.3.0",
     "react-dom": "^16.14.0",
     "react-helmet": "^6.1.0",
