@@ -19,11 +19,9 @@ import "./vendor/jquery-mmenu/jquery-mmenu.css"
 import "./vendor/flag-icon-css/flag-icon.css"
 import "./vendor/waves/waves.css"
 import "./css/site.min.css";
+import "./css/v1.css";
 
-
-import "jquery.mmenu/dist/jquery.mmenu.js"
-
-
+require("jquery.mmenu/dist/js/jquery.mmenu.min");
 
 import "./vendor/babel-external-helpers/babel-external-helpers.js"
 import "./vendor/popper-js/umd/popper.min.js"
@@ -36,15 +34,12 @@ import "./vendor/switchery/switchery.js"
 import "./vendor/intro-js/intro.js"
 import "./vendor/screenfull/screenfull.js"
 
-//import "./vendor/slidepanel/jquery-slidePanel.js"
+// import "./vendor/slidepanel/jquery-slidePanel.js"
 
 
 // Fonts
 import "./fonts/material-design/material-design.min.css"
 import "./fonts/brand-icons/brand-icons.min.css"
-
-// import  "./assets/js/Global/Component.js"
-// import "./assets/js/Global/Base.js"
 
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";

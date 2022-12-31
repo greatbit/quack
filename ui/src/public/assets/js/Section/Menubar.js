@@ -85,6 +85,9 @@
   var Menubar =
   /*#__PURE__*/
   function (_Component) {
+
+    console.log(_Component);
+
     babelHelpers.inherits(Menubar, _Component);
 
     function Menubar() {
