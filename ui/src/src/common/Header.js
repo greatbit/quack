@@ -213,7 +213,7 @@ class Header extends Component {
       );
     }
     return (
-      <div>
+      <div className="site-menubar-hover">
         <Helmet>
           <script src="/assets/js/breakpoints.min.js"></script>
           {/*<script>*/}
@@ -384,9 +384,8 @@ class Header extends Component {
         </div>
       </div>
       </nav>
-      <div class="site-menubar">
 
-
+      <div className="site-menubar">
         {this.props.project && (
         <ul className="site-menu">
           <li className="site-menu-item">

@@ -377,3 +377,7 @@ a.link-black, a.link-black:link, a.link-black:link:visited {
     font-size: 80%;
     margin-right: 15px;
 }
+
+.mm-panel.mm-subopened {
+    transform: translate3d(0, 0, 0)!important;
+}

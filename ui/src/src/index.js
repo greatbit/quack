@@ -21,7 +21,7 @@ import "./vendor/waves/waves.css"
 import "./css/site.min.css";
 import "./css/v1.css";
 
-require("jquery.mmenu/dist/js/jquery.mmenu.min");
+require("jquery.mmenu/dist/js/jquery.mmenu.all.min");
 
 import "./vendor/babel-external-helpers/babel-external-helpers.js"
 import "./vendor/popper-js/umd/popper.min.js"
