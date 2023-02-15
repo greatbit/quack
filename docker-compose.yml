@@ -5,12 +5,15 @@ services:
     ports:
       - "80:80"
     links:
-      - mongod
+      - mongod:mongod
     depends_on:
       - mongod
-
+    environment:
+      WAIT_HOSTS: mongod:27017
   mongod:
     container_name: "mongod"
-    image: mongo
+    image: mongo:5
+    expose:
+      - "27017"
     ports:
       - "27017:27017"
