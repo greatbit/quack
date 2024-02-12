@@ -622,6 +622,7 @@ class TestCase extends SubComponent {
                   <div id="description-form" className="inplace-form" style={{ display: "none" }}>
                     <Editor
                       initialValue={this.state.testcase.description}
+                      apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                       init={{
                         height: 500,
                         menubar: false,
@@ -678,6 +679,7 @@ class TestCase extends SubComponent {
                   <div id="preconditions-form" className="inplace-form" style={{ display: "none" }}>
                     <Editor
                       initialValue={this.state.testcase.preconditions}
+                      apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                       init={{
                         height: 500,
                         menubar: false,
@@ -725,6 +727,7 @@ class TestCase extends SubComponent {
                             <p className="card-text">
                               <Editor
                                 initialValue={this.state.testcase.steps[i].action}
+                                apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                                 init={{
                                   height: 300,
                                   menubar: false,
@@ -739,6 +742,7 @@ class TestCase extends SubComponent {
                             <p className="card-text">
                               <Editor
                                 initialValue={this.state.testcase.steps[i].expectation}
+                                apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                                 init={{
                                   height: 300,
                                   menubar: false,
@@ -823,6 +827,7 @@ class TestCase extends SubComponent {
                               <p className="card-text">
                                 <Editor
                                   initialValue={this.state.testcase.steps[i].action}
+                                  apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                                   init={{
                                     height: 300,
                                     menubar: false,
@@ -837,6 +842,7 @@ class TestCase extends SubComponent {
                               <p className="card-text">
                                 <Editor
                                   initialValue={this.state.testcase.steps[i].expectation}
+                                  apiKey='u5vv578ulj3h3ztoac8v58phwjkq2u6xaw9ohhjp0bofz8zi'
                                   init={{
                                     height: 300,
                                     menubar: false,
